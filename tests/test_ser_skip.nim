@@ -25,17 +25,18 @@ type
     text: Option[string]
     kek: int
 
-  Foo {.skipSerializeIf(skipFloat).} = object
-    fooInt: int
-    bar {.flat.}: Bar
-    fooFloat: float
-
 let t = Test()
 
 forSerFields key, value, t:
   echo key, " ", value.type, " ", value
 
 echo ""
+
+type
+  Foo {.skipSerializeIf(skipFloat).} = object
+    fooInt: int
+    bar {.flat.}: Bar
+    fooFloat: float
 
 let f = Foo()
 
