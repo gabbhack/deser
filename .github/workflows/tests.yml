@@ -1,0 +1,48 @@
+name: Tests
+
+on:
+  push:
+    path-ignore:
+      - 'README.rst'
+  pull_request:
+    path-ignore:
+      - 'README.rst'
+  release:
+    types: [published]
+
+jobs:
+  build:
+    if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 6
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+        nim: [ 'stable', 'devel' ]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache nimble
+        id: cache-nimble
+        uses: actions/cache@v1
+        with:
+          path: ~/.nimble
+          key: ${{ runner.os }}-nimble-${{ hashFiles('*.nimble') }}
+        if: runner.os != 'Windows'
+
+      - name: Set up Nim ${{ matrix.nim }} on ${{ matrix.os }}
+        uses: jiro4989/setup-nim-action@v1
+        with:
+          nim-version: ${{ matrix.nim }}
+
+      - name: Install dependencies
+        run: nimble install -d -y
+      
+      - name: Run check
+        run: nim check src/deser
+      
+      - name: Run tests
+        run: testament p "./tests/test_*.nim"
