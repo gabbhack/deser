@@ -41,8 +41,5 @@ jobs:
       - name: Install dependencies
         run: nimble install -d -y
       
-      - name: Run check
-        run: nim check src/deser
-      
       - name: Run tests
-        run: testament p "./tests/test_*.nim"
+        run: nimble test
