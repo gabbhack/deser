@@ -1,8 +1,8 @@
 discard """
   output: '''
-id int 0
-kek int 0
-lol int 0
+id
+kek
+lol
   '''
 """
 import macros
@@ -26,4 +26,4 @@ type
 let f = Foo()
 
 forSerFields key, value, f:
-  echo key, " ", value.type, " ", value
+  echo key

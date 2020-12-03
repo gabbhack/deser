@@ -28,3 +28,6 @@ doc/*.idx
 bin/*
 
 /*.html
+outputGotten.txt
+tests/megatest.nim
+outputExpected.txt
