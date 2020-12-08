@@ -50,42 +50,6 @@ macro getProcReturnType*(f: typed{`proc`}): typedesc =
   ## for internal use only
   f.getType[1]
 
-template getPragmaOrNothing*(inOb: typedesc, pragm: typed): tuple[] | typed =
-  ## for internal use only
-  when inOb.hasCustomPragma(pragm):
-    hackType(inOb.getCustomPragmaVal(pragm))
-  else:
-    ()
-
-template forTuple*(value: untyped, x: static[tuple], actions: untyped) =
-  ## for internal use only
-  # special template for processing tuple that comes from parent objects for flat objects
-  for field in fields(x):
-    const value = field
-    when field is tuple[]:
-      discard
-    elif field is tuple:
-      forTuple(value, field, actions)
-    else:
-      actions
-
-template forTupleVar*(value: untyped, x: tuple, actions: untyped) =
-  ## for internal use only
-  for field in fields(x):
-    var value = field
-    when field is tuple[]:
-      discard
-    elif field is tuple:
-      forTuple(value, field, actions)
-    else:
-      actions
-
-# hack to apply only the first serializeWith that fits the types
-proc hackSerializeWith*(x: static[tuple], v: auto): auto {.inline.} =
-  forTupleVar(tv, x):
-    when compiles(hackType(tv(v))) and $result.type == "untyped":
-      result = hackType(tv(v))
-
 proc renamer*(x: string, rule: RenameKind): string {.compileTime.} =
   case rule
   of rkCamelCase:
@@ -103,7 +67,7 @@ proc renamer*(x: string, rule: RenameKind): string {.compileTime.} =
   else:
       x
 
-template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple, actions: untyped, flatSkip: static[tuple], flatRenameAll: static[tuple | tuple[ser: RenameKind, des: RenameKind]], flatSerWith: static[tuple]) =
+template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple, actions: untyped, flatSkipSerIf: proc | tuple[] = (), flatRenameAll: RenameKind | tuple[] = (), flatSerWith: proc | tuple[] = ()) =
   ## for internal use only
   for k, v in fieldPairs(inOb):
     when not(v.hasCustomPragma(skip) or v.hasCustomPragma(skipSerializing)):
@@ -120,49 +84,52 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple,
 
       # apply "global" skipSerializeIf from object to current field
       # will be silently skipped if the types don't match
-      when type(inOb).hasCustomPragma(skipSerializeIf) and compiles(hackType(type(inOb).getCustomPragmaVal(skipSerializeIf)(v))):
-        isSkip = hackType(type(inOb).getCustomPragmaVal(skipSerializeIf)(v))
+
+      when type(inOb).hasCustomPragma(skipSerializeIf) and compiles(hackType(getCustomPragmaVal(type(inOb), skipSerializeIf)(v))):
+        isSkip = hackType(getCustomPragmaVal(type(inOb), skipSerializeIf)(v))
 
       # apply skipSerializeIf from parent object to `flat` child's field
       # will be silently skipped if the types don't match
-      when flatSkip is not tuple[]:
-        forTuple(tv {.used.}, flatSkip):
-          when compiles(hackType(tv(v))):
-            if not isSkip:
-              isSkip = hackType(tv(v))
+      when flatSkipSerIf isnot tuple[]:
+        when compiles(hackType(flatSkipSerIf(v))):
+          if not isSkip:
+            isSkip = hackType(flatSkipSerIf(v))
 
       # apply `skipSerializeIf` from current field
       # instead of a silent skip, a compile-time error will be called if the types do not match
       when v.hasCustomPragma(skipSerializeIf):
         if not isSkip:
-          isSkip = hackType(v.getCustomPragmaVal(skipSerializeIf)(v))
+          isSkip = hackType(getCustomPragmaVal(v, skipSerializeIf)(v))
 
       if not isSkip:
         # `flat` logic
         # recursively calling actualForSerFields
         when v is object | tuple and v.hasCustomPragma(flat):
-          # `skipSerializeIf` and `renameAll` are tuples itself
+          # `skipSerializeIf`, `renameAll` and `serializeWith` are tuples itself
           # so need to get only value that require for serialize
-          const checkedFlatSkip = static:
-            const temp = getPragmaOrNothing(type(inOb), skipSerializeIf)
-            when temp isnot tuple[] and temp is tuple:
-              temp[0]
+          template checkedFlatSkip: untyped =
+            when hasCustomPragma(type(inOb), skipSerializeIf):
+              getCustomPragmaVal(type(inOb), skipSerializeIf)
             else:
-              temp
-          const checkedFlatRenameAll = static:
-            const temp = getPragmaOrNothing(type(inOb), renameAll)
-            when temp isnot tuple[] and temp is tuple:
-              temp[0]
+              flatSkipSerIf
+          template checkedFlatRenameAll: untyped =
+            when hasCustomPragma(type(inOb), renameAll):
+              getCustomPragmaVal(type(inOb), renameAll)[0]
             else:
-              temp
+              flatRenameAll
+          template checkedFlatSerWith: untyped =
+            when hasCustomPragma(type(inOb), serializeWith):
+              getCustomPragmaVal(type(inOb), serializeWith)
+            else:
+              flatSerWith
           actualForSerFields(
             key,
             value,
             v,
             actions,
-            (checkedFlatSkip, flatSkip),  # apply skipSerializeIf to flat
-            (checkedFlatRenameAll, flatRenameAll),  # apply renameAll to flat
-            (getPragmaOrNothing(type(inOb), serializeWith), flatSerWith)  # apply serializeWith to flat
+            checkedFlatSkip(),  # apply skipSerializeIf to flat
+            checkedFlatRenameAll(),  # apply renameAll to flat
+            checkedFlatSerWith() # apply serializeWith to flat
           )
         else:
           # `rename` logic
@@ -173,17 +140,8 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple,
               const key = static(renamer(k, type(inOb).getCustomPragmaVal(renameAll)[0]))
           elif flatRenameAll isnot tuple[]:
             # in the first place is `renameAll` from the last parent object, that is, the highest priority
-            const key = static:
-              var key = k
-              forTuple(tv {.used.}, flatRenameAll):
-                key = static(renamer(k, tv))
-                break
-              key
+            const key = static(renamer(k, flatRenameAll))
           else:
-            const key = k
-
-          # if a suitable `renameAll` was not found
-          when not declaredInScope(key):
             const key = k
 
           # `serializeWith` logic
@@ -191,20 +149,16 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple,
           when v.hasCustomPragma(serializeWith):
             # instead of a silent skip, a compile-time error will be called if the types do not match
             let value = hackType(v.getCustomPragmaVal(serializeWith)(v))
-          elif type(inOb).hasCustomPragma(serializeWith) and compiles(type(inOb).getCustomPragmaVal(serializeWith)(v)):
+          elif type(inOb).hasCustomPragma(serializeWith) and compiles(hackType(getCustomPragmaVal(type(inOb), serializeWith)(v))):
             # will be silently skipped if the types don't match
-            let value = hackType(type(inOb).getCustomPragmaVal(serializeWith)(v))
+            let value = hackType(getCustomPragmaVal(type(inOb), serializeWith)(v))
           elif flatSerWith isnot tuple[]:
             # will be silently skipped if the types don't match
-            when compiles(hackSerializeWith(flatSerWith, v).type):
-              let value = hackSerializeWith(flatSerWith, v)
+            when compiles(hackType(flatSerWith(v))):
+              let value = hackType(flatSerWith(v))
             else:
               let value = v
           else:
-            let value = v
-
-          # if a suitable `serializeWith` was not found
-          when not declaredInScope(value):
             let value = v
 
           actions
