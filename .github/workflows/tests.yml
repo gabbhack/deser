@@ -1,10 +1,14 @@
-name: Tests
+name: Run tests
 
 on:
   push:
+    branches:
+      - master
     path-ignore:
       - 'README.rst'
   pull_request:
+    branches:
+      - master
     path-ignore:
       - 'README.rst'
   release:
