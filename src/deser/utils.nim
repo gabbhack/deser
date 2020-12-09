@@ -11,6 +11,7 @@ type
     rkUpperKebabCase
 
 proc renamer*(x: string, rule: RenameKind): string {.compileTime.} =
+  ## for internal use only
   case rule
   of rkCamelCase:
       camel(x)

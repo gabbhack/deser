@@ -1,6 +1,6 @@
 import macros
 
-# https://github.com/nim-lang/Nim/issues/16108
+# ISSUE: https://github.com/nim-lang/Nim/issues/16108
 # hack to instantiate type
 template hackType*[T](x: T): T =
   ## for internal use only
@@ -31,7 +31,7 @@ macro getProcReturnType*(f: typed{`proc`}): typedesc =
 template checkedObj*(inOb: object | tuple | ref | var object | var tuple): untyped =
   ## for internal use only
   when inOb is ref:
-    # https://github.com/nim-lang/Nim/issues/8456
+    # ISSUE: https://github.com/nim-lang/Nim/issues/8456
     inOb[]
   else:
     inOb

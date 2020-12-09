@@ -1,6 +1,6 @@
 import utils
 
-# https://github.com/nim-lang/Nim/issues/16158
+# ISSUE: https://github.com/nim-lang/Nim/issues/16158
 template rename*(ser = "", des = "") {.pragma.}  ##[
   Use this pragma to rename a field during serialization or deserialization.
   Example:
