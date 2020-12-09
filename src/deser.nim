@@ -50,6 +50,14 @@ macro getProcReturnType*(f: typed{`proc`}): typedesc =
   ## for internal use only
   f.getType[1]
 
+template checkedObj*(inOb: object | tuple | ref | var object | var tuple): untyped =
+  ## for internal use only
+  when inOb is ref:
+    # https://github.com/nim-lang/Nim/issues/8456
+    inOb[]
+  else:
+    inOb
+
 proc renamer*(x: string, rule: RenameKind): string {.compileTime.} =
   case rule
   of rkCamelCase:
@@ -67,9 +75,9 @@ proc renamer*(x: string, rule: RenameKind): string {.compileTime.} =
   else:
       x
 
-template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple, actions: untyped, flatSkipSerIf: proc | tuple[] = (), flatRenameAll: RenameKind | tuple[] = (), flatSerWith: proc | tuple[] = ()) =
+template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple | ref, actions: untyped, flatSkipSerIf: proc | tuple[] = (), flatRenameAll: RenameKind | tuple[] = (), flatSerWith: proc | tuple[] = ()) =
   ## for internal use only
-  for k, v in fieldPairs(inOb):
+  for k, v in fieldPairs(checkedObj(inOb)):
     when not(v.hasCustomPragma(skip) or v.hasCustomPragma(skipSerializing)):
       var isSkip = false
 
@@ -104,7 +112,7 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple,
       if not isSkip:
         # `flat` logic
         # recursively calling actualForSerFields
-        when v is object | tuple and v.hasCustomPragma(flat):
+        when v is object | tuple | ref and v.hasCustomPragma(flat):
           # `skipSerializeIf`, `renameAll` and `serializeWith` are tuples itself
           # so need to get only value that require for serialize
           template checkedFlatSkip: untyped =
@@ -163,18 +171,36 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple,
 
           actions
 
-template actualForDesFields*(key: untyped, value: untyped, inOb: var object | var tuple, actions: untyped) =
-  for k, v in fieldPairs(inOb):
+template actualForDesFields*(key: untyped, value: untyped, inOb: var object | var tuple | ref, actions: untyped, flatRenameAll: RenameKind | tuple[] = (), flatDesWith: proc | tuple[] = ()) =
+  ## for internal use only
+  for k, v in fieldPairs(checkedObj(inOb)):
     when not(v.hasCustomPragma(skip) or v.hasCustomPragma(skipDeserializing)):
-      # init ref object
-      when v is ref:
-        if v == nil:
-          new(v)
-
       # `flat` logic
       # recursively calling actualForDesFields
-      when v is object | tuple and v.hasCustomPragma(flat):
-        actualForDesFields(key, value, v, actions)
+      when v is var object | var tuple | ref and v.hasCustomPragma(flat):
+        # `renameAll` and `serializeWith` are tuples itself
+        # so need to get only value that require for serialize
+        template checkedFlatRenameAll: untyped =
+          when hasCustomPragma(type(inOb), renameAll):
+            when getCustomPragmaVal(type(inOb), renameAll)[0] == rkNothing and getCustomPragmaVal(type(inOb), renameAll)[1] != rkNothing:
+              getCustomPragmaVal(type(inOb), renameAll)[1]
+            else:
+              getCustomPragmaVal(type(inOb), renameAll)[0]
+          else:
+            flatRenameAll
+        template checkedFlatDesWith: untyped =
+          when hasCustomPragma(type(inOb), deserializeWith):
+            getCustomPragmaVal(type(inOb), deserializeWith)
+          else:
+            flatDesWith
+        actualForDesFields(
+          key,
+          value,
+          v,
+          actions,
+          checkedFlatRenameAll(),  # apply renameAll to flat
+          checkedFlatDesWith() # apply serializeWith to flat
+        )
       else:
         #[
           `rename` logic
@@ -186,30 +212,39 @@ template actualForDesFields*(key: untyped, value: untyped, inOb: var object | va
         ]#
         when v.hasCustomPragma(rename):
           when v.getCustomPragmaVal(rename)[0].len > 0:
-            var key = v.getCustomPragmaVal(rename)[0]
+            const key = v.getCustomPragmaVal(rename)[0]
           elif v.getCustomPragmaVal(rename)[1].len > 0:
-            var key = v.getCustomPragmaVal(rename)[1]
+            const key = v.getCustomPragmaVal(rename)[1]
+          else:
+            const key = k
         elif type(inOb).hasCustomPragma(renameAll):
-          when type(inOb).getCustomPragmaVal(renameAll)[0].len > 0:
-            var key = static(renamer(k, type(inOb).getCustomPragmaVal(renameAll)[0]))
-          elif type(inOb).getCustomPragmaVal(renameAll)[1].len > 0:
-            var key = static(renamer(k, type(inOb).getCustomPragmaVal(renameAll)[1]))
+          when type(inOb).getCustomPragmaVal(renameAll)[0] != rkNothing:
+            const key = static(renamer(k, type(inOb).getCustomPragmaVal(renameAll)[0]))
+          elif type(inOb).getCustomPragmaVal(renameAll)[1] != rkNothing:
+            const key = static(renamer(k, type(inOb).getCustomPragmaVal(renameAll)[1]))
+          else:
+            const key = k
+        elif flatRenameAll isnot tuple[]:
+            # in the first place is `renameAll` from the last parent object, that is, the highest priority
+            const key = static(renamer(k, flatRenameAll))
         else:
-          var key = k
+          const key = k
 
         #[
           `deserializeWith` logic is executed in two steps:
           1. Initialization of the variable that is given to the Deserializer, with the type that is expected in json
           2. Convert this variable using `deserializeWith` to the object field type
         ]#
-
         # step one
+
         when v.hasCustomPragma(deserializeWith):
-          var value: getFirstArgumentType(hackType(v.getCustomPragmaVal(deserializeWith)))
+          var value: getFirstArgumentType(v.getCustomPragmaVal(deserializeWith))
         # if `deserializeWith` from object
         # check that type of `deserializeWith` result equal to field type
-        elif type(inOb).hasCustomPragma(deserializeWith) and v is getProcReturnType(hackType(type(inOb).getCustomPragmaVal(deserializeWith))):
-          var value: getFirstArgumentType(hackType(type(inOb).getCustomPragmaVal(deserializeWith)))
+        elif type(inOb).hasCustomPragma(deserializeWith) and safeCondition(v is getProcReturnType(getCustomPragmaVal(type(inOb), deserializeWith))):
+          var value: getFirstArgumentType(getCustomPragmaVal(type(inOb), deserializeWith))
+        elif flatDesWith isnot tuple[] and safeCondition(v is getProcReturnType(flatDesWith)):
+          var value: getFirstArgumentType(flatDesWith)
         else:
           var value: type(v)
 
@@ -220,13 +255,15 @@ template actualForDesFields*(key: untyped, value: untyped, inOb: var object | va
         when v.hasCustomPragma(deserializeWith):
           # instead of a silent skip, a compile-time error will be called if the types do not match
           v = hackType(v.getCustomPragmaVal(deserializeWith)(value))
-        elif type(inOb).hasCustomPragma(deserializeWith) and v is getProcReturnType(hackType(type(inOb).getCustomPragmaVal(deserializeWith))):
-          v = hackType(type(inOb).getCustomPragmaVal(deserializeWith)(value))
+        elif type(inOb).hasCustomPragma(deserializeWith) and safeCondition(v is getProcReturnType(getCustomPragmaVal(type(inOb), deserializeWith))):
+          v = hackType(getCustomPragmaVal(type(inOb), deserializeWith)(value))
+        elif flatDesWith isnot tuple[] and safeCondition(v is getProcReturnType(flatDesWith)):
+          v = hackType(flatDesWith(value))
         else:
-          v = value
+          v = move(value)
 
-template forSerFields*(key: untyped, value: untyped, inOb: object | tuple, actions: untyped) =
+template forSerFields*(key: untyped, value: untyped, inOb: object | tuple | ref, actions: untyped) =
   actualForSerFields(`key`, `value`, `inOb`, `actions`, (), (), ())
 
-template forDesFields*(key: untyped, value: untyped, inOb: var object | var tuple, actions: untyped) =
-  actualForDesFields(`key`, `value`, `inOb`, `actions`)
+template forDesFields*(key: untyped, value: untyped, inOb: var object | var tuple | ref, actions: untyped) =
+  actualForDesFields(`key`, `value`, `inOb`, `actions`, (), ())

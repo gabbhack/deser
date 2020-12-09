@@ -1,19 +1,20 @@
 discard """
   output: '''
 Id
-text
+TEXT
   '''
 """
 
 import macros
 import deser
 
+# `rename` has a special behavior during deserialization
 type
   Foo = object
     id {.rename("Id").}: int
     text {.rename(des="TEXT").}: string
 
-let f = Foo()
+var f = Foo()
 
-forSerFields key, value, f:
+forDesFields key, value, f:
   echo key

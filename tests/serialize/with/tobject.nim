@@ -8,11 +8,8 @@ discard """
 import macros, times
 import deser
 
-proc timeToInt(x: Time): int64 =
-  x.toUnix()
-
 type
-  Foo {.serializeWith(timeToInt).} = object
+  Foo {.serializeWith(toUnix).} = object
     id: int
     created_at: Time
     used_at: Time

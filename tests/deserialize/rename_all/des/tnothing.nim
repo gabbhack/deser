@@ -12,7 +12,7 @@ type
     camelCase: int
     anotherCamelCase: int
 
-let tkc = TestToKebabCase()
+var tkc = TestToKebabCase()
 
-forSerFields key, value, tkc:
+forDesFields key, value, tkc:
   echo key

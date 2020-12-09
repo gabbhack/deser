@@ -7,12 +7,9 @@ discard """
 import macros, times
 import deser
 
-proc timeToInt(x: Time): int64 =
-  x.toUnix()
-
 type
   Test = object
-    time {.serializeWith(timeToInt).}: Time
+    time {.serializeWith(toUnix).}: Time
     text: string
 
 let t = Test(time: fromUnix(123), text: "321")

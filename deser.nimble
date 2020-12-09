@@ -1,8 +1,8 @@
 # Package
 
 version       = "0.1.0"
-author        = "Gabben"
-description   = "A serelialization framework"
+author        = "gabbhack"
+description   = "De/serialization library for Nim "
 license       = "MIT"
 srcDir        = "src"
 

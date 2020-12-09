@@ -8,11 +8,11 @@ import macros
 import deser
 
 type
-  TestToKebabCase {.renameAll().} = object
+  TestToKebabCase {.renameAll(rkNothing).} = object
     camelCase: int
     anotherCamelCase: int
 
-let tkc = TestToKebabCase()
+var tkc = TestToKebabCase()
 
-forSerFields key, value, tkc:
+forDesFields key, value, tkc:
   echo key

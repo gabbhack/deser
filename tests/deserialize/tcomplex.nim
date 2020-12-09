@@ -1,7 +1,10 @@
 discard """
   output: '''
+id int
 msg_text string
+photo Option[system.string]
 TiMe int64
+SOME_OPTION Option[system.string]
 SOME_FOO string
   '''
 """
@@ -12,15 +15,14 @@ type
   Foo {.renameAll(rkUpperSnakeCase).} = object
     someOption: Option[string]
     someFoo: string
-  Test {.renameAll(rkSnakeCase), skipSerializeIf(isNone).} = object
-    id {.skip.}: int
-    anotherSkip {.skipSerializing.}: int
+  Test {.renameAll(rkSnakeCase).} = object
+    id: int
     msgText: string
     photo: Option[string]
-    time {.serializeWith(toUnix), rename("TiMe").}: Time
+    time {.deserializeWith(fromUnix), rename("TiMe").}: Time
     foo {.flat.}: Foo
 
-let t = Test()
+var t = Test()
 
-forSerFields key, value, t:
+forDesFields key, value, t:
   echo key, " ", value.type

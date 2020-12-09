@@ -1,26 +1,26 @@
 discard """
   output: '''
-thirdTime Time
-fourthTime int64
+thirdTime int64
+fourthTime Time
 fourth string
   '''
 """
 import macros, times
 import deser
 
-proc fromFloat(x: float): string = $x
+proc toString(x: float): string = $x
 
 # `serializeWith` from the Third replaced `serializeWith` from the First
 type
   Fourth = object
-    fourthTime: int64
+    fourthTime: Time
     fourth: float
-  Third {.serializeWith(fromFloat).} = object
-    thirdTime: int64
+  Third {.serializeWith(toString).} = object
+    thirdTime: Time
     fourth {.flat.}: Fourth
   Second = object
     third {.flat.}: Third
-  First {.serializeWith(fromUnix).} = object
+  First {.serializeWith(toUnix).} = object
     second {.flat.}: Second
 
 let f = First()

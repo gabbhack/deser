@@ -1,0 +1,1 @@
+Tests are almost duplicated to check the special behavior of `renameAll` during deserialization

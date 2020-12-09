@@ -1,10 +1,10 @@
 discard """
   output: '''
-thirdTime Time
-fourthTime Time
+third_time
+fourth_time
   '''
 """
-import macros, times
+import macros
 import deser
 
 type
@@ -15,10 +15,10 @@ type
     fourth {.flat.}: Fourth
   Second = object
     third {.flat.}: Third
-  First {.serializeWith(fromUnix).} = object
+  First {.renameAll(des=rkSnakeCase).} = object
     second {.flat.}: Second
 
-let f = First()
+var f = First()
 
-forSerFields key, value, f:
-  echo key, " ", value.type
+forDesFields key, value, f:
+  echo key
