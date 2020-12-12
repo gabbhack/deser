@@ -25,14 +25,12 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple 
       # will be silently skipped if the types don't match
       when flatSkipSerIf isnot tuple[]:
         when compiles(hackType(flatSkipSerIf(v))):
-          if not isSkip:
-            isSkip = hackType(flatSkipSerIf(v))
+          isSkip = hackType(flatSkipSerIf(v)) or isSkip
 
       # apply `skipSerializeIf` from current field
       # instead of a silent skip, a compile-time error will be called if the types do not match
       when v.hasCustomPragma(skipSerializeIf):
-        if not isSkip:
-          isSkip = hackType(getCustomPragmaVal(v, skipSerializeIf)(v))
+        isSkip = hackType(getCustomPragmaVal(v, skipSerializeIf)(v)) or isSkip
 
       if not isSkip:
         # `flat` logic
@@ -90,9 +88,9 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple 
             when compiles(hackType(flatSerWith(v))):
               let value = hackType(flatSerWith(v))
             else:
-              let value = v
+              template value: untyped = v
           else:
-            let value = v
+            template value: untyped = v
 
           actions
 
@@ -177,7 +175,7 @@ template actualForDesFields*(key: untyped, value: untyped, inOb: var object | va
         elif flatDesWith isnot tuple[] and safeCondition(v is getProcReturnType(flatDesWith)):
           var value: getFirstArgumentType(flatDesWith)
         else:
-          var value: type(v)
+          template value: untyped = v
 
         actions
 
@@ -190,5 +188,3 @@ template actualForDesFields*(key: untyped, value: untyped, inOb: var object | va
           v = hackType(getCustomPragmaVal(type(inOb), deserializeWith)(value))
         elif flatDesWith isnot tuple[] and safeCondition(v is getProcReturnType(flatDesWith)):
           v = hackType(flatDesWith(value))
-        else:
-          v = move(value)
