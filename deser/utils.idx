@@ -1,0 +1,9 @@
+rkNothing	deser/utils.html#rkNothing	RenameKind.rkNothing	
+rkCamelCase	deser/utils.html#rkCamelCase	RenameKind.rkCamelCase	
+rkSnakeCase	deser/utils.html#rkSnakeCase	RenameKind.rkSnakeCase	
+rkKebabCase	deser/utils.html#rkKebabCase	RenameKind.rkKebabCase	
+rkPascalCase	deser/utils.html#rkPascalCase	RenameKind.rkPascalCase	
+rkUpperSnakeCase	deser/utils.html#rkUpperSnakeCase	RenameKind.rkUpperSnakeCase	
+rkUpperKebabCase	deser/utils.html#rkUpperKebabCase	RenameKind.rkUpperKebabCase	
+RenameKind	deser/utils.html#RenameKind	utils: RenameKind	
+renamer	deser/utils.html#renamer,string,RenameKind	utils: renamer(x: string; rule: RenameKind): string	

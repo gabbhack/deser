@@ -1,0 +1,5 @@
+hackType	deser/hacks.html#hackType.t,T	hacks: hackType[T](x: T): T	
+safeCondition	deser/hacks.html#safeCondition.t,untyped	hacks: safeCondition(x: untyped): bool	
+getFirstArgumentType	deser/hacks.html#getFirstArgumentType.m	hacks: getFirstArgumentType(f: typed{`proc`}): typedesc	
+getProcReturnType	deser/hacks.html#getProcReturnType.m	hacks: getProcReturnType(f: typed{`proc`}): typedesc	
+checkedObj	deser/hacks.html#checkedObj.t	hacks: checkedObj(inOb: object | tuple | ref | var object | var tuple): untyped	

@@ -1,0 +1,2195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Testament Test Results</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js" integrity="sha256-ihAoc6M/JPfrIiIeayPE9xjin4UWjsx2mjW/rtmxLM4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha256-ZT4HPpdCOt2lvDkXokHuhJfdOKSPFLzeAJik5U/Q+l4=" crossorigin="anonymous" />
+    <script>
+        /**
+        * Callback function that is executed for each Element in an array.
+        * @callback executeForElement
+        * @param {Element} elem Element to operate on
+        */
+
+        /**
+        *
+        * @param {number} index
+        * @param {Element[]} elemArray
+        * @param {executeForElement} executeOnItem
+        */
+        function executeAllAsync(elemArray, index, executeOnItem) {
+            for (var i = 0; index < elemArray.length && i < 100; i++ , index++) {
+                var item = elemArray[index];
+                executeOnItem(item);
+            }
+            if (index < elemArray.length) {
+                setTimeout(executeAllAsync, 0, elemArray, index, executeOnItem);
+            }
+        }
+
+        /** @param {Element} elem */
+        function executeShowOnElement(elem) {
+            while (elem.classList.contains("hidden")) {
+                elem.classList.remove("hidden");
+            }
+        }
+
+        /** @param {Element} elem */
+        function executeHideOnElement(elem) {
+            if (!elem.classList.contains("hidden")) {
+                elem.classList.add("hidden");
+            }
+        }
+
+        /** @param {Element} elem */
+        function executeExpandOnElement(elem) {
+            $(elem).collapse("show");
+        }
+
+        /** @param {Element} elem */
+        function executeCollapseOnElement(elem) {
+            $(elem).collapse("hide");
+        }
+
+        /**
+        * @param {string} [category] Optional bootstrap panel context class (danger, warning, info, success)
+        * @param {executeForElement} executeOnEachPanel
+        */
+        function wholePanelAll(category, executeOnEachPanel) {
+            var selector = "div.panel";
+            if (typeof category === "string" && category) {
+                selector += "-" + category;
+            }
+
+            var jqPanels = $(selector);
+            /** @type {Element[]} */
+            var elemArray = jqPanels.toArray();
+
+            setTimeout(executeAllAsync, 0, elemArray, 0, executeOnEachPanel);
+        }
+
+        /**
+        * @param {string} [category] Optional bootstrap panel context class (danger, warning, info, success)
+        * @param {executeForElement} executeOnEachPanel
+        */
+        function panelBodyAll(category, executeOnEachPanelBody) {
+            var selector = "div.panel";
+            if (typeof category === "string" && category) {
+                selector += "-" + category;
+            }
+
+            var jqPanels = $(selector);
+
+            var jqPanelBodies = $("div.panel-body", jqPanels);
+            /** @type {Element[]} */
+            var elemArray = jqPanelBodies.toArray();
+
+            setTimeout(executeAllAsync, 0, elemArray, 0, executeOnEachPanelBody);
+        }
+
+        /**
+        * @param {string} [category] Optional bootstrap panel context class (danger, warning, info, success)
+        */
+        function showAll(category) {
+            wholePanelAll(category, executeShowOnElement);
+        }
+
+        /**
+        * @param {string} [category] Optional bootstrap panel context class (danger, warning, info, success)
+        */
+        function hideAll(category) {
+            wholePanelAll(category, executeHideOnElement);
+        }
+
+        /**
+        * @param {string} [category] Optional bootstrap panel context class (danger, warning, info, success)
+        */
+        function expandAll(category) {
+            panelBodyAll(category, executeExpandOnElement);
+        }
+
+        /**
+        * @param {string} [category] Optional bootstrap panel context class (danger, warning, info, success)
+        */
+        function collapseAll(category) {
+            panelBodyAll(category, executeCollapseOnElement);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Testament Test Results <small>Nim Tester</small></h1>
+        <dl class="dl-horizontal">
+            <dt>Hostname</dt>
+            <dd>fv-az128-11</dd>
+            <dt>Git Commit</dt>
+            <dd><code>348182e717a</code></dd>
+            <dt title="Git Branch reference">Branch ref.</dt>
+            <dd>master</dd>
+        </dl>
+        <dl class="dl-horizontal">
+            <dt>All Tests</dt>
+            <dd>
+                <span class="glyphicon glyphicon-th-list"></span>
+                66
+            </dd>
+            <dt>Successful Tests</dt>
+            <dd>
+                <span class="glyphicon glyphicon-ok-sign"></span>
+                66 (100.00%)
+            </dd>
+            <dt>Skipped Tests</dt>
+            <dd>
+                <span class="glyphicon glyphicon-question-sign"></span>
+                0 (0.00%)
+            </dd>
+            <dt>Failed Tests</dt>
+            <dd>
+                <span class="glyphicon glyphicon-exclamation-sign"></span>
+                0 (0.00%)
+            </dd>
+        </dl>
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <tr>
+                    <th class="text-right" style="vertical-align:middle">All Tests</th>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-default" type="button" onclick="showAll();">Show All</button>
+                            <button class="btn btn-default" type="button" onclick="hideAll();">Hide All</button>
+                            <button class="btn btn-default" type="button" onclick="expandAll();">Expand All</button>
+                            <button class="btn btn-default" type="button" onclick="collapseAll();">Collapse All</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-right" style="vertical-align:middle">Successful Tests</th>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-default" type="button" onclick="showAll('success');">Show All</button>
+                            <button class="btn btn-default" type="button" onclick="hideAll('success');">Hide All</button>
+                            <button class="btn btn-default" type="button" onclick="expandAll('success');">Expand All</button>
+                            <button class="btn btn-default" type="button" onclick="collapseAll('success');">Collapse All</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-right" style="vertical-align:middle">Skipped Tests</th>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-default" type="button" onclick="showAll('info');">Show All</button>
+                            <button class="btn btn-default" type="button" onclick="hideAll('info');">Hide All</button>
+                            <button class="btn btn-default" type="button" onclick="expandAll('info');">Expand All</button>
+                            <button class="btn btn-default" type="button" onclick="collapseAll('info');">Collapse All</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-right" style="vertical-align:middle">Failed Tests</th>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-default" type="button" onclick="showAll('danger');">Show All</button>
+                            <button class="btn btn-default" type="button" onclick="hideAll('danger');">Hide All</button>
+                            <button class="btn btn-default" type="button" onclick="expandAll('danger');">Expand All</button>
+                            <button class="btn btn-default" type="button" onclick="collapseAll('danger');">Collapse All</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="panel-group">
+            <div id="panel-testResult-deserialize_tests_deserialize_flat_rename_all_des_tlevels_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_flat_rename_all_des_tlevels_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_flat_rename_all_des_tlevels_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/flat/rename_all/des/tlevels.nim C"><code class="text-success">tests/deserialize/flat/rename_all/des/tlevels.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_flat_rename_all_des_tlevels_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/flat/rename_all/des/tlevels.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_flat_rename_all_des_tlevels_replace_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_flat_rename_all_des_tlevels_replace_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_flat_rename_all_des_tlevels_replace_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/flat/rename_all/des/tlevels_replace.nim C"><code class="text-success">tests/deserialize/flat/rename_all/des/tlevels_replace.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_flat_rename_all_des_tlevels_replace_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/flat/rename_all/des/tlevels_replace.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_flat_rename_all_ser_tlevels_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_flat_rename_all_ser_tlevels_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_flat_rename_all_ser_tlevels_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/flat/rename_all/ser/tlevels.nim C"><code class="text-success">tests/deserialize/flat/rename_all/ser/tlevels.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_flat_rename_all_ser_tlevels_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/flat/rename_all/ser/tlevels.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_flat_rename_all_ser_tlevels_replace_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_flat_rename_all_ser_tlevels_replace_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_flat_rename_all_ser_tlevels_replace_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/flat/rename_all/ser/tlevels_replace.nim C"><code class="text-success">tests/deserialize/flat/rename_all/ser/tlevels_replace.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_flat_rename_all_ser_tlevels_replace_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/flat/rename_all/ser/tlevels_replace.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_flat_tmany_levels_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_flat_tmany_levels_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_flat_tmany_levels_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/flat/tmany_levels.nim C"><code class="text-success">tests/deserialize/flat/tmany_levels.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_flat_tmany_levels_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/flat/tmany_levels.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_flat_tref_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_flat_tref_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_flat_tref_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/flat/tref.nim C"><code class="text-success">tests/deserialize/flat/tref.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_flat_tref_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/flat/tref.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_flat_tsimple_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_flat_tsimple_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_flat_tsimple_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/flat/tsimple.nim C"><code class="text-success">tests/deserialize/flat/tsimple.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_flat_tsimple_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/flat/tsimple.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_flat_with_tlevels_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_flat_with_tlevels_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_flat_with_tlevels_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/flat/with/tlevels.nim C"><code class="text-success">tests/deserialize/flat/with/tlevels.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_flat_with_tlevels_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/flat/with/tlevels.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_flat_with_tlevels_replace_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_flat_with_tlevels_replace_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_flat_with_tlevels_replace_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/flat/with/tlevels_replace.nim C"><code class="text-success">tests/deserialize/flat/with/tlevels_replace.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_flat_with_tlevels_replace_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/flat/with/tlevels_replace.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_tempty_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_tempty_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_tempty_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename/tempty.nim C"><code class="text-success">tests/deserialize/rename/tempty.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_tempty_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename/tempty.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_tsimple_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_tsimple_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_tsimple_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename/tsimple.nim C"><code class="text-success">tests/deserialize/rename/tsimple.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_tsimple_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename/tsimple.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_des_tcamel_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tcamel_case_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tcamel_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/des/tcamel_case.nim C"><code class="text-success">tests/deserialize/rename_all/des/tcamel_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tcamel_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/des/tcamel_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_des_tkebab_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tkebab_case_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tkebab_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/des/tkebab_case.nim C"><code class="text-success">tests/deserialize/rename_all/des/tkebab_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tkebab_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/des/tkebab_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_des_tnothing_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tnothing_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tnothing_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/des/tnothing.nim C"><code class="text-success">tests/deserialize/rename_all/des/tnothing.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tnothing_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/des/tnothing.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_des_tpascal_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tpascal_case_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tpascal_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/des/tpascal_case.nim C"><code class="text-success">tests/deserialize/rename_all/des/tpascal_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tpascal_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/des/tpascal_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_des_tsnake_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tsnake_case_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tsnake_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/des/tsnake_case.nim C"><code class="text-success">tests/deserialize/rename_all/des/tsnake_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tsnake_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/des/tsnake_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_des_tupper_kebab_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tupper_kebab_case_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tupper_kebab_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/des/tupper_kebab_case.nim C"><code class="text-success">tests/deserialize/rename_all/des/tupper_kebab_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tupper_kebab_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/des/tupper_kebab_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_des_tupper_snake_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tupper_snake_case_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tupper_snake_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/des/tupper_snake_case.nim C"><code class="text-success">tests/deserialize/rename_all/des/tupper_snake_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_des_tupper_snake_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/des/tupper_snake_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_ser_tcamel_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tcamel_case_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tcamel_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/ser/tcamel_case.nim C"><code class="text-success">tests/deserialize/rename_all/ser/tcamel_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tcamel_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/ser/tcamel_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_ser_tkebab_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tkebab_case_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tkebab_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/ser/tkebab_case.nim C"><code class="text-success">tests/deserialize/rename_all/ser/tkebab_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tkebab_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/ser/tkebab_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_ser_tnothing_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tnothing_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tnothing_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/ser/tnothing.nim C"><code class="text-success">tests/deserialize/rename_all/ser/tnothing.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tnothing_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/ser/tnothing.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_ser_tpascal_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tpascal_case_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tpascal_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/ser/tpascal_case.nim C"><code class="text-success">tests/deserialize/rename_all/ser/tpascal_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tpascal_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/ser/tpascal_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_ser_tsnake_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tsnake_case_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tsnake_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/ser/tsnake_case.nim C"><code class="text-success">tests/deserialize/rename_all/ser/tsnake_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tsnake_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/ser/tsnake_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_ser_tupper_kebab_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tupper_kebab_case_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tupper_kebab_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/ser/tupper_kebab_case.nim C"><code class="text-success">tests/deserialize/rename_all/ser/tupper_kebab_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tupper_kebab_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/ser/tupper_kebab_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_rename_all_ser_tupper_snake_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tupper_snake_case_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tupper_snake_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/rename_all/ser/tupper_snake_case.nim C"><code class="text-success">tests/deserialize/rename_all/ser/tupper_snake_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_rename_all_ser_tupper_snake_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/rename_all/ser/tupper_snake_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_skip_tskip_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_skip_tskip_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_skip_tskip_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/skip/tskip.nim C"><code class="text-success">tests/deserialize/skip/tskip.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_skip_tskip_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/skip/tskip.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_skip_tskip_deserializing_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_skip_tskip_deserializing_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_skip_tskip_deserializing_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/skip/tskip_deserializing.nim C"><code class="text-success">tests/deserialize/skip/tskip_deserializing.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_skip_tskip_deserializing_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/skip/tskip_deserializing.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_skip_tskip_serializing_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_skip_tskip_serializing_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_skip_tskip_serializing_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/skip/tskip_serializing.nim C"><code class="text-success">tests/deserialize/skip/tskip_serializing.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_skip_tskip_serializing_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/skip/tskip_serializing.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_tcomplex_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_tcomplex_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_tcomplex_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/tcomplex.nim C"><code class="text-success">tests/deserialize/tcomplex.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_tcomplex_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/tcomplex.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_tref_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_tref_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_tref_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/tref.nim C"><code class="text-success">tests/deserialize/tref.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_tref_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/tref.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_tsimple_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_tsimple_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_tsimple_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/tsimple.nim C"><code class="text-success">tests/deserialize/tsimple.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_tsimple_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/tsimple.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_with_terror_type_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_with_terror_type_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_with_terror_type_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/with/terror_type.nim C"><code class="text-success">tests/deserialize/with/terror_type.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_with_terror_type_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/with/terror_type.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_with_tobject_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_with_tobject_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_with_tobject_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/with/tobject.nim C"><code class="text-success">tests/deserialize/with/tobject.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_with_tobject_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/with/tobject.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-deserialize_tests_deserialize_with_tsimple_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-deserialize_tests_deserialize_with_tsimple_nim_C" aria-controls="panel-body-testResult-deserialize_tests_deserialize_with_tsimple_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/deserialize/with/tsimple.nim C"><code class="text-success">tests/deserialize/with/tsimple.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">deserialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-deserialize_tests_deserialize_with_tsimple_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/deserialize/with/tsimple.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">deserialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_flat_rename_all_tlevels_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_flat_rename_all_tlevels_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_flat_rename_all_tlevels_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/flat/rename_all/tlevels.nim C"><code class="text-success">tests/serialize/flat/rename_all/tlevels.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_flat_rename_all_tlevels_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/flat/rename_all/tlevels.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_flat_rename_all_tlevels_replace_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_flat_rename_all_tlevels_replace_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_flat_rename_all_tlevels_replace_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/flat/rename_all/tlevels_replace.nim C"><code class="text-success">tests/serialize/flat/rename_all/tlevels_replace.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_flat_rename_all_tlevels_replace_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/flat/rename_all/tlevels_replace.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_flat_skip_serialize_if_tlevels_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_flat_skip_serialize_if_tlevels_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_flat_skip_serialize_if_tlevels_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/flat/skip_serialize_if/tlevels.nim C"><code class="text-success">tests/serialize/flat/skip_serialize_if/tlevels.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_flat_skip_serialize_if_tlevels_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/flat/skip_serialize_if/tlevels.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_flat_skip_serialize_if_tlevels_replace_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_flat_skip_serialize_if_tlevels_replace_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_flat_skip_serialize_if_tlevels_replace_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/flat/skip_serialize_if/tlevels_replace.nim C"><code class="text-success">tests/serialize/flat/skip_serialize_if/tlevels_replace.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_flat_skip_serialize_if_tlevels_replace_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/flat/skip_serialize_if/tlevels_replace.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_flat_tmany_levels_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_flat_tmany_levels_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_flat_tmany_levels_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/flat/tmany_levels.nim C"><code class="text-success">tests/serialize/flat/tmany_levels.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_flat_tmany_levels_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/flat/tmany_levels.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_flat_tref_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_flat_tref_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_flat_tref_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/flat/tref.nim C"><code class="text-success">tests/serialize/flat/tref.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_flat_tref_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/flat/tref.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_flat_tsimple_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_flat_tsimple_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_flat_tsimple_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/flat/tsimple.nim C"><code class="text-success">tests/serialize/flat/tsimple.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_flat_tsimple_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/flat/tsimple.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_flat_with_tlevels_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_flat_with_tlevels_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_flat_with_tlevels_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/flat/with/tlevels.nim C"><code class="text-success">tests/serialize/flat/with/tlevels.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_flat_with_tlevels_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/flat/with/tlevels.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_flat_with_tlevels_replace_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_flat_with_tlevels_replace_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_flat_with_tlevels_replace_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/flat/with/tlevels_replace.nim C"><code class="text-success">tests/serialize/flat/with/tlevels_replace.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_flat_with_tlevels_replace_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/flat/with/tlevels_replace.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_rename_tempty_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_rename_tempty_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_rename_tempty_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/rename/tempty.nim C"><code class="text-success">tests/serialize/rename/tempty.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_rename_tempty_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/rename/tempty.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_rename_tsimple_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_rename_tsimple_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_rename_tsimple_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/rename/tsimple.nim C"><code class="text-success">tests/serialize/rename/tsimple.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_rename_tsimple_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/rename/tsimple.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_rename_all_tcamel_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_rename_all_tcamel_case_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_rename_all_tcamel_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/rename_all/tcamel_case.nim C"><code class="text-success">tests/serialize/rename_all/tcamel_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_rename_all_tcamel_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/rename_all/tcamel_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_rename_all_tkebab_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_rename_all_tkebab_case_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_rename_all_tkebab_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/rename_all/tkebab_case.nim C"><code class="text-success">tests/serialize/rename_all/tkebab_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_rename_all_tkebab_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/rename_all/tkebab_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_rename_all_tnothing_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_rename_all_tnothing_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_rename_all_tnothing_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/rename_all/tnothing.nim C"><code class="text-success">tests/serialize/rename_all/tnothing.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_rename_all_tnothing_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/rename_all/tnothing.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_rename_all_tpascal_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_rename_all_tpascal_case_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_rename_all_tpascal_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/rename_all/tpascal_case.nim C"><code class="text-success">tests/serialize/rename_all/tpascal_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_rename_all_tpascal_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/rename_all/tpascal_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_rename_all_tsnake_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_rename_all_tsnake_case_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_rename_all_tsnake_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/rename_all/tsnake_case.nim C"><code class="text-success">tests/serialize/rename_all/tsnake_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_rename_all_tsnake_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/rename_all/tsnake_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_rename_all_tupper_kebab_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_rename_all_tupper_kebab_case_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_rename_all_tupper_kebab_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/rename_all/tupper_kebab_case.nim C"><code class="text-success">tests/serialize/rename_all/tupper_kebab_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_rename_all_tupper_kebab_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/rename_all/tupper_kebab_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_rename_all_tupper_snake_case_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_rename_all_tupper_snake_case_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_rename_all_tupper_snake_case_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/rename_all/tupper_snake_case.nim C"><code class="text-success">tests/serialize/rename_all/tupper_snake_case.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_rename_all_tupper_snake_case_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/rename_all/tupper_snake_case.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_skip_skip_serialize_if_tcomplex_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_tcomplex_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_tcomplex_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/skip/skip_serialize_if/tcomplex.nim C"><code class="text-success">tests/serialize/skip/skip_serialize_if/tcomplex.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_tcomplex_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/skip/skip_serialize_if/tcomplex.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_skip_skip_serialize_if_terror_type_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_terror_type_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_terror_type_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/skip/skip_serialize_if/terror_type.nim C"><code class="text-success">tests/serialize/skip/skip_serialize_if/terror_type.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_terror_type_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/skip/skip_serialize_if/terror_type.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_skip_skip_serialize_if_tgeneric_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_tgeneric_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_tgeneric_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/skip/skip_serialize_if/tgeneric.nim C"><code class="text-success">tests/serialize/skip/skip_serialize_if/tgeneric.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_tgeneric_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/skip/skip_serialize_if/tgeneric.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_skip_skip_serialize_if_tobject_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_tobject_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_tobject_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/skip/skip_serialize_if/tobject.nim C"><code class="text-success">tests/serialize/skip/skip_serialize_if/tobject.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_tobject_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/skip/skip_serialize_if/tobject.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_skip_skip_serialize_if_tsimple_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_tsimple_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_tsimple_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/skip/skip_serialize_if/tsimple.nim C"><code class="text-success">tests/serialize/skip/skip_serialize_if/tsimple.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_skip_skip_serialize_if_tsimple_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/skip/skip_serialize_if/tsimple.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_skip_tskip_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_skip_tskip_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_skip_tskip_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/skip/tskip.nim C"><code class="text-success">tests/serialize/skip/tskip.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_skip_tskip_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/skip/tskip.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_skip_tskip_deserializing_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_skip_tskip_deserializing_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_skip_tskip_deserializing_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/skip/tskip_deserializing.nim C"><code class="text-success">tests/serialize/skip/tskip_deserializing.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_skip_tskip_deserializing_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/skip/tskip_deserializing.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_skip_tskip_serializing_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_skip_tskip_serializing_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_skip_tskip_serializing_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/skip/tskip_serializing.nim C"><code class="text-success">tests/serialize/skip/tskip_serializing.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_skip_tskip_serializing_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/skip/tskip_serializing.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_tcomplex_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_tcomplex_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_tcomplex_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/tcomplex.nim C"><code class="text-success">tests/serialize/tcomplex.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_tcomplex_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/tcomplex.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_tref_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_tref_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_tref_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/tref.nim C"><code class="text-success">tests/serialize/tref.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_tref_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/tref.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_tsimple_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_tsimple_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_tsimple_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/tsimple.nim C"><code class="text-success">tests/serialize/tsimple.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_tsimple_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/tsimple.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_with_terror_type_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_with_terror_type_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_with_terror_type_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/with/terror_type.nim C"><code class="text-success">tests/serialize/with/terror_type.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_with_terror_type_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/with/terror_type.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_with_tobject_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_with_tobject_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_with_tobject_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/with/tobject.nim C"><code class="text-success">tests/serialize/with/tobject.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_with_tobject_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/with/tobject.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+            <div id="panel-testResult-serialize_tests_serialize_with_tsimple_nim_C" class="panel panel-success">
+                <div class="panel-heading" style="cursor:pointer" data-toggle="collapse" data-target="#panel-body-testResult-serialize_tests_serialize_with_tsimple_nim_C" aria-controls="panel-body-testResult-serialize_tests_serialize_with_tsimple_nim_C" aria-expanded="false">
+                    <div class="row">
+                        <h4 class="col-xs-3 col-sm-1 panel-title">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            <strong>PASS</strong>
+                        </h4>
+                        <h4 class="col-xs-1 panel-title"><span class="badge">C</span></h4>
+                        <h4 class="col-xs-5 col-sm-7 panel-title" title="tests/serialize/with/tsimple.nim C"><code class="text-success">tests/serialize/with/tsimple.nim C</code></h4>
+                        <h4 class="col-xs-3 col-sm-3 panel-title text-right"><span class="badge">serialize</span></h4>
+                    </div>
+                </div>
+                <div id="panel-body-testResult-serialize_tests_serialize_with_tsimple_nim_C" class="panel-body collapse bg-success">
+                    <dl class="dl-horizontal">
+                        <dt>Name</dt>
+                        <dd><code class="text-success">tests/serialize/with/tsimple.nim C</code></dd>
+                        <dt>Category</dt>
+                        <dd><span class="badge">serialize</span></dd>
+                        <dt>Timestamp</dt>
+                        <dd>unknown</dd>
+                        <dt>Nim Action</dt>
+                        <dd><code class="text-success">run</code></dd>
+                        <dt>Nim Backend Target</dt>
+                        <dd><span class="badge">C</span></dd>
+                        <dt>Code</dt>
+                        <dd><code class="text-success">reSuccess</code></dd>
+                    </dl>
+                    <p class="sr-only">No output details</p>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <footer>
+            <p>
+                Report generated by: <code>testament</code> &ndash; Nim Tester
+                <br />
+                Made with Nim. Generated on: 2020-12-12 19:14:24 UTC+00:00
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
