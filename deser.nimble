@@ -7,18 +7,18 @@ license       = "MIT"
 srcDir        = "src"
 skipDirs      = @["tests", "htmldocs"]
 
-
 # Dependencies
 
 requires "nim >= 1.4.2", "https://github.com/gabbhack/anycase-fork == 0.2.0"
+
+# Tasks
 
 task test, "Run tests":
   exec "nim check src/deser"
   exec "testament all"
 
 task docs, "Generate docs":
-  rmDir "htmldocs"
-  exec "nimble doc2 --outdir:htmldocs --project --index:on src/deser"
-  exec "nim rst2html -o:htmldocs/index.html README.rst"
+  rmDir "docs"
+  exec "nimble doc2 --outdir:docs --project --index:on src/deser"
   exec "testament html"
-  mvFile("testresults.html", "htmldocs/testresults.html")
+  mvFile("testresults.html", "docs/testresults.html")

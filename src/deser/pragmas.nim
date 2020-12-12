@@ -6,7 +6,7 @@ template rename*(ser = "", des = "") {.pragma.}  ##[
 
   Use this pragma to rename a field during serialization or deserialization.
 
-  Example:
+  **Example**:
   ```nim
   type
     Test = object
@@ -25,7 +25,7 @@ template renameAll*(ser: RenameKind = rkNothing, des: RenameKind = rkNothing) {.
 
   Use this pragma to rename all fields for the specified case.
 
-  Example:
+  **Example**:
   ```nim
   type
     Test {.renameAll(ser=rkSnakeCase, des=rkSnakeCase).} = object
@@ -47,11 +47,12 @@ template skipSerializeIf*(condition: typed{`proc`}) {.pragma.}  ##[
 
   When used on an object, the function will only be applied to fields of the appropriate type.
 
-  Example:
+  **Example**:
   ```nim
+  import options
+
   proc isZero(x: int) = x == 0
 
-  import options
   type
     Test {.skipSerializeIf(isNone).} = object
       someOption: Option[int]
@@ -64,7 +65,7 @@ template flat*() {.pragma.}  ##[
 
   Use this pragma to inlines keys from the field into the parent object.
 
-  Example:
+  **Example**:
   ```nim
   type
     Pagination = object
@@ -83,7 +84,7 @@ template skip*() {.pragma.}  ##[
 
   Use this pragma to skip the field during serialization and deserialization.
 
-  Example:
+  **Example**:
   ```nim
     type
       Test = object
@@ -96,7 +97,7 @@ template skipSerializing*() {.pragma.}  ##[
 
   Use this pragma to skip the field during serialization.
 
-  Example:
+  **Example**:
   ```nim
     type
       Test = object
@@ -109,7 +110,7 @@ template skipDeserializing*() {.pragma.}  ##[
 
   Use this pragma to skip the field during deserialization.
 
-  Example:
+  **Example**:
   ```nim
     type
       Test = object
@@ -125,7 +126,7 @@ template deserializeWith*(convert: typed{`proc`}) {.pragma.}  ##[
 
   When used on an object, the function will only be applied to fields of the appropriate type.
 
-  Example:
+  **Example**:
   ```nim
   import times
 
@@ -143,7 +144,7 @@ template serializeWith*(convert: typed{`proc`}) {.pragma.}  ##[
 
   When used on an object, the function will only be applied to fields of the appropriate type.
 
-  Example:
+  **Example**:
   ```nim
   import times
 
