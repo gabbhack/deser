@@ -98,8 +98,14 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple 
 
 template actualForDesFields*(key: untyped, value: untyped, inOb: var object | var tuple | ref, actions: untyped, flatRenameAll: RenameKind | tuple[] = (), flatDesWith: proc | tuple[] = ()) =
   ## for internal use only
+  when inOb is ref:
+    if inOb == nil:
+      new inOb
   for k, v in fieldPairs(checkedObj(inOb)):
     when not(v.hasCustomPragma(skip) or v.hasCustomPragma(skipDeserializing)):
+      when v is ref:
+        if v == nil:
+          new v
       # `flat` logic
       # recursively calling actualForDesFields
       when v is var object | var tuple | ref and v.hasCustomPragma(flat):
