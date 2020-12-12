@@ -21,20 +21,20 @@ type
 
 let t = Test(id: 321, text: "123")
 
-forSerFields(k, v, t):
-  echo v
+forSerFields(key, value, t):
+  echo value
 ```
 
 will be transformed at compile time into something like this:
 ```nim
 var isSkip`gensym1 = false
 if not isSkip`gensym1:
-  const k = "id"
+  const key = "id"
   echo t.id
 
 var isSkip`gensym2 = false
 if not isSkip`gensym2:
-  const k = "text"
+  const key = "text"
   echo t.text
 ```
 
