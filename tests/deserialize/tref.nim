@@ -16,7 +16,7 @@ type
     text: string
     foo: Foo
 
-var t: Test
+let t = new Test
 
 forDesFields key, value, t:
   echo key, " ", value.type

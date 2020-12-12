@@ -79,14 +79,14 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple 
           # `serializeWith` from field has a higher priority
           when v.hasCustomPragma(serializeWith):
             # instead of a silent skip, a compile-time error will be called if the types do not match
-            let value = hackType(v.getCustomPragmaVal(serializeWith)(v))
+            template value: untyped = hackType(v.getCustomPragmaVal(serializeWith)(v))
           elif type(inOb).hasCustomPragma(serializeWith) and compiles(hackType(getCustomPragmaVal(type(inOb), serializeWith)(v))):
             # will be silently skipped if the types don't match
-            let value = hackType(getCustomPragmaVal(type(inOb), serializeWith)(v))
+            template value: untyped = hackType(getCustomPragmaVal(type(inOb), serializeWith)(v))
           elif flatSerWith isnot tuple[]:
             # will be silently skipped if the types don't match
             when compiles(hackType(flatSerWith(v))):
-              let value = hackType(flatSerWith(v))
+              template value: untyped = hackType(flatSerWith(v))
             else:
               template value: untyped = v
           else:
@@ -96,14 +96,8 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple 
 
 template actualForDesFields*(key: untyped, value: untyped, inOb: var object | var tuple | ref, actions: untyped, flatRenameAll: RenameKind | tuple[] = (), flatDesWith: proc | tuple[] = ()) =
   ## for internal use only
-  when inOb is ref:
-    if inOb == nil:
-      new inOb
   for k, v in fieldPairs(checkedObj(inOb)):
     when not(v.hasCustomPragma(skip) or v.hasCustomPragma(skipDeserializing)):
-      when v is ref:
-        if v == nil:
-          new v
       # `flat` logic
       # recursively calling actualForDesFields
       when v is var object | var tuple | ref and v.hasCustomPragma(flat):
@@ -167,13 +161,13 @@ template actualForDesFields*(key: untyped, value: untyped, inOb: var object | va
         # step one
 
         when v.hasCustomPragma(deserializeWith):
-          var value: getFirstArgumentType(v.getCustomPragmaVal(deserializeWith))
+          var value {.noInit.}: getFirstArgumentType(v.getCustomPragmaVal(deserializeWith))
         # if `deserializeWith` from object
         # check that type of `deserializeWith` result equal to field type
         elif type(inOb).hasCustomPragma(deserializeWith) and safeCondition(v is getProcReturnType(getCustomPragmaVal(type(inOb), deserializeWith))):
-          var value: getFirstArgumentType(getCustomPragmaVal(type(inOb), deserializeWith))
+          var value {.noInit.}: getFirstArgumentType(getCustomPragmaVal(type(inOb), deserializeWith))
         elif flatDesWith isnot tuple[] and safeCondition(v is getProcReturnType(flatDesWith)):
-          var value: getFirstArgumentType(flatDesWith)
+          var value {.noInit.}: getFirstArgumentType(flatDesWith)
         else:
           template value: untyped = v
 
