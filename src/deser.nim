@@ -1,6 +1,8 @@
 ##[
 ``Deser`` is a deserialization and serealization library.
 
+``nimble install deser``
+
 Design
 ******
 
@@ -96,9 +98,28 @@ Fortunately, the standard library provides us `toUnix <https://nim-lang.org/docs
 
 Let's finally use them
 ```nim
+import deser
+
 type
   User = object
     created_at {.serializeWith(toUnix), deserializeWith(fromUnix).}: Time
+```
+
+Skip None values
+#################
+
+By default, some json serializers serialize ``None`` as ``null``. This meets the standard, but it doesn't always meet our expectations (because not all APIs respond correctly to null).
+
+You can skip serialization of None values using the `skipSerializeIf <deser/pragmas.html#skipSerializeIf.t>`_ pragma.
+``skipSerializeIf`` expects a function that takes a value with the field type and returns bool.
+```nim
+import options
+import deser
+
+type
+  Message = object
+    text {.skipSerializeIf(isNone).}: Option[string]
+    photo {.skipSerializeIf(isNone).}: Option[Photo]
 ```
 ]##
 
