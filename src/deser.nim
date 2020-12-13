@@ -1,10 +1,15 @@
 ##[
 ``Deser`` is a deserialization and serealization library.
 
+Installation
+******
 ``nimble install deser``
 
 Design
 ******
+
+``Deser`` is not limited to any data format, since it does not parse. 
+This is just a small layer between your objects and the specific implementation of the serializer.
 
 Efficiency
 #################
