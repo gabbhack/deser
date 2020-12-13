@@ -1,4 +1,4 @@
-import utils
+import utils, hacks, pragmas
 
 template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple | ref, actions: untyped, flatSkipSerIf: proc | tuple[] = (), flatRenameAll: RenameKind | tuple[] = (), flatSerWith: proc | tuple[] = ()) =
   ## for internal use only
