@@ -9,7 +9,7 @@ skipDirs      = @["tests", "htmldocs"]
 
 # Dependencies
 
-requires "nim >= 1.4.2", "https://github.com/gabbhack/anycase-fork == 0.2.0"
+requires "nim >= 1.4.2", "https://github.com/gabbhack/anycase-fork >= 0.2.0"
 
 # Tasks
 
