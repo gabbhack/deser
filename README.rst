@@ -6,4 +6,4 @@ Deser is a deserialization and serealization library.
 
 ``nimble install deser``
 
-`Documentation <https://gabbhack.github.io/deser/deser.html>`_
+`Documentation <https://deser.nim.town>`_
