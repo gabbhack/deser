@@ -6,5 +6,6 @@ Manual	deser.html#manual	 Manual
 Pragmas	deser.html#manual-pragmas	  Pragmas	
 Examples	deser.html#examples	 Examples	
 Convert timestamp to Time	deser.html#examples-convert-timestamp-to-time	  Convert timestamp to Time	
+Skip None values	deser.html#examples-skip-none-values	  Skip None values	
 forSerFields	deser.html#forSerFields.t,untyped,untyped,,untyped	deser: forSerFields(key: untyped; value: untyped; inOb: object | tuple | ref;\n             actions: untyped)	
 forDesFields	deser.html#forDesFields.t,untyped,untyped,,untyped	deser: forDesFields(key: untyped; value: untyped; inOb: var object | var tuple | ref;\n             actions: untyped)	
