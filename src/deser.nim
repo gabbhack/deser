@@ -45,7 +45,7 @@ if not isSkip`gensym2:
   echo t.text
 ```
 
-The compiler is smart enough to omit unused constants and skip the `isSkip` check. `isSkip` is needed to check `skipSerializeIf` at runtime.
+The compiler is smart enough to omit unused constants and skip the `isSkip` check. `isSkip` is needed to check `skipSerializeIf <deser/pragmas.html#skipSerializeIf.t>`_ at runtime.
 
 
 Easy to use
@@ -99,7 +99,7 @@ Fortunately, the standard library provides us `toUnix <https://nim-lang.org/docs
 
 ``toUnix`` accepts a Time object and returns int64, so we need this function for serialization. After all, the API only accepts timestamp, and we have to make `Time` again ``int64``.
 
-``fromUnix`` accepts int64 and returns the Time that is necessary for deserialization.
+``fromUnix`` accepts int64 and returns the ``Time`` that is necessary for deserialization.
 
 Let's finally use them
 ```nim
