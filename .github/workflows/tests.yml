@@ -5,7 +5,7 @@ on:
     branches:
       - master
     path-ignore:
-      - 'README.rst'
+      - 'README.md'
   release:
     types: [published]
 
