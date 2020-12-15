@@ -35,3 +35,10 @@ template checkedObj*(inOb: object | tuple | ref | var object | var tuple): untyp
     inOb[]
   else:
     inOb
+
+template tryFinally*(actions: untyped, final: untyped): untyped {.dirty.} =
+  ## for internal use only
+  try:
+    actions
+  finally:
+    final

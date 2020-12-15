@@ -158,27 +158,23 @@ template actualForDesFields*(key: untyped, value: untyped, inOb: var object | va
           1. Initialization of the variable that is given to the Deserializer, with the type that is expected in json
           2. Convert this variable using `deserializeWith` to the object field type
         ]#
-        # step one
 
         when v.hasCustomPragma(deserializeWith):
           var value {.noInit.}: getFirstArgumentType(v.getCustomPragmaVal(deserializeWith))
+          # inside "actions" can contain a "break", which will interrupt the execution of the loop and the assignment will not happen.
+          tryFinally(actions):
+            v = hackType(v.getCustomPragmaVal(deserializeWith)(value))
         # if `deserializeWith` from object
         # check that type of `deserializeWith` result equal to field type
         elif type(inOb).hasCustomPragma(deserializeWith) and safeCondition(v is getProcReturnType(getCustomPragmaVal(type(inOb), deserializeWith))):
           var value {.noInit.}: getFirstArgumentType(getCustomPragmaVal(type(inOb), deserializeWith))
+          tryFinally(actions):
+            v = hackType(getCustomPragmaVal(type(inOb), deserializeWith)(value))
         elif flatDesWith isnot tuple[] and safeCondition(v is getProcReturnType(flatDesWith)):
           var value {.noInit.}: getFirstArgumentType(flatDesWith)
+          tryFinally(actions):
+            v = hackType(flatDesWith(value))
         else:
           template value: untyped = v
-
-        actions
-
-        # step two
-        # `deserializeWith` from field has a higher priority
-        when v.hasCustomPragma(deserializeWith):
-          # instead of a silent skip, a compile-time error will be called if the types do not match
-          v = hackType(v.getCustomPragmaVal(deserializeWith)(value))
-        elif type(inOb).hasCustomPragma(deserializeWith) and safeCondition(v is getProcReturnType(getCustomPragmaVal(type(inOb), deserializeWith))):
-          v = hackType(getCustomPragmaVal(type(inOb), deserializeWith)(value))
-        elif flatDesWith isnot tuple[] and safeCondition(v is getProcReturnType(flatDesWith)):
-          v = hackType(flatDesWith(value))
+          # don't generate "try-finally" in the simple case for performance.
+          actions

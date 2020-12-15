@@ -15,6 +15,7 @@ requires "nim >= 1.4.2, https://github.com/gabbhack/anycase-fork >= 0.2.0"
 
 task test, "Run tests":
   exec "nim check src/deser"
+  exec "nimble install deser_json -y"
   exec "testament all"
 
 task docs, "Generate docs":
