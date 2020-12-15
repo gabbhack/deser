@@ -3,3 +3,4 @@ safeCondition	deser/hacks.html#safeCondition.t,untyped	hacks: safeCondition(x: u
 getFirstArgumentType	deser/hacks.html#getFirstArgumentType.m	hacks: getFirstArgumentType(f: typed{`proc`}): typedesc	
 getProcReturnType	deser/hacks.html#getProcReturnType.m	hacks: getProcReturnType(f: typed{`proc`}): typedesc	
 checkedObj	deser/hacks.html#checkedObj.t	hacks: checkedObj(inOb: object | tuple | ref | var object | var tuple): untyped	
+tryFinally	deser/hacks.html#tryFinally.t,untyped,untyped	hacks: tryFinally(actions: untyped; final: untyped): untyped	
