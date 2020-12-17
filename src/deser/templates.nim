@@ -25,12 +25,12 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object | tuple 
       # will be silently skipped if the types don't match
       when flatSkipSerIf isnot tuple[]:
         when compiles(hackType(flatSkipSerIf(v))):
-          isSkip = hackType(flatSkipSerIf(v)) or isSkip
+          isSkip = isSkip or hackType(flatSkipSerIf(v))
 
       # apply `skipSerializeIf` from current field
       # instead of a silent skip, a compile-time error will be called if the types do not match
       when v.hasCustomPragma(skipSerializeIf):
-        isSkip = hackType(getCustomPragmaVal(v, skipSerializeIf)(v)) or isSkip
+        isSkip = isSkip or hackType(getCustomPragmaVal(v, skipSerializeIf)(v))
 
       if not isSkip:
         # `flat` logic
