@@ -31,16 +31,16 @@ proc renamer*(x: string, rule: RenameKind): string {.compileTime.} =
   ## for internal use only
   case rule
   of rkCamelCase:
-      camel(x)
+    camel(x)
   of rkSnakeCase:
-      snake(x)
+    snake(x)
   of rkKebabCase:
-      kebab(x)
+    kebab(x)
   of rkPascalCase:
-      pascal(x)
+    pascal(x)
   of rkUpperSnakeCase:
-      upperSnake(x)
+    upperSnake(x)
   of rkUpperKebabCase:
-      cobol(x)
+    cobol(x)
   else:
-      x
+    x

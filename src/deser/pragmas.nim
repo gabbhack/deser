@@ -1,7 +1,7 @@
 import utils
 
 # ISSUE: https://github.com/nim-lang/Nim/issues/16158
-template rename*(ser = "", des = "") {.pragma.}  ##[
+template rename*(ser = "", des = "") {.pragma.} ##[
   **Only for fields**
 
   Use this pragma to rename a field during serialization or deserialization.
@@ -20,7 +20,7 @@ template rename*(ser = "", des = "") {.pragma.}  ##[
   ```
 ]##
 
-template renameAll*(ser: RenameKind = rkNothing, des: RenameKind = rkNothing) {.pragma.}  ##[
+template renameAll*(ser: RenameKind = rkNothing, des: RenameKind = rkNothing) {.pragma.} ##[
   **Only for objects**
 
   Use this pragma to rename all fields for the specified case.
@@ -39,7 +39,7 @@ template renameAll*(ser: RenameKind = rkNothing, des: RenameKind = rkNothing) {.
   ```
 ]##
 
-template skipSerializeIf*(condition: typed{`proc`}) {.pragma.}  ##[
+template skipSerializeIf*(condition: typed{`proc`}) {.pragma.} ##[
   **For fields and objects**
 
   Use this pragma to skip the field during serialization based on the runtime value.
@@ -60,7 +60,7 @@ template skipSerializeIf*(condition: typed{`proc`}) {.pragma.}  ##[
   ```
 ]##
 
-template flat*() {.pragma.}  ##[
+template flat*() {.pragma.} ##[
   **Only for fields**
 
   Use this pragma to inlines keys from the field into the parent object.
@@ -79,7 +79,7 @@ template flat*() {.pragma.}  ##[
   ```
 ]##
 
-template skip*() {.pragma.}  ##[
+template skip*() {.pragma.} ##[
   **Only for fields**
 
   Use this pragma to skip the field during serialization and deserialization.
@@ -92,7 +92,7 @@ template skip*() {.pragma.}  ##[
   ```
 ]##
 
-template skipSerializing*() {.pragma.}  ##[
+template skipSerializing*() {.pragma.} ##[
   **Only for fields**
 
   Use this pragma to skip the field during serialization.
@@ -105,7 +105,7 @@ template skipSerializing*() {.pragma.}  ##[
   ```
 ]##
 
-template skipDeserializing*() {.pragma.}  ##[
+template skipDeserializing*() {.pragma.} ##[
   **Only for fields**
 
   Use this pragma to skip the field during deserialization.
@@ -118,7 +118,7 @@ template skipDeserializing*() {.pragma.}  ##[
   ```
 ]##
 
-template deserializeWith*(convert: typed{`proc`}) {.pragma.}  ##[
+template deserializeWith*(convert: typed{`proc`}) {.pragma.} ##[
   **For fields and objects**
 
   Use this pragma to apply the passed function to the field during deserialization.
@@ -136,7 +136,7 @@ template deserializeWith*(convert: typed{`proc`}) {.pragma.}  ##[
   ```
 ]##
 
-template serializeWith*(convert: typed{`proc`}) {.pragma.}  ##[
+template serializeWith*(convert: typed{`proc`}) {.pragma.} ##[
   **For fields and objects**
 
   Use this pragma to apply the passed function to the field during serialization.

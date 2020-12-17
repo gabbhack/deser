@@ -28,7 +28,8 @@ macro getProcReturnType*(f: typed{`proc`}): typedesc =
   ## for internal use only
   f.getType[1]
 
-template checkedObj*(inOb: object | tuple | ref | var object | var tuple): untyped =
+template checkedObj*(inOb: object | tuple | ref | var object |
+    var tuple): untyped =
   ## for internal use only
   when inOb is ref:
     # ISSUE: https://github.com/nim-lang/Nim/issues/8456
