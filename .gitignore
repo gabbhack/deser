@@ -2,6 +2,7 @@ nimcache/
 nimblecache/
 htmldocs/
 testresults/
+docs/
 
 *.o
 !/icons/*.o
