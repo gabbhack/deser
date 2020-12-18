@@ -2,12 +2,10 @@ import utils, hacks, pragmas
 
 template actualForSerFields*(key: untyped, value: untyped, inOb: object |
     tuple | ref, actions: untyped, flatSkipSerIf: proc | tuple[] = (),
-    flatRenameAll: RenameKind | tuple[] = (), flatSerWith: proc | tuple[] = ()) =
+    flatRenameAll: RenameKind = rkNothing, flatSerWith: proc | tuple[] = ()) =
   ## for internal use only
   for k, v in fieldPairs(checkedObj(inOb)):
     when not(v.hasCustomPragma(skip) or v.hasCustomPragma(skipSerializing)):
-      var isSkip = false
-
       #[
         Skip logic
         Where can the conditions come from:
@@ -22,20 +20,25 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object |
 
       when type(inOb).hasCustomPragma(skipSerializeIf) and compiles(hackType(
           getCustomPragmaVal(type(inOb), skipSerializeIf)(v))):
-        isSkip = hackType(getCustomPragmaVal(type(inOb), skipSerializeIf)(v))
+        var isSkip = hackType(getCustomPragmaVal(type(inOb), skipSerializeIf)(v))
 
       # apply skipSerializeIf from parent object to `flat` child's field
       # will be silently skipped if the types don't match
-      when flatSkipSerIf isnot tuple[]:
-        when compiles(hackType(flatSkipSerIf(v))):
+      when flatSkipSerIf isnot tuple[] and compiles(hackType(flatSkipSerIf(v))):
+        when declared(isSkip):
           isSkip = isSkip or hackType(flatSkipSerIf(v))
+        else:
+          var isSkip = hackType(flatSkipSerIf(v))
 
       # apply `skipSerializeIf` from current field
       # instead of a silent skip, a compile-time error will be called if the types do not match
       when v.hasCustomPragma(skipSerializeIf):
-        isSkip = isSkip or hackType(getCustomPragmaVal(v, skipSerializeIf)(v))
+        when declared(isSkip):
+          isSkip = isSkip or hackType(getCustomPragmaVal(v, skipSerializeIf)(v))
+        else:
+          var isSkip = hackType(getCustomPragmaVal(v, skipSerializeIf)(v))
 
-      if not isSkip:
+      template body: untyped {.dirty.} =
         # `flat` logic
         # recursively calling actualForSerFields
         when v is object | tuple | ref and v.hasCustomPragma(flat):
@@ -75,7 +78,7 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object |
               inOb).getCustomPragmaVal(renameAll)[0] != rkNothing):
             const key = static(renamer(k, type(inOb).getCustomPragmaVal(
                 renameAll)[0]))
-          elif flatRenameAll isnot tuple[]:
+          elif flatRenameAll != rkNothing:
             # in the first place is `renameAll` from the last parent object, that is, the highest priority
             const key = static(renamer(k, flatRenameAll))
           else:
@@ -100,11 +103,17 @@ template actualForSerFields*(key: untyped, value: untyped, inOb: object |
               template value: untyped = v
           else:
             template value: untyped = v
-
           actions
 
+      # avoid generating an extra `isSkip` check
+      when declared(isSkip):
+        if not isSkip:
+          body()
+      else:
+        body()
+
 template actualForDesFields*(key: untyped, value: untyped, inOb: var object |
-    var tuple | ref, actions: untyped, flatRenameAll: RenameKind | tuple[] = (),
+    var tuple | ref, actions: untyped, flatRenameAll: RenameKind = rkNothing,
     flatDesWith: proc | tuple[] = ()) =
   ## for internal use only
   for k, v in fieldPairs(checkedObj(inOb)):
@@ -161,7 +170,7 @@ template actualForDesFields*(key: untyped, value: untyped, inOb: var object |
                 renameAll)[1]))
           else:
             const key = k
-        elif flatRenameAll isnot tuple[]:
+        elif flatRenameAll != rkNothing:
           # in the first place is `renameAll` from the last parent object, that is, the highest priority
           const key = static(renamer(k, flatRenameAll))
         else:
