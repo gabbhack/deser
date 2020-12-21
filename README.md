@@ -26,7 +26,8 @@ requires "nim >= 1.4.2, deser >= 0.1.3"
 ## Usage
 
 ```nim
-import macros, options, times
+import macros # https://deser.nim.town/deser.html#manual-limitations
+import options, times
 import deser, deser_json
 
 type
