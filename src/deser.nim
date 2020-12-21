@@ -8,7 +8,7 @@ Installation
 or
 
 ```nim
-requires "nim >= 1.4.2, deser >= 0.1.3"
+requires "nim >= 1.4.2, deser"
 ```
 
 Design
