@@ -163,6 +163,10 @@ function main() {
     <span class="Identifier">someVar</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">rename</span><span class="Punctuation">(</span><span class="StringLit">&quot;some_var&quot;</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
 </pre> </p>
 
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L4"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L4" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="renameAll.t,RenameKind,RenameKind"></a>
@@ -182,6 +186,10 @@ function main() {
     <span class="Identifier">someVar</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
 </pre> Look at the <a class="reference external" href="utils.html#RenameKind">available cases</a>. </p>
 
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L23"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L23" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="skipSerializeIf.t"></a>
@@ -203,6 +211,10 @@ function main() {
     <span class="Identifier">someInt</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializeIf</span><span class="Punctuation">(</span><span class="Identifier">isZero</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
 </pre> </p>
 
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L43"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L43" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="flat.t"></a>
@@ -246,6 +258,10 @@ function main() {
   <span class="Identifier">assert</span> <span class="Identifier">k</span> <span class="Operator">==</span> <span class="Identifier">thirdInt</span>
 </pre> </p>
 
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L66"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L66" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="skip.t"></a>
@@ -260,6 +276,10 @@ function main() {
     <span class="Identifier">alwaysSkip</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skip</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
 </pre> </p>
 
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L112"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L112" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="skipSerializing.t"></a>
@@ -274,6 +294,10 @@ function main() {
     <span class="Identifier">skipOnSerialization</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializing</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
 </pre> </p>
 
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L125"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L125" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="skipDeserializing.t"></a>
@@ -288,6 +312,10 @@ function main() {
     <span class="Identifier">skipOnDeserialization</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipDeserializing</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
 </pre> </p>
 
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L138"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L138" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="deserializeWith.t"></a>
@@ -306,6 +334,10 @@ function main() {
 </pre></p>
 <p><strong>Overhead</strong>: Generates a <tt class="docutils literal"><span class="pre">try-finally</span></tt> on all code inside <tt class="docutils literal"><span class="pre">forDesFields</span></tt>. </p>
 
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L151"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L151" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="serializeWith.t"></a>
@@ -323,6 +355,10 @@ function main() {
     <span class="Identifier">date</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">serializeWith</span><span class="Punctuation">(</span><span class="Identifier">toUnix</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Time</span>
 </pre> </p>
 
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L172"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L172" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 
@@ -335,7 +371,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-12-21 15:15:13 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-12-21 15:55:57 UTC</small>
       </div>
     </div>
   </div>
