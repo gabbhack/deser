@@ -78,13 +78,13 @@ function main() {
       <a href="../theindex.html">Index</a>
     </li>
     <li>
-      <a href="https://gabbhack.github.io/deser/deser.html">Main</a>
+      <a href="https://deser.nim.town/deser.html">Main</a>
     </li>
     <li>
       <a href="https://github.com/gabbhack/deser">GitHub</a>
     </li>
     <li>
-      <a href="https://gabbhack.github.io/deser/testresults.html">Test results</a>
+      <a href="https://deser.nim.town/testresults.html">Test results</a>
     </li>
     </ul>
   </div>
@@ -151,7 +151,7 @@ function main() {
 <dt><pre><span class="Keyword">template</span> <a href="#rename.t%2Cstring%2Cstring"><span class="Identifier">rename</span></a><span class="Other">(</span><span class="Identifier">ser</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">des</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-<p><strong>Only for fields</strong></p>
+<p><strong>Only for fields, compile-time</strong></p>
 <p>Use this pragma to rename a field during serialization or deserialization.</p>
 <p><strong>Example</strong>:</p>
 <p><pre class="listing"><span class="Keyword">type</span>
@@ -170,7 +170,7 @@ function main() {
     <span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-<p><strong>Only for objects</strong></p>
+<p><strong>Only for objects, compile-time</strong></p>
 <p>Use this pragma to rename all fields for the specified case.</p>
 <p><strong>Example</strong>:</p>
 <p><pre class="listing"><span class="Keyword">type</span>
@@ -180,7 +180,7 @@ function main() {
 <p><pre class="listing"><span class="Keyword">type</span>
   <span class="Identifier">Test</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">renameAll</span><span class="Punctuation">(</span><span class="Identifier">rkSnakeCase</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Keyword">object</span>
     <span class="Identifier">someVar</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
-</pre> </p>
+</pre> Look at the <a class="reference external" href="utils.html#RenameKind">available cases</a>. </p>
 
 
 </dd>
@@ -188,9 +188,10 @@ function main() {
 <dt><pre><span class="Keyword">template</span> <a href="#skipSerializeIf.t"><span class="Identifier">skipSerializeIf</span></a><span class="Other">(</span><span class="Identifier">condition</span><span class="Other">:</span> <span class="Identifier">typed</span><span class="Other">{</span><span class="Other">`</span><span class="Keyword">proc</span><span class="Other">`</span><span class="Other">}</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-<p><strong>For fields and objects</strong></p>
+<p><strong>For fields and objects, runtime</strong></p>
 <p>Use this pragma to skip the field during serialization based on the runtime value. You must specify a function that accepts an argument with the same type as the field, and return bool.</p>
 <p>When used on an object, the function will only be applied to fields of the appropriate type.</p>
+<p>If there are several matching <tt class="docutils literal"><span class="pre">skipSerializeIf</span></tt> (from the field, from the object, from the parent object), then <tt class="docutils literal"><span class="pre">deser</span></tt> will skip the field if at least one of them returns <tt class="docutils literal"><span class="pre">true</span></tt>.</p>
 <p><strong>Example</strong>:</p>
 <p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">options</span>
 
@@ -208,7 +209,7 @@ function main() {
 <dt><pre><span class="Keyword">template</span> <a href="#flat.t"><span class="Identifier">flat</span></a><span class="Other">(</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-<p><strong>Only for fields</strong></p>
+<p><strong>Only for fields, compile-time</strong></p>
 <p>Use this pragma to inlines keys from the field into the parent object.</p>
 <p><strong>Example</strong>:</p>
 <p><pre class="listing"><span class="Keyword">type</span>
@@ -220,6 +221,29 @@ function main() {
   <span class="Identifier">Users</span> <span class="Operator">=</span> <span class="Keyword">object</span>
     <span class="Identifier">users</span><span class="Punctuation">:</span> <span class="Identifier">seq</span><span class="Punctuation">[</span><span class="Identifier">User</span><span class="Punctuation">]</span>
     <span class="Identifier">pagination</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">flat</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Pagination</span>
+</pre></p>
+<p>The pragmas specified in the parent object will be applied to the fields of the child <tt class="docutils literal"><span class="pre">flat</span></tt> object. <tt class="docutils literal"><span class="pre">Deser</span></tt> applies pragmas from the parent object to the <tt class="docutils literal"><span class="pre">flat</span></tt> fields of the object at any nesting level, but such &quot;global&quot; pragmas <strong>can be overridden</strong>.</p>
+<p><pre class="listing"><span class="Keyword">proc</span> <span class="Identifier">isInt</span><span class="Punctuation">(</span><span class="Identifier">x</span><span class="Punctuation">:</span> <span class="Identifier">int</span><span class="Punctuation">)</span><span class="Punctuation">:</span> <span class="Identifier">bool</span> <span class="Operator">=</span> <span class="Identifier">true</span>
+<span class="Keyword">proc</span> <span class="Identifier">isFloat</span><span class="Punctuation">(</span><span class="Identifier">x</span><span class="Punctuation">:</span> <span class="Identifier">float</span><span class="Punctuation">)</span><span class="Punctuation">:</span> <span class="Identifier">bool</span> <span class="Operator">=</span> <span class="Identifier">true</span>
+
+<span class="Keyword">type</span>
+  <span class="Identifier">Fourth</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">fourthFloat</span><span class="Punctuation">:</span> <span class="Identifier">float</span> <span class="Comment"># skipped because of pragma from parent object</span>
+  <span class="Identifier">Third</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">thirdInt</span><span class="Punctuation">:</span> <span class="Identifier">int</span> <span class="Comment"># not skipped because it's not a float</span>
+    <span class="Identifier">fourth</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">flat</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Fourth</span> <span class="Comment"># Third object has no pragma, so pragma from Second object (isFloat) applied to Fourth's field</span>
+  <span class="Identifier">Second</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializeIf</span><span class="Punctuation">(</span><span class="Identifier">isFloat</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">secondInt</span><span class="Punctuation">:</span> <span class="Identifier">int</span> <span class="Comment"># skipped because of pragma from parent object</span>
+    <span class="Identifier">secondFloat</span><span class="Punctuation">:</span> <span class="Identifier">float</span> <span class="Comment"># skipped because of pragma from current object</span>
+    <span class="Identifier">third</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">flat</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Third</span> <span class="Comment"># pragma from current object (isFloat) applied to Third's fields</span>
+  <span class="Identifier">First</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializeIf</span><span class="Punctuation">(</span><span class="Identifier">isInt</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">first</span><span class="Punctuation">:</span> <span class="Identifier">int</span> <span class="Comment"># skipped because of pragma from current object</span>
+    <span class="Identifier">second</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">flat</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Second</span> <span class="Comment"># pragma from current object (isInt) applied to Second's fields</span>
+
+<span class="Keyword">let</span> <span class="Identifier">f</span> <span class="Operator">=</span> <span class="Identifier">First</span><span class="Punctuation">(</span><span class="Punctuation">)</span>
+
+<span class="Identifier">forSerFields</span><span class="Punctuation">(</span><span class="Identifier">k</span><span class="Punctuation">,</span> <span class="Identifier">v</span><span class="Punctuation">,</span> <span class="Identifier">f</span><span class="Punctuation">)</span><span class="Punctuation">:</span>
+  <span class="Identifier">assert</span> <span class="Identifier">k</span> <span class="Operator">==</span> <span class="Identifier">thirdInt</span>
 </pre> </p>
 
 
@@ -228,12 +252,12 @@ function main() {
 <dt><pre><span class="Keyword">template</span> <a href="#skip.t"><span class="Identifier">skip</span></a><span class="Other">(</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-<p><strong>Only for fields</strong></p>
+<p><strong>Only for fields, compile-time</strong></p>
 <p>Use this pragma to skip the field during serialization and deserialization.</p>
 <p><strong>Example</strong>:</p>
 <p><pre class="listing"><span class="Keyword">type</span>
-    <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-      <span class="Identifier">alwaysSkip</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skip</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
+  <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">alwaysSkip</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skip</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
 </pre> </p>
 
 
@@ -242,12 +266,12 @@ function main() {
 <dt><pre><span class="Keyword">template</span> <a href="#skipSerializing.t"><span class="Identifier">skipSerializing</span></a><span class="Other">(</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-<p><strong>Only for fields</strong></p>
+<p><strong>Only for fields, compile-time</strong></p>
 <p>Use this pragma to skip the field during serialization.</p>
 <p><strong>Example</strong>:</p>
 <p><pre class="listing"><span class="Keyword">type</span>
-    <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-      <span class="Identifier">skipOnSerialization</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializing</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
+  <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">skipOnSerialization</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializing</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
 </pre> </p>
 
 
@@ -256,12 +280,12 @@ function main() {
 <dt><pre><span class="Keyword">template</span> <a href="#skipDeserializing.t"><span class="Identifier">skipDeserializing</span></a><span class="Other">(</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-<p><strong>Only for fields</strong></p>
+<p><strong>Only for fields, compile-time</strong></p>
 <p>Use this pragma to skip the field during deserialization.</p>
 <p><strong>Example</strong>:</p>
 <p><pre class="listing"><span class="Keyword">type</span>
-    <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-      <span class="Identifier">skipOnDeserialization</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializing</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
+  <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">skipOnDeserialization</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipDeserializing</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
 </pre> </p>
 
 
@@ -270,7 +294,7 @@ function main() {
 <dt><pre><span class="Keyword">template</span> <a href="#deserializeWith.t"><span class="Identifier">deserializeWith</span></a><span class="Other">(</span><span class="Identifier">convert</span><span class="Other">:</span> <span class="Identifier">typed</span><span class="Other">{</span><span class="Other">`</span><span class="Keyword">proc</span><span class="Other">`</span><span class="Other">}</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-<p><strong>For fields and objects</strong></p>
+<p><strong>For fields and objects, runtime</strong></p>
 <p>Use this pragma to apply the passed function to the field during deserialization. Can be used to convert the original type to a field type.</p>
 <p>When used on an object, the function will only be applied to fields of the appropriate type.</p>
 <p><strong>Example</strong>:</p>
@@ -279,7 +303,8 @@ function main() {
 <span class="Keyword">type</span>
   <span class="Identifier">Message</span> <span class="Operator">=</span> <span class="Keyword">object</span>
     <span class="Identifier">date</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">deserializeWith</span><span class="Punctuation">(</span><span class="Identifier">fromUnix</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Time</span>
-</pre> </p>
+</pre></p>
+<p><strong>Overhead</strong>: Generates a <tt class="docutils literal"><span class="pre">try-finally</span></tt> on all code inside <tt class="docutils literal"><span class="pre">forDesFields</span></tt>. </p>
 
 
 </dd>
@@ -310,7 +335,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-12-15 16:35:09 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-12-21 14:51:23 UTC</small>
       </div>
     </div>
   </div>

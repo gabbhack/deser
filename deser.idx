@@ -1,12 +1,23 @@
 Installation	deser.html#installation	 Installation	
 Design	deser.html#design	 Design	
-Efficiency	deser.html#design-efficiency	  Efficiency	
+Efficient	deser.html#design-efficient	  Efficient	
 Easy to use	deser.html#design-easy-to-use	  Easy to use	
+I'm a user	deser.html#easy-to-use-i-m-a-user	   I'm a user	
+I'm a data format developer	deser.html#easy-to-use-i-m-a-data-format-developer	   I'm a data format developer	
 Functional	deser.html#design-functional	  Functional	
+Universal	deser.html#design-universal	  Universal	
 Manual	deser.html#manual	 Manual	
+Supported data formats	deser.html#manual-supported-data-formats	  Supported data formats	
 Pragmas	deser.html#manual-pragmas	  Pragmas	
+Pragmas prioritization	deser.html#pragmas-pragmas-prioritization	   Pragmas prioritization	
+Overhead	deser.html#manual-overhead	  Overhead	
+Pragmas with overhead	deser.html#overhead-pragmas-with-overhead	   Pragmas with overhead	
+Limitations	deser.html#manual-limitations	  Limitations	
 Examples	deser.html#examples	 Examples	
 Convert timestamp to Time	deser.html#examples-convert-timestamp-to-time	  Convert timestamp to Time	
-Skip None values	deser.html#examples-skip-none-values	  Skip None values	
+Skip fields	deser.html#examples-skip-fields	  Skip fields	
+Skip fields on serializing or/and deserializing	deser.html#skip-fields-skip-fields-on-serializing-orslashand-deserializing	   Skip fields on serializing or/and deserializing	
+Skip None values	deser.html#skip-fields-skip-none-values	   Skip None values	
+Object flattening	deser.html#examples-object-flattening	  Object flattening	
 forSerFields	deser.html#forSerFields.t,untyped,untyped,,untyped	deser: forSerFields(key: untyped; value: untyped; inOb: object | tuple | ref;\n             actions: untyped)	
 forDesFields	deser.html#forDesFields.t,untyped,untyped,,untyped	deser: forDesFields(key: untyped; value: untyped; inOb: var object | var tuple | ref;\n             actions: untyped)	
