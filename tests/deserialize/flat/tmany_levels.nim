@@ -19,7 +19,7 @@ type
   Bar = object
     id: int
     barOne {.flat.}: BarOne
-  
+
   Foo = object
     bar {.flat.}: Bar
 

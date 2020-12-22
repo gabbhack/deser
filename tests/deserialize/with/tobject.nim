@@ -19,4 +19,4 @@ forDesFields(k, v, f):
   v = 123
 
 assert f.created_at.toUnix == 123
-assert f.used_at .toUnix == 123
+assert f.used_at.toUnix == 123

@@ -8,7 +8,7 @@ import macros
 import deser
 
 type
-  TestToCamelCase {.renameAll(des=rkCamelCase).} = object
+  TestToCamelCase {.renameAll(des = rkCamelCase).} = object
     snake_case: int
     another_snake_case: int
 

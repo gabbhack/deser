@@ -11,7 +11,7 @@ import deser
 type
   Foo = object
     id {.rename("Id").}: int
-    text {.rename(des="TEXT").}: string
+    text {.rename(des = "TEXT").}: string
 
 let f = Foo()
 

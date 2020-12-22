@@ -15,7 +15,7 @@ type
     fourth {.flat.}: Fourth
   Second = object
     third {.flat.}: Third
-  First {.renameAll(des=rkSnakeCase).} = object
+  First {.renameAll(des = rkSnakeCase).} = object
     second {.flat.}: Second
 
 var f = First()

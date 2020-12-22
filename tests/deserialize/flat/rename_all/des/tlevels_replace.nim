@@ -12,12 +12,12 @@ import deser
 type
   Fourth = object
     fourthTime: int64
-  Third {.renameAll(des=rkUpperKebabCase).} = object
+  Third {.renameAll(des = rkUpperKebabCase).} = object
     thirdTime: int64
     fourth {.flat.}: Fourth
   Second = object
     third {.flat.}: Third
-  First {.renameAll(des=rkSnakeCase).} = object
+  First {.renameAll(des = rkSnakeCase).} = object
     firstElement: int64
     second {.flat.}: Second
 

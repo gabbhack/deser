@@ -8,7 +8,7 @@ import macros
 import deser
 
 type
-  TestToPascalCase {.renameAll(des=rkPascalCase).} = object
+  TestToPascalCase {.renameAll(des = rkPascalCase).} = object
     camelCase: int
     anotherCamelCase: int
 

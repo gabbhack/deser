@@ -1,5 +1,3 @@
-import strformat
-
 # Package
 
 version       = "0.1.4"
@@ -14,16 +12,25 @@ skipDirs      = @["tests", "htmldocs"]
 requires "nim >= 1.4.2, https://github.com/gabbhack/anycase-fork >= 0.2.0"
 
 # Tasks
+import strformat, strutils, sequtils
+
+proc recursiveListFiles(dir: string, l: var seq[string]) =
+  for i in listDirs(dir):
+    recursiveListFiles(i, l)
+
+  for i in listFiles(dir):
+    if i.endsWith(".nim"):
+      l.add(i)
+
+proc recursiveListFiles(dir: string): seq[string] =
+  recursiveListFiles(dir, result)
 
 task pretty, "Pretty source code":
-  echo "Pretty src\\deser"
-  exec "nimpretty src/deser --indent:2"
-  for i in listFiles("src/deser"):
+  for i in concat(recursiveListFiles(srcDir), recursiveListFiles("tests")):
     echo fmt"Pretty {i}"
     exec fmt"nimpretty {i} --indent:2"
 
 task test, "Run tests":
-  exec "nim check src/deser"
   exec "nimble install deser_json -y"
   exec "testament all"
 
