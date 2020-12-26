@@ -121,8 +121,12 @@ template actualForDesFields*(key: untyped, value: untyped, inOb: var object |
       # `flat` logic
       # recursively calling actualForDesFields
       when v is var object | var tuple | ref and v.hasCustomPragma(flat):
-        # `renameAll` and `serializeWith` are tuples itself
-        # so need to get only value that require for serialize
+        #[
+          `renameAll` and `serializeWith` are tuples itself
+
+          Behavior of `renameAll` during deserialization differs from that during serialization. 
+          Since you most often need to rename a field immediately for both serialization and deserialization, you just need to specify `renameAll` only for serialization.
+        ]#
         template checkedFlatRenameAll: untyped =
           when hasCustomPragma(type(inOb), renameAll):
             when getCustomPragmaVal(type(inOb), renameAll)[0] == rkNothing and
@@ -163,16 +167,15 @@ template actualForDesFields*(key: untyped, value: untyped, inOb: var object |
             const key = k
         elif type(inOb).hasCustomPragma(renameAll):
           when type(inOb).getCustomPragmaVal(renameAll)[0] != rkNothing:
-            const key = static(renamer(k, type(inOb).getCustomPragmaVal(
-                renameAll)[0]))
+            const key = renamer(k, type(inOb).getCustomPragmaVal(
+                renameAll)[0])
           elif type(inOb).getCustomPragmaVal(renameAll)[1] != rkNothing:
-            const key = static(renamer(k, type(inOb).getCustomPragmaVal(
-                renameAll)[1]))
+            const key = renamer(k, type(inOb).getCustomPragmaVal(
+                renameAll)[1])
           else:
             const key = k
         elif flatRenameAll != rkNothing:
-          # in the first place is `renameAll` from the last parent object, that is, the highest priority
-          const key = static(renamer(k, flatRenameAll))
+          const key = renamer(k, flatRenameAll)
         else:
           const key = k
 
