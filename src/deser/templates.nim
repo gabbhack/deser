@@ -202,5 +202,5 @@ template actualForDesFields*(key: untyped, value: untyped, inOb: var object |
             v = hackType(flatDesWith(value))
         else:
           template value: untyped = v
-          # don't generate "try-finally" in the simple case for performance.
+          # don't generate "try-finally" in the simple case for performance
           actions
