@@ -1,4 +1,55 @@
-import utils
+type
+  RenameKind* = enum
+    ##[
+    Variants of cases.
+
+    **rkNothing** - The default value in `renameAll <pragmas.html>`_. The name will not be changed.
+
+    **rkCamelCase** - Any to camelCase.
+
+    **rkSnakeCase** - Any to snake_case.
+
+    **rkKebabCase** - Any to kebab-case.
+
+    **rkPascalCase** - Any to PascalCase.
+
+    **rkUpperSnakeCase** - Any to SNAKE_CASE.
+
+    **rkUpperKebabCase** - Any to KEBAB-CASE
+    ]##
+    rkNothing,
+    rkCamelCase,
+    rkSnakeCase,
+    rkKebabCase,
+    rkPascalCase,
+    rkUpperSnakeCase,
+    rkUpperKebabCase
+
+template des*() {.pragma.} ##[
+**Only for objects, compile-time**
+
+Use this pragma to mark an object as deserializable.
+
+**Example**:
+```nim
+type
+  Test {.des.} = object
+    id: int
+```
+]##
+
+template ser*() {.pragma.} ##[
+**Only for objects, compile-time**
+
+Use this pragma to mark an object as serializable.
+
+**Example**:
+```nim
+type
+  Test {.ser.} = object
+    id: int
+```
+]##
 
 # ISSUE: https://github.com/nim-lang/Nim/issues/16158
 template rename*(ser = "", des = "") {.pragma.} ##[
@@ -109,6 +160,10 @@ forSerFields(k, v, f):
 ```
 ]##
 
+template untagged*() {.pragma.} ##[
+TODO
+]##
+
 template skip*() {.pragma.} ##[
 **Only for fields, compile-time**
 
@@ -185,4 +240,8 @@ type
   Message = object
     date {.serializeWith(toUnix).}: Time
 ```
+]##
+
+template withDefault*(convert: typed{`proc`}) {.pragma.} ##[
+#TODO
 ]##

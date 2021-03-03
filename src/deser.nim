@@ -303,49 +303,7 @@ type
 
 ]##
 
-import deser/[hacks, pragmas, templates, utils]
-export hacks, pragmas, templates, utils
-
-template forSerFields*(key: untyped, value: untyped, inOb: object | tuple | ref,
-    actions: untyped) =
-  ##[
-    Data format developers should use this during serialization instead of `fieldPairs <https://nim-lang.org/docs/iterators.html#fieldPairs.i%2CT>`_
-
-    In contrast to the `fieldPairs`, supports ref types.
-
-    **Limitations**:
-    Since this is just a template, you need to import the `macros <https://nim-lang.org/docs/macros.html>`_ module
-  ]##
-  runnableExamples:
-    import macros
-    import deser
-    type
-      Foo = object
-        id: int
-    let f = Foo(id: 123)
-    forSerFields(k, v, f):
-      echo k, " ", v
-  actualForSerFields(`key`, `value`, `inOb`, `actions`, (), rkNothing, ())
-
-template forDesFields*(key: untyped, value: untyped, inOb: var object |
-    var tuple | ref, actions: untyped) =
-  ##[
-    Data format developers should use this during deserialization instead of fieldPairs.
-
-    In contrast to the `fieldPairs`, supports ref types.
-
-    **Limitations**:
-    Since this is just a template, you need to import the `macros <https://nim-lang.org/docs/macros.html>`_ module
-  ]##
-  runnableExamples:
-    import macros
-    import deser
-    type
-      Foo = object
-        id: int
-    var f = Foo()
-    forDesFields(k, v, f):
-      echo k
-      v = 123
-    echo f.id
-  actualForDesFields(`key`, `value`, `inOb`, `actions`, rkNothing, ())
+import
+  options,
+  deser/[des, ser, pragmas, macro_utils, error]
+export des, ser, pragmas, macro_utils, error, options
