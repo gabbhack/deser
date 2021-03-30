@@ -2,7 +2,7 @@ discard """
   output: '''
 id Option[system.int]
 text Option[system.string]
-foo Option[tref.Foo]
+foo Option[tref_des.Foo]
   '''
 """
 import

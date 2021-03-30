@@ -2,7 +2,7 @@ discard """
   output: '''
 id Option[system.int] None[int]
 text Option[system.string] None[string]
-foo Option[tsimple.Foo] None[Foo]
+foo Option[tsimple_des.Foo] None[Foo]
   '''
 """
 import

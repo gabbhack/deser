@@ -31,7 +31,6 @@ task pretty, "Pretty source code":
     exec fmt"nimpretty {i} --indent:2"
 
 task test, "Run tests":
-  exec "nimble install deser_json -y"
   exec "testament all"
 
 task docs, "Generate docs":
