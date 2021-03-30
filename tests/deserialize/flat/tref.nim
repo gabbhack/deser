@@ -4,18 +4,20 @@ id
 text
   '''
 """
-import macros
 import deser
 
 type
-  Foo = ref object
+  Foo {.des.} = ref object
     text: string
-  Test = ref object
+  Test {.des.} = ref object
     id: int
     foo {.flat.}: Foo
 
 var t = new(Test)
 new(t.foo)
 
-forDesFields key, value, t:
-  echo key
+startDes(t[]):
+  forDes(k, v, t[]):
+    echo k
+    finish:
+      v = some(default(v.get.type))

@@ -1,13 +1,14 @@
-import macros
+
 import deser
 
 proc skipFloat(x: float): bool = true
 
 type
-  Test = object
+  Test {.ser.} = object
     id: int
     uselessInt {.skipSerializeIf(skipFloat).}: int
 
 let t = Test()
 
-assert not compiles(forSerFields(k, v, t))
+# TODO check error text
+assert not compiles(forSer(k, v, t))

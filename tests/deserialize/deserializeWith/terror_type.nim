@@ -1,4 +1,4 @@
-import macros, times
+import times
 import deser
 
 type
@@ -7,4 +7,5 @@ type
 
 var t = Test()
 
+# TODO check error text
 assert not compiles(forDesFields(k, v, t))

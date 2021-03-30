@@ -1,12 +1,11 @@
-# Actually testing `break` statement inside forDesFields
-
-import macros, options, times
+import times
 import deser, deser_json
 
 type
-  Foo {.skipSerializeIf(isNone), renameAll(rkSnakeCase).} = object
+  Foo {.des, ser, renameAll(rkSnakeCase), skipSerializeIf(isNone).} = object
     id: int
     someOption: Option[int]
+    test {.skip.}: int
     date {.serializeWith(toUnix), deserializeWith(fromUnix).}: Time
 
 const js = """
@@ -17,8 +16,10 @@ const js = """
   }
 """
 
-var f = js.parse().to(Foo)
+var f = Foo.fromJson(js)
+
+assert f.someOption.get == 321
 
 f.someOption = none(int)
 
-assert f.dumps() == """{"id":123,"date":1214092800}"""
+assert f.toJson() == """{"id":123,"date":1214092800}"""

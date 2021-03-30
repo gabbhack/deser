@@ -4,15 +4,18 @@ CamelCase
 AnotherCamelCase
   '''
 """
-import macros
+
 import deser
 
 type
-  TestToPascalCase {.renameAll(des = rkPascalCase).} = object
+  TestToPascalCase {.des, renameAll(des = rkPascalCase).} = object
     camelCase: int
     anotherCamelCase: int
 
-var tpc = TestToPascalCase()
+var t = TestToPascalCase()
 
-forDesFields key, value, tpc:
-  echo key
+startDes(t):
+  forDes(k, v, t):
+    echo k
+    finish:
+      v = some(default(v.get.type))

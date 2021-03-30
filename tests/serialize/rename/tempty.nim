@@ -1,11 +1,11 @@
-import macros
+
 import deser
 
 type
-  Foo = object
+  Foo {.ser.} = object
     id {.rename().}: int
 
 let f = Foo()
 
-forSerFields key, value, f:
+forSer key, value, f:
   assert key == "id"

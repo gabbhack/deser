@@ -5,25 +5,25 @@ kek
 lol
   '''
 """
-import macros
+
 import deser
 
 type
-  BarTwo = object
+  BarTwo {.ser.} = object
     lol: int
 
-  BarOne = object
+  BarOne {.ser.} = object
     kek: int
     barTwo {.flat.}: BarTwo
 
-  Bar = object
+  Bar {.ser.} = object
     id: int
     barOne {.flat.}: BarOne
 
-  Foo = object
+  Foo {.ser.} = object
     bar {.flat.}: Bar
 
 let f = Foo()
 
-forSerFields key, value, f:
+forSer key, value, f:
   echo key

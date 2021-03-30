@@ -5,18 +5,18 @@ text string
 foo Foo
   '''
 """
-import macros
+
 import deser
 
 type
-  Foo = ref object
+  Foo {.ser.} = ref object
     id: int
-  Test = ref object
+  Test {.ser.} = ref object
     id: int
     text: string
     foo: Foo
 
 let t = new(Test)
 
-forSerFields key, value, t:
+forSer key, value, t[]:
   echo key, " ", value.type

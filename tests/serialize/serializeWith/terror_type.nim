@@ -1,11 +1,12 @@
-import macros, times
+import times
 import deser
 
 type
-  Test = object
+  Test {.ser.} = object
     time {.serializeWith(toUnix).}: int
     text: string
 
 let t = Test(time: 123, text: "321")
 
-assert not compiles(forSerFields(k, v, t))
+# TODO check error text
+assert not compiles(forSer(k, v, t))

@@ -1,21 +1,22 @@
 discard """
   output: '''
-id int
-msg_text string
+id Option[system.int]
+msg_text Option[system.string]
 photo Option[system.string]
-TiMe int64
+TiMe Option[system.int64]
 SOME_OPTION Option[system.string]
-SOME_FOO string
+SOME_FOO Option[system.string]
   '''
 """
-import macros, options, times
-import deser
+import
+  times,
+  deser
 
 type
-  Foo {.renameAll(rkUpperSnakeCase).} = object
+  Foo {.des, renameAll(rkUpperSnakeCase).} = object
     someOption: Option[string]
     someFoo: string
-  Test {.renameAll(rkSnakeCase).} = object
+  Test {.des, renameAll(rkSnakeCase).} = object
     id: int
     msgText: string
     photo: Option[string]
@@ -24,5 +25,8 @@ type
 
 var t = Test()
 
-forDesFields key, value, t:
-  echo key, " ", value.type
+startDes t:
+  forDes key, value, t:
+    echo key, " ", value.type
+    finish:
+      value = some(default(value.get.type))

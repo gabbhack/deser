@@ -1,37 +1,48 @@
 import
   strformat,
-  pragmas, macro_utils
+  macro_utils
+
+proc genForSer(target, key, value: NimNode, fields: seq[FieldDescription],
+    actions: NimNode): NimNode
 
 proc genSkipIf(procIdent: NimNode, target: NimNode, actions: NimNode): NimNode =
   result = quote do:
     if not `procIdent`(`target`):
-      `actions `
+      `actions`
 
-proc genWhenSkipIf(procIdent: NimNode, target: NimNode, actions: NimNode): NimNode =
+proc genWhenSkipIf(procIdent: NimNode, target: NimNode,
+    actions: NimNode): NimNode =
+  let skipIf = genSkipIf(procIdent, target, actions)
   result = quote do:
     when compiles(`procIdent`(`target`)):
-      if not `procIdent`(`target`):
-        `actions `
+      `skipIf`
     else:
       `actions`
 
-proc addSerBlockActions(result: NimNode, target: NimNode, field: FieldDescription, keyVar: NimNode, valueVar: NimNode, actions: NimNode) =
-  let name = field.renamed(Operation.Ser)
-  let objSkipSerIf = field.skipSerializeIf
-  let skipSerIf = field.pragmas.findPragma(bindSym"skipSerializeIf")
-  let serWith = field.pragmas.findPragma(bindSym"serializeWith")
-  var tempStmt = newStmtList()
+proc genSerBlock(field: FieldDescription, target, key, value,
+    actions: NimNode): NimNode =
+  result = newStmtList()
+
+  let
+    name = field.renamed(Operation.Ser)
+    objSkipSerIf = field.skipSerializeIf
+    skipSerIf = field.getSkipSerIf()
+    serWith = field.getSerWith()
+    tempStmt = newStmtList()
+
   var tempTarget: NimNode
+
   if serWith.isNil:
     tempTarget = target
   else:
     let serWithProc = serWith[1]
     tempTarget = quote do:
       `serWithProc`(`target`)
+
   tempStmt.add quote do:
     block:
-      template `keyVar`: untyped = `name`
-      template `valueVar`: untyped = `tempTarget`
+      template `key`: untyped = `name`
+      template `value`: untyped = `tempTarget`
       `actions`
 
   if skipSerIf != nil:
@@ -43,50 +54,53 @@ proc addSerBlockActions(result: NimNode, target: NimNode, field: FieldDescriptio
   else:
     result.add tempStmt
 
-proc addForSer(result: NimNode, target: NimNode, keyVar: NimNode, valueVar: NimNode, fields: seq[FieldDescription], actions: NimNode) =
-  for field in fields:
-    if field.pragmas.findPragma(bindSym"skip") != nil or field.pragmas.findPragma(bindSym"skipSerializing") != nil:
-      continue
-    if field.isDiscriminator:
-      if field.pragmas.findPragma(bindSym"untagged").isNil:
-        result.addSerBlockActions(newDotExpr(target, field.name), field, keyVar, valueVar, actions)
-      let cases = field.getCases()
-      var caseStmt = nnkCaseStmt.newTree newDotExpr(target, field.name)
-      for c in cases:
-        var localStmt = newStmtList()
-        localStmt.addForSer(target, keyVar, valueVar, c.fields, actions)
-        case c.branch.kind
-        of nnkOfBranch:
-          caseStmt.add nnkOfBranch.newTree(c.branch[0], localStmt)
-        of nnkElse:
-          caseStmt.add nnkElse.newTree(localStmt)
-        else:
-          doAssert false
-      result.add caseStmt
+proc genCaseStmt(field: FieldDescription, target, key, value,
+    actions: NimNode): NimNode =
+  result = nnkCaseStmt.newTree newDotExpr(target, field.nameIdent)
+  let cases = field.getCases(Ser)
+
+  for c in cases:
+    var localStmt = genForSer(target, key, value, c.fields, actions)
+    case c.branch.kind
+    of nnkOfBranch:
+      result.add nnkOfBranch.newTree(c.branch[0], localStmt)
+    of nnkElse:
+      result.add nnkElse.newTree(localStmt)
     else:
-      if field.pragmas.findPragma(bindSym"flat").isNil:
-        result.addSerBlockActions(newDotExpr(target, field.name), field, keyVar, valueVar, actions)
-      else:
-        let typeDesc = typeDescription(field.typ.getImpl)
-        if typeDesc.pragmas.findPragma(bindSym"ser").isNil:
-          error(fmt"Type `{typeDesc.name}` does not have the `ser` pragma", typeDesc.name)
-        result.addForSer(newDotExpr(target, field.name), keyVar, valueVar, typeDescription(field.typ.getImpl).fields, actions)
+      doAssert false
 
-macro forSer*(keyVar: untyped, valueVar: untyped, target: typed, actions: untyped) =
+proc genForSer(target, key, value: NimNode, fields: seq[FieldDescription],
+    actions: NimNode): NimNode =
   result = newStmtList()
-  initTypeInst()
-  # not all types are serealizable, so we check for the presence of a pragma
-  if typeDesc.pragmas.findPragma(bindSym"ser").isNil:
-    error(fmt"Type `{$T}` does not have the `ser` pragma", T)
 
-  result.addForSer(target, keyVar, valueVar, typeDesc.fields, actions)
+  for field in fields:
+    if field.isDiscriminator:
+      if not field.isUntagged:
+        result.add genSerBlock(field, newDotExpr(target, field.nameIdent), key,
+            value, actions)
+      result.add genCaseStmt(field, target, key, value, actions)
+    else:
+      if field.isFlat:
+        let typeDesc = field.getTypeDesc(Ser)
+        result.add genForSer(newDotExpr(target, field.nameIdent), key, value,
+            typeDesc.fields(Ser), actions)
+      else:
+        result.add genSerBlock(field, newDotExpr(target, field.nameIdent), key,
+            value, actions)
+
+macro forSer*(key, value: untyped, target: typed, actions: untyped) =
+  result = newStmtList()
+
+  let
+    typeDesc = target.getTypeDesc(Ser)
+    fields = typeDesc.fields(Ser)
+
+  result.add genForSer(target, key, value, fields, actions)
+
   result = newStmtList(newBlockStmt(ident("serLoop"), result))
 
-  if defined(debugDeser):
-    echo "------------------------"
-    echo fmt"Debug serialize for `{$T}` type"
-    echo "------------------------"
-    echo "forSer:"
+  if defined(debug):
+    echo fmt"forSer for `{$typeDesc.name}` type:"
     echo "------------------------"
     echo result.toStrLit
     echo "------------------------"

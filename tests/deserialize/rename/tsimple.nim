@@ -5,16 +5,19 @@ TEXT
   '''
 """
 
-import macros
+
 import deser
 
 # `rename` has a special behavior during deserialization
 type
-  Foo = object
+  Foo {.des.} = object
     id {.rename("Id").}: int
     text {.rename(des = "TEXT").}: string
 
-var f = Foo()
+var t = Foo()
 
-forDesFields key, value, f:
-  echo key
+startDes(t):
+  forDes(k, v, t):
+    echo k
+    finish:
+      v = some(default(v.get.type))

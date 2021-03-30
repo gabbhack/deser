@@ -1,11 +1,13 @@
-import macros
 import deser
 
 type
-  Foo = object
-    id {.rename().}: int
+  Foo {.des.} = object
+    id {.des, rename().}: int
 
-var f = Foo()
+var t = Foo()
 
-forDesFields key, value, f:
-  assert key == "id"
+startDes(t):
+  forDes(k, v, t):
+    assert k == "id"
+    finish:
+      v = some(default(v.get.type))

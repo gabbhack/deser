@@ -1,22 +1,25 @@
 discard """
   output: '''
-id int 0
-text string 
-foo Foo (id: 0)
+id Option[system.int] None[int]
+text Option[system.string] None[string]
+foo Option[tsimple.Foo] None[Foo]
   '''
 """
-import macros
-import deser
+import
+  deser
 
 type
-  Foo = object
+  Foo {.des.} = object
     id: int
-  Test = object
+  Test {.des.} = object
     id: int
     text: string
     foo: Foo
 
 var t = Test()
 
-forDesFields key, value, t:
-  echo key, " ", value.type, " ", value
+startDes t:
+  forDes key, value, t:
+    echo key, " ", value.type, " ", value
+    finish:
+      value = some(default(value.get.type))

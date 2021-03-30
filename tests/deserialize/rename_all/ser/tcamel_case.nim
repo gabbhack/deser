@@ -4,15 +4,18 @@ snakeCase
 anotherSnakeCase
   '''
 """
-import macros
+
 import deser
 
 type
-  TestToCamelCase {.renameAll(rkCamelCase).} = object
+  TestToCamelCase {.des, renameAll(rkCamelCase).} = object
     snake_case: int
     another_snake_case: int
 
-var tcc = TestToCamelCase()
+var t = TestToCamelCase()
 
-forDesFields key, value, tcc:
-  echo key
+startDes(t):
+  forDes(k, v, t):
+    echo k
+    finish:
+      v = some(default(v.get.type))

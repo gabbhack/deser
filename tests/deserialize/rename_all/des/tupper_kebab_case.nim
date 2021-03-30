@@ -4,15 +4,18 @@ CAMEL-CASE
 ANOTHER-CAMEL-CASE
   '''
 """
-import macros
+
 import deser
 
 type
-  TestToUpperKebabCase {.renameAll(des = rkUpperKebabCase).} = object
+  TestToUpperKebabCase {.des, renameAll(des = rkUpperKebabCase).} = object
     camelCase: int
     anotherCamelCase: int
 
-var tukc = TestToUpperKebabCase()
+var t = TestToUpperKebabCase()
 
-forDesFields key, value, tukc:
-  echo key
+startDes(t):
+  forDes(k, v, t):
+    echo k
+    finish:
+      v = some(default(v.get.type))

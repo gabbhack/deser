@@ -5,16 +5,16 @@ discard """
 321
   '''
 """
-import macros, times
+import times
 import deser
 
 type
-  Foo {.serializeWith(toUnix).} = object
+  Foo {.ser.} = object
     id: int
-    created_at: Time
-    used_at: Time
+    created_at {.serializeWith(toUnix).}: Time
+    used_at {.serializeWith(toUnix).}: Time
 
 let f = Foo(id: 10, created_at: fromUnix(123), used_at: fromUnix(321))
 
-forSerFields(k, v, f):
+forSer(k, v, f):
   echo v

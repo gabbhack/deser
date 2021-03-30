@@ -5,25 +5,27 @@ kek
 lol
   '''
 """
-import macros
 import deser
 
 type
-  BarTwo = object
+  BarTwo {.des.} = object
     lol: int
 
-  BarOne = object
+  BarOne {.des.} = object
     kek: int
     barTwo {.flat.}: BarTwo
 
-  Bar = object
+  Bar {.des.} = object
     id: int
     barOne {.flat.}: BarOne
 
-  Foo = object
+  Foo {.des.} = object
     bar {.flat.}: Bar
 
-var f = Foo()
+var t = Foo()
 
-forDesFields key, value, f:
-  echo key
+startDes(t):
+  forDes(k, v, t):
+    echo k
+    finish:
+      v = some(default(v.get.type))

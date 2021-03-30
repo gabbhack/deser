@@ -4,15 +4,15 @@ camelCase
 anotherCamelCase
   '''
 """
-import macros
+
 import deser
 
 type
-  TestToKebabCase {.renameAll().} = object
+  TestToKebabCase {.ser, renameAll().} = object
     camelCase: int
     anotherCamelCase: int
 
 let tkc = TestToKebabCase()
 
-forSerFields key, value, tkc:
+forSer key, value, tkc:
   echo key

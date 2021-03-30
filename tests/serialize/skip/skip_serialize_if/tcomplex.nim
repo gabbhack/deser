@@ -4,13 +4,13 @@ someFloat
 kek
   '''
 """
-import macros, options
+import options
 import deser
 
 proc skipInt(x: int): bool = true
 
 type
-  Test {.skipSerializeIf(isNone).} = object
+  Test {.ser, skipSerializeIf(isNone).} = object
     id {.skipSerializeIf(skipInt).}: int
     someFloat: float
     text: Option[string]
@@ -18,5 +18,5 @@ type
 
 let t = Test()
 
-forSerFields key, value, t:
+forSer key, value, t:
   echo key

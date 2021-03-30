@@ -5,16 +5,19 @@ text
 usefull
   '''
 """
-import macros
+
 import deser
 
 type
-  Test = object
+  Test {.des.} = object
     id: int
     text: string
     usefull {.skipSerializing.}: string
 
 var t = Test()
 
-forDesFields(k, v, t):
-  echo k
+startDes(t):
+  forDes(k, v, t):
+    echo k
+    finish:
+      v = some(default(v.get.type))

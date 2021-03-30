@@ -4,15 +4,15 @@ discard """
 321
   '''
 """
-import macros, times
+import times
 import deser
 
 type
-  Test = object
+  Test {.ser.} = object
     time {.serializeWith(toUnix).}: Time
     text: string
 
 let t = Test(time: fromUnix(123), text: "321")
 
-forSerFields(k, v, t):
+forSer(k, v, t):
   echo v

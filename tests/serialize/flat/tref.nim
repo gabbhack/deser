@@ -4,18 +4,18 @@ id
 text
   '''
 """
-import macros
+
 import deser
 
 type
-  Foo = ref object
+  Foo {.ser.} = ref object
     text: string
-  Test = ref object
+  Test {.ser.} = ref object
     id: int
     foo {.flat.}: Foo
 
 var t = new(Test)
 new(t.foo)
 
-forSerFields key, value, t:
+forSer key, value, t[]:
   echo key

@@ -8,7 +8,7 @@ Installation
 or
 
 ```nim
-requires "nim >= 1.4.2, deser"
+requires "nim >= 1.4.4, deser"
 ```
 
 Design
@@ -16,35 +16,9 @@ Design
 
 Efficient
 #################
-`Deser` does not use reflection or type information at runtime. Instead, it uses the magic `fieldPairs <https://nim-lang.org/docs/iterators.html#fieldPairs.i%2CT>`_ iterator to get information about types at compile time.
-The resulting code is very close to the code written manually.
+`Deser` does not use reflection or type information at runtime. Instead, it uses Nim macros and templates to get information about types at compile-time.
 
-This code
-```nim
-import macros
-import deser
-
-type
-  Test = object
-    id: int
-    text: string
-
-let t = Test(id: 321, text: "123")
-
-forSerFields(key, value, t):
-  echo value
-```
-
-will be transformed at compile time into something like this:
-```nim
-const key`gensym1 = "id"
-echo t.id
-
-const key`gensym2 = "text"
-echo t.text
-```
-
-  Read more about `overhead <#manual-overhead>`_
+But not all the work can be done at compile-time, read more about `overhead <#manual-overhead>`_
 
 
 Easy to use
@@ -57,19 +31,21 @@ Set up the necessary `pragmas <#manual-pragmas>`_, take a third-party library (f
 
 I'm a data format developer
 ---------------
-Look at the example implementation in `deser_json <https://github.com/gabbhack/deser_json>`_, read about `forSerFields <#forSerFields.t%2Cuntyped%2Cuntyped%2C%2Cuntyped>`_ and `forDesFields <#forDesFields.t%2Cuntyped%2Cuntyped%2C%2Cuntyped>`_.
+Look at the example implementation in `deser_json <https://github.com/gabbhack/deser_json>`_, read about `startDes <deser/des.html#startDes.m%2Ctyped%2Cuntyped>`_, `forDes <deser/des.html#forDes.m%2Cuntyped%2Cuntyped%2Ctyped%2Cuntyped>`_ and `forSer <deser/ser.html#forSer.m%2Cuntyped%2Cuntyped%2Ctyped%2Cuntyped>`_.
 
 
 Functional
 #################
 You can use pragmas to manage the serialization and deserialization process.
-
-`Deser` provides the ability to `skip the necessary fields <#examples-skip-fields>`_, `inline the keys <#examples-object-flattening>`_ of a child object in the parent, and apply various functions to the object's fields, for example, to `convert types <#examples-convert-timestamp-to-time>`_.
+- `Skip fields <#examples-skip-fields>`_
+- `Flatten objects <#examples-object-flattening>`_
+- `Convert types <#examples-convert-timestamp-to-time>`_
+- `Object variants <#examples-object-variants>`_
 
 
 Universal
 #################
-`Deser` is not limited to any data format, since it does not parse. 
+`Deser` is not limited to any data format, since it does not parse data. 
 This is just a small layer between your objects and the specific implementation of the serializer.
 
 Look at the `supported data formats <#manual-supported-data-formats>`_.
@@ -86,35 +62,28 @@ Supported data formats
 
 Pragmas
 #################
-Pragmas are special templats that tell `deser` how to handle the current field or object.
+Pragmas are special templates that tell `deser` how to handle the current field or object.
 
 You can find out about available pragmas and their behavior in the `pragma documentation <deser/pragmas.html>`_.
-
-
-Pragmas prioritization
----------------
-`Deser` applies pragmas according to this priority:
-1. Pragmas from field
-2. Pragmas from object
-3. Pragmas from parent object
 
 
 Overhead
 #################
 This section is about what overhead `deser` has at runtime.
 
-
-Pragmas with overhead
----------------
-Pragmas that have an overhead are listed here. 
-For more information, see the documentation of the pragmas themselves.
-* `deserializeWith <deser/pragmas.html#deserializeWith.t>`_
+TODO
 
 
 Limitations
 #################
-Due to the nature of templates and type instantiation, you will need to import the `macros <https://nim-lang.org/docs/macros.html>`_ module if you are using `forSerFields <#forSerFields.t%2Cuntyped%2Cuntyped%2C%2Cuntyped>`_ or `forDesFields <#forDesFields.t%2Cuntyped%2Cuntyped%2C%2Cuntyped>`_. 
-`macros` may be required if the third-party generic function uses `forSerFields` or `forDesFields`.
+- Limited support for reference objects
+Due to some limitations from the Nim macro system, we can't get complete information about reference types. This prevents deser from getting instantiated types with generics objects.
+To support reference types, format developers must dereference the object before passing it to the deser macros.
+
+Deser supports reference objects as flat objects.
+
+- No support for tuples yet
+- Support only one `case` field per "level"
 
 
 Examples
@@ -137,8 +106,10 @@ In the case of `deserializeWith <deser/pragmas.html#deserializeWith.t>`_, you ca
 Let's say that some API returns timestamp. Then we will have such an object:
 
 ```nim
+import deser
+
 type
-  User = object
+  User {.des, ser.} = object
     created_at: int64
 ```
 But it's more convenient for us to work with the `Time <https://nim-lang.org/docs/times.html#Time>`_ object from the standard times library.
@@ -153,7 +124,7 @@ Let's finally use them
 import deser
 
 type
-  User = object
+  User {.des, ser.} = object
     created_at {.serializeWith(toUnix), deserializeWith(fromUnix).}: Time
 ```
 
@@ -169,7 +140,7 @@ You can skip serialization and deserialization of a field using the `skip <deser
 import deser
 
 type
-  Foo = object
+  Foo {.des, ser.} = object
     ok: bool
     uselessField {.skip.}: string
 ```
@@ -188,14 +159,15 @@ type
 
 Skip None values
 ---------------
-By default, some json serializers serialize `None` as `null`. This meets the standard, but it doesn't always meet our expectations (because not all APIs respond correctly to null).
+By default, some JSON serializers serialize `None` as `null`. This meets the standard, but it doesn't always meet our expectations (because not all APIs respond correctly to null).
 
 You can skip serialization of None values using the `skipSerializeIf <deser/pragmas.html#skipSerializeIf.t>`_ pragma.
 `skipSerializeIf` expects a function that takes a value with the field type and returns bool.
 
 ```nim
-import options
-import deser
+import
+  options,
+  deser
 
 type
   Message = object
@@ -203,28 +175,15 @@ type
     photo {.skipSerializeIf(isNone).}: Option[Photo]
 ```
 
-To write less code, you can apply this pragma to an object:
-
-```nim
-import options
-import deser
-
-type
-  Message {.skipSerializeIf(isNone).}  = object
-    text: Option[string]
-    photo: Option[Photo]
-```
-
-`Deser` check at compile time which fields are suitable by type and apply the pragma only to them.
-
 
 Object flattening
 #################
 Consider some api that returns a page with results and metadata about pagination.
 
 ```nim
-import macros, options
-import deser
+import 
+  macros, options,
+  deser
 
 type
   Items = object
@@ -301,9 +260,17 @@ type
     pagination {.flat.}: Pagination
 ```
 
+
+Object variants
+#################
+
+Deser supports object variants with any nesting level. But only one `case` per level.
+
+
 ]##
 
 import
   options,
-  deser/[des, ser, pragmas, macro_utils, error]
-export des, ser, pragmas, macro_utils, error, options
+  deser/[des, ser, pragmas, macro_utils, errors, results]
+
+export des, ser, pragmas, macro_utils, errors, options, results

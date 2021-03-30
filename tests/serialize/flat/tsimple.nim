@@ -4,17 +4,17 @@ id
 text
   '''
 """
-import macros
+
 import deser
 
 type
-  Foo = object
+  Foo {.ser.} = object
     text: string
-  Test = object
+  Test {.ser.} = object
     id: int
     foo {.flat.}: Foo
 
 let t = Test()
 
-forSerFields key, value, t:
+forSer key, value, t:
   echo key

@@ -18,7 +18,7 @@ requires "nim >= 1.4.2, deser"
 
 ## Features
 
-- **Efficient**: `deser` does not use reflection or type information at runtime and generates code close to hand-written. Read more about [overhead](https://deser.nim.town/deser.html#manual-overhead).
+- **Efficient**: `deser` does not use reflection or type information at runtime. Read more about [overhead](https://deser.nim.town/deser.html#manual-overhead).
 - **Easy to use**: [simple](https://deser.nim.town/deser.html#design-easy-to-use) API for users and data formats developers.
 - **Functional**: use pragmas to [manage](https://deser.nim.town/deser.html#design-functional) the serialization and deserialization process.
 - **Universal**: `deser` is [not limited](https://deser.nim.town/deser.html#design-universal) to any data format.
@@ -26,14 +26,14 @@ requires "nim >= 1.4.2, deser"
 ## Usage
 
 ```nim
-import macros # https://deser.nim.town/deser.html#manual-limitations
-import options, times
+import times
 import deser, deser_json
 
 type
-  Foo {.skipSerializeIf(isNone), renameAll(rkSnakeCase).} = object
+  Foo {.des, ser, renameAll(rkSnakeCase), skipSerializeIf(isNone).} = object
     id: int
     someOption: Option[int]
+    test {.skip.}: int
     date {.serializeWith(toUnix), deserializeWith(fromUnix).}: Time
 
 const js = """
@@ -44,11 +44,14 @@ const js = """
   }
 """
 
-var f = js.parse().to(Foo)
+var f = Foo.fromJson(js)
+
+assert f.someOption.get == 321
 
 f.someOption = none(int)
 
-assert f.dumps() == """{"id":123,"date":1214092800}"""
+assert f.toJson() == """{"id":123,"date":1214092800}"""
+
 ```
 
 ## Contributing

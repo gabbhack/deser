@@ -4,15 +4,15 @@ CamelCase
 AnotherCamelCase
   '''
 """
-import macros
+
 import deser
 
 type
-  TestToPascalCase {.renameAll(rkPascalCase).} = object
+  TestToPascalCase {.ser, renameAll(rkPascalCase).} = object
     camelCase: int
     anotherCamelCase: int
 
 let tpc = TestToPascalCase()
 
-forSerFields key, value, tpc:
+forSer key, value, tpc:
   echo key

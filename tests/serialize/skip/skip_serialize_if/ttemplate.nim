@@ -6,8 +6,8 @@ id
 
 import deser
 
-proc skipFloat(x: float): bool = true
-proc skipInt(x: int): bool = true
+template skipFloat(x: float): bool = true
+template skipInt(x: int): bool = true
 
 type
   Test {.ser.} = object

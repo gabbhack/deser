@@ -2,17 +2,18 @@ discard """
   output: '''
 msg_text string
 TiMe int64
+SOME_OPTION Option[system.string]
 SOME_FOO string
   '''
 """
-import macros, options, times
+import options, times
 import deser
 
 type
-  Foo {.renameAll(rkUpperSnakeCase).} = object
+  Foo {.ser, renameAll(rkUpperSnakeCase).} = object
     someOption: Option[string]
     someFoo: string
-  Test {.renameAll(rkSnakeCase), skipSerializeIf(isNone).} = object
+  Test {.ser, renameAll(rkSnakeCase), skipSerializeIf(isNone).} = object
     id {.skip.}: int
     anotherSkip {.skipSerializing.}: int
     msgText: string
@@ -22,5 +23,5 @@ type
 
 let t = Test()
 
-forSerFields key, value, t:
+forSer key, value, t:
   echo key, " ", value.type
