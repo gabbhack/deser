@@ -39,6 +39,72 @@ const
 
 {.push compileTime.}
 
+proc findPragma*(pragmas: NimNode, pragmaSym: NimNode): NimNode
+
+proc asStr*(x: NimNode): string
+
+proc typeDescription*(typeDef: NimNode, objectTy: NimNode = nil): TypeDescription
+
+proc hideIdent*(field: FieldDescription): NimNode = ident(field.name.asStr & "Hide")
+
+proc nameIdent*(field: FieldDescription): NimNode = ident(field.name.asStr)
+
+proc isFlat*(field: FieldDescription): bool = field.pragmas.findPragma(
+    bindSym"flat") != nil
+
+proc isUntagged*(field: FieldDescription): bool = field.pragmas.findPragma(
+    bindSym"untagged") != nil
+
+proc hasWithDefault*(field: FieldDescription): bool = field.pragmas.findPragma(
+    bindSym"withDefault") != nil
+
+proc hasDeserWith*(field: FieldDescription): bool = field.pragmas.findPragma(
+    bindSym"deserializeWith") != nil
+
+proc hasUntagged*(fields: seq[FieldDescription]): bool = any(fields, (field) =>
+    field.isUntagged and field.isDiscriminator)
+
+proc getWithDefault*(field: FieldDescription): NimNode = field.pragmas.findPragma(bindSym"withDefault")
+
+proc getDeserWith*(field: FieldDescription): (NimNode, NimNode) =
+  result = (nil, nil)
+  let deserWith = field.pragmas.findPragma(bindSym"deserializeWith")
+  if deserWith != nil:
+    let deserWithProc = deserWith[1]
+    let deserWithProcParams = deserWithProc.getTypeInst[0]
+    if deserWithProcParams[0].kind == nnkEmpty:
+      error("`deserializeWith` procedure must have return type", deserWithProc)
+    if deserWithProcParams.len == 1:
+      error("`deserializeWith` procedure must have at least one parameter", deserWithProc)
+    let varType = deserWithProcParams[1][1]
+    let returnType = deserWithProcParams[0]
+    if returnType != field.typ:
+      error(fmt"The return type of `{deserWithProc.asStr}` ({returnType.asStr}) does not match the field type ({field.typ.asStr})", deserWithProc)
+    else:
+      result = (deserWithProc, varType)
+
+proc getSkipSerIf*(field: FieldDescription): NimNode = field.pragmas.findPragma(bindSym"skipSerializeIf")
+
+proc getSerWith*(field: FieldDescription): NimNode = field.pragmas.findPragma(bindSym"serializeWith")
+
+proc getTypeDesc*(target: NimNode | FieldDescription,
+    op: Operation): TypeDescription =
+  when target is NimNode:
+    let typeInst = target.getTypeInst
+    var T: NimNode
+    case typeInst.kind
+    of nnkSym:
+      T = typeInst
+    of nnkBracketExpr:
+      T = target.getTypeInst[0]
+    else:
+      error(fmt"Invalid sym kind: {typeInst.kind}")
+    let impl = T.getImpl()
+    result = typeDescription(impl, target.getTypeImpl())
+  else:
+    result = typeDescription(target.typ.getImpl)
+  result.check(op)
+
 proc renamer(x: string, rule: string): string =
   case rule
   of "rkCamelCase":
@@ -240,19 +306,6 @@ proc typeDescription*(typeDef: NimNode, objectTy: NimNode = nil): TypeDescriptio
   if skipSerializeIf != nil:
     addSkipSerializeIf(result.fields, skipSerializeIf)
 
-template initTypeInst*() {.dirty.} =
-  let typeInst = target.getTypeInst
-  var T: NimNode
-  case typeInst.kind
-  of nnkSym:
-    T = typeInst
-  of nnkBracketExpr:
-    T = target.getTypeInst[0]
-  else:
-    error(fmt"Invalid sym kind: {typeInst.kind}")
-  let impl = T.getImpl()
-  let typeDesc = typeDescription(impl, target.getTypeImpl())
-
 proc checkCases(T: NimNode, fields: seq[FieldDescription]) =
   var casesCount = 0
   for field in fields:
@@ -274,50 +327,12 @@ proc check*(desc: TypeDescription, op: Operation) =
 
   checkCases(desc.name, desc.fields)
 
-proc isFlat*(field: FieldDescription): bool = field.pragmas.findPragma(
-    bindSym"flat") != nil
-
-proc isUntagged*(field: FieldDescription): bool = field.pragmas.findPragma(
-    bindSym"untagged") != nil
-
-proc hasWithDefault*(field: FieldDescription): bool = field.pragmas.findPragma(
-    bindSym"withDefault") != nil
-
-proc getWithDefault*(field: FieldDescription): NimNode = field.pragmas.findPragma(bindSym"withDefault")
-
-proc hasDeserWith*(field: FieldDescription): bool = field.pragmas.findPragma(
-    bindSym"deserializeWith") != nil
-
-proc getDeserWith*(field: FieldDescription): (NimNode, NimNode) =
-  result = (nil, nil)
-  let deserWith = field.pragmas.findPragma(bindSym"deserializeWith")
-  if deserWith != nil:
-    let deserWithProc = deserWith[1]
-    let deserWithProcParams = deserWithProc.getTypeInst[0]
-    if deserWithProcParams[0].kind == nnkEmpty:
-      error("`deserializeWith` procedure must have return type", deserWithProc)
-    if deserWithProcParams.len == 1:
-      error("`deserializeWith` procedure must have at least one parameter", deserWithProc)
-    let varType = deserWithProcParams[1][1]
-    let returnType = deserWithProcParams[0]
-    if returnType != field.typ:
-      error(fmt"The return type of `{deserWithProc.asStr}` ({returnType.asStr}) does not match the field type ({field.typ.asStr})", deserWithProc)
-    else:
-      result = (deserWithProc, varType)
-
-proc getSkipSerIf*(field: FieldDescription): NimNode = field.pragmas.findPragma(bindSym"skipSerializeIf")
-
-proc getSerWith*(field: FieldDescription): NimNode = field.pragmas.findPragma(bindSym"serializeWith")
-
 proc optionaizer(fields: var seq[FieldDescription]) =
   for field in mitems(fields):
     if field.isDiscriminator:
       optionaizer(field.subFields)
     if not field.isUntagged:
       field.asOption = true
-
-proc hasUntagged*(fields: seq[FieldDescription]): bool = any(fields, (field) =>
-    field.isUntagged and field.isDiscriminator)
 
 proc fields*(desc: TypeDescription | FieldDescription, op: Operation): seq[
     FieldDescription] =
@@ -343,28 +358,6 @@ proc fields*(desc: TypeDescription | FieldDescription, op: Operation): seq[
     if field.pragmas.findPragma(bindSym"skip").isNil and
         field.pragmas.findPragma(secondSkip).isNil:
       result.add field
-
-proc hideIdent*(field: FieldDescription): NimNode = ident(field.name.asStr & "Hide")
-
-proc nameIdent*(field: FieldDescription): NimNode = ident(field.name.asStr)
-
-proc getTypeDesc*(target: NimNode | FieldDescription,
-    op: Operation): TypeDescription =
-  when target is NimNode:
-    let typeInst = target.getTypeInst
-    var T: NimNode
-    case typeInst.kind
-    of nnkSym:
-      T = typeInst
-    of nnkBracketExpr:
-      T = target.getTypeInst[0]
-    else:
-      error(fmt"Invalid sym kind: {typeInst.kind}")
-    let impl = T.getImpl()
-    result = typeDescription(impl, target.getTypeImpl())
-  else:
-    result = typeDescription(target.typ.getImpl)
-  result.check(op)
 
 proc renamed*(field: FieldDescription, op: Operation): NimNode =
   let rename = field.pragmas.findPragma(bindSym"rename")
