@@ -8,6 +8,9 @@ type
 
 
 template getField*[T](field: DeserResult[T]): T =
+  # In general, if the macro generated the correct IFs,
+  # `get` should not affect performance,
+  # since the compiler is smart enough and does not perform the additional check that `get` does
   when defined(danger) or defined(deserDisableSafeGet):
     field.unsafeGet()
   else:
@@ -269,7 +272,10 @@ proc foldObjectBody(target: NimNode, T: NimNode, fields: seq[FieldDescription],
             localAsgnStmt, insideUntagged = insideUntagged)
         case c.branch.kind
         of nnkOfBranch:
-          caseStmt.add nnkOfBranch.newTree(c.branch[0], localStmt)
+          let localBranch = nnkOfBranch.newTree()
+          localBranch.add c.branch[0..^2]
+          localBranch.add localStmt
+          caseStmt.add localBranch
         of nnkElse:
           caseStmt.add nnkElse.newTree(localStmt)
         else:

@@ -63,7 +63,10 @@ proc genCaseStmt(field: FieldDescription, target, key, value,
     var localStmt = genForSer(target, key, value, c.fields, actions)
     case c.branch.kind
     of nnkOfBranch:
-      result.add nnkOfBranch.newTree(c.branch[0], localStmt)
+      let localBranch = nnkOfBranch.newTree()
+      localBranch.add c.branch[0..^2]
+      localBranch.add localStmt
+      result.add localBranch
     of nnkElse:
       result.add nnkElse.newTree(localStmt)
     else:
