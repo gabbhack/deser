@@ -45,7 +45,7 @@ proc asStr*(x: NimNode): string
 
 proc typeDescription*(typeDef: NimNode, objectTy: NimNode = nil): TypeDescription
 
-proc hideIdent*(field: FieldDescription): NimNode = ident(field.name.asStr & "Hide")
+proc hideIdent*(field: FieldDescription): NimNode = ident(fmt"{field.name.asStr}_{field.typ}_hide")
 
 proc nameIdent*(field: FieldDescription): NimNode = ident(field.name.asStr)
 

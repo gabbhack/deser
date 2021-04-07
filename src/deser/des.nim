@@ -67,20 +67,23 @@ proc genHideVar(field: FieldDescription, asOption: bool): NimNode =
       else:
         var `identExpr` = DeserResult[`typ`].err(`missingFieldError`)
 
-proc genHideVars(fields: seq[FieldDescription]): NimNode =
+proc genHideVars(fields: seq[FieldDescription], alreadyGen: seq[NimNode] = @[]): NimNode =
   result = newStmtList()
+  var alreadyGen = alreadyGen
 
-  for field in fields:
+  for field in fields.filter((x) => x.hideIdent notin alreadyGen):
     if field.isFlat:
       let typeDesc = field.getTypeDesc(Des)
-      result.add genHideVars(typeDesc.fields(Des))
+      result.add genHideVars(typeDesc.fields(Des), alreadyGen)
     else:
       if field.isDiscriminator:
         if not field.isUntagged:
           result.add genHideVar(field, field.asOption)
-        result.add genHideVars(field.fields(Des))
+          alreadyGen.add field.hideIdent
+        result.add genHideVars(field.fields(Des), alreadyGen)
       else:
         result.add genHideVar(field, field.asOption)
+        alreadyGen.add field.hideIdent
 
 proc genErrorCheckOnRequired(fields: seq[FieldDescription]): NimNode =
   result = newStmtList()
