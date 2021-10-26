@@ -42,6 +42,8 @@ proc serializeTuple*(self: FlatMapSerializer, len: static[uint]): FlatMapSeriali
 
 proc serializeSeqMap*(self: FlatMapSerializer, len: Option[int]): FlatMapSerializer
 
+proc serializeArray*(self: FlatMapSerializer, len: static[int]): FlatMapSerializer
+
 # FlatMapSerializeSeq
 proc serializeSeqElement*[Value](self: var FlatMapSerializer, v: Value)
 
@@ -58,15 +60,20 @@ proc serializeSeqMapKey*[T](self: FlatMapSerializer, key: T)
 proc serializeSeqMapValue*[T](self: FlatMapSerializer, v: T)
 
 proc endSeqMap*(self: FlatMapSerializer)
+
+# FlatMapSerializeArray
+proc serializeArrayElement*[T](self: FlatMapSerializer, v: T)
+
+proc endArray*(self: FlatMapSerializer)
 {.pop.}
 
 proc serializeNone*(self: FlatMapSerializer) = discard
 
 proc serializeSome*[Value](self: FlatMapSerializer, v: Value) = v.serialize(self)
 
-proc serializeStructUnit*(self: FlatMapSerializer) = discard
+proc serializeUnitStruct*(self: FlatMapSerializer) = discard
 
-proc serializeTupleUnit*(self: FlatMapSerializer) = discard
+proc serializeUnitTuple*(self: FlatMapSerializer) = discard
 
 proc serializeMap*[T](self: FlatMapSerializer[T]): FlatMapSerializeMap[T] =
   FlatMapSerializeMap[T](ser: self.ser)
