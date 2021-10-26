@@ -1,6 +1,4 @@
-##[
-Private module for the `inlineKeys` pragma
-]##
+## Private module for the `inlineKeys` pragma
 
 import std/options
 
@@ -27,7 +25,6 @@ proc initFlatMapSerializer*[T](serializer: var T): FlatMapSerializer {.inline.} 
 ## FlatMapSerializer
 # Unsupported procedures
 {.push error: "can ony flatten structs and maps".}
-## Unsupported procedures
 proc serializeBool*(self: FlatMapSerializer, v: bool)
 
 proc serializeInt*[Value: SomeInteger](self: FlatMapSerializer, v: Value)
@@ -44,17 +41,17 @@ proc serializeTuple*(self: FlatMapSerializer, len: static[uint]): FlatMapSeriali
 
 proc serializeNamedTuple*(self: FlatMapSerializer, name: static[string], len: static[uint]): FlatMapSerializer
 
-## FlatMapSerializeSeq
+# FlatMapSerializeSeq
 proc serializeSeqElement*[Value](self: var FlatMapSerializer, v: Value)
 
 proc endSeq*(self: FlatMapSerializer)
 
-## FlatMapSerializeTuple
+# FlatMapSerializeTuple
 proc serializeTupleElement*[Value](self: var FlatMapSerializer, v: Value)
 
 proc endTuple*(self: FlatMapSerializer)
 
-## FlatMapSerializeNamedTuple
+# FlatMapSerializeNamedTuple
 proc serializeNamedTupleField*[Key, Value](self: FlatMapSerializer, key: Key, value: Value)
 
 proc endNamedTuple*(self: FlatMapSerializer)
@@ -72,14 +69,14 @@ proc serializeMap*(self: FlatMapSerializer): FlatMapSerializeMap = FlatMapSerial
 
 proc serializeStruct*(self: FlatMapSerializer, name: static[string]): FlatMapSerializeStruct = FlatMapSerializeStruct(ser: self.ser)
 
-## FlatMapSerializeMap
+# FlatMapSerializeMap
 proc serializeMapKey*[Value](self: var FlatMapSerializeMap, key: Value) = self.ser[].serializeMapKey(key)
 
 proc serializeMapValue*[Value](self: var FlatMapSerializeMap, v: Value) = self.ser[].serializeMapValue(v)
 
 proc endMap*(self: FlatMapSerializeMap) = discard
 
-## FlatMapSerializeStruct
+# FlatMapSerializeStruct
 proc serializeField*[Value](self: var FlatMapSerializeStruct, key: static[string], v: Value) = self.ser[].serializeMapEntry(key, v)
 
 proc endStruct*(self: FlatMapSerializeStruct) = discard

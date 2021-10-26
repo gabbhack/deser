@@ -1,4 +1,4 @@
-import std/[options]
+import std/options
 
 import ../ser/impls
 import token

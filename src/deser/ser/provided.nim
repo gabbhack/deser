@@ -1,6 +1,4 @@
-##[
-Auxiliary functions that you can use when implementing `serialize`
-]##
+## Auxiliary functions that you can use when implementing `serialize`
 
 import std/options
 

@@ -1,6 +1,4 @@
-##[
-Implementation of `serialize` for basic types
-]##
+## Implementation of `serialize` for std types.
 
 import std/[options, typetraits, tables, sets]
 
@@ -9,7 +7,7 @@ import ../utils
 
 
 {.push inline.}
-## Basic types
+# Basic types
 proc serialize*[Serializer](self: bool, serializer: var Serializer) =
   serializer.serializeBool(self)
 
@@ -85,7 +83,7 @@ proc serialize*[Tuple: tuple, Serializer](self: Tuple, serializer: var Serialize
 proc serialize*[Unit: UnitConcept, Serializer](self: Unit, serializer: var Serializer) =
   serializer.serializeUnitStruct($self.type)
 
-## other std types
+# other std types
 proc serialize*[Value, Serializer](self: Option[Value], serializer: var Serializer) =
   if self.isSome:
     serializer.serializeSome(self.unsafeGet)

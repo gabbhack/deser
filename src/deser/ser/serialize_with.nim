@@ -1,6 +1,4 @@
-##[
-Private module for the `serializeWith` pragma
-]##
+## Private module for the `serializeWith` pragma
 
 type
   SerializeWith*[T, Serializer] = object

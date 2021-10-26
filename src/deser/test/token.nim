@@ -1,6 +1,5 @@
 import std/options
 
-# TODO borrow test lib from https://github.com/serde-rs/serde/tree/master/serde_test
 type
   TokenKind* {.pure.} = enum
     Boolean, Integer, Float, Char, String, Bytes, None, Some, UnitStruct, UnitTuple, Array, ArrayEnd, Seq, SeqEnd,
@@ -168,8 +167,7 @@ proc TupleEnd*(): Token {.used.} =
   result = Token(kind: TokenKind.TupleEnd)
 
 proc NamedTuple*(namedTupleName: string; namedTupleLen: int): Token {.used.} =
-  result = Token(kind: TokenKind.NamedTuple, namedTupleName: namedTupleName,
-                 namedTupleLen: namedTupleLen)
+  result = Token(kind: TokenKind.NamedTuple, namedTupleName: namedTupleName, namedTupleLen: namedTupleLen)
 
 proc NamedTupleEnd*(): Token {.used.} =
   result = Token(kind: TokenKind.NamedTupleEnd)
