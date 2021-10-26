@@ -17,7 +17,7 @@
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
-<title>deser/pragmas</title>
+<title>src/deser/pragmas</title>
 <link rel="stylesheet" type="text/css" href="../nimdoc.out.css">
 
 <script type="text/javascript" src="../dochack.js"></script>
@@ -34,7 +34,6 @@ function main() {
     }
   }
 
-  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
   function switchTheme(e) {
       if (e.target.checked) {
           document.documentElement.setAttribute('data-theme', 'dark');
@@ -45,24 +44,32 @@ function main() {
       }
   }
 
-  toggleSwitch.addEventListener('change', switchTheme, false);
+  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+  if (toggleSwitch !== null) {
+    toggleSwitch.addEventListener('change', switchTheme, false);
+  }
 
-  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+  var currentTheme = localStorage.getItem('theme');
+  if (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    currentTheme = 'dark';
+  }
   if (currentTheme) {
     document.documentElement.setAttribute('data-theme', currentTheme);
 
-    if (currentTheme === 'dark') {
+    if (currentTheme === 'dark' && toggleSwitch !== null) {
       toggleSwitch.checked = true;
     }
   }
 }
+
+window.addEventListener('DOMContentLoaded', main);
 </script>
 
 </head>
-<body onload="main()">
+<body>
 <div class="document" id="documentId">
   <div class="container">
-    <h1 class="title">deser/pragmas</h1>
+    <h1 class="title">src/deser/pragmas</h1>
     <div class="row">
   <div class="three columns">
   <div class="theme-switch-wrapper">
@@ -101,32 +108,53 @@ function main() {
   </div>
   <ul class="simple simple-toc" id="toc-list">
 <li>
-  <a class="reference reference-toplevel" href="#6" id="56">Imports</a>
-  <ul class="simple simple-toc-section">
-    
-  </ul>
-</li>
-<li>
   <a class="reference reference-toplevel" href="#18" id="68">Templates</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#rename.t%2Cstring%2Cstring"
-    title="rename(ser = &quot;&quot;; des = &quot;&quot;)">rename</a></li>
-  <li><a class="reference" href="#renameAll.t%2CRenameKind%2CRenameKind"
-    title="renameAll(ser: RenameKind = rkNothing; des: RenameKind = rkNothing)">renameAll</a></li>
-  <li><a class="reference" href="#skipSerializeIf.t"
-    title="skipSerializeIf(condition: typed{`proc`})">skipSerializeIf</a></li>
-  <li><a class="reference" href="#flat.t"
-    title="flat()">flat</a></li>
-  <li><a class="reference" href="#skip.t"
-    title="skip()">skip</a></li>
-  <li><a class="reference" href="#skipSerializing.t"
-    title="skipSerializing()">skipSerializing</a></li>
-  <li><a class="reference" href="#skipDeserializing.t"
-    title="skipDeserializing()">skipDeserializing</a></li>
-  <li><a class="reference" href="#deserializeWith.t"
-    title="deserializeWith(convert: typed{`proc`})">deserializeWith</a></li>
-  <li><a class="reference" href="#serializeWith.t"
-    title="serializeWith(convert: typed{`proc`})">serializeWith</a></li>
+      <ul class="simple nested-toc-section">inlineKeys
+      <li><a class="reference" href="#inlineKeys.t"
+    title="inlineKeys()">inlineKeys()</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">renameDeserialize
+      <li><a class="reference" href="#renameDeserialize.t%2Cstring"
+    title="renameDeserialize(renamed: string)">renameDeserialize(renamed: string)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">renameSerialize
+      <li><a class="reference" href="#renameSerialize.t%2Cstring"
+    title="renameSerialize(renamed: string)">renameSerialize(renamed: string)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">serializeWith
+      <li><a class="reference" href="#serializeWith.t%2Ctyped"
+    title="serializeWith(with: typed)">serializeWith(with: typed)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">skipDeserializing
+      <li><a class="reference" href="#skipDeserializing.t"
+    title="skipDeserializing()">skipDeserializing()</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">skipped
+      <li><a class="reference" href="#skipped.t"
+    title="skipped()">skipped()</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">skipSerializeIf
+      <li><a class="reference" href="#skipSerializeIf.t%2Ctyped"
+    title="skipSerializeIf(condition: typed)">skipSerializeIf(condition: typed)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">skipSerializing
+      <li><a class="reference" href="#skipSerializing.t"
+    title="skipSerializing()">skipSerializing()</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">untagged
+      <li><a class="reference" href="#untagged.t"
+    title="untagged()">untagged()</a></li>
+
+  </ul>
 
   </ul>
 </li>
@@ -139,90 +167,14 @@ function main() {
   <div id="tocRoot"></div>
   
   <p class="module-desc"></p>
-  <div class="section" id="6">
-<h1><a class="toc-backref" href="#6">Imports</a></h1>
-<dl class="item">
-<a class="reference external" href="utils.html">utils</a>
-</dl></div>
-<div class="section" id="18">
+  <div class="section" id="18">
 <h1><a class="toc-backref" href="#18">Templates</a></h1>
 <dl class="item">
-<a id="rename.t,string,string"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#rename.t%2Cstring%2Cstring"><span class="Identifier">rename</span></a><span class="Other">(</span><span class="Identifier">ser</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">des</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
+<div id="inlineKeys.t">
+<dt><pre><span class="Keyword">template</span> <a href="#inlineKeys.t"><span class="Identifier">inlineKeys</span></a><span class="Other">(</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
 <dd>
 
-<p><strong>Only for fields, compile-time</strong></p>
-<p>Use this pragma to rename a field during serialization or deserialization.</p>
-<p><strong>Example</strong>:</p>
-<p><pre class="listing"><span class="Keyword">type</span>
-  <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">someVar</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">rename</span><span class="Punctuation">(</span><span class="Identifier">ser</span><span class="Operator">=</span><span class="StringLit">&quot;some_var&quot;</span><span class="Punctuation">,</span> <span class="Identifier">des</span><span class="Operator">=</span><span class="StringLit">&quot;some_var&quot;</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
-</pre> If you want to rename the field for serialization and deserialization, just specify the new name with the first argument:</p>
-<p><pre class="listing"><span class="Keyword">type</span>
-  <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">someVar</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">rename</span><span class="Punctuation">(</span><span class="StringLit">&quot;some_var&quot;</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
-</pre> </p>
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L4"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L4" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="renameAll.t,RenameKind,RenameKind"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#renameAll.t%2CRenameKind%2CRenameKind"><span class="Identifier">renameAll</span></a><span class="Other">(</span><span class="Identifier">ser</span><span class="Other">:</span> <a href="utils.html#RenameKind"><span class="Identifier">RenameKind</span></a> <span class="Other">=</span> <span class="Identifier">rkNothing</span><span class="Other">;</span> <span class="Identifier">des</span><span class="Other">:</span> <a href="utils.html#RenameKind"><span class="Identifier">RenameKind</span></a> <span class="Other">=</span> <span class="Identifier">rkNothing</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-<p><strong>Only for objects, compile-time</strong></p>
-<p>Use this pragma to rename all fields for the specified case.</p>
-<p><strong>Example</strong>:</p>
-<p><pre class="listing"><span class="Keyword">type</span>
-  <span class="Identifier">Test</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">renameAll</span><span class="Punctuation">(</span><span class="Identifier">ser</span><span class="Operator">=</span><span class="Identifier">rkSnakeCase</span><span class="Punctuation">,</span> <span class="Identifier">des</span><span class="Operator">=</span><span class="Identifier">rkSnakeCase</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">someVar</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
-</pre> If you want to rename the field for serialization and deserialization, just specify the new name with the first argument:</p>
-<p><pre class="listing"><span class="Keyword">type</span>
-  <span class="Identifier">Test</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">renameAll</span><span class="Punctuation">(</span><span class="Identifier">rkSnakeCase</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">someVar</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
-</pre> Look at the <a class="reference external" href="utils.html#RenameKind">available cases</a>. </p>
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L23"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L23" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="skipSerializeIf.t"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#skipSerializeIf.t"><span class="Identifier">skipSerializeIf</span></a><span class="Other">(</span><span class="Identifier">condition</span><span class="Other">:</span> <span class="Identifier">typed</span><span class="Other">{</span><span class="Other">`</span><span class="Keyword">proc</span><span class="Other">`</span><span class="Other">}</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-<p><strong>For fields and objects, runtime</strong></p>
-<p>Use this pragma to skip the field during serialization based on the runtime value. You must specify a function that accepts an argument with the same type as the field, and return bool.</p>
-<p>When used on an object, the function will only be applied to fields of the appropriate type.</p>
-<p>If there are several matching <tt class="docutils literal"><span class="pre">skipSerializeIf</span></tt> (from the field, from the object, from the parent object), then <tt class="docutils literal"><span class="pre">deser</span></tt> will skip the field if at least one of them returns <tt class="docutils literal"><span class="pre">true</span></tt>.</p>
-<p><strong>Example</strong>:</p>
-<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">options</span>
-
-<span class="Keyword">proc</span> <span class="Identifier">isZero</span><span class="Punctuation">(</span><span class="Identifier">x</span><span class="Punctuation">:</span> <span class="Identifier">int</span><span class="Punctuation">)</span> <span class="Operator">=</span> <span class="Identifier">x</span> <span class="Operator">==</span> <span class="DecNumber">0</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">Test</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializeIf</span><span class="Punctuation">(</span><span class="Identifier">isNone</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">someOption</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">int</span><span class="Punctuation">]</span>
-    <span class="Identifier">someInt</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializeIf</span><span class="Punctuation">(</span><span class="Identifier">isZero</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-</pre> </p>
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L43"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L43" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="flat.t"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#flat.t"><span class="Identifier">flat</span></a><span class="Other">(</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-<p><strong>Only for fields, compile-time</strong></p>
-<p>Use this pragma to inlines keys from the field into the parent object.</p>
+<p>Use this pragma to inline keys from the field into the parent object.</p>
 <p><strong>Example</strong>:</p>
 <p><pre class="listing"><span class="Keyword">type</span>
   <span class="Identifier">Pagination</span> <span class="Operator">=</span> <span class="Keyword">object</span>
@@ -232,79 +184,65 @@ class="link-seesrc" target="_blank">Source</a>
   
   <span class="Identifier">Users</span> <span class="Operator">=</span> <span class="Keyword">object</span>
     <span class="Identifier">users</span><span class="Punctuation">:</span> <span class="Identifier">seq</span><span class="Punctuation">[</span><span class="Identifier">User</span><span class="Punctuation">]</span>
-    <span class="Identifier">pagination</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">flat</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Pagination</span>
+    <span class="Identifier">pagination</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">inlineKeys</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Pagination</span>
 </pre></p>
-<p>The pragmas specified in the parent object will be applied to the fields of the child <tt class="docutils literal"><span class="pre">flat</span></tt> object. <tt class="docutils literal"><span class="pre">Deser</span></tt> applies pragmas from the parent object to the <tt class="docutils literal"><span class="pre">flat</span></tt> fields of the object at any nesting level, but such &quot;global&quot; pragmas <strong>can be overridden</strong>.</p>
-<p><pre class="listing"><span class="Keyword">proc</span> <span class="Identifier">isInt</span><span class="Punctuation">(</span><span class="Identifier">x</span><span class="Punctuation">:</span> <span class="Identifier">int</span><span class="Punctuation">)</span><span class="Punctuation">:</span> <span class="Identifier">bool</span> <span class="Operator">=</span> <span class="Identifier">true</span>
-<span class="Keyword">proc</span> <span class="Identifier">isFloat</span><span class="Punctuation">(</span><span class="Identifier">x</span><span class="Punctuation">:</span> <span class="Identifier">float</span><span class="Punctuation">)</span><span class="Punctuation">:</span> <span class="Identifier">bool</span> <span class="Operator">=</span> <span class="Identifier">true</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">Fourth</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">fourthFloat</span><span class="Punctuation">:</span> <span class="Identifier">float</span> <span class="Comment"># skipped because of pragma from parent object</span>
-  <span class="Identifier">Third</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">thirdInt</span><span class="Punctuation">:</span> <span class="Identifier">int</span> <span class="Comment"># not skipped because it's not a float</span>
-    <span class="Identifier">fourth</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">flat</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Fourth</span> <span class="Comment"># Third object has no pragma, so pragma from Second object (isFloat) applied to Fourth's field</span>
-  <span class="Identifier">Second</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializeIf</span><span class="Punctuation">(</span><span class="Identifier">isFloat</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">secondInt</span><span class="Punctuation">:</span> <span class="Identifier">int</span> <span class="Comment"># skipped because of pragma from parent object</span>
-    <span class="Identifier">secondFloat</span><span class="Punctuation">:</span> <span class="Identifier">float</span> <span class="Comment"># skipped because of pragma from current object</span>
-    <span class="Identifier">third</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">flat</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Third</span> <span class="Comment"># pragma from current object (isFloat) applied to Third's fields</span>
-  <span class="Identifier">First</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializeIf</span><span class="Punctuation">(</span><span class="Identifier">isInt</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">first</span><span class="Punctuation">:</span> <span class="Identifier">int</span> <span class="Comment"># skipped because of pragma from current object</span>
-    <span class="Identifier">second</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">flat</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Second</span> <span class="Comment"># pragma from current object (isInt) applied to Second's fields</span>
-
-<span class="Keyword">let</span> <span class="Identifier">f</span> <span class="Operator">=</span> <span class="Identifier">First</span><span class="Punctuation">(</span><span class="Punctuation">)</span>
-
-<span class="Identifier">forSerFields</span><span class="Punctuation">(</span><span class="Identifier">k</span><span class="Punctuation">,</span> <span class="Identifier">v</span><span class="Punctuation">,</span> <span class="Identifier">f</span><span class="Punctuation">)</span><span class="Punctuation">:</span>
-  <span class="Identifier">assert</span> <span class="Identifier">k</span> <span class="Operator">==</span> <span class="Identifier">thirdInt</span>
+<p>equals to this JSON:</p>
+<p><pre class="listing">
+{
+  &quot;users&quot;: [],
+  &quot;limit&quot;: 10,
+  &quot;offset&quot;: 10,
+  &quot;total&quot;: 10
+}
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L66"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L111"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L66" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L111" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-<a id="skip.t"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#skip.t"><span class="Identifier">skip</span></a><span class="Other">(</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="renameDeserialize.t,string">
+<dt><pre><span class="Keyword">template</span> <a href="#renameDeserialize.t%2Cstring"><span class="Identifier">renameDeserialize</span></a><span class="Other">(</span><span class="Identifier">renamed</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
 <dd>
 
-<p><strong>Only for fields, compile-time</strong></p>
-<p>Use this pragma to skip the field during serialization and deserialization.</p>
-<p><strong>Example</strong>:</p>
-<p><pre class="listing"><span class="Keyword">type</span>
-  <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">alwaysSkip</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skip</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-</pre> </p>
-
+Deserialize this field with the given name instead of its Nim name 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L112"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L54"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L112" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L54" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-<a id="skipSerializing.t"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#skipSerializing.t"><span class="Identifier">skipSerializing</span></a><span class="Other">(</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="renameSerialize.t,string">
+<dt><pre><span class="Keyword">template</span> <a href="#renameSerialize.t%2Cstring"><span class="Identifier">renameSerialize</span></a><span class="Other">(</span><span class="Identifier">renamed</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
 <dd>
 
-<p><strong>Only for fields, compile-time</strong></p>
-<p>Use this pragma to skip the field during serialization.</p>
-<p><strong>Example</strong>:</p>
-<p><pre class="listing"><span class="Keyword">type</span>
-  <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">skipOnSerialization</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializing</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-</pre> </p>
-
+Serialize this field with the given name instead of its Nim name 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L125"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L50"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L125" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L50" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-<a id="skipDeserializing.t"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#skipDeserializing.t"><span class="Identifier">skipDeserializing</span></a><span class="Other">(</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="serializeWith.t,typed">
+<dt><pre><span class="Keyword">template</span> <a href="#serializeWith.t%2Ctyped"><span class="Identifier">serializeWith</span></a><span class="Other">(</span><span class="Identifier">with</span><span class="Other">:</span> <span class="Identifier">typed</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
 <dd>
 
-<p><strong>Only for fields, compile-time</strong></p>
+Serialize this field using a procedure. The given function must be callable as <tt class="docutils literal"><span class="pre"><span class="Keyword">proc</span><span class="Punctuation">[</span><span class="Identifier">Serializer</span><span class="Punctuation">]</span> <span class="Punctuation">(</span><span class="Identifier">self</span><span class="Punctuation">:</span> <span class="Identifier">field</span><span class="Operator">.</span><span class="Keyword">type</span><span class="Punctuation">,</span> <span class="Identifier">serializer</span><span class="Punctuation">:</span> <span class="Identifier">Serializer</span><span class="Punctuation">)</span></span></tt> 
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L45"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L45" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="skipDeserializing.t">
+<dt><pre><span class="Keyword">template</span> <a href="#skipDeserializing.t"><span class="Identifier">skipDeserializing</span></a><span class="Other">(</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<dd>
+
 <p>Use this pragma to skip the field during deserialization.</p>
 <p><strong>Example</strong>:</p>
 <p><pre class="listing"><span class="Keyword">type</span>
@@ -313,54 +251,115 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L138"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L81"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L138" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L81" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-<a id="deserializeWith.t"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#deserializeWith.t"><span class="Identifier">deserializeWith</span></a><span class="Other">(</span><span class="Identifier">convert</span><span class="Other">:</span> <span class="Identifier">typed</span><span class="Other">{</span><span class="Other">`</span><span class="Keyword">proc</span><span class="Other">`</span><span class="Other">}</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="skipped.t">
+<dt><pre><span class="Keyword">template</span> <a href="#skipped.t"><span class="Identifier">skipped</span></a><span class="Other">(</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
 <dd>
 
-<p><strong>For fields and objects, runtime</strong></p>
-<p>Use this pragma to apply the passed function to the field during deserialization. Can be used to convert the original type to a field type.</p>
-<p>When used on an object, the function will only be applied to fields of the appropriate type.</p>
+<p>Use this pragma to skip the field during serialization and deserialization.</p>
 <p><strong>Example</strong>:</p>
-<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">times</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">Message</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">date</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">deserializeWith</span><span class="Punctuation">(</span><span class="Identifier">fromUnix</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Time</span>
-</pre></p>
-<p><strong>Overhead</strong>: Generates a <tt class="docutils literal"><span class="pre">try-finally</span></tt> on all code inside <tt class="docutils literal"><span class="pre">forDesFields</span></tt>. </p>
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L151"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L151" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="serializeWith.t"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#serializeWith.t"><span class="Identifier">serializeWith</span></a><span class="Other">(</span><span class="Identifier">convert</span><span class="Other">:</span> <span class="Identifier">typed</span><span class="Other">{</span><span class="Other">`</span><span class="Keyword">proc</span><span class="Other">`</span><span class="Other">}</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pragma</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-<p><strong>For fields and objects</strong></p>
-<p>Use this pragma to apply the passed function to the field during serialization. Can be used to convert the field type to a original type.</p>
-<p>When used on an object, the function will only be applied to fields of the appropriate type.</p>
-<p><strong>Example</strong>:</p>
-<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">times</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">Message</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">date</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">serializeWith</span><span class="Punctuation">(</span><span class="Identifier">toUnix</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Time</span>
+<p><pre class="listing"><span class="Keyword">type</span>
+  <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">alwaysSkip</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipped</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L172"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L58"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L172" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L58" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
+</div>
+<div id="skipSerializeIf.t,typed">
+<dt><pre><span class="Keyword">template</span> <a href="#skipSerializeIf.t%2Ctyped"><span class="Identifier">skipSerializeIf</span></a><span class="Other">(</span><span class="Identifier">condition</span><span class="Other">:</span> <span class="Identifier">typed</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<dd>
+
+<p>Use this pragma to skip the field during serialization based on the runtime value. You must specify a function or template that accepts an argument with the same type as the field, and return bool.</p>
+<p><strong>Example</strong>:</p>
+<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">options</span>
+
+<span class="Keyword">func</span> <span class="Identifier">isZero</span><span class="Punctuation">(</span><span class="Identifier">x</span><span class="Punctuation">:</span> <span class="Identifier">int</span><span class="Punctuation">)</span> <span class="Operator">=</span> <span class="Identifier">x</span> <span class="Operator">==</span> <span class="DecNumber">0</span>
+
+<span class="Keyword">type</span>
+  <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">someOption</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializeIf</span><span class="Punctuation">(</span><span class="Identifier">isNone</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">int</span><span class="Punctuation">]</span>
+    <span class="Identifier">someInt</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializeIf</span><span class="Punctuation">(</span><span class="Identifier">isZero</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
+</pre> </p>
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L93"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L93" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="skipSerializing.t">
+<dt><pre><span class="Keyword">template</span> <a href="#skipSerializing.t"><span class="Identifier">skipSerializing</span></a><span class="Other">(</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<dd>
+
+<p>Use this pragma to skip the field during serialization.</p>
+<p><strong>Example</strong>:</p>
+<p><pre class="listing"><span class="Keyword">type</span>
+  <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">skipOnSerialization</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializing</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
+</pre> </p>
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L70"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L70" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="untagged.t">
+<dt><pre><span class="Keyword">template</span> <a href="#untagged.t"><span class="Identifier">untagged</span></a><span class="Other">(</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<dd>
+
+<p>By default, the discriminant of object variants is de/serialized as a regular field:</p>
+<p><pre class="listing"><span class="Keyword">type</span>
+  <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">kind</span><span class="Punctuation">:</span> <span class="Identifier">bool</span>
+    <span class="Keyword">of</span> <span class="Identifier">true</span><span class="Punctuation">:</span>
+      <span class="Identifier">trueField</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
+    <span class="Keyword">else</span><span class="Punctuation">:</span>
+      <span class="Identifier">falseField</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
+</pre> equals to this JSON:</p>
+<p><pre class="listing">
+{
+  &quot;kind&quot;: true
+  &quot;trueField&quot;: &quot;&quot;
+}
+</pre></p>
+<p>However, <tt class="docutils literal"><span class="pre"><span class="Identifier">deser</span></span></tt> can independently deduce the discriminant from the raw data:</p>
+<p><pre class="listing"><span class="Keyword">type</span>
+  <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">kind</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">untagged</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">bool</span>
+    <span class="Keyword">of</span> <span class="Identifier">true</span><span class="Punctuation">:</span>
+      <span class="Identifier">trueField</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
+    <span class="Keyword">else</span><span class="Punctuation">:</span>
+      <span class="Identifier">falseField</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
+
+<span class="Keyword">const</span> <span class="Identifier">js</span> <span class="Operator">=</span> <span class="LongStringLit">&quot;&quot;&quot;
+  {
+    &quot;trueField&quot;: &quot;&quot;
+  }
+let test = Test.fromJson(js)
+
+assert test.kind
+</span></pre></p>
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L1"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L1" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
 
 </dl></div>
 
@@ -371,7 +370,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-12-24 11:30:29 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-10-26 10:27:51 UTC</small>
       </div>
     </div>
   </div>

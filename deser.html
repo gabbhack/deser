@@ -17,7 +17,7 @@
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
-<title>deser</title>
+<title>src/deser</title>
 <link rel="stylesheet" type="text/css" href="nimdoc.out.css">
 
 <script type="text/javascript" src="dochack.js"></script>
@@ -34,7 +34,6 @@ function main() {
     }
   }
 
-  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
   function switchTheme(e) {
       if (e.target.checked) {
           document.documentElement.setAttribute('data-theme', 'dark');
@@ -45,24 +44,32 @@ function main() {
       }
   }
 
-  toggleSwitch.addEventListener('change', switchTheme, false);
+  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+  if (toggleSwitch !== null) {
+    toggleSwitch.addEventListener('change', switchTheme, false);
+  }
 
-  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+  var currentTheme = localStorage.getItem('theme');
+  if (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    currentTheme = 'dark';
+  }
   if (currentTheme) {
     document.documentElement.setAttribute('data-theme', currentTheme);
 
-    if (currentTheme === 'dark') {
+    if (currentTheme === 'dark' && toggleSwitch !== null) {
       toggleSwitch.checked = true;
     }
   }
 }
+
+window.addEventListener('DOMContentLoaded', main);
 </script>
 
 </head>
-<body onload="main()">
+<body>
 <div class="document" id="documentId">
   <div class="container">
-    <h1 class="title">deser</h1>
+    <h1 class="title">src/deser</h1>
     <div class="row">
   <div class="three columns">
   <div class="theme-switch-wrapper">
@@ -100,43 +107,10 @@ function main() {
     </select>
   </div>
   <ul class="simple simple-toc" id="toc-list">
-<li><a class="reference" id="installation_toc" href="#installation">Installation</a></li>
-<li><a class="reference" id="design_toc" href="#design">Design</a></li>
-<ul class="simple"><li><a class="reference" id="design-efficient_toc" href="#design-efficient">Efficient</a></li>
-<li><a class="reference" id="design-easy-to-use_toc" href="#design-easy-to-use">Easy to use</a></li>
-<ul class="simple"><li><a class="reference" id="easy-to-use-i-m-a-user_toc" href="#easy-to-use-i-m-a-user">I'm a user</a></li>
-<li><a class="reference" id="easy-to-use-i-m-a-data-format-developer_toc" href="#easy-to-use-i-m-a-data-format-developer">I'm a data format developer</a></li>
-</ul><li><a class="reference" id="design-functional_toc" href="#design-functional">Functional</a></li>
-<li><a class="reference" id="design-universal_toc" href="#design-universal">Universal</a></li>
-</ul><li><a class="reference" id="manual_toc" href="#manual">Manual</a></li>
-<ul class="simple"><li><a class="reference" id="manual-supported-data-formats_toc" href="#manual-supported-data-formats">Supported data formats</a></li>
-<li><a class="reference" id="manual-pragmas_toc" href="#manual-pragmas">Pragmas</a></li>
-<ul class="simple"><li><a class="reference" id="pragmas-pragmas-prioritization_toc" href="#pragmas-pragmas-prioritization">Pragmas prioritization</a></li>
-</ul><li><a class="reference" id="manual-overhead_toc" href="#manual-overhead">Overhead</a></li>
-<ul class="simple"><li><a class="reference" id="overhead-pragmas-with-overhead_toc" href="#overhead-pragmas-with-overhead">Pragmas with overhead</a></li>
-</ul><li><a class="reference" id="manual-limitations_toc" href="#manual-limitations">Limitations</a></li>
-</ul><li><a class="reference" id="examples_toc" href="#examples">Examples</a></li>
-<ul class="simple"><li><a class="reference" id="examples-convert-timestamp-to-time_toc" href="#examples-convert-timestamp-to-time">Convert timestamp to Time</a></li>
-<li><a class="reference" id="examples-skip-fields_toc" href="#examples-skip-fields">Skip fields</a></li>
-<ul class="simple"><li><a class="reference" id="skip-fields-skip-fields-on-serializing-orslashand-deserializing_toc" href="#skip-fields-skip-fields-on-serializing-orslashand-deserializing">Skip fields on serializing or/and deserializing</a></li>
-<li><a class="reference" id="skip-fields-skip-none-values_toc" href="#skip-fields-skip-none-values">Skip None values</a></li>
-</ul><li><a class="reference" id="examples-object-flattening_toc" href="#examples-object-flattening">Object flattening</a></li>
-</ul><li>
+<li>
   <a class="reference reference-toplevel" href="#6" id="56">Imports</a>
   <ul class="simple simple-toc-section">
     
-  </ul>
-</li>
-<li>
-  <a class="reference reference-toplevel" href="#18" id="68">Templates</a>
-  <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#forSerFields.t%2Cuntyped%2Cuntyped%2C%2Cuntyped"
-    title="forSerFields(key: untyped; value: untyped; inOb: object | tuple | ref;
-             actions: untyped)">forSerFields</a></li>
-  <li><a class="reference" href="#forDesFields.t%2Cuntyped%2Cuntyped%2C%2Cuntyped"
-    title="forDesFields(key: untyped; value: untyped; inOb: var object | var tuple | ref;
-             actions: untyped)">forDesFields</a></li>
-
   </ul>
 </li>
 <li>
@@ -153,264 +127,16 @@ function main() {
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
   
-  <p class="module-desc"><tt class="docutils literal"><span class="pre">Deser</span></tt> is a deserialization and serealization library.
-<h1><a class="toc-backref" id="installation" href="#installation">Installation</a></h1><p><tt class="docutils literal"><span class="pre">nimble install deser</span></tt></p>
-<p>or</p>
-<p><pre class="listing"><span class="Identifier">requires</span> <span class="StringLit">&quot;nim &gt;= 1.4.2, deser&quot;</span>
-</pre></p>
-
-<h1><a class="toc-backref" id="design" href="#design">Design</a></h1>
-<h2><a class="toc-backref" id="design-efficient" href="#design-efficient">Efficient</a></h2><p><tt class="docutils literal"><span class="pre">Deser</span></tt> does not use reflection or type information at runtime. Instead, it uses the magic <a class="reference external" href="https://nim-lang.org/docs/iterators.html#fieldPairs.i%2CT">fieldPairs</a> iterator to get information about types at compile time. The resulting code is very close to the code written manually.</p>
-<p>This code</p>
-<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">macros</span>
-<span class="Keyword">import</span> <span class="Identifier">deser</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">Test</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">id</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-    <span class="Identifier">text</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
-
-<span class="Keyword">let</span> <span class="Identifier">t</span> <span class="Operator">=</span> <span class="Identifier">Test</span><span class="Punctuation">(</span><span class="Identifier">id</span><span class="Punctuation">:</span> <span class="DecNumber">321</span><span class="Punctuation">,</span> <span class="Identifier">text</span><span class="Punctuation">:</span> <span class="StringLit">&quot;123&quot;</span><span class="Punctuation">)</span>
-
-<span class="Identifier">forSerFields</span><span class="Punctuation">(</span><span class="Identifier">key</span><span class="Punctuation">,</span> <span class="Identifier">value</span><span class="Punctuation">,</span> <span class="Identifier">t</span><span class="Punctuation">)</span><span class="Punctuation">:</span>
-  <span class="Identifier">echo</span> <span class="Identifier">value</span>
-</pre></p>
-<p>will be transformed at compile time into something like this:</p>
-<p><pre class="listing"><span class="Keyword">const</span> <span class="Identifier">key</span><span class="Punctuation">`</span><span class="Identifier">gensym1</span> <span class="Operator">=</span> <span class="StringLit">&quot;id&quot;</span>
-<span class="Identifier">echo</span> <span class="Identifier">t</span><span class="Operator">.</span><span class="Identifier">id</span>
-
-<span class="Keyword">const</span> <span class="Identifier">key</span><span class="Punctuation">`</span><span class="Identifier">gensym2</span> <span class="Operator">=</span> <span class="StringLit">&quot;text&quot;</span>
-<span class="Identifier">echo</span> <span class="Identifier">t</span><span class="Operator">.</span><span class="Identifier">text</span>
-</pre></p>
-<blockquote><p>Read more about <a class="reference external" href="#manual-overhead">overhead</a></p></blockquote>
-
-<h2><a class="toc-backref" id="design-easy-to-use" href="#design-easy-to-use">Easy to use</a></h2><p><tt class="docutils literal"><span class="pre">Deser</span></tt> has a simple API for users and developers of data formats.</p>
-
-<h3><a class="toc-backref" id="easy-to-use-i-m-a-user" href="#easy-to-use-i-m-a-user">I'm a user</a></h3><p>Set up the necessary <a class="reference external" href="#manual-pragmas">pragmas</a>, take a third-party library (for example <a class="reference external" href="https://github.com/gabbhack/deser_json">deser_json</a>) that implements the necessary data format, and use it.</p>
-
-<h3><a class="toc-backref" id="easy-to-use-i-m-a-data-format-developer" href="#easy-to-use-i-m-a-data-format-developer">I'm a data format developer</a></h3><p>Look at the example implementation in <a class="reference external" href="https://github.com/gabbhack/deser_json">deser_json</a>, read about <a class="reference external" href="#forSerFields.t%2Cuntyped%2Cuntyped%2C%2Cuntyped">forSerFields</a> and <a class="reference external" href="#forDesFields.t%2Cuntyped%2Cuntyped%2C%2Cuntyped">forDesFields</a>.</p>
-
-<h2><a class="toc-backref" id="design-functional" href="#design-functional">Functional</a></h2><p>You can use pragmas to manage the serialization and deserialization process.</p>
-<p><tt class="docutils literal"><span class="pre">Deser</span></tt> provides the ability to <a class="reference external" href="#examples-skip-fields">skip the necessary fields</a>, <a class="reference external" href="#examples-object-flattening">inline the keys</a> of a child object in the parent, and apply various functions to the object's fields, for example, to <a class="reference external" href="#examples-convert-timestamp-to-time">convert types</a>.</p>
-
-<h2><a class="toc-backref" id="design-universal" href="#design-universal">Universal</a></h2><p><tt class="docutils literal"><span class="pre">Deser</span></tt> is not limited to any data format, since it does not parse. This is just a small layer between your objects and the specific implementation of the serializer.</p>
-<p>Look at the <a class="reference external" href="#manual-supported-data-formats">supported data formats</a>.</p>
-
-<h1><a class="toc-backref" id="manual" href="#manual">Manual</a></h1>
-<h2><a class="toc-backref" id="manual-supported-data-formats" href="#manual-supported-data-formats">Supported data formats</a></h2><ul class="simple"><li><strong>JSON</strong> - <a class="reference external" href="https://github.com/gabbhack/deser_json">deser_json</a></li>
-</ul>
-
-<h2><a class="toc-backref" id="manual-pragmas" href="#manual-pragmas">Pragmas</a></h2><p>Pragmas are special templats that tell <tt class="docutils literal"><span class="pre">deser</span></tt> how to handle the current field or object.</p>
-<p>You can find out about available pragmas and their behavior in the <a class="reference external" href="deser/pragmas.html">pragma documentation</a>.</p>
-
-<h3><a class="toc-backref" id="pragmas-pragmas-prioritization" href="#pragmas-pragmas-prioritization">Pragmas prioritization</a></h3><p><tt class="docutils literal"><span class="pre">Deser</span></tt> applies pragmas according to this priority:</p>
-<ol class="simple"><li>Pragmas from field</li>
-<li>Pragmas from object</li>
-<li>Pragmas from parent object</li>
-</ol>
-
-<h2><a class="toc-backref" id="manual-overhead" href="#manual-overhead">Overhead</a></h2><p>This section is about what overhead <tt class="docutils literal"><span class="pre">deser</span></tt> has at runtime.</p>
-
-<h3><a class="toc-backref" id="overhead-pragmas-with-overhead" href="#overhead-pragmas-with-overhead">Pragmas with overhead</a></h3><p>Pragmas that have an overhead are listed here. For more information, see the documentation of the pragmas themselves.</p>
-<ul class="simple"><li><a class="reference external" href="deser/pragmas.html#deserializeWith.t">deserializeWith</a></li>
-</ul>
-
-<h2><a class="toc-backref" id="manual-limitations" href="#manual-limitations">Limitations</a></h2><p>Due to the nature of templates and type instantiation, you will need to import the <a class="reference external" href="https://nim-lang.org/docs/macros.html">macros</a> module if you are using <a class="reference external" href="#forSerFields.t%2Cuntyped%2Cuntyped%2C%2Cuntyped">forSerFields</a> or <a class="reference external" href="#forDesFields.t%2Cuntyped%2Cuntyped%2C%2Cuntyped">forDesFields</a>. <tt class="docutils literal"><span class="pre">macros</span></tt> may be required if the third-party generic function uses <tt class="docutils literal"><span class="pre">forSerFields</span></tt> or <tt class="docutils literal"><span class="pre">forDesFields</span></tt>.</p>
-
-<h1><a class="toc-backref" id="examples" href="#examples">Examples</a></h1>
-<h2><a class="toc-backref" id="examples-convert-timestamp-to-time" href="#examples-convert-timestamp-to-time">Convert timestamp to Time</a></h2><p><tt class="docutils literal"><span class="pre">Deser</span></tt> has <a class="reference external" href="deser/pragmas.html#serializeWith.t">serializeWith</a> and <a class="reference external" href="deser/pragmas.html#deserializeWith.t">deserializeWith</a> pragmas. You can pass a function to them and it will be applied to the field value.</p>
-<p>If you just change the value, then the argument and result of the function must have the same type, which must be equal to the field type.</p>
-<p>But these pragmas can also be used for converting types.</p>
-<p>You can pass a function to <a class="reference external" href="deser/pragmas.html#serializeWith.t">serializeWith</a> that expects a value with a <em>field type</em>, but returns a value with a <em>another type</em>. In this case, <tt class="docutils literal"><span class="pre">deser</span></tt> will call your function, where the value of the field will be the argument, and send the result of the function to the serializer.</p>
-<p>In the case of <a class="reference external" href="deser/pragmas.html#deserializeWith.t">deserializeWith</a>, you can pass a function that expects a <em>value of some type</em>, and returns the result with the <em>field type</em>. <tt class="docutils literal"><span class="pre">Deser</span></tt> tells the deserializer to search for the type specified in the function argument in the data. The function will be called with the found value, and the field will be assigned the result of the function.</p>
-<p>Let's say that some API returns timestamp. Then we will have such an object:</p>
-<p><pre class="listing"><span class="Keyword">type</span>
-  <span class="Identifier">User</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">created_at</span><span class="Punctuation">:</span> <span class="Identifier">int64</span>
-</pre> But it's more convenient for us to work with the <a class="reference external" href="https://nim-lang.org/docs/times.html#Time">Time</a> object from the standard times library. Fortunately, the standard library provides us <a class="reference external" href="https://nim-lang.org/docs/times.html#toUnix%2CTime">toUnix</a> and <a class="reference external" href="https://nim-lang.org/docs/times.html#fromUnix%2Cint64">fromUnix</a> functions.</p>
-<p><tt class="docutils literal"><span class="pre">toUnix</span></tt> accepts a Time object and returns int64, so we need this function for serialization. After all, the API only accepts timestamp, and we have to make <tt class="docutils literal"><span class="pre">Time</span></tt> again <tt class="docutils literal"><span class="pre">int64</span></tt>.</p>
-<p><tt class="docutils literal"><span class="pre">fromUnix</span></tt> accepts int64 and returns the <tt class="docutils literal"><span class="pre">Time</span></tt> that is necessary for deserialization.</p>
-<p>Let's finally use them</p>
-<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">deser</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">User</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">created_at</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">serializeWith</span><span class="Punctuation">(</span><span class="Identifier">toUnix</span><span class="Punctuation">)</span><span class="Punctuation">,</span> <span class="Identifier">deserializeWith</span><span class="Punctuation">(</span><span class="Identifier">fromUnix</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Time</span>
-</pre></p>
-
-<h2><a class="toc-backref" id="examples-skip-fields" href="#examples-skip-fields">Skip fields</a></h2>
-<h3><a class="toc-backref" id="skip-fields-skip-fields-on-serializing-orslashand-deserializing" href="#skip-fields-skip-fields-on-serializing-orslashand-deserializing">Skip fields on serializing or/and deserializing</a></h3><p>You can skip serialization and deserialization of a field using the <a class="reference external" href="deser/pragmas.html#skip.t">skip</a> pragma:</p>
-<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">deser</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">Foo</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">ok</span><span class="Punctuation">:</span> <span class="Identifier">bool</span>
-    <span class="Identifier">uselessField</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skip</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
-</pre></p>
-<p>You can skip only serialization or only deserialization of the field using <a class="reference external" href="deser/pragmas.html#skipSerializing.t">skipSerializing</a> and <a class="reference external" href="deser/pragmas.html#skipDeserializing.t">skipDeserializing</a>:</p>
-<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">deser</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">Foo</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">ok</span><span class="Punctuation">:</span> <span class="Identifier">bool</span>
-    <span class="Identifier">uselessOnDes</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipDeserializing</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
-    <span class="Identifier">uselessOnSer</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializing</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
-</pre></p>
-
-<h3><a class="toc-backref" id="skip-fields-skip-none-values" href="#skip-fields-skip-none-values">Skip None values</a></h3><p>By default, some json serializers serialize <tt class="docutils literal"><span class="pre">None</span></tt> as <tt class="docutils literal"><span class="pre">null</span></tt>. This meets the standard, but it doesn't always meet our expectations (because not all APIs respond correctly to null).</p>
-<p>You can skip serialization of None values using the <a class="reference external" href="deser/pragmas.html#skipSerializeIf.t">skipSerializeIf</a> pragma. <tt class="docutils literal"><span class="pre">skipSerializeIf</span></tt> expects a function that takes a value with the field type and returns bool.</p>
-<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">options</span>
-<span class="Keyword">import</span> <span class="Identifier">deser</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">Message</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">text</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializeIf</span><span class="Punctuation">(</span><span class="Identifier">isNone</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span>
-    <span class="Identifier">photo</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializeIf</span><span class="Punctuation">(</span><span class="Identifier">isNone</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">Photo</span><span class="Punctuation">]</span>
-</pre></p>
-<p>To write less code, you can apply this pragma to an object:</p>
-<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">options</span>
-<span class="Keyword">import</span> <span class="Identifier">deser</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">Message</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipSerializeIf</span><span class="Punctuation">(</span><span class="Identifier">isNone</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span>  <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">text</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span>
-    <span class="Identifier">photo</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">Photo</span><span class="Punctuation">]</span>
-</pre></p>
-<p><tt class="docutils literal"><span class="pre">Deser</span></tt> check at compile time which fields are suitable by type and apply the pragma only to them.</p>
-
-<h2><a class="toc-backref" id="examples-object-flattening" href="#examples-object-flattening">Object flattening</a></h2><p>Consider some api that returns a page with results and metadata about pagination.</p>
-<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">macros</span><span class="Punctuation">,</span> <span class="Identifier">options</span>
-<span class="Keyword">import</span> <span class="Identifier">deser</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">Items</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">results</span><span class="Punctuation">:</span> <span class="Identifier">seq</span><span class="Punctuation">[</span><span class="Identifier">Item</span><span class="Punctuation">]</span>
-    <span class="Identifier">start</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-    <span class="Identifier">limit</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-    <span class="Identifier">next</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span>
-    <span class="Identifier">previous</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span>
-  
-  <span class="Identifier">Users</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">results</span><span class="Punctuation">:</span> <span class="Identifier">seq</span><span class="Punctuation">[</span><span class="Identifier">User</span><span class="Punctuation">]</span>
-    <span class="Identifier">start</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-    <span class="Identifier">limit</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-    <span class="Identifier">next</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span>
-    <span class="Identifier">previous</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span>
-</pre></p>
-<p>Different requests contain the same fields related to pagination. You can simplify the code by putting these fields in a separate object.</p>
-<p><pre class="listing"><span class="Keyword">type</span>
-  <span class="Identifier">Pagination</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">start</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-    <span class="Identifier">limit</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-    <span class="Identifier">next</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span>
-    <span class="Identifier">previous</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span>
-</pre></p>
-<p>You can now use this object in all pagination-related queries. The <a class="reference external" href="deser/pragmas.html#flat.t">flat</a> pragma will help with this.</p>
-<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">macros</span><span class="Punctuation">,</span> <span class="Identifier">options</span>
-<span class="Keyword">import</span> <span class="Identifier">deser</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">Pagination</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">start</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-    <span class="Identifier">limit</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-    <span class="Identifier">next</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span>
-    <span class="Identifier">previous</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span>
-  
-  <span class="Identifier">Items</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">results</span><span class="Punctuation">:</span> <span class="Identifier">seq</span><span class="Punctuation">[</span><span class="Identifier">Item</span><span class="Punctuation">]</span>
-    <span class="Identifier">pagination</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">flat</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Pagination</span>
-  
-  <span class="Identifier">Users</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">results</span><span class="Punctuation">:</span> <span class="Identifier">seq</span><span class="Punctuation">[</span><span class="Identifier">User</span><span class="Punctuation">]</span>
-    <span class="Identifier">pagination</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">flat</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Pagination</span>
-</pre></p>
-<p><tt class="docutils literal"><span class="pre">flat</span></tt> objects can be nested as many times as you want.</p>
-<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">macros</span><span class="Punctuation">,</span> <span class="Identifier">options</span>
-<span class="Keyword">import</span> <span class="Identifier">deser</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">PaginationUrls</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">next</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span>
-    <span class="Identifier">previous</span><span class="Punctuation">:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span>
-  
-  <span class="Identifier">Pagination</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">start</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-    <span class="Identifier">limit</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
-    <span class="Identifier">urls</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">flat</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">PaginationUrls</span>
-  
-  <span class="Identifier">Items</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">results</span><span class="Punctuation">:</span> <span class="Identifier">seq</span><span class="Punctuation">[</span><span class="Identifier">Item</span><span class="Punctuation">]</span>
-    <span class="Identifier">pagination</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">flat</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Pagination</span>
-  
-  <span class="Identifier">Users</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">results</span><span class="Punctuation">:</span> <span class="Identifier">seq</span><span class="Punctuation">[</span><span class="Identifier">User</span><span class="Punctuation">]</span>
-    <span class="Identifier">pagination</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">flat</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Pagination</span>
-</pre></p>
-</p>
+  <p class="module-desc"></p>
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="deser/hacks.html">deser/hacks</a>, <a class="reference external" href="deser/pragmas.html">deser/pragmas</a>, <a class="reference external" href="deser/templates.html">deser/templates</a>, <a class="reference external" href="deser/utils.html">deser/utils</a>
-</dl></div>
-<div class="section" id="18">
-<h1><a class="toc-backref" href="#18">Templates</a></h1>
-<dl class="item">
-<a id="forSerFields.t,untyped,untyped,,untyped"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#forSerFields.t%2Cuntyped%2Cuntyped%2C%2Cuntyped"><span class="Identifier">forSerFields</span></a><span class="Other">(</span><span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">;</span> <span class="Identifier">inOb</span><span class="Other">:</span> <span class="Keyword">object</span> <span class="Operator">|</span> <span class="Keyword">tuple</span> <span class="Operator">|</span> <span class="Keyword">ref</span><span class="Other">;</span>
-                      <span class="Identifier">actions</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
-<dd>
-
-<p>Data format developers should use this during serialization instead of <a class="reference external" href="https://nim-lang.org/docs/iterators.html#fieldPairs.i%2CT">fieldPairs</a></p>
-<p>In contrast to the <tt class="docutils literal"><span class="pre">fieldPairs</span></tt>, supports ref types.</p>
-<p><strong>Limitations</strong>: Since this is just a template, you need to import the <a class="reference external" href="https://nim-lang.org/docs/macros.html">macros</a> module </p>
-
-<p><strong class="examples_text">Example:</strong></p>
-<pre class="listing"><span class="Keyword">import</span><span class="Whitespace"> </span><span class="Identifier">macros</span><span class="Whitespace">
-</span><span class="Keyword">import</span><span class="Whitespace"> </span><span class="Identifier">deser</span><span class="Whitespace">
-</span><span class="Keyword">type</span><span class="Whitespace">
-  </span><span class="Identifier">Foo</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Keyword">object</span><span class="Whitespace">
-    </span><span class="Identifier">id</span><span class="Punctuation">:</span><span class="Whitespace"> </span><span class="Identifier">int</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">f</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">Foo</span><span class="Punctuation">(</span><span class="Identifier">id</span><span class="Punctuation">:</span><span class="Whitespace"> </span><span class="DecNumber">123</span><span class="Punctuation">)</span><span class="Whitespace">
-</span><span class="Identifier">forSerFields</span><span class="Punctuation">(</span><span class="Identifier">k</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="Identifier">v</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="Identifier">f</span><span class="Punctuation">)</span><span class="Punctuation">:</span><span class="Whitespace">
-  </span><span class="Identifier">echo</span><span class="Whitespace"> </span><span class="Identifier">k</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="StringLit">&quot; &quot;</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="Identifier">v</span></pre>
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser.nim#L309"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/gabbhack/deser/edit/devel/src/deser.nim#L309" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="forDesFields.t,untyped,untyped,,untyped"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#forDesFields.t%2Cuntyped%2Cuntyped%2C%2Cuntyped"><span class="Identifier">forDesFields</span></a><span class="Other">(</span><span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">;</span>
-                      <span class="Identifier">inOb</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Keyword">object</span> <span class="Operator">|</span> <span class="Keyword">var</span> <span class="Keyword">tuple</span> <span class="Operator">|</span> <span class="Keyword">ref</span><span class="Other">;</span> <span class="Identifier">actions</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
-<dd>
-
-<p>Data format developers should use this during deserialization instead of fieldPairs.</p>
-<p>In contrast to the <tt class="docutils literal"><span class="pre">fieldPairs</span></tt>, supports ref types.</p>
-<p><strong>Limitations</strong>: Since this is just a template, you need to import the <a class="reference external" href="https://nim-lang.org/docs/macros.html">macros</a> module </p>
-
-<p><strong class="examples_text">Example:</strong></p>
-<pre class="listing"><span class="Keyword">import</span><span class="Whitespace"> </span><span class="Identifier">macros</span><span class="Whitespace">
-</span><span class="Keyword">import</span><span class="Whitespace"> </span><span class="Identifier">deser</span><span class="Whitespace">
-</span><span class="Keyword">type</span><span class="Whitespace">
-  </span><span class="Identifier">Foo</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Keyword">object</span><span class="Whitespace">
-    </span><span class="Identifier">id</span><span class="Punctuation">:</span><span class="Whitespace"> </span><span class="Identifier">int</span><span class="Whitespace">
-</span><span class="Keyword">var</span><span class="Whitespace"> </span><span class="Identifier">f</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">Foo</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Whitespace">
-</span><span class="Identifier">forDesFields</span><span class="Punctuation">(</span><span class="Identifier">k</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="Identifier">v</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="Identifier">f</span><span class="Punctuation">)</span><span class="Punctuation">:</span><span class="Whitespace">
-  </span><span class="Identifier">echo</span><span class="Whitespace"> </span><span class="Identifier">k</span><span class="Whitespace">
-  </span><span class="Identifier">v</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="DecNumber">123</span><span class="Whitespace">
-</span><span class="Identifier">echo</span><span class="Whitespace"> </span><span class="Identifier">f</span><span class="Operator">.</span><span class="Identifier">id</span></pre>
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser.nim#L330"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/gabbhack/deser/edit/devel/src/deser.nim#L330" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-
+<a class="reference external" href="deser/pragmas.html">deser/pragmas</a>, <a class="reference external" href="deser/ser.html">deser/ser</a>
 </dl></div>
 <div class="section" id="19">
 <h1><a class="toc-backref" href="#19">Exports</a></h1>
 <dl class="item">
-<a href="deser/hacks.html#checkedObj.t"><span class="Identifier">checkedObj</span></a>, <a href="deser/hacks.html#hackType.t,T"><span class="Identifier">hackType</span></a>, <a href="deser/hacks.html#getProcReturnType.m"><span class="Identifier">getProcReturnType</span></a>, <a href="deser/hacks.html#safeCondition.t,untyped"><span class="Identifier">safeCondition</span></a>, <a href="deser/hacks.html#tryFinally.t,untyped,untyped"><span class="Identifier">tryFinally</span></a>, <a href="deser/hacks.html#getFirstArgumentType.m"><span class="Identifier">getFirstArgumentType</span></a>, <a href="deser/pragmas.html#skipDeserializing.t"><span class="Identifier">skipDeserializing</span></a>, <a href="deser/pragmas.html#skipSerializing.t"><span class="Identifier">skipSerializing</span></a>, <a href="deser/pragmas.html#skipSerializeIf.t"><span class="Identifier">skipSerializeIf</span></a>, <a href="deser/pragmas.html#deserializeWith.t"><span class="Identifier">deserializeWith</span></a>, <a href="deser/pragmas.html#serializeWith.t"><span class="Identifier">serializeWith</span></a>, <a href="deser/pragmas.html#skip.t"><span class="Identifier">skip</span></a>, <a href="deser/pragmas.html#renameAll.t,RenameKind,RenameKind"><span class="Identifier">renameAll</span></a>, <a href="deser/pragmas.html#rename.t,string,string"><span class="Identifier">rename</span></a>, <a href="deser/pragmas.html#flat.t"><span class="Identifier">flat</span></a>, <a href="deser/templates.html#actualForSerFields.t,untyped,untyped,,untyped,tuple[],RenameKind,tuple[]"><span class="Identifier">actualForSerFields</span></a>, <a href="deser/templates.html#actualForDesFields.t,untyped,untyped,,untyped,RenameKind,tuple[]"><span class="Identifier">actualForDesFields</span></a>, <a href="deser/utils.html#renamer,string,RenameKind"><span class="Identifier">renamer</span></a>, <a href="deser/utils.html#RenameKind"><span class="Identifier">RenameKind</span></a>
+<a href="deser/pragmas.html#inlineKeys.t"><span class="Identifier">inlineKeys</span></a>, <a href="deser/pragmas.html#skipDeserializing.t"><span class="Identifier">skipDeserializing</span></a>, <a href="deser/pragmas.html#serializeWith.t,typed"><span class="Identifier">serializeWith</span></a>, <a href="deser/pragmas.html#renameDeserialize.t,string"><span class="Identifier">renameDeserialize</span></a>, <a href="deser/pragmas.html#skipped.t"><span class="Identifier">skipped</span></a>, <a href="deser/pragmas.html#skipSerializing.t"><span class="Identifier">skipSerializing</span></a>, <a href="deser/pragmas.html#renameSerialize.t,string"><span class="Identifier">renameSerialize</span></a>, <a href="deser/pragmas.html#untagged.t"><span class="Identifier">untagged</span></a>, <a href="deser/pragmas.html#skipSerializeIf.t,typed"><span class="Identifier">skipSerializeIf</span></a>, <a href="deser/ser/impls.html#serialize,bool,Serializer"><span class="Identifier">serialize</span></a>, <a href="deser/ser/flat.html#endMap,FlatMapSerializeMap"><span class="Identifier">endMap</span></a>, <a href="deser/ser/flat.html#endStruct,FlatMapSerializeStruct"><span class="Identifier">endStruct</span></a>, <a href="deser/ser/provided.html#MapIter"><span class="Identifier">MapIter</span></a>, <a href="deser/ser/flat.html#initFlatMapSerializer,T"><span class="Identifier">initFlatMapSerializer</span></a>, <a href="deser/ser/flat.html#serializeChar,FlatMapSerializer,char"><span class="Identifier">serializeChar</span></a>, <a href="deser/ser/flat.html#serializeSome,FlatMapSerializer,Value"><span class="Identifier">serializeSome</span></a>, <a href="deser/ser/flat.html#serializeMapValue,FlatMapSerializeMap,Value"><span class="Identifier">serializeMapValue</span></a>, <a href="deser/ser/flat.html#serializeStructUnit,FlatMapSerializer"><span class="Identifier">serializeStructUnit</span></a>, <a href="deser/ser/flat.html#serializeMapKey,FlatMapSerializeMap,Value"><span class="Identifier">serializeMapKey</span></a>, <a href="deser/ser/provided.html#serializeMapEntry,Serializer,Key,Value"><span class="Identifier">serializeMapEntry</span></a>, <a href="deser/ser/flat.html#serializeTupleUnit,FlatMapSerializer"><span class="Identifier">serializeTupleUnit</span></a>, <a href="deser/ser/flat.html#serializeSeqElement,FlatMapSerializer,Value"><span class="Identifier">serializeSeqElement</span></a>, <a href="deser/ser/provided.html#collectSeq,Serializer,Iter"><span class="Identifier">collectSeq</span></a>, <a href="deser/ser/flat.html#serializeMap,FlatMapSerializer"><span class="Identifier">serializeMap</span></a>, <a href="deser/ser/serialize_with.html#serialize,SerializeWith[T,Serializer],Serializer"><span class="Identifier">serialize</span></a>, <a href="deser/ser/flat.html#FlatMapSerializeMap"><span class="Identifier">FlatMapSerializeMap</span></a>, <a href="deser/ser/impls.html#serialize,SomeTable,Serializer"><span class="Identifier">serialize</span></a>, <a href="deser/ser/flat.html#serializeTupleElement,FlatMapSerializer,Value"><span class="Identifier">serializeTupleElement</span></a>, <a href="deser/ser/impls.html#serialize,Integer,Serializer"><span class="Identifier">serialize</span></a>, <a href="deser/ser/impls.html#serialize,Unit,Serializer"><span class="Identifier">serialize</span></a>, <a href="deser/ser/flat.html#serializeField,FlatMapSerializeStruct,static[string],Value"><span class="Identifier">serializeField</span></a>, <a href="deser/ser/flat.html#endSeq,FlatMapSerializer"><span class="Identifier">endSeq</span></a>, <a href="deser/ser/flat.html#serializeTuple,FlatMapSerializer,static[uint]"><span class="Identifier">serializeTuple</span></a>, <a href="deser/ser/flat.html#FlatMapSerializeStruct"><span class="Identifier">FlatMapSerializeStruct</span></a>, <a href="deser/ser/impls.html#serialize,Set,Serializer"><span class="Identifier">serialize</span></a>, <a href="deser/ser/serialize_with.html#SerializeWith"><span class="Identifier">SerializeWith</span></a>, <a href="deser/ser/provided.html#SeqIter"><span class="Identifier">SeqIter</span></a>, <a href="deser/ser/flat.html#serializeInt,FlatMapSerializer,Value"><span class="Identifier">serializeInt</span></a>, <a href="deser/ser/flat.html#endNamedTuple,FlatMapSerializer"><span class="Identifier">endNamedTuple</span></a>, <a href="deser/ser/impls.html#serialize,Option[Value],Serializer"><span class="Identifier">serialize</span></a>, <a href="deser/ser/flat.html#serializeBool,FlatMapSerializer,bool"><span class="Identifier">serializeBool</span></a>, <a href="deser/ser/provided.html#UnitConcept"><span class="Identifier">UnitConcept</span></a>, <a href="deser/ser/make.html#makeSerializable.m,typedesc,static[bool]"><span class="Identifier">makeSerializable</span></a>, <a href="deser/ser/provided.html#collectMap,Serializer,Iter"><span class="Identifier">collectMap</span></a>, <a href="deser/ser/flat.html#serializeSeq,FlatMapSerializer,Option[uint]"><span class="Identifier">serializeSeq</span></a>, <a href="deser/ser/flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a>, <a href="deser/ser/flat.html#serializeNamedTupleField,FlatMapSerializer,Key,Value"><span class="Identifier">serializeNamedTupleField</span></a>, <a href="deser/ser/flat.html#serializeStruct,FlatMapSerializer,static[string]"><span class="Identifier">serializeStruct</span></a>, <a href="deser/ser/impls.html#serialize,string,Serializer"><span class="Identifier">serialize</span></a>, <a href="deser/ser/impls.html#serialize,,Serializer"><span class="Identifier">serialize</span></a>, <a href="deser/ser/flat.html#serializeFloat,FlatMapSerializer,Value"><span class="Identifier">serializeFloat</span></a>, <a href="deser/ser/impls.html#serialize,Tuple,Serializer"><span class="Identifier">serialize</span></a>, <a href="deser/ser/flat.html#serializeNone,FlatMapSerializer"><span class="Identifier">serializeNone</span></a>, <a href="deser/ser/flat.html#endTuple,FlatMapSerializer"><span class="Identifier">endTuple</span></a>, <a href="deser/ser/flat.html#serializeNamedTuple,FlatMapSerializer,static[string],static[uint]"><span class="Identifier">serializeNamedTuple</span></a>, <a href="deser/ser/impls.html#serialize,Float,Serializer"><span class="Identifier">serialize</span></a>, <a href="deser/ser/flat.html#serializeBytes,FlatMapSerializer,openArray[byte]"><span class="Identifier">serializeBytes</span></a>, <a href="deser/ser/impls.html#serialize,char,Serializer"><span class="Identifier">serialize</span></a>, <a href="deser/ser/impls.html#serialize,Seq,Serializer"><span class="Identifier">serialize</span></a>, <a href="deser/ser/impls.html#serialize,Set,Serializer_2"><span class="Identifier">serialize</span></a>
 </dl></div>
 
   </div>
@@ -420,7 +146,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-12-24 11:30:30 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-10-26 10:27:51 UTC</small>
       </div>
     </div>
   </div>

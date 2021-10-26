@@ -1,0 +1,2 @@
+SerializeWith	deser/ser/serialize_with.html#SerializeWith	serialize_with: SerializeWith	
+serialize	deser/ser/serialize_with.html#serialize,SerializeWith[T,Serializer],Serializer	serialize_with: serialize[T, Serializer](self: SerializeWith[T, Serializer];\n                         serializer: Serializer)	
