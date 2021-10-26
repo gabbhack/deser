@@ -29,7 +29,10 @@ func newSerializeWithType(field: Field): NimNode =
   )
 
 func newFlatStructSerialize(item: NimNode): NimNode =
-  # serialize(item, FlatMapSerializer(ser: state))
+  #[
+  var flatState = FlatMapSerializer(ser: addr(state))
+  serialize(item, flatState)
+  ]#
   let constrFlatMap = nnkObjConstr.newTree(
     nnkBracketExpr.newTree(
       bindSym("FlatMapSerializer"),
