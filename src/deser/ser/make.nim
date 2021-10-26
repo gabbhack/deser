@@ -90,14 +90,21 @@ func newSerializeCaseField(field: Field): NimNode =
   
   let
     # serialize case ("kind") field without `skipSerializeIf` check
-    serializeCaseField = newUncheckedSerializeField(field)
+    serializeCaseField = (
+      # do nothing if the `untagged` pragma is detected
+      if field.features.untagged:
+        newEmptyNode()
+      else:
+        newUncheckedSerializeField(field)
+    )
     # serialize fields inside branches
     serializeBranchesFields = newCaseStmt(newDotExpr(ident "self", field.ident), branches)
     #[
     `serializeCaseField` body
     `serializeBranchesFields` body
     ]#
-    serialize = newStmtList(serializeCaseField, serializeBranchesFields)
+  
+  let serialize = newStmtList(serializeCaseField, serializeBranchesFields)
   
   # add `skipSerializeIf` check
   result = newSerializeCheck(field, serialize)

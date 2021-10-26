@@ -25,6 +25,13 @@ type
       yes: string
     else:
       discard
+  
+  UntaggedCaseObject = object
+    case kind {.untagged.}: bool
+    of true:
+      yes: string
+    else:
+      discard
 
 proc serialize[Serializer](self: ref int, serializer: var Serializer) =
   serializer.serializeInt(self[])
@@ -35,6 +42,7 @@ makeSerializable(ObjectWithRef)
 makeSerializable(RefObject)
 makeSerializable(InheritObject)
 makeSerializable(CaseObject)
+makeSerializable(UntaggedCaseObject)
 
 suite "makeSerializable":
   test "simple":
@@ -86,5 +94,25 @@ suite "makeSerializable":
       Boolean(true),
       String("yes"),
       String("yes"),
+      StructEnd()
+    ]
+
+    serTokens CaseObject(kind: false), [
+      Struct("CaseObject"),
+      String("kind"),
+      Boolean(false),
+      StructEnd()
+    ]
+  
+  test "untagged case object":
+    serTokens UntaggedCaseObject(kind: true, yes: "yes"), [
+      Struct("UntaggedCaseObject"),
+      String("yes"),
+      String("yes"),
+      StructEnd()
+    ]
+
+    serTokens UntaggedCaseObject(kind: false), [
+      Struct("UntaggedCaseObject"),
       StructEnd()
     ]
