@@ -1,7 +1,10 @@
-import std/[unittest]
+import std/[unittest, options, times]
 
 import deser
+import deser/utils
 import deser/test
+
+proc toTimestamp[Serializer](date: DateTime, serializer: var Serializer) = date.toTime.toUnix.serialize(serializer)
 
 type
   Object = object
@@ -32,6 +35,12 @@ type
       yes: string
     else:
       discard
+  
+  SkipIfObject = object
+    text {.skipSerializeIf(isNone).}: Option[string]
+  
+  SerializeWithObject = object
+    date {.serializeWith(toTimestamp).}: DateTime
 
 proc serialize[Serializer](self: ref int, serializer: var Serializer) =
   serializer.serializeInt(self[])
@@ -43,6 +52,8 @@ makeSerializable(RefObject)
 makeSerializable(InheritObject)
 makeSerializable(CaseObject)
 makeSerializable(UntaggedCaseObject)
+makeSerializable(SkipIfObject)
+makeSerializable(SerializeWithObject)
 
 suite "makeSerializable":
   test "simple":
@@ -114,5 +125,27 @@ suite "makeSerializable":
 
     serTokens UntaggedCaseObject(kind: false), [
       Struct("UntaggedCaseObject"),
+      StructEnd()
+    ]
+  
+  test "object with skipSerializeIf":
+    serTokens SkipIfObject(text: some "text"), [
+      Struct("SkipIfObject"),
+      String("text"),
+      Some(),
+      StructEnd()
+    ]
+
+    serTokens SkipIfObject(text: none string), [
+      Struct("SkipIfObject"),
+      StructEnd()
+    ]
+  
+  test "object with serializeWith":
+    let date = now()
+    serTokens SerializeWithObject(date: date), [
+      Struct("SerializeWithObject"),
+      String("date"),
+      Integer(int(date.toTime.toUnix)),
       StructEnd()
     ]
