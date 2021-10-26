@@ -1,0 +1,8 @@
+MapIter	ser/provided.html#MapIter	provided: MapIter	
+SeqIter	ser/provided.html#SeqIter	provided: SeqIter	
+UnitConcept	ser/provided.html#UnitConcept	provided: UnitConcept	
+serializeMapEntry	ser/provided.html#serializeMapEntry,Serializer,Key,Value	provided: serializeMapEntry[Serializer; Key; Value](self: var Serializer; key: Key;\n    v: Value)	
+collectSeq	ser/provided.html#collectSeq,Serializer,Iter	provided: collectSeq[Serializer; Iter: SeqIter](self: var Serializer; iter: Iter)	
+collectMap	ser/provided.html#collectMap,Serializer,Iter	provided: collectMap[Serializer; Iter: MapIter](self: var Serializer; iter: Iter)	
+collectSeq	ser/provided.html#collectSeq.t,Serializer,iterable[Value]	provided: collectSeq[Serializer; Value](self: var Serializer; iter: iterable[Value])	
+collectMap	ser/provided.html#collectMap.t,Serializer,iterable[]	provided: collectMap[Serializer; Key; Value](self: var Serializer;\n                                   iter: iterable[(Key, Value)])	

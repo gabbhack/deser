@@ -70,10 +70,40 @@ window.addEventListener('DOMContentLoaded', main);
 <div class="document" id="documentId">
   <div class="container">
     <h1 class="title">Index</h1>
-    Modules: <a href="deser/pragmas.html">deser/pragmas</a>, <a href="deser/ser/flat.html">deser/ser/flat</a>, <a href="deser/ser/impls.html">deser/ser/impls</a>, <a href="deser/ser/make.html">deser/ser/make</a>, <a href="deser/ser/provided.html">deser/ser/provided</a>, <a href="deser/ser/serialize_with.html">deser/ser/serialize_with</a>, <a href="deser/utils.html">deser/utils</a>.<br/><p /><h2>API symbols</h2>
-<dl><dt><a name="asAddr" href="#asAddr"><span>asAddr:</span></a></dt><dd><ul class="simple">
+    Modules: <a href="deser/pragmas.html">deser/pragmas</a>, <a href="deser/ser/flat.html">deser/ser/flat</a>, <a href="deser/ser/impls.html">deser/ser/impls</a>, <a href="deser/ser/make.html">deser/ser/make</a>, <a href="deser/ser/provided.html">deser/ser/provided</a>, <a href="deser/ser/serialize_with.html">deser/ser/serialize_with</a>, <a href="deser/utils.html">deser/utils</a>, <a href="ser/impls.html">ser/impls</a>, <a href="ser/provided.html">ser/provided</a>, <a href="test/ser.html">test/ser</a>, <a href="test/token.html">test/token</a>, <a href="utils.html">utils</a>.<br/><p /><h2>API symbols</h2>
+<dl><dt><a name="%60%3D%3D%60" href="#%60%3D%3D%60"><span>`==`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: `==`(a: Token; b: Token): bool" href="test/token.html#%3D%3D%2CToken%2CToken">token: `==`(a: Token; b: Token): bool</a></li>
+          </ul></dd>
+<dt><a name="Array" href="#Array"><span>Array:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: Array(arrayLen: int): Token" href="test/token.html#Array%2Cint">token: Array(arrayLen: int): Token</a></li>
+          </ul></dd>
+<dt><a name="ArrayEnd" href="#ArrayEnd"><span>ArrayEnd:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: ArrayEnd(): Token" href="test/token.html#ArrayEnd">token: ArrayEnd(): Token</a></li>
+          </ul></dd>
+<dt><a name="asAddr" href="#asAddr"><span>asAddr:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="utils: asAddr(ident: untyped; exp: untyped)" href="deser/utils.html#asAddr.t%2Cuntyped%2Cuntyped">utils: asAddr(ident: untyped; exp: untyped)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="utils: asAddr(ident: untyped; exp: untyped)" href="utils.html#asAddr.t%2Cuntyped%2Cuntyped">utils: asAddr(ident: untyped; exp: untyped)</a></li>
+          </ul></dd>
+<dt><a name="assertNextToken" href="#assertNextToken"><span>assertNextToken:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: assertNextToken(ser: var Serializer; actual: Token)" href="test/ser.html#assertNextToken%2CSerializer%2CToken">ser: assertNextToken(ser: var Serializer; actual: Token)</a></li>
+          </ul></dd>
+<dt><a name="Boolean" href="#Boolean"><span>Boolean:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: Boolean(boolean: bool): Token" href="test/token.html#Boolean%2Cbool">token: Boolean(boolean: bool): Token</a></li>
+          </ul></dd>
+<dt><a name="Bytes" href="#Bytes"><span>Bytes:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: Bytes(bytes: seq[byte]): Token" href="test/token.html#Bytes%2Cseq%5Bbyte%5D">token: Bytes(bytes: seq[byte]): Token</a></li>
+          </ul></dd>
+<dt><a name="Char" href="#Char"><span>Char:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: Char(char: char): Token" href="test/token.html#Char%2Cchar">token: Char(char: char): Token</a></li>
           </ul></dd>
 <dt><a name="collectMap" href="#collectMap"><span>collectMap:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -82,32 +112,64 @@ window.addEventListener('DOMContentLoaded', main);
           data-doc-search-tag="provided: collectMap[Serializer; Key; Value](self: var Serializer;
                                    iter: iterable[(Key, Value)])" href="deser/ser/provided.html#collectMap.t%2CSerializer%2Citerable%5B%5D">provided: collectMap[Serializer; Key; Value](self: var Serializer;
                                    iter: iterable[(Key, Value)])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="provided: collectMap[Serializer; Iter: MapIter](self: var Serializer; iter: Iter)" href="ser/provided.html#collectMap%2CSerializer%2CIter">provided: collectMap[Serializer; Iter: MapIter](self: var Serializer; iter: Iter)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="provided: collectMap[Serializer; Key; Value](self: var Serializer;
+                                   iter: iterable[(Key, Value)])" href="ser/provided.html#collectMap.t%2CSerializer%2Citerable%5B%5D">provided: collectMap[Serializer; Key; Value](self: var Serializer;
+                                   iter: iterable[(Key, Value)])</a></li>
           </ul></dd>
 <dt><a name="collectSeq" href="#collectSeq"><span>collectSeq:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="provided: collectSeq[Serializer; Iter: SeqIter](self: var Serializer; iter: Iter)" href="deser/ser/provided.html#collectSeq%2CSerializer%2CIter">provided: collectSeq[Serializer; Iter: SeqIter](self: var Serializer; iter: Iter)</a></li>
           <li><a class="reference external"
           data-doc-search-tag="provided: collectSeq[Serializer; Value](self: var Serializer; iter: iterable[Value])" href="deser/ser/provided.html#collectSeq.t%2CSerializer%2Citerable%5BValue%5D">provided: collectSeq[Serializer; Value](self: var Serializer; iter: iterable[Value])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="provided: collectSeq[Serializer; Iter: SeqIter](self: var Serializer; iter: Iter)" href="ser/provided.html#collectSeq%2CSerializer%2CIter">provided: collectSeq[Serializer; Iter: SeqIter](self: var Serializer; iter: Iter)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="provided: collectSeq[Serializer; Value](self: var Serializer; iter: iterable[Value])" href="ser/provided.html#collectSeq.t%2CSerializer%2Citerable%5BValue%5D">provided: collectSeq[Serializer; Value](self: var Serializer; iter: iterable[Value])</a></li>
+          </ul></dd>
+<dt><a name="Empty" href="#Empty"><span>Empty:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: Empty(): Token" href="test/token.html#Empty">token: Empty(): Token</a></li>
+          </ul></dd>
+<dt><a name="endArray" href="#endArray"><span>endArray:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: endArray(self: var Serializer)" href="test/ser.html#endArray%2CSerializer">ser: endArray(self: var Serializer)</a></li>
           </ul></dd>
 <dt><a name="endMap" href="#endMap"><span>endMap:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: endMap(self: FlatMapSerializeMap)" href="deser/ser/flat.html#endMap%2CFlatMapSerializeMap">flat: endMap(self: FlatMapSerializeMap)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: endMap(self: var Serializer)" href="test/ser.html#endMap%2CSerializer">ser: endMap(self: var Serializer)</a></li>
           </ul></dd>
 <dt><a name="endNamedTuple" href="#endNamedTuple"><span>endNamedTuple:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: endNamedTuple(self: FlatMapSerializer)" href="deser/ser/flat.html#endNamedTuple%2CFlatMapSerializer">flat: endNamedTuple(self: FlatMapSerializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: endNamedTuple(self: var Serializer)" href="test/ser.html#endNamedTuple%2CSerializer">ser: endNamedTuple(self: var Serializer)</a></li>
           </ul></dd>
 <dt><a name="endSeq" href="#endSeq"><span>endSeq:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: endSeq(self: FlatMapSerializer)" href="deser/ser/flat.html#endSeq%2CFlatMapSerializer">flat: endSeq(self: FlatMapSerializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: endSeq(self: var Serializer)" href="test/ser.html#endSeq%2CSerializer">ser: endSeq(self: var Serializer)</a></li>
+          </ul></dd>
+<dt><a name="endSeqMap" href="#endSeqMap"><span>endSeqMap:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: endSeqMap(self: var Serializer)" href="test/ser.html#endSeqMap%2CSerializer">ser: endSeqMap(self: var Serializer)</a></li>
           </ul></dd>
 <dt><a name="endStruct" href="#endStruct"><span>endStruct:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: endStruct(self: FlatMapSerializeStruct)" href="deser/ser/flat.html#endStruct%2CFlatMapSerializeStruct">flat: endStruct(self: FlatMapSerializeStruct)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: endStruct(self: var Serializer)" href="test/ser.html#endStruct%2CSerializer">ser: endStruct(self: var Serializer)</a></li>
           </ul></dd>
 <dt><a name="endTuple" href="#endTuple"><span>endTuple:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: endTuple(self: FlatMapSerializer)" href="deser/ser/flat.html#endTuple%2CFlatMapSerializer">flat: endTuple(self: FlatMapSerializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: endTuple(self: var Serializer)" href="test/ser.html#endTuple%2CSerializer">ser: endTuple(self: var Serializer)</a></li>
           </ul></dd>
 <dt><a name="FlatMapSerializeMap" href="#FlatMapSerializeMap"><span>FlatMapSerializeMap:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -121,6 +183,10 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="flat: FlatMapSerializeStruct" href="deser/ser/flat.html#FlatMapSerializeStruct">flat: FlatMapSerializeStruct</a></li>
           </ul></dd>
+<dt><a name="Float" href="#Float"><span>Float:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: Float(float: float): Token" href="test/token.html#Float%2Cfloat">token: Float(float: float): Token</a></li>
+          </ul></dd>
 <dt><a name="initFlatMapSerializer" href="#initFlatMapSerializer"><span>initFlatMapSerializer:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: initFlatMapSerializer[T](serializer: var T): FlatMapSerializer" href="deser/ser/flat.html#initFlatMapSerializer%2CT">flat: initFlatMapSerializer[T](serializer: var T): FlatMapSerializer</a></li>
@@ -129,13 +195,47 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="pragmas: inlineKeys()" href="deser/pragmas.html#inlineKeys.t">pragmas: inlineKeys()</a></li>
           </ul></dd>
+<dt><a name="Integer" href="#Integer"><span>Integer:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: Integer(integer: int): Token" href="test/token.html#Integer%2Cint">token: Integer(integer: int): Token</a></li>
+          </ul></dd>
 <dt><a name="makeSerializable" href="#makeSerializable"><span>makeSerializable:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="make: makeSerializable(T: typedesc; public: static[bool] = false)" href="deser/ser/make.html#makeSerializable.m%2Ctypedesc%2Cstatic%5Bbool%5D">make: makeSerializable(T: typedesc; public: static[bool] = false)</a></li>
           </ul></dd>
+<dt><a name="Map" href="#Map"><span>Map:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: Map(map_len: Option[int]): Token" href="test/token.html#Map%2COption%5Bint%5D">token: Map(map_len: Option[int]): Token</a></li>
+          </ul></dd>
+<dt><a name="MapEnd" href="#MapEnd"><span>MapEnd:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: MapEnd(): Token" href="test/token.html#MapEnd">token: MapEnd(): Token</a></li>
+          </ul></dd>
 <dt><a name="MapIter" href="#MapIter"><span>MapIter:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="provided: MapIter" href="deser/ser/provided.html#MapIter">provided: MapIter</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="provided: MapIter" href="ser/provided.html#MapIter">provided: MapIter</a></li>
+          </ul></dd>
+<dt><a name="NamedTuple" href="#NamedTuple"><span>NamedTuple:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: NamedTuple(namedTupleName: string; namedTupleLen: int): Token" href="test/token.html#NamedTuple%2Cstring%2Cint">token: NamedTuple(namedTupleName: string; namedTupleLen: int): Token</a></li>
+          </ul></dd>
+<dt><a name="NamedTupleEnd" href="#NamedTupleEnd"><span>NamedTupleEnd:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: NamedTupleEnd(): Token" href="test/token.html#NamedTupleEnd">token: NamedTupleEnd(): Token</a></li>
+          </ul></dd>
+<dt><a name="nextToken" href="#nextToken"><span>nextToken:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: nextToken(self: var Serializer): Option[Token]" href="test/ser.html#nextToken%2CSerializer">ser: nextToken(self: var Serializer): Option[Token]</a></li>
+          </ul></dd>
+<dt><a name="None" href="#None"><span>None:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: None(): Token" href="test/token.html#None">token: None(): Token</a></li>
+          </ul></dd>
+<dt><a name="remaining" href="#remaining"><span>remaining:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: remaining(self: Serializer): int" href="test/ser.html#remaining%2CSerializer">ser: remaining(self: Serializer): int</a></li>
           </ul></dd>
 <dt><a name="renameDeserialize" href="#renameDeserialize"><span>renameDeserialize:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -145,9 +245,27 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="pragmas: renameSerialize(renamed: string)" href="deser/pragmas.html#renameSerialize.t%2Cstring">pragmas: renameSerialize(renamed: string)</a></li>
           </ul></dd>
+<dt><a name="Seq" href="#Seq"><span>Seq:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: Seq(seq_len: Option[int]): Token" href="test/token.html#Seq%2COption%5Bint%5D">token: Seq(seq_len: Option[int]): Token</a></li>
+          </ul></dd>
+<dt><a name="SeqEnd" href="#SeqEnd"><span>SeqEnd:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: SeqEnd(): Token" href="test/token.html#SeqEnd">token: SeqEnd(): Token</a></li>
+          </ul></dd>
 <dt><a name="SeqIter" href="#SeqIter"><span>SeqIter:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="provided: SeqIter" href="deser/ser/provided.html#SeqIter">provided: SeqIter</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="provided: SeqIter" href="ser/provided.html#SeqIter">provided: SeqIter</a></li>
+          </ul></dd>
+<dt><a name="SeqMap" href="#SeqMap"><span>SeqMap:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: SeqMap(seqMapLen: Option[int]): Token" href="test/token.html#SeqMap%2COption%5Bint%5D">token: SeqMap(seqMapLen: Option[int]): Token</a></li>
+          </ul></dd>
+<dt><a name="SeqMapEnd" href="#SeqMapEnd"><span>SeqMapEnd:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: SeqMapEnd(): Token" href="test/token.html#SeqMapEnd">token: SeqMapEnd(): Token</a></li>
           </ul></dd>
 <dt><a name="serialize" href="#serialize"><span>serialize:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -184,18 +302,62 @@ window.addEventListener('DOMContentLoaded', main);
           data-doc-search-tag="serialize_with: serialize[T, Serializer](self: SerializeWith[T, Serializer];
                          serializer: Serializer)" href="deser/ser/serialize_with.html#serialize%2CSerializeWith%5BT%2CSerializer%5D%2CSerializer">serialize_with: serialize[T, Serializer](self: SerializeWith[T, Serializer];
                          serializer: Serializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="impls: serialize[Serializer](self: enum; serializer: var Serializer)" href="ser/impls.html#serialize%2C%2CSerializer">impls: serialize[Serializer](self: enum; serializer: var Serializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="impls: serialize[Serializer](self: bool; serializer: var Serializer)" href="ser/impls.html#serialize%2Cbool%2CSerializer">impls: serialize[Serializer](self: bool; serializer: var Serializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="impls: serialize[Serializer](self: char; serializer: var Serializer)" href="ser/impls.html#serialize%2Cchar%2CSerializer">impls: serialize[Serializer](self: char; serializer: var Serializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="impls: serialize[Float: SomeFloat; Serializer](self: Float; serializer: var Serializer)" href="ser/impls.html#serialize%2CFloat%2CSerializer">impls: serialize[Float: SomeFloat; Serializer](self: Float; serializer: var Serializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="impls: serialize[Integer: SomeInteger; Serializer](self: Integer;
+    serializer: var Serializer)" href="ser/impls.html#serialize%2CInteger%2CSerializer">impls: serialize[Integer: SomeInteger; Serializer](self: Integer;
+    serializer: var Serializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="impls: serialize[Value, Serializer](self: Option[Value]; serializer: var Serializer)" href="ser/impls.html#serialize%2COption%5BValue%5D%2CSerializer">impls: serialize[Value, Serializer](self: Option[Value]; serializer: var Serializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="impls: serialize[Seq: seq or array; Serializer](self: Seq; serializer: var Serializer)" href="ser/impls.html#serialize%2CSeq%2CSerializer">impls: serialize[Seq: seq or array; Serializer](self: Seq; serializer: var Serializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="impls: serialize[Set: set; Serializer](self: Set; serializer: var Serializer)" href="ser/impls.html#serialize%2CSet%2CSerializer">impls: serialize[Set: set; Serializer](self: Set; serializer: var Serializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="impls: serialize[Set: SomeSet; Serializer](self: Set; serializer: var Serializer)" href="ser/impls.html#serialize%2CSet%2CSerializer_2">impls: serialize[Set: SomeSet; Serializer](self: Set; serializer: var Serializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="impls: serialize[SomeTable: Table | TableRef | OrderedTable | OrderedTableRef;
+          Serializer](self: SomeTable; serializer: var Serializer)" href="ser/impls.html#serialize%2CSomeTable%2CSerializer">impls: serialize[SomeTable: Table | TableRef | OrderedTable | OrderedTableRef;
+          Serializer](self: SomeTable; serializer: var Serializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="impls: serialize[Serializer](self: string; serializer: var Serializer)" href="ser/impls.html#serialize%2Cstring%2CSerializer">impls: serialize[Serializer](self: string; serializer: var Serializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="impls: serialize[Tuple: tuple; Serializer](self: Tuple; serializer: var Serializer)" href="ser/impls.html#serialize%2CTuple%2CSerializer">impls: serialize[Tuple: tuple; Serializer](self: Tuple; serializer: var Serializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="impls: serialize[Unit: UnitConcept; Serializer](self: Unit; serializer: var Serializer)" href="ser/impls.html#serialize%2CUnit%2CSerializer">impls: serialize[Unit: UnitConcept; Serializer](self: Unit; serializer: var Serializer)</a></li>
+          </ul></dd>
+<dt><a name="serializeArray" href="#serializeArray"><span>serializeArray:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: serializeArray(self: var Serializer; len: static[int]): var Serializer" href="test/ser.html#serializeArray%2CSerializer%2Cstatic%5Bint%5D">ser: serializeArray(self: var Serializer; len: static[int]): var Serializer</a></li>
+          </ul></dd>
+<dt><a name="serializeArrayElement" href="#serializeArrayElement"><span>serializeArrayElement:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: serializeArrayElement[T](self: var Serializer; v: T)" href="test/ser.html#serializeArrayElement%2CSerializer%2CT">ser: serializeArrayElement[T](self: var Serializer; v: T)</a></li>
           </ul></dd>
 <dt><a name="serializeBool" href="#serializeBool"><span>serializeBool:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeBool(self: FlatMapSerializer; v: bool)" href="deser/ser/flat.html#serializeBool%2CFlatMapSerializer%2Cbool">flat: serializeBool(self: FlatMapSerializer; v: bool)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeBool(self: var Serializer; v: bool)" href="test/ser.html#serializeBool%2CSerializer%2Cbool">ser: serializeBool(self: var Serializer; v: bool)</a></li>
           </ul></dd>
 <dt><a name="serializeBytes" href="#serializeBytes"><span>serializeBytes:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeBytes(self: FlatMapSerializer; v: openArray[byte])" href="deser/ser/flat.html#serializeBytes%2CFlatMapSerializer%2CopenArray%5Bbyte%5D">flat: serializeBytes(self: FlatMapSerializer; v: openArray[byte])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeBytes(self: var Serializer; v: openArray[byte])" href="test/ser.html#serializeBytes%2CSerializer%2CopenArray%5Bbyte%5D">ser: serializeBytes(self: var Serializer; v: openArray[byte])</a></li>
           </ul></dd>
 <dt><a name="serializeChar" href="#serializeChar"><span>serializeChar:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeChar(self: FlatMapSerializer; v: char)" href="deser/ser/flat.html#serializeChar%2CFlatMapSerializer%2Cchar">flat: serializeChar(self: FlatMapSerializer; v: char)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeChar(self: var Serializer; v: char)" href="test/ser.html#serializeChar%2CSerializer%2Cchar">ser: serializeChar(self: var Serializer; v: char)</a></li>
           </ul></dd>
 <dt><a name="serializeField" href="#serializeField"><span>serializeField:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -206,60 +368,112 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="serializeFloat" href="#serializeFloat"><span>serializeFloat:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeFloat[Value: SomeFloat](self: FlatMapSerializer; v: Value)" href="deser/ser/flat.html#serializeFloat%2CFlatMapSerializer%2CValue">flat: serializeFloat[Value: SomeFloat](self: FlatMapSerializer; v: Value)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeFloat(self: var Serializer; v: SomeFloat)" href="test/ser.html#serializeFloat%2CSerializer%2CSomeFloat">ser: serializeFloat(self: var Serializer; v: SomeFloat)</a></li>
           </ul></dd>
 <dt><a name="serializeInt" href="#serializeInt"><span>serializeInt:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeInt[Value: SomeInteger](self: FlatMapSerializer; v: Value)" href="deser/ser/flat.html#serializeInt%2CFlatMapSerializer%2CValue">flat: serializeInt[Value: SomeInteger](self: FlatMapSerializer; v: Value)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeInt(self: var Serializer; v: SomeInteger)" href="test/ser.html#serializeInt%2CSerializer%2CSomeInteger">ser: serializeInt(self: var Serializer; v: SomeInteger)</a></li>
           </ul></dd>
 <dt><a name="serializeMap" href="#serializeMap"><span>serializeMap:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeMap(self: FlatMapSerializer): FlatMapSerializeMap" href="deser/ser/flat.html#serializeMap%2CFlatMapSerializer">flat: serializeMap(self: FlatMapSerializer): FlatMapSerializeMap</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeMap(self: var Serializer; len: Option[int]): var Serializer" href="test/ser.html#serializeMap%2CSerializer%2COption%5Bint%5D">ser: serializeMap(self: var Serializer; len: Option[int]): var Serializer</a></li>
           </ul></dd>
 <dt><a name="serializeMapEntry" href="#serializeMapEntry"><span>serializeMapEntry:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="provided: serializeMapEntry[Serializer; Key; Value](self: var Serializer; key: Key;
     v: Value)" href="deser/ser/provided.html#serializeMapEntry%2CSerializer%2CKey%2CValue">provided: serializeMapEntry[Serializer; Key; Value](self: var Serializer; key: Key;
     v: Value)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="provided: serializeMapEntry[Serializer; Key; Value](self: var Serializer; key: Key;
+    v: Value)" href="ser/provided.html#serializeMapEntry%2CSerializer%2CKey%2CValue">provided: serializeMapEntry[Serializer; Key; Value](self: var Serializer; key: Key;
+    v: Value)</a></li>
           </ul></dd>
 <dt><a name="serializeMapKey" href="#serializeMapKey"><span>serializeMapKey:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeMapKey[Value](self: var FlatMapSerializeMap; key: Value)" href="deser/ser/flat.html#serializeMapKey%2CFlatMapSerializeMap%2CValue">flat: serializeMapKey[Value](self: var FlatMapSerializeMap; key: Value)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeMapKey[T](self: var Serializer; key: T)" href="test/ser.html#serializeMapKey%2CSerializer%2CT">ser: serializeMapKey[T](self: var Serializer; key: T)</a></li>
           </ul></dd>
 <dt><a name="serializeMapValue" href="#serializeMapValue"><span>serializeMapValue:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeMapValue[Value](self: var FlatMapSerializeMap; v: Value)" href="deser/ser/flat.html#serializeMapValue%2CFlatMapSerializeMap%2CValue">flat: serializeMapValue[Value](self: var FlatMapSerializeMap; v: Value)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeMapValue[T](self: var Serializer; v: T)" href="test/ser.html#serializeMapValue%2CSerializer%2CT">ser: serializeMapValue[T](self: var Serializer; v: T)</a></li>
           </ul></dd>
 <dt><a name="serializeNamedTuple" href="#serializeNamedTuple"><span>serializeNamedTuple:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeNamedTuple(self: FlatMapSerializer; name: static[string];
                     len: static[uint]): FlatMapSerializer" href="deser/ser/flat.html#serializeNamedTuple%2CFlatMapSerializer%2Cstatic%5Bstring%5D%2Cstatic%5Buint%5D">flat: serializeNamedTuple(self: FlatMapSerializer; name: static[string];
                     len: static[uint]): FlatMapSerializer</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeNamedTuple(self: var Serializer; name: static[string]; len: static[int]): var Serializer" href="test/ser.html#serializeNamedTuple%2CSerializer%2Cstatic%5Bstring%5D%2Cstatic%5Bint%5D">ser: serializeNamedTuple(self: var Serializer; name: static[string]; len: static[int]): var Serializer</a></li>
           </ul></dd>
 <dt><a name="serializeNamedTupleField" href="#serializeNamedTupleField"><span>serializeNamedTupleField:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeNamedTupleField[Key, Value](self: FlatMapSerializer; key: Key;
                                      value: Value)" href="deser/ser/flat.html#serializeNamedTupleField%2CFlatMapSerializer%2CKey%2CValue">flat: serializeNamedTupleField[Key, Value](self: FlatMapSerializer; key: Key;
                                      value: Value)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeNamedTupleField[T](self: var Serializer; key: static[string]; v: T)" href="test/ser.html#serializeNamedTupleField%2CSerializer%2Cstatic%5Bstring%5D%2CT">ser: serializeNamedTupleField[T](self: var Serializer; key: static[string]; v: T)</a></li>
           </ul></dd>
 <dt><a name="serializeNone" href="#serializeNone"><span>serializeNone:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeNone(self: FlatMapSerializer)" href="deser/ser/flat.html#serializeNone%2CFlatMapSerializer">flat: serializeNone(self: FlatMapSerializer)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeNone(self: var Serializer)" href="test/ser.html#serializeNone%2CSerializer">ser: serializeNone(self: var Serializer)</a></li>
+          </ul></dd>
+<dt><a name="Serializer" href="#Serializer"><span>Serializer:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: Serializer" href="test/ser.html#Serializer">ser: Serializer</a></li>
           </ul></dd>
 <dt><a name="serializeSeq" href="#serializeSeq"><span>serializeSeq:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeSeq(self: FlatMapSerializer; len: Option[uint]): FlatMapSerializer" href="deser/ser/flat.html#serializeSeq%2CFlatMapSerializer%2COption%5Buint%5D">flat: serializeSeq(self: FlatMapSerializer; len: Option[uint]): FlatMapSerializer</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeSeq(self: var Serializer; len: Option[int]): var Serializer" href="test/ser.html#serializeSeq%2CSerializer%2COption%5Bint%5D">ser: serializeSeq(self: var Serializer; len: Option[int]): var Serializer</a></li>
           </ul></dd>
 <dt><a name="serializeSeqElement" href="#serializeSeqElement"><span>serializeSeqElement:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeSeqElement[Value](self: var FlatMapSerializer; v: Value)" href="deser/ser/flat.html#serializeSeqElement%2CFlatMapSerializer%2CValue">flat: serializeSeqElement[Value](self: var FlatMapSerializer; v: Value)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeSeqElement[T](self: var Serializer; v: T)" href="test/ser.html#serializeSeqElement%2CSerializer%2CT">ser: serializeSeqElement[T](self: var Serializer; v: T)</a></li>
+          </ul></dd>
+<dt><a name="serializeSeqMap" href="#serializeSeqMap"><span>serializeSeqMap:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: serializeSeqMap(self: var Serializer; len: Option[int]): var Serializer" href="test/ser.html#serializeSeqMap%2CSerializer%2COption%5Bint%5D">ser: serializeSeqMap(self: var Serializer; len: Option[int]): var Serializer</a></li>
+          </ul></dd>
+<dt><a name="serializeSeqMapKey" href="#serializeSeqMapKey"><span>serializeSeqMapKey:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: serializeSeqMapKey[T](self: var Serializer; key: T)" href="test/ser.html#serializeSeqMapKey%2CSerializer%2CT">ser: serializeSeqMapKey[T](self: var Serializer; key: T)</a></li>
+          </ul></dd>
+<dt><a name="serializeSeqMapValue" href="#serializeSeqMapValue"><span>serializeSeqMapValue:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: serializeSeqMapValue[T](self: var Serializer; v: T)" href="test/ser.html#serializeSeqMapValue%2CSerializer%2CT">ser: serializeSeqMapValue[T](self: var Serializer; v: T)</a></li>
           </ul></dd>
 <dt><a name="serializeSome" href="#serializeSome"><span>serializeSome:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeSome[Value](self: FlatMapSerializer; v: Value)" href="deser/ser/flat.html#serializeSome%2CFlatMapSerializer%2CValue">flat: serializeSome[Value](self: FlatMapSerializer; v: Value)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeSome[T](self: var Serializer; v: T)" href="test/ser.html#serializeSome%2CSerializer%2CT">ser: serializeSome[T](self: var Serializer; v: T)</a></li>
+          </ul></dd>
+<dt><a name="serializeString" href="#serializeString"><span>serializeString:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: serializeString(self: var Serializer; v: string)" href="test/ser.html#serializeString%2CSerializer%2Cstring">ser: serializeString(self: var Serializer; v: string)</a></li>
           </ul></dd>
 <dt><a name="serializeStruct" href="#serializeStruct"><span>serializeStruct:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeStruct(self: FlatMapSerializer; name: static[string]): FlatMapSerializeStruct" href="deser/ser/flat.html#serializeStruct%2CFlatMapSerializer%2Cstatic%5Bstring%5D">flat: serializeStruct(self: FlatMapSerializer; name: static[string]): FlatMapSerializeStruct</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeStruct(self: var Serializer; name: static[string]): var Serializer" href="test/ser.html#serializeStruct%2CSerializer%2Cstatic%5Bstring%5D">ser: serializeStruct(self: var Serializer; name: static[string]): var Serializer</a></li>
+          </ul></dd>
+<dt><a name="serializeStructField" href="#serializeStructField"><span>serializeStructField:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: serializeStructField[T](self: var Serializer; key: static[string]; v: T)" href="test/ser.html#serializeStructField%2CSerializer%2Cstatic%5Bstring%5D%2CT">ser: serializeStructField[T](self: var Serializer; key: static[string]; v: T)</a></li>
           </ul></dd>
 <dt><a name="serializeStructUnit" href="#serializeStructUnit"><span>serializeStructUnit:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -268,14 +482,26 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="serializeTuple" href="#serializeTuple"><span>serializeTuple:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeTuple(self: FlatMapSerializer; len: static[uint]): FlatMapSerializer" href="deser/ser/flat.html#serializeTuple%2CFlatMapSerializer%2Cstatic%5Buint%5D">flat: serializeTuple(self: FlatMapSerializer; len: static[uint]): FlatMapSerializer</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeTuple(self: var Serializer; name: static[string]; len: static[int]): var Serializer" href="test/ser.html#serializeTuple%2CSerializer%2Cstatic%5Bstring%5D%2Cstatic%5Bint%5D">ser: serializeTuple(self: var Serializer; name: static[string]; len: static[int]): var Serializer</a></li>
           </ul></dd>
 <dt><a name="serializeTupleElement" href="#serializeTupleElement"><span>serializeTupleElement:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeTupleElement[Value](self: var FlatMapSerializer; v: Value)" href="deser/ser/flat.html#serializeTupleElement%2CFlatMapSerializer%2CValue">flat: serializeTupleElement[Value](self: var FlatMapSerializer; v: Value)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="ser: serializeTupleElement[T](self: var Serializer; v: T)" href="test/ser.html#serializeTupleElement%2CSerializer%2CT">ser: serializeTupleElement[T](self: var Serializer; v: T)</a></li>
           </ul></dd>
 <dt><a name="serializeTupleUnit" href="#serializeTupleUnit"><span>serializeTupleUnit:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="flat: serializeTupleUnit(self: FlatMapSerializer)" href="deser/ser/flat.html#serializeTupleUnit%2CFlatMapSerializer">flat: serializeTupleUnit(self: FlatMapSerializer)</a></li>
+          </ul></dd>
+<dt><a name="serializeUnitStruct" href="#serializeUnitStruct"><span>serializeUnitStruct:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: serializeUnitStruct(self: var Serializer; name: static[string])" href="test/ser.html#serializeUnitStruct%2CSerializer%2Cstatic%5Bstring%5D">ser: serializeUnitStruct(self: var Serializer; name: static[string])</a></li>
+          </ul></dd>
+<dt><a name="serializeUnitTuple" href="#serializeUnitTuple"><span>serializeUnitTuple:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: serializeUnitTuple(self: var Serializer; name: static[string])" href="test/ser.html#serializeUnitTuple%2CSerializer%2Cstatic%5Bstring%5D">ser: serializeUnitTuple(self: var Serializer; name: static[string])</a></li>
           </ul></dd>
 <dt><a name="serializeWith" href="#serializeWith"><span>serializeWith:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -284,6 +510,10 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="SerializeWith" href="#SerializeWith"><span>SerializeWith:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="serialize_with: SerializeWith" href="deser/ser/serialize_with.html#SerializeWith">serialize_with: SerializeWith</a></li>
+          </ul></dd>
+<dt><a name="serTokens" href="#serTokens"><span>serTokens:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: serTokens[T](value: T; tokens: openArray[Token])" href="test/ser.html#serTokens%2CT%2CopenArray%5BToken%5D">ser: serTokens[T](value: T; tokens: openArray[Token])</a></li>
           </ul></dd>
 <dt><a name="skipDeserializing" href="#skipDeserializing"><span>skipDeserializing:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -301,9 +531,51 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="pragmas: skipSerializing()" href="deser/pragmas.html#skipSerializing.t">pragmas: skipSerializing()</a></li>
           </ul></dd>
+<dt><a name="Some" href="#Some"><span>Some:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: Some(): Token" href="test/token.html#Some">token: Some(): Token</a></li>
+          </ul></dd>
+<dt><a name="String" href="#String"><span>String:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: String(str: string): Token" href="test/token.html#String%2Cstring">token: String(str: string): Token</a></li>
+          </ul></dd>
+<dt><a name="Struct" href="#Struct"><span>Struct:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: Struct(struct_name: string): Token" href="test/token.html#Struct%2Cstring">token: Struct(struct_name: string): Token</a></li>
+          </ul></dd>
+<dt><a name="StructEnd" href="#StructEnd"><span>StructEnd:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: StructEnd(): Token" href="test/token.html#StructEnd">token: StructEnd(): Token</a></li>
+          </ul></dd>
+<dt><a name="Token" href="#Token"><span>Token:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: Token" href="test/token.html#Token">token: Token</a></li>
+          </ul></dd>
+<dt><a name="TokenKind" href="#TokenKind"><span>TokenKind:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: TokenKind" href="test/token.html#TokenKind">token: TokenKind</a></li>
+          </ul></dd>
+<dt><a name="Tuple" href="#Tuple"><span>Tuple:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: Tuple(tupleName: string; tupleLen: int): Token" href="test/token.html#Tuple%2Cstring%2Cint">token: Tuple(tupleName: string; tupleLen: int): Token</a></li>
+          </ul></dd>
+<dt><a name="TupleEnd" href="#TupleEnd"><span>TupleEnd:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: TupleEnd(): Token" href="test/token.html#TupleEnd">token: TupleEnd(): Token</a></li>
+          </ul></dd>
 <dt><a name="UnitConcept" href="#UnitConcept"><span>UnitConcept:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="provided: UnitConcept" href="deser/ser/provided.html#UnitConcept">provided: UnitConcept</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="provided: UnitConcept" href="ser/provided.html#UnitConcept">provided: UnitConcept</a></li>
+          </ul></dd>
+<dt><a name="UnitStruct" href="#UnitStruct"><span>UnitStruct:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: UnitStruct(unitStructName: string): Token" href="test/token.html#UnitStruct%2Cstring">token: UnitStruct(unitStructName: string): Token</a></li>
+          </ul></dd>
+<dt><a name="UnitTuple" href="#UnitTuple"><span>UnitTuple:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="token: UnitTuple(unitTupleName: string): Token" href="test/token.html#UnitTuple%2Cstring">token: UnitTuple(unitTupleName: string): Token</a></li>
           </ul></dd>
 <dt><a name="untagged" href="#untagged"><span>untagged:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -314,7 +586,7 @@ window.addEventListener('DOMContentLoaded', main);
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-10-26 11:07:52 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-10-26 11:34:12 UTC</small>
       </div>
     </div>
   </div>

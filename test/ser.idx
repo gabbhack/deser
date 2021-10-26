@@ -1,0 +1,38 @@
+Serializer	test/ser.html#Serializer	ser: Serializer	
+serTokens	test/ser.html#serTokens,T,openArray[Token]	ser: serTokens[T](value: T; tokens: openArray[Token])	
+nextToken	test/ser.html#nextToken,Serializer	ser: nextToken(self: var Serializer): Option[Token]	
+remaining	test/ser.html#remaining,Serializer	ser: remaining(self: Serializer): int	
+assertNextToken	test/ser.html#assertNextToken,Serializer,Token	ser: assertNextToken(ser: var Serializer; actual: Token)	
+serializeBool	test/ser.html#serializeBool,Serializer,bool	ser: serializeBool(self: var Serializer; v: bool)	
+serializeInt	test/ser.html#serializeInt,Serializer,SomeInteger	ser: serializeInt(self: var Serializer; v: SomeInteger)	
+serializeFloat	test/ser.html#serializeFloat,Serializer,SomeFloat	ser: serializeFloat(self: var Serializer; v: SomeFloat)	
+serializeString	test/ser.html#serializeString,Serializer,string	ser: serializeString(self: var Serializer; v: string)	
+serializeChar	test/ser.html#serializeChar,Serializer,char	ser: serializeChar(self: var Serializer; v: char)	
+serializeBytes	test/ser.html#serializeBytes,Serializer,openArray[byte]	ser: serializeBytes(self: var Serializer; v: openArray[byte])	
+serializeNone	test/ser.html#serializeNone,Serializer	ser: serializeNone(self: var Serializer)	
+serializeSome	test/ser.html#serializeSome,Serializer,T	ser: serializeSome[T](self: var Serializer; v: T)	
+serializeUnitStruct	test/ser.html#serializeUnitStruct,Serializer,static[string]	ser: serializeUnitStruct(self: var Serializer; name: static[string])	
+serializeUnitTuple	test/ser.html#serializeUnitTuple,Serializer,static[string]	ser: serializeUnitTuple(self: var Serializer; name: static[string])	
+serializeArray	test/ser.html#serializeArray,Serializer,static[int]	ser: serializeArray(self: var Serializer; len: static[int]): var Serializer	
+serializeSeq	test/ser.html#serializeSeq,Serializer,Option[int]	ser: serializeSeq(self: var Serializer; len: Option[int]): var Serializer	
+serializeTuple	test/ser.html#serializeTuple,Serializer,static[string],static[int]	ser: serializeTuple(self: var Serializer; name: static[string]; len: static[int]): var Serializer	
+serializeNamedTuple	test/ser.html#serializeNamedTuple,Serializer,static[string],static[int]	ser: serializeNamedTuple(self: var Serializer; name: static[string]; len: static[int]): var Serializer	
+serializeMap	test/ser.html#serializeMap,Serializer,Option[int]	ser: serializeMap(self: var Serializer; len: Option[int]): var Serializer	
+serializeStruct	test/ser.html#serializeStruct,Serializer,static[string]	ser: serializeStruct(self: var Serializer; name: static[string]): var Serializer	
+serializeSeqMap	test/ser.html#serializeSeqMap,Serializer,Option[int]	ser: serializeSeqMap(self: var Serializer; len: Option[int]): var Serializer	
+serializeArrayElement	test/ser.html#serializeArrayElement,Serializer,T	ser: serializeArrayElement[T](self: var Serializer; v: T)	
+endArray	test/ser.html#endArray,Serializer	ser: endArray(self: var Serializer)	
+serializeSeqElement	test/ser.html#serializeSeqElement,Serializer,T	ser: serializeSeqElement[T](self: var Serializer; v: T)	
+endSeq	test/ser.html#endSeq,Serializer	ser: endSeq(self: var Serializer)	
+serializeTupleElement	test/ser.html#serializeTupleElement,Serializer,T	ser: serializeTupleElement[T](self: var Serializer; v: T)	
+endTuple	test/ser.html#endTuple,Serializer	ser: endTuple(self: var Serializer)	
+serializeNamedTupleField	test/ser.html#serializeNamedTupleField,Serializer,static[string],T	ser: serializeNamedTupleField[T](self: var Serializer; key: static[string]; v: T)	
+endNamedTuple	test/ser.html#endNamedTuple,Serializer	ser: endNamedTuple(self: var Serializer)	
+serializeMapKey	test/ser.html#serializeMapKey,Serializer,T	ser: serializeMapKey[T](self: var Serializer; key: T)	
+serializeMapValue	test/ser.html#serializeMapValue,Serializer,T	ser: serializeMapValue[T](self: var Serializer; v: T)	
+endMap	test/ser.html#endMap,Serializer	ser: endMap(self: var Serializer)	
+serializeStructField	test/ser.html#serializeStructField,Serializer,static[string],T	ser: serializeStructField[T](self: var Serializer; key: static[string]; v: T)	
+endStruct	test/ser.html#endStruct,Serializer	ser: endStruct(self: var Serializer)	
+serializeSeqMapKey	test/ser.html#serializeSeqMapKey,Serializer,T	ser: serializeSeqMapKey[T](self: var Serializer; key: T)	
+serializeSeqMapValue	test/ser.html#serializeSeqMapValue,Serializer,T	ser: serializeSeqMapValue[T](self: var Serializer; v: T)	
+endSeqMap	test/ser.html#endSeqMap,Serializer	ser: endSeqMap(self: var Serializer)	
