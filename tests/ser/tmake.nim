@@ -37,10 +37,28 @@ type
       discard
   
   SkipIfObject = object
+    alwaysSkipped {.skipped.}: int
+    serializeSkipped {.skipSerializing.}: int
     text {.skipSerializeIf(isNone).}: Option[string]
   
   SerializeWithObject = object
     date {.serializeWith(toTimestamp).}: DateTime
+  
+  RenameObject = object
+    name {.renameSerialize("fullname").}: string
+
+  User = object
+    id: int
+
+  Pagination = object
+    limit: int64
+    offset: int64
+    total: int64
+  
+  Users = object
+    users: seq[User]
+    pagination {.inlineKeys.}: Pagination
+
 
 proc serialize[Serializer](self: ref int, serializer: var Serializer) =
   serializer.serializeInt(self[])
@@ -54,6 +72,11 @@ makeSerializable(CaseObject)
 makeSerializable(UntaggedCaseObject)
 makeSerializable(SkipIfObject)
 makeSerializable(SerializeWithObject)
+makeSerializable(RenameObject)
+
+makeSerializable(User)
+makeSerializable(Pagination)
+makeSerializable(Users)
 
 suite "makeSerializable":
   test "simple":
@@ -98,7 +121,7 @@ suite "makeSerializable":
       StructEnd()
     ]
   
-  test "case object":
+  test "case":
     serTokens CaseObject(kind: true, yes: "yes"), [
       Struct("CaseObject"),
       String("kind"),
@@ -115,7 +138,7 @@ suite "makeSerializable":
       StructEnd()
     ]
   
-  test "untagged case object":
+  test "untagged case":
     serTokens UntaggedCaseObject(kind: true, yes: "yes"), [
       Struct("UntaggedCaseObject"),
       String("yes"),
@@ -128,7 +151,7 @@ suite "makeSerializable":
       StructEnd()
     ]
   
-  test "object with skipSerializeIf":
+  test "skipSerializeIf":
     serTokens SkipIfObject(text: some "text"), [
       Struct("SkipIfObject"),
       String("text"),
@@ -141,7 +164,7 @@ suite "makeSerializable":
       StructEnd()
     ]
   
-  test "object with serializeWith":
+  test "serializeWith":
     let date = now()
     serTokens SerializeWithObject(date: date), [
       Struct("SerializeWithObject"),
@@ -149,3 +172,27 @@ suite "makeSerializable":
       Integer(int(date.toTime.toUnix)),
       StructEnd()
     ]
+  
+  test "renameSerialize":
+    serTokens RenameObject(name: "Name"), [
+      Struct("RenameObject"),
+      String("fullname"),
+      String("Name"),
+      StructEnd()
+    ]
+  
+  test "inlineKeys":
+    serTokens Users(), [
+      Struct("Users"),
+      String("users"),
+      Seq(some 0),
+      SeqEnd(),
+      String("limit"),
+      Integer(0),
+      String("offset"),
+      Integer(0),
+      String("total"),
+      Integer(0),
+      StructEnd()
+    ]
+
