@@ -1,3 +1,7 @@
+##[
+Auxiliary functions that you can use when implementing `serialize`
+]##
+
 import std/options
 
 import ../utils
@@ -10,15 +14,13 @@ proc isUnit(T: typedesc): bool {.compileTime.} =
   return true
 
 type
-  MapIter* = concept self
-    for key, value in self:
-      discard
+  MapIter* = concept self  ## Type with pairs()
+    self.pairs()
 
-  SeqIter* = concept self
-    for value in self:
-      discard
+  SeqIter* = concept self  ## Type with items()
+    self.items()
   
-  UnitConcept* = concept type T
+  UnitConcept* = concept type T  ## Type without fields
     T is object
     T.isUnit
 

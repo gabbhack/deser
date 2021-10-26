@@ -1,3 +1,7 @@
+##[
+Private module for the `serializeWith` pragma
+]##
+
 type
   SerializeWith*[T, Serializer] = object
     serializeProc: proc (self: T, serializer: Serializer)

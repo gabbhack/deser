@@ -1,5 +1,5 @@
 ##[
-Auxiliary module for the `inlineKeys` pragma
+Private module for the `inlineKeys` pragma
 ]##
 
 import std/options

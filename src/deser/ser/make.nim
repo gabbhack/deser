@@ -127,6 +127,10 @@ func newProcEnd(): NimNode =
   )
 
 macro makeSerializable*(T: typedesc, public: static[bool] = false) =
+  ##[
+Generates `serialize` for your type. Supports only `object` and `ref`.
+All tuples implement `serialize` out of the box.
+  ]##
   let struct = structFromTypeImpl(T.getTypeImpl[1].getImpl)
   let procParams = ProcedureParams(
     name: "serialize",
