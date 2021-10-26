@@ -13,13 +13,14 @@ type
   FlatMapSerializeStruct*[T] = object
     ser*: ptr T
   
+  FlatMapSerializeNamedTuple*[T] = object
+    ser*: ptr T
+  
 
 proc `=copy`[T](x: var FlatMapSerializer[T], y: FlatMapSerializer[T]) {.error.}
 proc `=copy`[T](x: var FlatMapSerializeMap[T], y: FlatMapSerializeMap[T]) {.error.}
 proc `=copy`[T](x: var FlatMapSerializeStruct[T], y: FlatMapSerializeStruct[T]) {.error.}
-
-proc initFlatMapSerializer*[T](serializer: var T): FlatMapSerializer {.inline.} =
-  result = FlatMapSerializer(ser: serializer.addr)
+proc `=copy`[T](x: var FlatMapSerializeNamedTuple[T], y: FlatMapSerializeNamedTuple[T]) {.error.}
 
 {.push inline.}
 ## FlatMapSerializer
@@ -39,7 +40,7 @@ proc serializeSeq*(self: FlatMapSerializer, len: Option[uint]): FlatMapSerialize
 
 proc serializeTuple*(self: FlatMapSerializer, len: static[uint]): FlatMapSerializer
 
-proc serializeNamedTuple*(self: FlatMapSerializer, name: static[string], len: static[uint]): FlatMapSerializer
+proc serializeSeqMap*(self: FlatMapSerializer, len: Option[int]): FlatMapSerializer
 
 # FlatMapSerializeSeq
 proc serializeSeqElement*[Value](self: var FlatMapSerializer, v: Value)
@@ -51,10 +52,12 @@ proc serializeTupleElement*[Value](self: var FlatMapSerializer, v: Value)
 
 proc endTuple*(self: FlatMapSerializer)
 
-# FlatMapSerializeNamedTuple
-proc serializeNamedTupleField*[Key, Value](self: FlatMapSerializer, key: Key, value: Value)
+# FlatMapSerializeSeqMap
+proc serializeSeqMapKey*[T](self: FlatMapSerializer, key: T)
 
-proc endNamedTuple*(self: FlatMapSerializer)
+proc serializeSeqMapValue*[T](self: FlatMapSerializer, v: T)
+
+proc endSeqMap*(self: FlatMapSerializer)
 {.pop.}
 
 proc serializeNone*(self: FlatMapSerializer) = discard
@@ -65,19 +68,34 @@ proc serializeStructUnit*(self: FlatMapSerializer) = discard
 
 proc serializeTupleUnit*(self: FlatMapSerializer) = discard
 
-proc serializeMap*(self: FlatMapSerializer): FlatMapSerializeMap = FlatMapSerializeMap(ser: self.ser)
+proc serializeMap*[T](self: FlatMapSerializer[T]): FlatMapSerializeMap[T] =
+  FlatMapSerializeMap[T](ser: self.ser)
 
-proc serializeStruct*(self: FlatMapSerializer, name: static[string]): FlatMapSerializeStruct = FlatMapSerializeStruct(ser: self.ser)
+proc serializeStruct*[T](self: FlatMapSerializer[T], name: static[string]): FlatMapSerializeStruct[T] =
+  FlatMapSerializeStruct[T](ser: self.ser)
+
+proc serializeNamedTuple*[T](self: FlatMapSerializer[T], name: static[string], len: static[uint]): FlatMapSerializeNamedTuple[T] =
+  FlatMapSerializeNamedTuple[T](ser: self.ser)
 
 # FlatMapSerializeMap
-proc serializeMapKey*[Value](self: var FlatMapSerializeMap, key: Value) = self.ser[].serializeMapKey(key)
+proc serializeMapKey*[Value](self: FlatMapSerializeMap, key: Value) =
+  self.ser[].serializeMapKey(key)
 
-proc serializeMapValue*[Value](self: var FlatMapSerializeMap, v: Value) = self.ser[].serializeMapValue(v)
+proc serializeMapValue*[Value](self: FlatMapSerializeMap, v: Value) =
+  self.ser[].serializeMapValue(v)
 
 proc endMap*(self: FlatMapSerializeMap) = discard
 
 # FlatMapSerializeStruct
-proc serializeField*[Value](self: var FlatMapSerializeStruct, key: static[string], v: Value) = self.ser[].serializeMapEntry(key, v)
+proc serializeStructField*[Value](self: FlatMapSerializeStruct, key: static[string], v: Value) =
+  self.ser[].serializeMapEntry(key, v)
 
 proc endStruct*(self: FlatMapSerializeStruct) = discard
+
+# FlatMapSerializeNamedTuple
+proc serializeNamedTupleField*[Key, Value](self: FlatMapSerializeNamedTuple, key: Key, value: Value) =
+  self.ser[].serializeNamedTupleField(key, value)
+
+proc endNamedTuple*(self: FlatMapSerializeNamedTuple) = discard
+
 {.pop.}

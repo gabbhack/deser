@@ -11,7 +11,7 @@ include ../macro_utils
 func newProcMiddle(fields: seq[Field]): NimNode
 
 func newSerializeWithType(field: Field): NimNode =
-  # SerializeWith(serializeProc: withProc, value: addr(self.fieldName))
+  # SerializeWith(serializeProc: withProc, value: self.fieldName)
   result = nnkObjConstr.newTree(
     nnkBracketExpr.newTree(
       bindSym("SerializeWith"),
@@ -29,9 +29,23 @@ func newSerializeWithType(field: Field): NimNode =
   )
 
 func newFlatStructSerialize(item: NimNode): NimNode =
-  # serialize(item, initFlatMapSerializer(state))
-  let callInitFlat = newCall(bindSym("initFlatMapSerializer"), ident "state")
-  result = newCall("serialize", item, callInitFlat)
+  # serialize(item, FlatMapSerializer(ser: state))
+  let constrFlatMap = nnkObjConstr.newTree(
+    nnkBracketExpr.newTree(
+      bindSym("FlatMapSerializer"),
+      
+      newTypeOf(ident "state")
+    ),
+    nnkExprColonExpr.newTree(
+      ident "ser",
+      newCall(bindSym("addr"), ident "state")
+    )
+  )
+  let flatState = newVarStmt(ident "flatState", constrFlatMap)
+  result = newStmtList(
+    flatState,
+    newCall("serialize", item, ident "flatState")
+  )
 
 func newSerializeItem(field: Field): NimNode =
   if field.features.serializeWith.isSome:
