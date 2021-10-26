@@ -112,8 +112,8 @@ window.addEventListener('DOMContentLoaded', main);
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#SerializeWith"
     title="SerializeWith[T; Serializer] = object
-  serializeProc: proc (self: T; serializer: Serializer)
-  value: ptr T">SerializeWith</a></li>
+  serializeProc*: proc (self: T; serializer: var Serializer)
+  value*: T">SerializeWith</a></li>
 
   </ul>
 </li>
@@ -123,8 +123,8 @@ window.addEventListener('DOMContentLoaded', main);
       <ul class="simple nested-toc-section">serialize
       <li><a class="reference" href="#serialize%2CSerializeWith%5BT%2CSerializer%5D%2CSerializer"
     title="serialize[T, Serializer](self: SerializeWith[T, Serializer];
-                         serializer: Serializer)">serialize[T, Serializer](self: SerializeWith[T, Serializer];
-                         serializer: Serializer)</a></li>
+                         serializer: var Serializer)">serialize[T, Serializer](self: SerializeWith[T, Serializer];
+                         serializer: var Serializer)</a></li>
 
   </ul>
 
@@ -144,8 +144,8 @@ window.addEventListener('DOMContentLoaded', main);
 <dl class="item">
 <div id="SerializeWith">
 <dt><pre><a href="serialize_with.html#SerializeWith"><span class="Identifier">SerializeWith</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">;</span> <span class="Identifier">Serializer</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Identifier">serializeProc</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">;</span> <span class="Identifier">serializer</span><span class="Other">:</span> <span class="Identifier">Serializer</span><span class="Other">)</span>
-  <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">T</span>
+  <span class="Identifier">serializeProc</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">;</span> <span class="Identifier">serializer</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Serializer</span><span class="Other">)</span>
+  <span class="Identifier">value</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">T</span>
 </pre></dt>
 <dd>
 
@@ -164,7 +164,7 @@ class="link-seesrc" target="_blank">Source</a>
 <dl class="item">
 <div id="serialize,SerializeWith[T,Serializer],Serializer">
 <dt><pre><span class="Keyword">proc</span> <a href="#serialize%2CSerializeWith%5BT%2CSerializer%5D%2CSerializer"><span class="Identifier">serialize</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">Serializer</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="serialize_with.html#SerializeWith"><span class="Identifier">SerializeWith</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">,</span> <span class="Identifier">Serializer</span><span class="Other">]</span><span class="Other">;</span>
-                              <span class="Identifier">serializer</span><span class="Other">:</span> <span class="Identifier">Serializer</span><span class="Other">)</span></pre></dt>
+                              <span class="Identifier">serializer</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Serializer</span><span class="Other">)</span> {.<span class="Identifier">inline</span>.}</pre></dt>
 <dd>
 
 
@@ -185,7 +185,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-10-26 11:34:12 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-10-26 12:17:58 UTC</small>
       </div>
     </div>
   </div>
