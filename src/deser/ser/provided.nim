@@ -1,0 +1,54 @@
+import std/[options]
+
+import ../utils
+
+
+proc isUnit(T: typedesc): bool {.compileTime.} =
+  var ob = default T
+  for _ in ob.fields():
+    return false
+  return true
+
+type
+  MapIter* = concept self
+    for key, value in self:
+      discard
+
+  SeqIter* = concept self
+    for value in self:
+      discard
+  
+  UnitConcept* = concept type T
+    T is object
+    T.isUnit
+
+
+proc serializeMapEntry*[Serializer; Key; Value](self: var Serializer, key: Key, v: Value) =
+  self.serializeMapKey(key)
+  self.serializeMapValue(v)
+
+proc collectSeq*[Serializer; Iter: SeqIter](self: var Serializer, iter: Iter) =
+  when compiles(iter.len):
+    let length = some iter.len
+  else:
+    let length = none int
+  
+  asAddr state, self.serializeSeq(length)
+
+  for value in iter:
+    state.serializeSeqElement(value)
+
+  state.endSeq()
+
+proc collectMap*[Serializer; Iter: MapIter](self: var Serializer, iter: Iter) =
+  when compiles(iter.len):
+    let length = some iter.len
+  else:
+    let length = none int
+  
+  asAddr state, self.serializeMap(length)
+
+  for key, value in iter:
+    state.serializeMapEntry(key, value)
+  
+  state.endMap()

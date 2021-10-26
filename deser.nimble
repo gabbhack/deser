@@ -1,37 +1,17 @@
 # Package
 
-version       = "0.1.4"
+version       = "0.1.5"
 author        = "gabbhack"
-description   = "De/serialization library for Nim "
+description   = "De/serialization library for Nim"
 license       = "MIT"
 srcDir        = "src"
-skipDirs      = @["tests", "htmldocs"]
+
 
 # Dependencies
 
-requires "nim >= 1.4.2, https://github.com/gabbhack/anycase-fork >= 0.2.0"
-
-# Tasks
-import strformat, strutils, sequtils
-
-proc recursiveListFiles(dir: string, l: var seq[string]) =
-  for i in listDirs(dir):
-    recursiveListFiles(i, l)
-
-  for i in listFiles(dir):
-    if i.endsWith(".nim"):
-      l.add(i)
-
-proc recursiveListFiles(dir: string): seq[string] =
-  recursiveListFiles(dir, result)
-
-task pretty, "Pretty source code":
-  for i in concat(recursiveListFiles(srcDir), recursiveListFiles("tests")):
-    echo fmt"Pretty {i}"
-    exec fmt"nimpretty {i} --indent:2"
+requires "nim >= 1.6.0"
 
 task test, "Run tests":
-  exec "nimble install deser_json -y"
   exec "testament all"
 
 task docs, "Generate docs":

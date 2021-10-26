@@ -1,130 +1,73 @@
-import utils
+template untagged*() {.pragma.} ##[
+By default, the discriminant of object variants is de/serialized as a regular field:
 
-# ISSUE: https://github.com/nim-lang/Nim/issues/16158
-template rename*(ser = "", des = "") {.pragma.} ##[
-**Only for fields, compile-time**
-
-Use this pragma to rename a field during serialization or deserialization.
-
-**Example**:
 ```nim
 type
   Test = object
-    someVar {.rename(ser="some_var", des="some_var").}: string
+    kind: bool
+    of true:
+      trueField: string
+    else:
+      falseField: string
 ```
-If you want to rename the field for serialization and deserialization, just specify the new name with the first argument:
+equals to this JSON:
+
+```
+{
+  "kind": true
+  "trueField": ""
+}
+```
+
+However, `deser` can independently deduce the discriminant from the raw data:
+
 ```nim
 type
   Test = object
-    someVar {.rename("some_var").}: string
+    kind {.untagged.}: bool
+    of true:
+      trueField: string
+    else:
+      falseField: string
+
+const js = """
+  {
+    "trueField": ""
+  }
+let test = Test.fromJson(js)
+
+assert test.kind
 ```
+
+
 ]##
 
-template renameAll*(ser: RenameKind = rkNothing, des: RenameKind = rkNothing) {.pragma.} ##[
-**Only for objects, compile-time**
-
-Use this pragma to rename all fields for the specified case.
-
-**Example**:
-```nim
-type
-  Test {.renameAll(ser=rkSnakeCase, des=rkSnakeCase).} = object
-    someVar: string
-```
-If you want to rename the field for serialization and deserialization, just specify the new name with the first argument:
-```nim
-type
-  Test {.renameAll(rkSnakeCase).} = object
-    someVar: string
-```
-Look at the `available cases <utils.html#RenameKind>`_.
+template serializeWith*(with: typed) {.pragma.} ##[
+Serialize this field using a procedure.
+The given function must be callable as `proc[Serializer] (self: field.type, serializer: Serializer)`
 ]##
 
-template skipSerializeIf*(condition: typed{`proc`}) {.pragma.} ##[
-**For fields and objects, runtime**
-
-Use this pragma to skip the field during serialization based on the runtime value.
-You must specify a function that accepts an argument with the same type as the field, and return bool.
-
-When used on an object, the function will only be applied to fields of the appropriate type.
-
-If there are several matching `skipSerializeIf` (from the field, from the object, from the parent object), then `deser` will skip the field if at least one of them returns `true`.
-
-**Example**:
-```nim
-import options
-
-proc isZero(x: int) = x == 0
-
-type
-  Test {.skipSerializeIf(isNone).} = object
-    someOption: Option[int]
-    someInt {.skipSerializeIf(isZero).}: int
-```
+template renameSerialize*(renamed: string) {.pragma.} ##[
+Serialize this field with the given name instead of its Nim name
 ]##
 
-template flat*() {.pragma.} ##[
-**Only for fields, compile-time**
-
-Use this pragma to inlines keys from the field into the parent object.
-
-**Example**:
-```nim
-type
-  Pagination = object
-    limit: uint64
-    offset: uint64
-    total: uint64
-  
-  Users = object
-    users: seq[User]
-    pagination {.flat.}: Pagination
-```
-
-The pragmas specified in the parent object will be applied to the fields of the child `flat` object. 
-`Deser` applies pragmas from the parent object to the `flat` fields of the object at any nesting level, but such "global" pragmas **can be overridden**.
-
-```nim
-proc isInt(x: int): bool = true
-proc isFloat(x: float): bool = true
-
-type
-  Fourth = object
-    fourthFloat: float # skipped because of pragma from parent object
-  Third = object
-    thirdInt: int # not skipped because it's not a float
-    fourth {.flat.}: Fourth # Third object has no pragma, so pragma from Second object (isFloat) applied to Fourth's field
-  Second {.skipSerializeIf(isFloat).} = object
-    secondInt: int # skipped because of pragma from parent object
-    secondFloat: float # skipped because of pragma from current object
-    third {.flat.}: Third # pragma from current object (isFloat) applied to Third's fields
-  First {.skipSerializeIf(isInt).} = object
-    first: int # skipped because of pragma from current object
-    second {.flat.}: Second # pragma from current object (isInt) applied to Second's fields
-
-let f = First()
-
-forSerFields(k, v, f):
-  assert k == thirdInt
-```
+template renameDeserialize*(renamed: string) {.pragma.} ##[
+Deserialize this field with the given name instead of its Nim name
 ]##
 
-template skip*() {.pragma.} ##[
-**Only for fields, compile-time**
-
+template skipped*() {.pragma.} ##[
 Use this pragma to skip the field during serialization and deserialization.
 
 **Example**:
+
 ```nim
 type
   Test = object
-    alwaysSkip {.skip.}: int
+    alwaysSkip {.skipped.}: int
 ```
 ]##
 
 template skipSerializing*() {.pragma.} ##[
-**Only for fields, compile-time**
-
 Use this pragma to skip the field during serialization.
 
 **Example**:
@@ -136,11 +79,10 @@ type
 ]##
 
 template skipDeserializing*() {.pragma.} ##[
-**Only for fields, compile-time**
-
 Use this pragma to skip the field during deserialization.
 
 **Example**:
+
 ```nim
 type
   Test = object
@@ -148,41 +90,49 @@ type
 ```
 ]##
 
-template deserializeWith*(convert: typed{`proc`}) {.pragma.} ##[
-**For fields and objects, runtime**
-
-Use this pragma to apply the passed function to the field during deserialization.
-Can be used to convert the original type to a field type.
-
-When used on an object, the function will only be applied to fields of the appropriate type.
+template skipSerializeIf*(condition: typed) {.pragma.} ##[
+Use this pragma to skip the field during serialization based on the runtime value.
+You must specify a function or template that accepts an argument with the same type as the field, and return bool.
 
 **Example**:
+  
 ```nim
-import times
+import options
+
+func isZero(x: int) = x == 0
 
 type
-  Message = object
-    date {.deserializeWith(fromUnix).}: Time
+  Test = object
+    someOption {.skipSerializeIf(isNone).}: Option[int]
+    someInt {.skipSerializeIf(isZero).}: int
 ```
-
-**Overhead**:
-Generates a `try-finally` on all code inside `forDesFields`.
 ]##
 
-template serializeWith*(convert: typed{`proc`}) {.pragma.} ##[
-**For fields and objects**
-
-Use this pragma to apply the passed function to the field during serialization.
-Can be used to convert the field type to a original type.
-
-When used on an object, the function will only be applied to fields of the appropriate type.
+template inlineKeys*() {.pragma.} ##[
+Use this pragma to inline keys from the field into the parent object.
 
 **Example**:
-```nim
-import times
 
+```nim
 type
-  Message = object
-    date {.serializeWith(toUnix).}: Time
+  Pagination = object
+    limit: uint64
+    offset: uint64
+    total: uint64
+  
+  Users = object
+    users: seq[User]
+    pagination {.inlineKeys.}: Pagination
+```
+
+equals to this JSON:
+
+```
+{
+  "users": [],
+  "limit": 10,
+  "offset": 10,
+  "total": 10
+}
 ```
 ]##
