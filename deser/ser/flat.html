@@ -113,6 +113,9 @@ window.addEventListener('DOMContentLoaded', main);
       <li><a class="reference" href="#FlatMapSerializeMap"
     title="FlatMapSerializeMap[T] = object
   ser*: ptr T">FlatMapSerializeMap</a></li>
+  <li><a class="reference" href="#FlatMapSerializeNamedTuple"
+    title="FlatMapSerializeNamedTuple[T] = object
+  ser*: ptr T">FlatMapSerializeNamedTuple</a></li>
   <li><a class="reference" href="#FlatMapSerializer"
     title="FlatMapSerializer[T] = object
   ser*: ptr T">FlatMapSerializer</a></li>
@@ -131,13 +134,18 @@ window.addEventListener('DOMContentLoaded', main);
 
   </ul>
   <ul class="simple nested-toc-section">endNamedTuple
-      <li><a class="reference" href="#endNamedTuple%2CFlatMapSerializer"
-    title="endNamedTuple(self: FlatMapSerializer)">endNamedTuple(self: FlatMapSerializer)</a></li>
+      <li><a class="reference" href="#endNamedTuple%2CFlatMapSerializeNamedTuple"
+    title="endNamedTuple(self: FlatMapSerializeNamedTuple)">endNamedTuple(self: FlatMapSerializeNamedTuple)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">endSeq
       <li><a class="reference" href="#endSeq%2CFlatMapSerializer"
     title="endSeq(self: FlatMapSerializer)">endSeq(self: FlatMapSerializer)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">endSeqMap
+      <li><a class="reference" href="#endSeqMap%2CFlatMapSerializer"
+    title="endSeqMap(self: FlatMapSerializer)">endSeqMap(self: FlatMapSerializer)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">endStruct
@@ -148,11 +156,6 @@ window.addEventListener('DOMContentLoaded', main);
   <ul class="simple nested-toc-section">endTuple
       <li><a class="reference" href="#endTuple%2CFlatMapSerializer"
     title="endTuple(self: FlatMapSerializer)">endTuple(self: FlatMapSerializer)</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">initFlatMapSerializer
-      <li><a class="reference" href="#initFlatMapSerializer%2CT"
-    title="initFlatMapSerializer[T](serializer: var T): FlatMapSerializer">initFlatMapSerializer[T](serializer: var T): FlatMapSerializer</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">serializeBool
@@ -170,13 +173,6 @@ window.addEventListener('DOMContentLoaded', main);
     title="serializeChar(self: FlatMapSerializer; v: char)">serializeChar(self: FlatMapSerializer; v: char)</a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">serializeField
-      <li><a class="reference" href="#serializeField%2CFlatMapSerializeStruct%2Cstatic%5Bstring%5D%2CValue"
-    title="serializeField[Value](self: var FlatMapSerializeStruct; key: static[string];
-                      v: Value)">serializeField[Value](self: var FlatMapSerializeStruct; key: static[string];
-                      v: Value)</a></li>
-
-  </ul>
   <ul class="simple nested-toc-section">serializeFloat
       <li><a class="reference" href="#serializeFloat%2CFlatMapSerializer%2CValue"
     title="serializeFloat[Value: SomeFloat](self: FlatMapSerializer; v: Value)">serializeFloat[Value: SomeFloat](self: FlatMapSerializer; v: Value)</a></li>
@@ -188,31 +184,31 @@ window.addEventListener('DOMContentLoaded', main);
 
   </ul>
   <ul class="simple nested-toc-section">serializeMap
-      <li><a class="reference" href="#serializeMap%2CFlatMapSerializer"
-    title="serializeMap(self: FlatMapSerializer): FlatMapSerializeMap">serializeMap(self: FlatMapSerializer): FlatMapSerializeMap</a></li>
+      <li><a class="reference" href="#serializeMap%2CFlatMapSerializer%5BT%5D"
+    title="serializeMap[T](self: FlatMapSerializer[T]): FlatMapSerializeMap[T]">serializeMap[T](self: FlatMapSerializer[T]): FlatMapSerializeMap[T]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">serializeMapKey
       <li><a class="reference" href="#serializeMapKey%2CFlatMapSerializeMap%2CValue"
-    title="serializeMapKey[Value](self: var FlatMapSerializeMap; key: Value)">serializeMapKey[Value](self: var FlatMapSerializeMap; key: Value)</a></li>
+    title="serializeMapKey[Value](self: FlatMapSerializeMap; key: Value)">serializeMapKey[Value](self: FlatMapSerializeMap; key: Value)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">serializeMapValue
       <li><a class="reference" href="#serializeMapValue%2CFlatMapSerializeMap%2CValue"
-    title="serializeMapValue[Value](self: var FlatMapSerializeMap; v: Value)">serializeMapValue[Value](self: var FlatMapSerializeMap; v: Value)</a></li>
+    title="serializeMapValue[Value](self: FlatMapSerializeMap; v: Value)">serializeMapValue[Value](self: FlatMapSerializeMap; v: Value)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">serializeNamedTuple
-      <li><a class="reference" href="#serializeNamedTuple%2CFlatMapSerializer%2Cstatic%5Bstring%5D%2Cstatic%5Buint%5D"
-    title="serializeNamedTuple(self: FlatMapSerializer; name: static[string];
-                    len: static[uint]): FlatMapSerializer">serializeNamedTuple(self: FlatMapSerializer; name: static[string];
-                    len: static[uint]): FlatMapSerializer</a></li>
+      <li><a class="reference" href="#serializeNamedTuple%2CFlatMapSerializer%5BT%5D%2Cstatic%5Bstring%5D%2Cstatic%5Buint%5D"
+    title="serializeNamedTuple[T](self: FlatMapSerializer[T]; name: static[string];
+                       len: static[uint]): FlatMapSerializeNamedTuple[T]">serializeNamedTuple[T](self: FlatMapSerializer[T]; name: static[string];
+                       len: static[uint]): FlatMapSerializeNamedTuple[T]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">serializeNamedTupleField
-      <li><a class="reference" href="#serializeNamedTupleField%2CFlatMapSerializer%2CKey%2CValue"
-    title="serializeNamedTupleField[Key, Value](self: FlatMapSerializer; key: Key;
-                                     value: Value)">serializeNamedTupleField[Key, Value](self: FlatMapSerializer; key: Key;
+      <li><a class="reference" href="#serializeNamedTupleField%2CFlatMapSerializeNamedTuple%2CKey%2CValue"
+    title="serializeNamedTupleField[Key, Value](self: FlatMapSerializeNamedTuple; key: Key;
+                                     value: Value)">serializeNamedTupleField[Key, Value](self: FlatMapSerializeNamedTuple; key: Key;
                                      value: Value)</a></li>
 
   </ul>
@@ -231,14 +227,38 @@ window.addEventListener('DOMContentLoaded', main);
     title="serializeSeqElement[Value](self: var FlatMapSerializer; v: Value)">serializeSeqElement[Value](self: var FlatMapSerializer; v: Value)</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">serializeSeqMap
+      <li><a class="reference" href="#serializeSeqMap%2CFlatMapSerializer%2COption%5Bint%5D"
+    title="serializeSeqMap(self: FlatMapSerializer; len: Option[int]): FlatMapSerializer">serializeSeqMap(self: FlatMapSerializer; len: Option[int]): FlatMapSerializer</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">serializeSeqMapKey
+      <li><a class="reference" href="#serializeSeqMapKey%2CFlatMapSerializer%2CT"
+    title="serializeSeqMapKey[T](self: FlatMapSerializer; key: T)">serializeSeqMapKey[T](self: FlatMapSerializer; key: T)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">serializeSeqMapValue
+      <li><a class="reference" href="#serializeSeqMapValue%2CFlatMapSerializer%2CT"
+    title="serializeSeqMapValue[T](self: FlatMapSerializer; v: T)">serializeSeqMapValue[T](self: FlatMapSerializer; v: T)</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">serializeSome
       <li><a class="reference" href="#serializeSome%2CFlatMapSerializer%2CValue"
     title="serializeSome[Value](self: FlatMapSerializer; v: Value)">serializeSome[Value](self: FlatMapSerializer; v: Value)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">serializeStruct
-      <li><a class="reference" href="#serializeStruct%2CFlatMapSerializer%2Cstatic%5Bstring%5D"
-    title="serializeStruct(self: FlatMapSerializer; name: static[string]): FlatMapSerializeStruct">serializeStruct(self: FlatMapSerializer; name: static[string]): FlatMapSerializeStruct</a></li>
+      <li><a class="reference" href="#serializeStruct%2CFlatMapSerializer%5BT%5D%2Cstatic%5Bstring%5D"
+    title="serializeStruct[T](self: FlatMapSerializer[T]; name: static[string]): FlatMapSerializeStruct[
+    T]">serializeStruct[T](self: FlatMapSerializer[T]; name: static[string]): FlatMapSerializeStruct[
+    T]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">serializeStructField
+      <li><a class="reference" href="#serializeStructField%2CFlatMapSerializeStruct%2Cstatic%5Bstring%5D%2CValue"
+    title="serializeStructField[Value](self: FlatMapSerializeStruct; key: static[string];
+                            v: Value)">serializeStructField[Value](self: FlatMapSerializeStruct; key: static[string];
+                            v: Value)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">serializeStructUnit
@@ -290,6 +310,20 @@ class="link-seesrc" target="_blank">Source</a>
 
 </dd>
 </div>
+<div id="FlatMapSerializeNamedTuple">
+<dt><pre><a href="flat.html#FlatMapSerializeNamedTuple"><span class="Identifier">FlatMapSerializeNamedTuple</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">ser</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">T</span>
+</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L16"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L16" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
 <div id="FlatMapSerializer">
 <dt><pre><a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">ser</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">T</span>
@@ -329,22 +363,21 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L77"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L87"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L77" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L87" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
-<div id="endNamedTuple,FlatMapSerializer">
-<dt><pre><span class="Keyword">proc</span> <a href="#endNamedTuple%2CFlatMapSerializer"><span class="Identifier">endNamedTuple</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
-    <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
+<div id="endNamedTuple,FlatMapSerializeNamedTuple">
+<dt><pre><span class="Keyword">proc</span> <a href="#endNamedTuple%2CFlatMapSerializeNamedTuple"><span class="Identifier">endNamedTuple</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializeNamedTuple"><span class="Identifier">FlatMapSerializeNamedTuple</span></a><span class="Other">)</span> {.<span class="Identifier">inline</span>.}</pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L57"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L99"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L57" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L99" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -354,192 +387,15 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L47"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L48"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L47" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L48" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
-<div id="endStruct,FlatMapSerializeStruct">
-<dt><pre><span class="Keyword">proc</span> <a href="#endStruct%2CFlatMapSerializeStruct"><span class="Identifier">endStruct</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializeStruct"><span class="Identifier">FlatMapSerializeStruct</span></a><span class="Other">)</span> {.<span class="Identifier">inline</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L82"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L82" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="endTuple,FlatMapSerializer">
-<dt><pre><span class="Keyword">proc</span> <a href="#endTuple%2CFlatMapSerializer"><span class="Identifier">endTuple</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
+<div id="endSeqMap,FlatMapSerializer">
+<dt><pre><span class="Keyword">proc</span> <a href="#endSeqMap%2CFlatMapSerializer"><span class="Identifier">endSeqMap</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
     <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L52"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L52" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="initFlatMapSerializer,T">
-<dt><pre><span class="Keyword">proc</span> <a href="#initFlatMapSerializer%2CT"><span class="Identifier">initFlatMapSerializer</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">serializer</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a> {.<span class="Identifier">inline</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L21"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L21" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="serializeBool,FlatMapSerializer,bool">
-<dt><pre><span class="Keyword">proc</span> <a href="#serializeBool%2CFlatMapSerializer%2Cbool"><span class="Identifier">serializeBool</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
-    <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L28"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L28" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="serializeBytes,FlatMapSerializer,openArray[byte]">
-<dt><pre><span class="Keyword">proc</span> <a href="#serializeBytes%2CFlatMapSerializer%2CopenArray%5Bbyte%5D"><span class="Identifier">serializeBytes</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
-    <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L36"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L36" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="serializeChar,FlatMapSerializer,char">
-<dt><pre><span class="Keyword">proc</span> <a href="#serializeChar%2CFlatMapSerializer%2Cchar"><span class="Identifier">serializeChar</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">char</span><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
-    <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L34"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L34" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="serializeField,FlatMapSerializeStruct,static[string],Value">
-<dt><pre><span class="Keyword">proc</span> <a href="#serializeField%2CFlatMapSerializeStruct%2Cstatic%5Bstring%5D%2CValue"><span class="Identifier">serializeField</span></a><span class="Other">[</span><span class="Identifier">Value</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="flat.html#FlatMapSerializeStruct"><span class="Identifier">FlatMapSerializeStruct</span></a><span class="Other">;</span>
-                           <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">static</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Value</span><span class="Other">)</span> {.<span class="Identifier">inline</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L80"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L80" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="serializeFloat,FlatMapSerializer,Value">
-<dt><pre><span class="Keyword">proc</span> <a href="#serializeFloat%2CFlatMapSerializer%2CValue"><span class="Identifier">serializeFloat</span></a><span class="Other">[</span><span class="Identifier">Value</span><span class="Other">:</span> <span class="Identifier">SomeFloat</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Value</span><span class="Other">)</span> {.
-    <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L32"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L32" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="serializeInt,FlatMapSerializer,Value">
-<dt><pre><span class="Keyword">proc</span> <a href="#serializeInt%2CFlatMapSerializer%2CValue"><span class="Identifier">serializeInt</span></a><span class="Other">[</span><span class="Identifier">Value</span><span class="Other">:</span> <span class="Identifier">SomeInteger</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Value</span><span class="Other">)</span> {.
-    <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L30"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L30" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="serializeMap,FlatMapSerializer">
-<dt><pre><span class="Keyword">proc</span> <a href="#serializeMap%2CFlatMapSerializer"><span class="Identifier">serializeMap</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">)</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializeMap"><span class="Identifier">FlatMapSerializeMap</span></a> {.<span class="Identifier">inline</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L68"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L68" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="serializeMapKey,FlatMapSerializeMap,Value">
-<dt><pre><span class="Keyword">proc</span> <a href="#serializeMapKey%2CFlatMapSerializeMap%2CValue"><span class="Identifier">serializeMapKey</span></a><span class="Other">[</span><span class="Identifier">Value</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="flat.html#FlatMapSerializeMap"><span class="Identifier">FlatMapSerializeMap</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">Value</span><span class="Other">)</span> {.<span class="Identifier">inline</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L73"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L73" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="serializeMapValue,FlatMapSerializeMap,Value">
-<dt><pre><span class="Keyword">proc</span> <a href="#serializeMapValue%2CFlatMapSerializeMap%2CValue"><span class="Identifier">serializeMapValue</span></a><span class="Other">[</span><span class="Identifier">Value</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="flat.html#FlatMapSerializeMap"><span class="Identifier">FlatMapSerializeMap</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Value</span><span class="Other">)</span> {.<span class="Identifier">inline</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L75"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L75" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="serializeNamedTuple,FlatMapSerializer,static[string],static[uint]">
-<dt><pre><span class="Keyword">proc</span> <a href="#serializeNamedTuple%2CFlatMapSerializer%2Cstatic%5Bstring%5D%2Cstatic%5Buint%5D"><span class="Identifier">serializeNamedTuple</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">static</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">;</span>
-                         <span class="Identifier">len</span><span class="Other">:</span> <span class="Identifier">static</span><span class="Other">[</span><span class="Identifier">uint</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">FlatMapSerializer</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
-    <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L42"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L42" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="serializeNamedTupleField,FlatMapSerializer,Key,Value">
-<dt><pre><span class="Keyword">proc</span> <a href="#serializeNamedTupleField%2CFlatMapSerializer%2CKey%2CValue"><span class="Identifier">serializeNamedTupleField</span></a><span class="Other">[</span><span class="Identifier">Key</span><span class="Other">,</span> <span class="Identifier">Value</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">Key</span><span class="Other">;</span>
-    <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">Value</span><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L55"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L55" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="serializeNone,FlatMapSerializer">
-<dt><pre><span class="Keyword">proc</span> <a href="#serializeNone%2CFlatMapSerializer"><span class="Identifier">serializeNone</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">)</span> {.<span class="Identifier">inline</span>.}</pre></dt>
 <dd>
 
 
@@ -550,6 +406,172 @@ class="link-seesrc" target="_blank">Source</a>
 
 </dd>
 </div>
+<div id="endStruct,FlatMapSerializeStruct">
+<dt><pre><span class="Keyword">proc</span> <a href="#endStruct%2CFlatMapSerializeStruct"><span class="Identifier">endStruct</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializeStruct"><span class="Identifier">FlatMapSerializeStruct</span></a><span class="Other">)</span> {.<span class="Identifier">inline</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L93"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L93" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="endTuple,FlatMapSerializer">
+<dt><pre><span class="Keyword">proc</span> <a href="#endTuple%2CFlatMapSerializer"><span class="Identifier">endTuple</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
+    <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L53"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L53" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeBool,FlatMapSerializer,bool">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeBool%2CFlatMapSerializer%2Cbool"><span class="Identifier">serializeBool</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
+    <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L29"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L29" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeBytes,FlatMapSerializer,openArray[byte]">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeBytes%2CFlatMapSerializer%2CopenArray%5Bbyte%5D"><span class="Identifier">serializeBytes</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
+    <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L37"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L37" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeChar,FlatMapSerializer,char">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeChar%2CFlatMapSerializer%2Cchar"><span class="Identifier">serializeChar</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">char</span><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
+    <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L35"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L35" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeFloat,FlatMapSerializer,Value">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeFloat%2CFlatMapSerializer%2CValue"><span class="Identifier">serializeFloat</span></a><span class="Other">[</span><span class="Identifier">Value</span><span class="Other">:</span> <span class="Identifier">SomeFloat</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Value</span><span class="Other">)</span> {.
+    <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L33"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L33" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeInt,FlatMapSerializer,Value">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeInt%2CFlatMapSerializer%2CValue"><span class="Identifier">serializeInt</span></a><span class="Other">[</span><span class="Identifier">Value</span><span class="Other">:</span> <span class="Identifier">SomeInteger</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Value</span><span class="Other">)</span> {.
+    <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L31"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L31" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeMap,FlatMapSerializer[T]">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeMap%2CFlatMapSerializer%5BT%5D"><span class="Identifier">serializeMap</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializeMap"><span class="Identifier">FlatMapSerializeMap</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> {.
+    <span class="Identifier">inline</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L71"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L71" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeMapKey,FlatMapSerializeMap,Value">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeMapKey%2CFlatMapSerializeMap%2CValue"><span class="Identifier">serializeMapKey</span></a><span class="Other">[</span><span class="Identifier">Value</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializeMap"><span class="Identifier">FlatMapSerializeMap</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">Value</span><span class="Other">)</span> {.<span class="Identifier">inline</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L81"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L81" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeMapValue,FlatMapSerializeMap,Value">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeMapValue%2CFlatMapSerializeMap%2CValue"><span class="Identifier">serializeMapValue</span></a><span class="Other">[</span><span class="Identifier">Value</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializeMap"><span class="Identifier">FlatMapSerializeMap</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Value</span><span class="Other">)</span> {.<span class="Identifier">inline</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L84"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L84" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeNamedTuple,FlatMapSerializer[T],static[string],static[uint]">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeNamedTuple%2CFlatMapSerializer%5BT%5D%2Cstatic%5Bstring%5D%2Cstatic%5Buint%5D"><span class="Identifier">serializeNamedTuple</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">static</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">;</span>
+                            <span class="Identifier">len</span><span class="Other">:</span> <span class="Identifier">static</span><span class="Other">[</span><span class="Identifier">uint</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializeNamedTuple"><span class="Identifier">FlatMapSerializeNamedTuple</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> {.
+    <span class="Identifier">inline</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L77"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L77" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeNamedTupleField,FlatMapSerializeNamedTuple,Key,Value">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeNamedTupleField%2CFlatMapSerializeNamedTuple%2CKey%2CValue"><span class="Identifier">serializeNamedTupleField</span></a><span class="Other">[</span><span class="Identifier">Key</span><span class="Other">,</span> <span class="Identifier">Value</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializeNamedTuple"><span class="Identifier">FlatMapSerializeNamedTuple</span></a><span class="Other">;</span>
+    <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">Key</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">Value</span><span class="Other">)</span> {.<span class="Identifier">inline</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L96"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L96" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeNone,FlatMapSerializer">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeNone%2CFlatMapSerializer"><span class="Identifier">serializeNone</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">)</span> {.<span class="Identifier">inline</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L63"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L63" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
 <div id="serializeSeq,FlatMapSerializer,Option[uint]">
 <dt><pre><span class="Keyword">proc</span> <a href="#serializeSeq%2CFlatMapSerializer%2COption%5Buint%5D"><span class="Identifier">serializeSeq</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">len</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">uint</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">FlatMapSerializer</span> {.
     <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
@@ -557,9 +579,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L38"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L39"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L38" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L39" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -570,9 +592,48 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L45"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L46"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L45" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L46" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeSeqMap,FlatMapSerializer,Option[int]">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeSeqMap%2CFlatMapSerializer%2COption%5Bint%5D"><span class="Identifier">serializeSeqMap</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">len</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">FlatMapSerializer</span> {.
+    <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L43"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L43" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeSeqMapKey,FlatMapSerializer,T">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeSeqMapKey%2CFlatMapSerializer%2CT"><span class="Identifier">serializeSeqMapKey</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
+    <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L56"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L56" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeSeqMapValue,FlatMapSerializer,T">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeSeqMapValue%2CFlatMapSerializer%2CT"><span class="Identifier">serializeSeqMapValue</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span> {.<span class="Identifier">inline</span><span class="Other">,</span>
+    <span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;can ony flatten structs and maps&quot;</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L58"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L58" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -582,22 +643,35 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L62"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L65"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L62" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L65" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
-<div id="serializeStruct,FlatMapSerializer,static[string]">
-<dt><pre><span class="Keyword">proc</span> <a href="#serializeStruct%2CFlatMapSerializer%2Cstatic%5Bstring%5D"><span class="Identifier">serializeStruct</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">static</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializeStruct"><span class="Identifier">FlatMapSerializeStruct</span></a> {.
-    <span class="Identifier">inline</span>.}</pre></dt>
+<div id="serializeStruct,FlatMapSerializer[T],static[string]">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeStruct%2CFlatMapSerializer%5BT%5D%2Cstatic%5Bstring%5D"><span class="Identifier">serializeStruct</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializer"><span class="Identifier">FlatMapSerializer</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">static</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializeStruct"><span class="Identifier">FlatMapSerializeStruct</span></a><span class="Other">[</span>
+    <span class="Identifier">T</span><span class="Other">]</span> {.<span class="Identifier">inline</span>.}</pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L70"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L74"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L70" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L74" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="serializeStructField,FlatMapSerializeStruct,static[string],Value">
+<dt><pre><span class="Keyword">proc</span> <a href="#serializeStructField%2CFlatMapSerializeStruct%2Cstatic%5Bstring%5D%2CValue"><span class="Identifier">serializeStructField</span></a><span class="Other">[</span><span class="Identifier">Value</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="flat.html#FlatMapSerializeStruct"><span class="Identifier">FlatMapSerializeStruct</span></a><span class="Other">;</span>
+                                 <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">static</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Value</span><span class="Other">)</span> {.<span class="Identifier">inline</span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L90"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L90" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -607,9 +681,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L64"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L67"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L64" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L67" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -620,9 +694,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L40"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L41"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L40" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L41" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -633,9 +707,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L50"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L51"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L50" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L51" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -645,9 +719,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L66"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/flat.nim#L69"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L66" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/flat.nim#L69" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -661,7 +735,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-10-26 12:17:58 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-10-26 12:55:15 UTC</small>
       </div>
     </div>
   </div>
