@@ -10,6 +10,7 @@ serializeBytes	deser/ser/flat.html#serializeBytes,FlatMapSerializer,openArray[by
 serializeSeq	deser/ser/flat.html#serializeSeq,FlatMapSerializer,Option[uint]	flat: serializeSeq(self: FlatMapSerializer; len: Option[uint]): FlatMapSerializer	
 serializeTuple	deser/ser/flat.html#serializeTuple,FlatMapSerializer,static[uint]	flat: serializeTuple(self: FlatMapSerializer; len: static[uint]): FlatMapSerializer	
 serializeSeqMap	deser/ser/flat.html#serializeSeqMap,FlatMapSerializer,Option[int]	flat: serializeSeqMap(self: FlatMapSerializer; len: Option[int]): FlatMapSerializer	
+serializeArray	deser/ser/flat.html#serializeArray,FlatMapSerializer,static[int]	flat: serializeArray(self: FlatMapSerializer; len: static[int]): FlatMapSerializer	
 serializeSeqElement	deser/ser/flat.html#serializeSeqElement,FlatMapSerializer,Value	flat: serializeSeqElement[Value](self: var FlatMapSerializer; v: Value)	
 endSeq	deser/ser/flat.html#endSeq,FlatMapSerializer	flat: endSeq(self: FlatMapSerializer)	
 serializeTupleElement	deser/ser/flat.html#serializeTupleElement,FlatMapSerializer,Value	flat: serializeTupleElement[Value](self: var FlatMapSerializer; v: Value)	
@@ -17,10 +18,12 @@ endTuple	deser/ser/flat.html#endTuple,FlatMapSerializer	flat: endTuple(self: Fla
 serializeSeqMapKey	deser/ser/flat.html#serializeSeqMapKey,FlatMapSerializer,T	flat: serializeSeqMapKey[T](self: FlatMapSerializer; key: T)	
 serializeSeqMapValue	deser/ser/flat.html#serializeSeqMapValue,FlatMapSerializer,T	flat: serializeSeqMapValue[T](self: FlatMapSerializer; v: T)	
 endSeqMap	deser/ser/flat.html#endSeqMap,FlatMapSerializer	flat: endSeqMap(self: FlatMapSerializer)	
+serializeArrayElement	deser/ser/flat.html#serializeArrayElement,FlatMapSerializer,T	flat: serializeArrayElement[T](self: FlatMapSerializer; v: T)	
+endArray	deser/ser/flat.html#endArray,FlatMapSerializer	flat: endArray(self: FlatMapSerializer)	
 serializeNone	deser/ser/flat.html#serializeNone,FlatMapSerializer	flat: serializeNone(self: FlatMapSerializer)	
 serializeSome	deser/ser/flat.html#serializeSome,FlatMapSerializer,Value	flat: serializeSome[Value](self: FlatMapSerializer; v: Value)	
-serializeStructUnit	deser/ser/flat.html#serializeStructUnit,FlatMapSerializer	flat: serializeStructUnit(self: FlatMapSerializer)	
-serializeTupleUnit	deser/ser/flat.html#serializeTupleUnit,FlatMapSerializer	flat: serializeTupleUnit(self: FlatMapSerializer)	
+serializeUnitStruct	deser/ser/flat.html#serializeUnitStruct,FlatMapSerializer	flat: serializeUnitStruct(self: FlatMapSerializer)	
+serializeUnitTuple	deser/ser/flat.html#serializeUnitTuple,FlatMapSerializer	flat: serializeUnitTuple(self: FlatMapSerializer)	
 serializeMap	deser/ser/flat.html#serializeMap,FlatMapSerializer[T]	flat: serializeMap[T](self: FlatMapSerializer[T]): FlatMapSerializeMap[T]	
 serializeStruct	deser/ser/flat.html#serializeStruct,FlatMapSerializer[T],static[string]	flat: serializeStruct[T](self: FlatMapSerializer[T]; name: static[string]): FlatMapSerializeStruct[\n    T]	
 serializeNamedTuple	deser/ser/flat.html#serializeNamedTuple,FlatMapSerializer[T],static[string],static[uint]	flat: serializeNamedTuple[T](self: FlatMapSerializer[T]; name: static[string];\n                       len: static[uint]): FlatMapSerializeNamedTuple[T]	
