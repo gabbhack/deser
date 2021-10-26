@@ -1,3 +1,6 @@
 template asAddr*(ident: untyped, exp: untyped) =
-  let temp = exp.addr
-  template ident: untyped = temp[]
+  when compiles(exp.addr):
+    let temp = exp.addr
+    template ident: untyped = temp[]
+  else:
+    var temp = exp
