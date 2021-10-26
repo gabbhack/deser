@@ -15,10 +15,12 @@ proc isUnit(T: typedesc): bool {.compileTime.} =
 
 type
   MapIter* = concept self  ## Type with pairs()
-    self.pairs()
+    for key, value in self:
+      discard
 
   SeqIter* = concept self  ## Type with items()
-    self.items()
+    for key in self:
+      discard
   
   UnitConcept* = concept type T  ## Type without fields
     T is object
