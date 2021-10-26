@@ -24,7 +24,7 @@ func newSerializeWithType(field: Field): NimNode =
     ),
     nnkExprColonExpr.newTree(
       ident "value",
-      newDotExpr(ident "self", newCall(bindSym("addr"), field.ident))
+      newDotExpr(ident "self", field.ident)
     )
   )
 

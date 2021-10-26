@@ -2,8 +2,8 @@
 
 type
   SerializeWith*[T, Serializer] = object
-    serializeProc: proc (self: T, serializer: Serializer)
-    value: ptr T
+    serializeProc*: proc (self: T, serializer: var Serializer)
+    value*: T
 
-proc serialize*[T, Serializer](self: SerializeWith[T, Serializer], serializer: Serializer) =
-  self.serializeProc(self.value[], serializer)
+proc serialize*[T, Serializer](self: SerializeWith[T, Serializer], serializer: var Serializer) {.inline.} =
+  self.serializeProc(self.value, serializer)
