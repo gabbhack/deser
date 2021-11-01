@@ -44,7 +44,7 @@ assert test.kind
 
 template serializeWith*(with: typed) {.pragma.} ##[
 Serialize this field using a procedure.
-The given function must be callable as `proc[Serializer] (self: field.type, serializer: Serializer)`
+The given function must be callable as `proc[Serializer] (self: field.type, serializer: var Serializer)`
 ]##
 
 template renameSerialize*(renamed: string) {.pragma.} ##[
