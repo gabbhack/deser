@@ -188,7 +188,7 @@ func structFromTypeImpl(impl: NimNode): Struct =
   
 func newProcDef(name: string, selfType: NimNode, lizerArgName: string, body: NimNode, public: bool): NimNode =
   #[
-    proc name[T](self: selfType, lizerArgName: T) =
+    proc name[T](self: selfType, lizerArgName: var T) =
       body
   ]#
   let procName = (
@@ -237,10 +237,10 @@ func newProc(typeName: NimNode, params: ProcedureParams, body: varargs[NimNode])
 func newPrefix(prefix: NimNode, body: NimNode): NimNode =
   result = nnkPrefix.newTree(prefix, body)
 
-func newType(name: string, identDefs: varargs[NimNode]): NimNode =
+func newType(name: NimNode, identDefs: varargs[NimNode]): NimNode =
   result = nnkTypeSection.newTree(
     nnkTypeDef.newTree(
-      newIdentNode("SerializeWith"),
+      name,
       newEmptyNode(),
       nnkObjectTy.newTree(
         newEmptyNode(),
