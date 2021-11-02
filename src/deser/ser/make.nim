@@ -1,34 +1,49 @@
 import std/[options, sequtils]
 
-import flat, serialize_with
+import flat
 import ../pragmas
 import ../utils
 
 include ../macro_utils
 
-{.experimental: "strictFuncs".}
 {.push compileTime.}
-func newProcMiddle(fields: seq[Field]): NimNode
+var globalStmt {.compileTime.}: NimNode
 
-func newSerializeWithType(field: Field): NimNode =
-  # SerializeWith(serializeProc: withProc, value: self.fieldName)
+proc newProcMiddle(fields: seq[Field]): NimNode
+
+proc newSerializeWithType(field: Field): NimNode =
+  let serWithTypeName = genSym(nskType, "SerializeWith")
+  #[
+  type SerializeWithgensym:
+    value: field.symType
+  ]#
+  globalStmt.add newType(
+    serWithTypeName,
+    newIdentDefs(ident "value", field.symType, newEmptyNode())
+  )
+
+  let procParams = ProcedureParams(
+    name: "serialize",
+    public: false,
+    lizerArgName: "serializer",
+  )
+
+  let procBody = newCall(field.features.serializeWith.get(), newDotExpr(ident "self", ident "value"), ident "serializer")
+  #[
+  proc serialize[T](self: SerializeWithgensym, serializer: var T) =
+    serializeWithProc(self.value, serializer)
+  ]#
+  globalStmt.add newProc(serWithTypeName, procParams, procBody)
+  # SerializeWithgensym(value: self.fieldName)
   result = nnkObjConstr.newTree(
-    nnkBracketExpr.newTree(
-      bindSym("SerializeWith"),
-      field.symType,
-      newTypeOf(ident "state")
-    ),
-    nnkExprColonExpr.newTree(
-      ident "serializeProc",
-      field.features.serializeWith.get()
-    ),
+    serWithTypeName,
     nnkExprColonExpr.newTree(
       ident "value",
       newDotExpr(ident "self", field.ident)
     )
   )
 
-func newFlatStructSerialize(item: NimNode): NimNode =
+proc newFlatStructSerialize(item: NimNode): NimNode =
   #[
   var flatState = FlatMapSerializer(ser: addr(state))
   serialize(item, flatState)
@@ -50,13 +65,13 @@ func newFlatStructSerialize(item: NimNode): NimNode =
     newCall("serialize", item, ident "flatState")
   )
 
-func newSerializeItem(field: Field): NimNode =
+proc newSerializeItem(field: Field): NimNode =
   if field.features.serializeWith.isSome:
     result = newSerializeWithType(field)
   else:
     result = newDotExpr(ident "self", field.ident)
 
-func newUncheckedSerializeField(field: Field): NimNode =
+proc newUncheckedSerializeField(field: Field): NimNode =
   if field.features.inlineKeys:
     result = newFlatStructSerialize(newSerializeItem(field))
   else:
@@ -67,7 +82,7 @@ func newUncheckedSerializeField(field: Field): NimNode =
       newSerializeItem(field)
     )
 
-func newSerializeCheck(field: Field, happyPathBody: NimNode): NimNode =
+proc newSerializeCheck(field: Field, happyPathBody: NimNode): NimNode =
   if field.features.skipSerializeIf.isSome:
     let
       skipIfProc = field.features.skipSerializeIf.unsafeGet
@@ -82,11 +97,11 @@ func newSerializeCheck(field: Field, happyPathBody: NimNode): NimNode =
     result = happyPathBody
   
 
-func newSerializeField(field: Field): NimNode =
+proc newSerializeField(field: Field): NimNode =
   let serialize = newUncheckedSerializeField(field)
   result = newSerializeCheck(field, serialize)
 
-func newSerializeCaseField(field: Field): NimNode =
+proc newSerializeCaseField(field: Field): NimNode =
   var branches: seq[NimNode] = @[]
   for branch in field.branches:
     var tempStmt = (
@@ -126,7 +141,7 @@ func newSerializeCaseField(field: Field): NimNode =
   # add `skipSerializeIf` check
   result = newSerializeCheck(field, serialize)
   
-func newProcStart(lizerProcName, lizerArgName, typeName: string): NimNode =
+proc newProcStart(lizerProcName, lizerArgName, typeName: string): NimNode =
   # asAddr(state, lizerProcName(lizerArgName, "typeName"))
   let callLizerProc = nnkCall.newTree(
     newIdentNode(lizerProcName),
@@ -135,7 +150,7 @@ func newProcStart(lizerProcName, lizerArgName, typeName: string): NimNode =
   )
   result = newCall(bindSym("asAddr"), ident "state", callLizerProc)
 
-func newProcMiddle(fields: seq[Field]): NimNode =
+proc newProcMiddle(fields: seq[Field]): NimNode =
   result = newStmtList()
   for field in fields.filterIt(not (it.features.skipSerializing or it.features.skipped)):
     if field.isCase:
@@ -143,7 +158,7 @@ func newProcMiddle(fields: seq[Field]): NimNode =
     else:
       result.add newSerializeField(field)
 
-func newProcEnd(): NimNode =
+proc newProcEnd(): NimNode =
   # endStruct(state)
   result = newCall(
     "endStruct",
@@ -161,10 +176,12 @@ All tuples implement `serialize` out of the box.
     public: public,
     lizerArgName: "serializer",
   )
-  result = newProc(struct.symType, procParams, [
+  globalStmt = newStmtList()
+  globalStmt.add newProc(struct.symType, procParams, [
     newProcStart("serializeStruct", procParams.lizerArgName, struct.symType.strVal),
     newProcMiddle(struct.fields),
     newProcEnd()
   ])
+  result = globalStmt
 
 {.pop.}
