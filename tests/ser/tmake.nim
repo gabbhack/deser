@@ -1,3 +1,7 @@
+discard """
+  matrix: "; -d:release; --gc:orc; -d:release --gc:orc"
+"""
+
 import std/[unittest, options, times]
 
 import deser

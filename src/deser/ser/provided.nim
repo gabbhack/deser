@@ -55,18 +55,19 @@ proc collectMap*[Serializer; Iter: MapIter](self: var Serializer, iter: Iter) =
   
   state.endMap()
 
-template collectSeq*[Serializer; Value](self: var Serializer, iter: iterable[Value]) =
-  asAddr state, self.serializeSeq(none int)
+when defined(nimHasIterable):
+  template collectSeq*[Serializer; Value](self: var Serializer, iter: iterable[Value]) =
+    asAddr state, self.serializeSeq(none int)
 
-  for value in iter:
-    state.serializeSeqElement(value)
+    for value in iter:
+      state.serializeSeqElement(value)
 
-  state.endSeq()
+    state.endSeq()
 
-template collectMap*[Serializer; Key; Value](self: var Serializer, iter: iterable[(Key, Value)]) =
-  asAddr state, self.serializeMap(none int)
+  template collectMap*[Serializer; Key; Value](self: var Serializer, iter: iterable[(Key, Value)]) =
+    asAddr state, self.serializeMap(none int)
 
-  for key, value in iter:
-    state.serializeMapEntry(key, value)
-  
-  state.endMap()
+    for key, value in iter:
+      state.serializeMapEntry(key, value)
+    
+    state.endMap()
