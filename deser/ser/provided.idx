@@ -4,3 +4,5 @@ UnitConcept	deser/ser/provided.html#UnitConcept	provided: UnitConcept
 serializeMapEntry	deser/ser/provided.html#serializeMapEntry,Serializer,Key,Value	provided: serializeMapEntry[Serializer; Key; Value](self: var Serializer; key: Key;\n    v: Value)	
 collectSeq	deser/ser/provided.html#collectSeq,Serializer,Iter	provided: collectSeq[Serializer; Iter: SeqIter](self: var Serializer; iter: Iter)	
 collectMap	deser/ser/provided.html#collectMap,Serializer,Iter	provided: collectMap[Serializer; Iter: MapIter](self: var Serializer; iter: Iter)	
+collectSeq	deser/ser/provided.html#collectSeq.t,Serializer,iterable[Value]	provided: collectSeq[Serializer; Value](self: var Serializer; iter: iterable[Value])	
+collectMap	deser/ser/provided.html#collectMap.t,Serializer,iterable[]	provided: collectMap[Serializer; Key; Value](self: var Serializer;\n                                   iter: iterable[(Key, Value)])	
