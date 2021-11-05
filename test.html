@@ -17,7 +17,7 @@
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
-<title>src/deser/test</title>
+<title>test</title>
 <link rel="stylesheet" type="text/css" href="nimdoc.out.css">
 
 <script type="text/javascript" src="dochack.js"></script>
@@ -34,6 +34,7 @@ function main() {
     }
   }
 
+  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
   function switchTheme(e) {
       if (e.target.checked) {
           document.documentElement.setAttribute('data-theme', 'dark');
@@ -44,32 +45,24 @@ function main() {
       }
   }
 
-  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-  if (toggleSwitch !== null) {
-    toggleSwitch.addEventListener('change', switchTheme, false);
-  }
+  toggleSwitch.addEventListener('change', switchTheme, false);
 
-  var currentTheme = localStorage.getItem('theme');
-  if (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    currentTheme = 'dark';
-  }
+  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
   if (currentTheme) {
     document.documentElement.setAttribute('data-theme', currentTheme);
 
-    if (currentTheme === 'dark' && toggleSwitch !== null) {
+    if (currentTheme === 'dark') {
       toggleSwitch.checked = true;
     }
   }
 }
-
-window.addEventListener('DOMContentLoaded', main);
 </script>
 
 </head>
-<body>
+<body onload="main()">
 <div class="document" id="documentId">
   <div class="container">
-    <h1 class="title">src/deser/test</h1>
+    <h1 class="title">test</h1>
     <div class="row">
   <div class="three columns">
   <div class="theme-switch-wrapper">
@@ -127,7 +120,7 @@ window.addEventListener('DOMContentLoaded', main);
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
   
-  <p class="module-desc">A module for testing your <tt class="docutils literal"><span class="pre"><span class="Identifier">serialize</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">deserialize</span></span></tt> procedures</p>
+  <p class="module-desc">A module for testing your <tt class="docutils literal"><span class="pre">serialize</span></tt> and <tt class="docutils literal"><span class="pre">deserialize</span></tt> procedures</p>
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
@@ -136,7 +129,7 @@ window.addEventListener('DOMContentLoaded', main);
 <div class="section" id="19">
 <h1><a class="toc-backref" href="#19">Exports</a></h1>
 <dl class="item">
-<a href="test/ser.html#Serializer"><span class="Identifier">Serializer</span></a>, <a href="test/ser.html#endArray,Serializer"><span class="Identifier">endArray</span></a>, <a href="test/ser.html#serializeString,Serializer,string"><span class="Identifier">serializeString</span></a>, <a href="test/ser.html#endMap,Serializer"><span class="Identifier">endMap</span></a>, <a href="test/ser.html#serializeInt,Serializer,SomeInteger"><span class="Identifier">serializeInt</span></a>, <a href="test/ser.html#endStruct,Serializer"><span class="Identifier">endStruct</span></a>, <a href="test/ser.html#remaining,Serializer"><span class="Identifier">remaining</span></a>, <a href="test/ser.html#serializeUnitTuple,Serializer,static[string]"><span class="Identifier">serializeUnitTuple</span></a>, <a href="test/ser.html#serializeSome,Serializer,T"><span class="Identifier">serializeSome</span></a>, <a href="test/ser.html#serializeChar,Serializer,char"><span class="Identifier">serializeChar</span></a>, <a href="test/ser.html#serializeStruct,Serializer,static[string]"><span class="Identifier">serializeStruct</span></a>, <a href="test/ser.html#serializeBool,Serializer,bool"><span class="Identifier">serializeBool</span></a>, <a href="test/ser.html#assertNextToken,Serializer,Token"><span class="Identifier">assertNextToken</span></a>, <a href="test/ser.html#serializeStructField,Serializer,static[string],T"><span class="Identifier">serializeStructField</span></a>, <a href="test/ser.html#serializeMapKey,Serializer,T"><span class="Identifier">serializeMapKey</span></a>, <a href="test/ser.html#serTokens,T,openArray[Token]"><span class="Identifier">serTokens</span></a>, <a href="test/ser.html#endSeq,Serializer"><span class="Identifier">endSeq</span></a>, <a href="test/ser.html#serializeSeq,Serializer,Option[int]"><span class="Identifier">serializeSeq</span></a>, <a href="test/ser.html#serializeNamedTupleField,Serializer,static[string],T"><span class="Identifier">serializeNamedTupleField</span></a>, <a href="test/ser.html#serializeSeqElement,Serializer,T"><span class="Identifier">serializeSeqElement</span></a>, <a href="test/ser.html#serializeMapValue,Serializer,T"><span class="Identifier">serializeMapValue</span></a>, <a href="test/ser.html#serializeArray,Serializer,static[int]"><span class="Identifier">serializeArray</span></a>, <a href="test/ser.html#serializeMap,Serializer,Option[int]"><span class="Identifier">serializeMap</span></a>, <a href="test/ser.html#serializeNone,Serializer"><span class="Identifier">serializeNone</span></a>, <a href="test/ser.html#endTuple,Serializer"><span class="Identifier">endTuple</span></a>, <a href="test/ser.html#serializeSeqMapValue,Serializer,T"><span class="Identifier">serializeSeqMapValue</span></a>, <a href="test/ser.html#serializeNamedTuple,Serializer,static[string],static[int]"><span class="Identifier">serializeNamedTuple</span></a>, <a href="test/ser.html#serializeArrayElement,Serializer,T"><span class="Identifier">serializeArrayElement</span></a>, <a href="test/ser.html#endNamedTuple,Serializer"><span class="Identifier">endNamedTuple</span></a>, <a href="test/ser.html#serializeUnitStruct,Serializer,static[string]"><span class="Identifier">serializeUnitStruct</span></a>, <a href="test/ser.html#serializeTupleElement,Serializer,T"><span class="Identifier">serializeTupleElement</span></a>, <a href="test/ser.html#serializeBytes,Serializer,openArray[byte]"><span class="Identifier">serializeBytes</span></a>, <a href="test/ser.html#serializeSeqMap,Serializer,Option[int]"><span class="Identifier">serializeSeqMap</span></a>, <a href="test/ser.html#serializeTuple,Serializer,static[string],static[int]"><span class="Identifier">serializeTuple</span></a>, <a href="test/ser.html#serializeFloat,Serializer,SomeFloat"><span class="Identifier">serializeFloat</span></a>, <a href="test/ser.html#nextToken,Serializer"><span class="Identifier">nextToken</span></a>, <a href="test/ser.html#serializeSeqMapKey,Serializer,T"><span class="Identifier">serializeSeqMapKey</span></a>, <a href="test/ser.html#endSeqMap,Serializer"><span class="Identifier">endSeqMap</span></a>, <a href="test/token.html#NamedTuple,string,int"><span class="Identifier">NamedTuple</span></a>, <a href="test/token.html#SeqEnd"><span class="Identifier">SeqEnd</span></a>, <a href="test/token.html#Empty"><span class="Identifier">Empty</span></a>, <a href="test/token.html#UnitStruct,string"><span class="Identifier">UnitStruct</span></a>, <a href="test/token.html#Boolean,bool"><span class="Identifier">Boolean</span></a>, <a href="test/token.html#Map,Option[int]"><span class="Identifier">Map</span></a>, <a href="test/token.html#TokenKind"><span class="Identifier">TokenKind</span></a>, <a href="test/token.html#Struct,string"><span class="Identifier">Struct</span></a>, <a href="test/token.html#Seq,Option[int]"><span class="Identifier">Seq</span></a>, <a href="test/token.html#Float,float"><span class="Identifier">Float</span></a>, <a href="test/token.html#==,Token,Token"><span class="Identifier">==</span></a>, <a href="test/token.html#TupleEnd"><span class="Identifier">TupleEnd</span></a>, <a href="test/token.html#Tuple,string,int"><span class="Identifier">Tuple</span></a>, <a href="test/token.html#Token"><span class="Identifier">Token</span></a>, <a href="test/token.html#Some"><span class="Identifier">Some</span></a>, <a href="test/token.html#String,string"><span class="Identifier">String</span></a>, <a href="test/token.html#Bytes,seq[byte]"><span class="Identifier">Bytes</span></a>, <a href="test/token.html#None"><span class="Identifier">None</span></a>, <a href="test/token.html#Array,int"><span class="Identifier">Array</span></a>, <a href="test/token.html#MapEnd"><span class="Identifier">MapEnd</span></a>, <a href="test/token.html#SeqMapEnd"><span class="Identifier">SeqMapEnd</span></a>, <a href="test/token.html#SeqMap,Option[int]"><span class="Identifier">SeqMap</span></a>, <a href="test/token.html#UnitTuple,string"><span class="Identifier">UnitTuple</span></a>, <a href="test/token.html#Integer,int"><span class="Identifier">Integer</span></a>, <a href="test/token.html#StructEnd"><span class="Identifier">StructEnd</span></a>, <a href="test/token.html#NamedTupleEnd"><span class="Identifier">NamedTupleEnd</span></a>, <a href="test/token.html#Char,char"><span class="Identifier">Char</span></a>, <a href="test/token.html#ArrayEnd"><span class="Identifier">ArrayEnd</span></a>
+<a href="test/ser.html#Serializer"><span class="Identifier">Serializer</span></a>, <a href="test/ser.html#endArray"><span class="Identifier">endArray</span></a>, <a href="test/ser.html#serializeString"><span class="Identifier">serializeString</span></a>, <a href="test/ser.html#endMap"><span class="Identifier">endMap</span></a>, <a href="test/ser.html#serializeInt"><span class="Identifier">serializeInt</span></a>, <a href="test/ser.html#endStruct"><span class="Identifier">endStruct</span></a>, <a href="test/ser.html#remaining"><span class="Identifier">remaining</span></a>, <a href="test/ser.html#serializeUnitTuple"><span class="Identifier">serializeUnitTuple</span></a>, <a href="test/ser.html#serializeSome"><span class="Identifier">serializeSome</span></a>, <a href="test/ser.html#serializeChar"><span class="Identifier">serializeChar</span></a>, <a href="test/ser.html#serializeStruct"><span class="Identifier">serializeStruct</span></a>, <a href="test/ser.html#serializeBool"><span class="Identifier">serializeBool</span></a>, <a href="test/ser.html#assertNextToken"><span class="Identifier">assertNextToken</span></a>, <a href="test/ser.html#serializeStructField"><span class="Identifier">serializeStructField</span></a>, <a href="test/ser.html#serializeMapKey"><span class="Identifier">serializeMapKey</span></a>, <a href="test/ser.html#serTokens"><span class="Identifier">serTokens</span></a>, <a href="test/ser.html#endSeq"><span class="Identifier">endSeq</span></a>, <a href="test/ser.html#serializeSeq"><span class="Identifier">serializeSeq</span></a>, <a href="test/ser.html#serializeNamedTupleField"><span class="Identifier">serializeNamedTupleField</span></a>, <a href="test/ser.html#serializeSeqElement"><span class="Identifier">serializeSeqElement</span></a>, <a href="test/ser.html#serializeMapValue"><span class="Identifier">serializeMapValue</span></a>, <a href="test/ser.html#serializeArray"><span class="Identifier">serializeArray</span></a>, <a href="test/ser.html#serializeMap"><span class="Identifier">serializeMap</span></a>, <a href="test/ser.html#serializeNone"><span class="Identifier">serializeNone</span></a>, <a href="test/ser.html#endTuple"><span class="Identifier">endTuple</span></a>, <a href="test/ser.html#serializeSeqMapValue"><span class="Identifier">serializeSeqMapValue</span></a>, <a class="reference external" href="test/ser.html">test/ser</a>, <a href="test/ser.html#serializeNamedTuple"><span class="Identifier">serializeNamedTuple</span></a>, <a href="test/ser.html#serializeSeqMapKey"><span class="Identifier">serializeSeqMapKey</span></a>, <a href="test/ser.html#endNamedTuple"><span class="Identifier">endNamedTuple</span></a>, <a href="test/ser.html#serializeUnitStruct"><span class="Identifier">serializeUnitStruct</span></a>, <a href="test/ser.html#serializeArrayElement"><span class="Identifier">serializeArrayElement</span></a>, <a href="test/ser.html#serializeBytes"><span class="Identifier">serializeBytes</span></a>, <a href="test/ser.html#serializeSeqMap"><span class="Identifier">serializeSeqMap</span></a>, <a href="test/ser.html#serializeTuple"><span class="Identifier">serializeTuple</span></a>, <a href="test/ser.html#serializeFloat"><span class="Identifier">serializeFloat</span></a>, <a href="test/ser.html#nextToken"><span class="Identifier">nextToken</span></a>, <a href="test/ser.html#serializeTupleElement"><span class="Identifier">serializeTupleElement</span></a>, <a href="test/ser.html#endSeqMap"><span class="Identifier">endSeqMap</span></a>, <a href="test/token.html#NamedTuple"><span class="Identifier">NamedTuple</span></a>, <a href="test/token.html#SeqEnd"><span class="Identifier">SeqEnd</span></a>, <a href="test/token.html#Empty"><span class="Identifier">Empty</span></a>, <a href="test/token.html#UnitStruct"><span class="Identifier">UnitStruct</span></a>, <a href="test/token.html#Boolean"><span class="Identifier">Boolean</span></a>, <a href="test/token.html#Map"><span class="Identifier">Map</span></a>, <a href="test/token.html#Float"><span class="Identifier">Float</span></a>, <a href="test/token.html#Struct"><span class="Identifier">Struct</span></a>, <a href="test/token.html#Seq"><span class="Identifier">Seq</span></a>, <a href="test/token.html#TokenKind"><span class="Identifier">TokenKind</span></a>, <a href="test/token.html#=="><span class="Identifier">==</span></a>, <a href="test/token.html#TupleEnd"><span class="Identifier">TupleEnd</span></a>, <a href="test/token.html#Tuple"><span class="Identifier">Tuple</span></a>, <a href="test/token.html#Token"><span class="Identifier">Token</span></a>, <a href="test/token.html#Some"><span class="Identifier">Some</span></a>, <a href="test/token.html#String"><span class="Identifier">String</span></a>, <a href="test/token.html#Bytes"><span class="Identifier">Bytes</span></a>, <a href="test/token.html#None"><span class="Identifier">None</span></a>, <a href="test/token.html#Array"><span class="Identifier">Array</span></a>, <a href="test/token.html#MapEnd"><span class="Identifier">MapEnd</span></a>, <a href="test/token.html#SeqMapEnd"><span class="Identifier">SeqMapEnd</span></a>, <a href="test/token.html#SeqMap"><span class="Identifier">SeqMap</span></a>, <a class="reference external" href="test/token.html">test/token</a>, <a href="test/token.html#UnitTuple"><span class="Identifier">UnitTuple</span></a>, <a href="test/token.html#Integer"><span class="Identifier">Integer</span></a>, <a href="test/token.html#StructEnd"><span class="Identifier">StructEnd</span></a>, <a href="test/token.html#NamedTupleEnd"><span class="Identifier">NamedTupleEnd</span></a>, <a href="test/token.html#Char"><span class="Identifier">Char</span></a>, <a href="test/token.html#ArrayEnd"><span class="Identifier">ArrayEnd</span></a>
 </dl></div>
 
   </div>
@@ -146,7 +139,7 @@ window.addEventListener('DOMContentLoaded', main);
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-11-02 09:35:43 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-11-05 08:56:28 UTC</small>
       </div>
     </div>
   </div>

@@ -17,7 +17,7 @@
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
-<title>src/deser/ser/provided</title>
+<title>ser/provided</title>
 <link rel="stylesheet" type="text/css" href="../nimdoc.out.css">
 
 <script type="text/javascript" src="../dochack.js"></script>
@@ -34,6 +34,7 @@ function main() {
     }
   }
 
+  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
   function switchTheme(e) {
       if (e.target.checked) {
           document.documentElement.setAttribute('data-theme', 'dark');
@@ -44,32 +45,24 @@ function main() {
       }
   }
 
-  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-  if (toggleSwitch !== null) {
-    toggleSwitch.addEventListener('change', switchTheme, false);
-  }
+  toggleSwitch.addEventListener('change', switchTheme, false);
 
-  var currentTheme = localStorage.getItem('theme');
-  if (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    currentTheme = 'dark';
-  }
+  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
   if (currentTheme) {
     document.documentElement.setAttribute('data-theme', currentTheme);
 
-    if (currentTheme === 'dark' && toggleSwitch !== null) {
+    if (currentTheme === 'dark') {
       toggleSwitch.checked = true;
     }
   }
 }
-
-window.addEventListener('DOMContentLoaded', main);
 </script>
 
 </head>
-<body>
+<body onload="main()">
 <div class="document" id="documentId">
   <div class="container">
-    <h1 class="title">src/deser/ser/provided</h1>
+    <h1 class="title">ser/provided</h1>
     <div class="row">
   <div class="three columns">
   <div class="theme-switch-wrapper">
@@ -119,54 +112,35 @@ window.addEventListener('DOMContentLoaded', main);
       <li><a class="reference" href="#MapIter"
     title="MapIter = concept self
     for key, value in self:
-      discard">MapIter</a></li>
+      discard"><wbr />Map<wbr />Iter<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#SeqIter"
     title="SeqIter = concept self
     for key in self:
-      discard">SeqIter</a></li>
+      discard"><wbr />Seq<wbr />Iter<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#UnitConcept"
     title="UnitConcept = concept typeof(T)
     T is object
-    T.isUnit">UnitConcept</a></li>
+    T.isUnit"><wbr />Unit<wbr />Concept<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">collectMap
-      <li><a class="reference" href="#collectMap%2CSerializer%2CIter"
-    title="collectMap[Serializer; Iter: MapIter](self: var Serializer; iter: Iter)">collectMap[Serializer; Iter: MapIter](self: var Serializer; iter: Iter)</a></li>
+      <ul class="simple nested-toc-section">collectSeq
+      <li><a class="reference" href="#collectSeq%2CSerializer%2CIter"
+    title="collectSeq[Serializer; Iter: SeqIter](self: var Serializer; iter: Iter)">collectSeq,Serializer,Iter<span class="attachedType"></span></a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">collectSeq
-      <li><a class="reference" href="#collectSeq%2CSerializer%2CIter"
-    title="collectSeq[Serializer; Iter: SeqIter](self: var Serializer; iter: Iter)">collectSeq[Serializer; Iter: SeqIter](self: var Serializer; iter: Iter)</a></li>
+  <ul class="simple nested-toc-section">collectMap
+      <li><a class="reference" href="#collectMap%2CSerializer%2CIter"
+    title="collectMap[Serializer; Iter: MapIter](self: var Serializer; iter: Iter)">collectMap,Serializer,Iter<span class="attachedType"></span></a></li>
 
   </ul>
   <ul class="simple nested-toc-section">serializeMapEntry
       <li><a class="reference" href="#serializeMapEntry%2CSerializer%2CKey%2CValue"
     title="serializeMapEntry[Serializer; Key; Value](self: var Serializer; key: Key;
-    v: Value)">serializeMapEntry[Serializer; Key; Value](self: var Serializer; key: Key;
-    v: Value)</a></li>
-
-  </ul>
-
-  </ul>
-</li>
-<li>
-  <a class="reference reference-toplevel" href="#18" id="68">Templates</a>
-  <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">collectMap
-      <li><a class="reference" href="#collectMap.t%2CSerializer%2Citerable%5B%5D"
-    title="collectMap[Serializer; Key; Value](self: var Serializer;
-                                   iter: iterable[(Key, Value)])">collectMap[Serializer; Key; Value](self: var Serializer;
-                                   iter: iterable[(Key, Value)])</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">collectSeq
-      <li><a class="reference" href="#collectSeq.t%2CSerializer%2Citerable%5BValue%5D"
-    title="collectSeq[Serializer; Value](self: var Serializer; iter: iterable[Value])">collectSeq[Serializer; Value](self: var Serializer; iter: iterable[Value])</a></li>
+    v: Value)">serializeMapEntry,Serializer,Key,Value<span class="attachedType"></span></a></li>
 
   </ul>
 
@@ -180,7 +154,7 @@ window.addEventListener('DOMContentLoaded', main);
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
   
-  <p class="module-desc">Auxiliary functions that you can use when implementing <tt class="docutils literal"><span class="pre"><span class="Identifier">serialize</span></span></tt></p>
+  <p class="module-desc">Auxiliary functions that you can use when implementing <tt class="docutils literal"><span class="pre">serialize</span></tt></p>
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
@@ -189,7 +163,7 @@ window.addEventListener('DOMContentLoaded', main);
 <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
-<div id="MapIter">
+<a id="MapIter"></a>
 <dt><pre><a href="provided.html#MapIter"><span class="Identifier">MapIter</span></a> <span class="Other">=</span> <span class="Keyword">concept</span> <span class="Identifier">self</span>
     <span class="Keyword">for</span> <span class="Identifier">key</span><span class="Other">,</span> <span class="Identifier">value</span> <span class="Keyword">in</span> <span class="Identifier">self</span><span class="Other">:</span>
       <span class="Keyword">discard</span></pre></dt>
@@ -199,11 +173,10 @@ Type with pairs()
 &nbsp;&nbsp;<a
 href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/provided.nim#L15"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L15" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L15" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="SeqIter">
+<a id="SeqIter"></a>
 <dt><pre><a href="provided.html#SeqIter"><span class="Identifier">SeqIter</span></a> <span class="Other">=</span> <span class="Keyword">concept</span> <span class="Identifier">self</span>
     <span class="Keyword">for</span> <span class="Identifier">key</span> <span class="Keyword">in</span> <span class="Identifier">self</span><span class="Other">:</span>
       <span class="Keyword">discard</span></pre></dt>
@@ -213,11 +186,10 @@ Type with items()
 &nbsp;&nbsp;<a
 href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/provided.nim#L19"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L19" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L19" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="UnitConcept">
+<a id="UnitConcept"></a>
 <dt><pre><a href="provided.html#UnitConcept"><span class="Identifier">UnitConcept</span></a> <span class="Other">=</span> <span class="Keyword">concept</span> <span class="Keyword">typeof</span><span class="Other">(</span><span class="Identifier">T</span><span class="Other">)</span>
     <span class="Identifier">T</span> <span class="Identifier">is</span> <span class="Keyword">object</span>
     <span class="Identifier">T</span><span class="Other">.</span><span class="Identifier">isUnit</span></pre></dt>
@@ -227,40 +199,15 @@ Type without fields
 &nbsp;&nbsp;<a
 href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/provided.nim#L23"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L23" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L23" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
 
 </dl></div>
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
-<div id="collectMap,Serializer,Iter">
-<dt><pre><span class="Keyword">proc</span> <a href="#collectMap%2CSerializer%2CIter"><span class="Identifier">collectMap</span></a><span class="Other">[</span><span class="Identifier">Serializer</span><span class="Other">;</span> <span class="Identifier">Iter</span><span class="Other">:</span> <a href="provided.html#MapIter"><span class="Identifier">MapIter</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Serializer</span><span class="Other">;</span> <span class="Identifier">iter</span><span class="Other">:</span> <span class="Identifier">Iter</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/provided.nim#L45"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L45" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="collectSeq,Serializer,Iter">
-<dt><pre><span class="Keyword">proc</span> <a href="#collectSeq%2CSerializer%2CIter"><span class="Identifier">collectSeq</span></a><span class="Other">[</span><span class="Identifier">Serializer</span><span class="Other">;</span> <span class="Identifier">Iter</span><span class="Other">:</span> <a href="provided.html#SeqIter"><span class="Identifier">SeqIter</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Serializer</span><span class="Other">;</span> <span class="Identifier">iter</span><span class="Other">:</span> <span class="Identifier">Iter</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/provided.nim#L32"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L32" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="serializeMapEntry,Serializer,Key,Value">
+<a id="serializeMapEntry,Serializer,Key,Value"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#serializeMapEntry%2CSerializer%2CKey%2CValue"><span class="Identifier">serializeMapEntry</span></a><span class="Other">[</span><span class="Identifier">Serializer</span><span class="Other">;</span> <span class="Identifier">Key</span><span class="Other">;</span> <span class="Identifier">Value</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Serializer</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">Key</span><span class="Other">;</span>
     <span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Value</span><span class="Other">)</span></pre></dt>
 <dd>
@@ -269,41 +216,31 @@ class="link-seesrc" target="_blank">Source</a>
 &nbsp;&nbsp;<a
 href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/provided.nim#L28"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L28" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L28" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-
-</dl></div>
-<div class="section" id="18">
-<h1><a class="toc-backref" href="#18">Templates</a></h1>
-<dl class="item">
-<div id="collectMap.t,Serializer,iterable[]">
-<dt><pre><span class="Keyword">template</span> <a href="#collectMap.t%2CSerializer%2Citerable%5B%5D"><span class="Identifier">collectMap</span></a><span class="Other">[</span><span class="Identifier">Serializer</span><span class="Other">;</span> <span class="Identifier">Key</span><span class="Other">;</span> <span class="Identifier">Value</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Serializer</span><span class="Other">;</span>
-    <span class="Identifier">iter</span><span class="Other">:</span> <span class="Identifier">iterable</span><span class="Other">[</span><span class="Other">(</span><span class="Identifier">Key</span><span class="Other">,</span> <span class="Identifier">Value</span><span class="Other">)</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+<a id="collectSeq,Serializer,Iter"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#collectSeq%2CSerializer%2CIter"><span class="Identifier">collectSeq</span></a><span class="Other">[</span><span class="Identifier">Serializer</span><span class="Other">;</span> <span class="Identifier">Iter</span><span class="Other">:</span> <a href="provided.html#SeqIter"><span class="Identifier">SeqIter</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Serializer</span><span class="Other">;</span> <span class="Identifier">iter</span><span class="Other">:</span> <span class="Identifier">Iter</span><span class="Other">)</span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/provided.nim#L66"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/provided.nim#L32"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L66" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L32" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="collectSeq.t,Serializer,iterable[Value]">
-<dt><pre><span class="Keyword">template</span> <a href="#collectSeq.t%2CSerializer%2Citerable%5BValue%5D"><span class="Identifier">collectSeq</span></a><span class="Other">[</span><span class="Identifier">Serializer</span><span class="Other">;</span> <span class="Identifier">Value</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Serializer</span><span class="Other">;</span>
-                                       <span class="Identifier">iter</span><span class="Other">:</span> <span class="Identifier">iterable</span><span class="Other">[</span><span class="Identifier">Value</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+<a id="collectMap,Serializer,Iter"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#collectMap%2CSerializer%2CIter"><span class="Identifier">collectMap</span></a><span class="Other">[</span><span class="Identifier">Serializer</span><span class="Other">;</span> <span class="Identifier">Iter</span><span class="Other">:</span> <a href="provided.html#MapIter"><span class="Identifier">MapIter</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Serializer</span><span class="Other">;</span> <span class="Identifier">iter</span><span class="Other">:</span> <span class="Identifier">Iter</span><span class="Other">)</span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/provided.nim#L58"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/provided.nim#L45"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L58" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/provided.nim#L45" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
 
 </dl></div>
 
@@ -314,7 +251,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-11-02 09:35:43 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-11-05 08:56:28 UTC</small>
       </div>
     </div>
   </div>

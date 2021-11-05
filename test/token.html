@@ -17,7 +17,7 @@
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
-<title>src/deser/test/token</title>
+<title>test/token</title>
 <link rel="stylesheet" type="text/css" href="../nimdoc.out.css">
 
 <script type="text/javascript" src="../dochack.js"></script>
@@ -34,6 +34,7 @@ function main() {
     }
   }
 
+  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
   function switchTheme(e) {
       if (e.target.checked) {
           document.documentElement.setAttribute('data-theme', 'dark');
@@ -44,32 +45,24 @@ function main() {
       }
   }
 
-  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-  if (toggleSwitch !== null) {
-    toggleSwitch.addEventListener('change', switchTheme, false);
-  }
+  toggleSwitch.addEventListener('change', switchTheme, false);
 
-  var currentTheme = localStorage.getItem('theme');
-  if (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    currentTheme = 'dark';
-  }
+  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
   if (currentTheme) {
     document.documentElement.setAttribute('data-theme', currentTheme);
 
-    if (currentTheme === 'dark' && toggleSwitch !== null) {
+    if (currentTheme === 'dark') {
       toggleSwitch.checked = true;
     }
   }
 }
-
-window.addEventListener('DOMContentLoaded', main);
 </script>
 
 </head>
-<body>
+<body onload="main()">
 <div class="document" id="documentId">
   <div class="container">
-    <h1 class="title">src/deser/test/token</h1>
+    <h1 class="title">test/token</h1>
     <div class="row">
   <div class="three columns">
   <div class="theme-switch-wrapper">
@@ -110,7 +103,12 @@ window.addEventListener('DOMContentLoaded', main);
 <li>
   <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#Token"
+      <li><a class="reference" href="#TokenKind"
+    title="TokenKind {.pure.} = enum
+  Boolean, Integer, Float, Char, String, Bytes, None, Some, UnitStruct,
+  UnitTuple, Array, ArrayEnd, Seq, SeqEnd, Tuple, TupleEnd, NamedTuple,
+  NamedTupleEnd, Map, MapEnd, Struct, StructEnd, SeqMap, SeqMapEnd, Empty"><wbr />Token<wbr />Kind<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#Token"
     title="Token = object
   case kind*: TokenKind
   of TokenKind.Boolean:
@@ -188,146 +186,141 @@ window.addEventListener('DOMContentLoaded', main);
       nil
 
   of TokenKind.Empty:
-      nil">Token</a></li>
-  <li><a class="reference" href="#TokenKind"
-    title="TokenKind {.pure.} = enum
-  Boolean, Integer, Float, Char, String, Bytes, None, Some, UnitStruct,
-  UnitTuple, Array, ArrayEnd, Seq, SeqEnd, Tuple, TupleEnd, NamedTuple,
-  NamedTupleEnd, Map, MapEnd, Struct, StructEnd, SeqMap, SeqMapEnd, Empty">TokenKind</a></li>
+      nil"><wbr />Token<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">==
-      <li><a class="reference" href="#%3D%3D%2CToken%2CToken"
-    title="`==`(a: Token; b: Token): bool">`==`(a: Token; b: Token): bool</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">Array
-      <li><a class="reference" href="#Array%2Cint"
-    title="Array(arrayLen: int): Token">Array(arrayLen: int): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">ArrayEnd
-      <li><a class="reference" href="#ArrayEnd"
-    title="ArrayEnd(): Token">ArrayEnd(): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">Boolean
-      <li><a class="reference" href="#Boolean%2Cbool"
-    title="Boolean(boolean: bool): Token">Boolean(boolean: bool): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">Bytes
-      <li><a class="reference" href="#Bytes%2Cseq%5Bbyte%5D"
-    title="Bytes(bytes: seq[byte]): Token">Bytes(bytes: seq[byte]): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">Char
-      <li><a class="reference" href="#Char%2Cchar"
-    title="Char(char: char): Token">Char(char: char): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">Empty
-      <li><a class="reference" href="#Empty"
-    title="Empty(): Token">Empty(): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">Float
-      <li><a class="reference" href="#Float%2Cfloat"
-    title="Float(float: float): Token">Float(float: float): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">Integer
-      <li><a class="reference" href="#Integer%2Cint"
-    title="Integer(integer: int): Token">Integer(integer: int): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">Map
-      <li><a class="reference" href="#Map%2COption%5Bint%5D"
-    title="Map(map_len: Option[int]): Token">Map(map_len: Option[int]): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">MapEnd
-      <li><a class="reference" href="#MapEnd"
-    title="MapEnd(): Token">MapEnd(): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">NamedTuple
-      <li><a class="reference" href="#NamedTuple%2Cstring%2Cint"
-    title="NamedTuple(namedTupleName: string; namedTupleLen: int): Token">NamedTuple(namedTupleName: string; namedTupleLen: int): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">NamedTupleEnd
-      <li><a class="reference" href="#NamedTupleEnd"
-    title="NamedTupleEnd(): Token">NamedTupleEnd(): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">None
-      <li><a class="reference" href="#None"
-    title="None(): Token">None(): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">Seq
-      <li><a class="reference" href="#Seq%2COption%5Bint%5D"
-    title="Seq(seq_len: Option[int]): Token">Seq(seq_len: Option[int]): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">SeqEnd
-      <li><a class="reference" href="#SeqEnd"
-    title="SeqEnd(): Token">SeqEnd(): Token</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">SeqMap
-      <li><a class="reference" href="#SeqMap%2COption%5Bint%5D"
-    title="SeqMap(seqMapLen: Option[int]): Token">SeqMap(seqMapLen: Option[int]): Token</a></li>
+      <ul class="simple nested-toc-section">Struct
+      <li><a class="reference" href="#Struct%2Cstring"
+    title="Struct(struct_name: string): Token">Struct,string<span class="attachedType">Token</span></a></li>
 
   </ul>
   <ul class="simple nested-toc-section">SeqMapEnd
       <li><a class="reference" href="#SeqMapEnd"
-    title="SeqMapEnd(): Token">SeqMapEnd(): Token</a></li>
+    title="SeqMapEnd(): Token">SeqMapEnd<span class="attachedType">Token</span></a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">Some
-      <li><a class="reference" href="#Some"
-    title="Some(): Token">Some(): Token</a></li>
+  <ul class="simple nested-toc-section">SeqEnd
+      <li><a class="reference" href="#SeqEnd"
+    title="SeqEnd(): Token">SeqEnd<span class="attachedType">Token</span></a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">String
-      <li><a class="reference" href="#String%2Cstring"
-    title="String(str: string): Token">String(str: string): Token</a></li>
+  <ul class="simple nested-toc-section">Float
+      <li><a class="reference" href="#Float%2Cfloat"
+    title="Float(float: float): Token">Float,float<span class="attachedType">Token</span></a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">Struct
-      <li><a class="reference" href="#Struct%2Cstring"
-    title="Struct(struct_name: string): Token">Struct(struct_name: string): Token</a></li>
+  <ul class="simple nested-toc-section">None
+      <li><a class="reference" href="#None"
+    title="None(): Token">None<span class="attachedType">Token</span></a></li>
 
   </ul>
   <ul class="simple nested-toc-section">StructEnd
       <li><a class="reference" href="#StructEnd"
-    title="StructEnd(): Token">StructEnd(): Token</a></li>
+    title="StructEnd(): Token">StructEnd<span class="attachedType">Token</span></a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">Tuple
-      <li><a class="reference" href="#Tuple%2Cstring%2Cint"
-    title="Tuple(tupleName: string; tupleLen: int): Token">Tuple(tupleName: string; tupleLen: int): Token</a></li>
+  <ul class="simple nested-toc-section">MapEnd
+      <li><a class="reference" href="#MapEnd"
+    title="MapEnd(): Token">MapEnd<span class="attachedType">Token</span></a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">TupleEnd
-      <li><a class="reference" href="#TupleEnd"
-    title="TupleEnd(): Token">TupleEnd(): Token</a></li>
+  <ul class="simple nested-toc-section">Empty
+      <li><a class="reference" href="#Empty"
+    title="Empty(): Token">Empty<span class="attachedType">Token</span></a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">UnitStruct
-      <li><a class="reference" href="#UnitStruct%2Cstring"
-    title="UnitStruct(unitStructName: string): Token">UnitStruct(unitStructName: string): Token</a></li>
+  <ul class="simple nested-toc-section">Seq
+      <li><a class="reference" href="#Seq%2COption%5Bint%5D"
+    title="Seq(seq_len: Option[int]): Token">Seq,Option[int]<span class="attachedType">Token</span></a></li>
 
   </ul>
   <ul class="simple nested-toc-section">UnitTuple
       <li><a class="reference" href="#UnitTuple%2Cstring"
-    title="UnitTuple(unitTupleName: string): Token">UnitTuple(unitTupleName: string): Token</a></li>
+    title="UnitTuple(unitTupleName: string): Token">UnitTuple,string<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">Array
+      <li><a class="reference" href="#Array%2Cint"
+    title="Array(arrayLen: int): Token">Array,int<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">Boolean
+      <li><a class="reference" href="#Boolean%2Cbool"
+    title="Boolean(boolean: bool): Token">Boolean,bool<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">NamedTupleEnd
+      <li><a class="reference" href="#NamedTupleEnd"
+    title="NamedTupleEnd(): Token">NamedTupleEnd<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">Bytes
+      <li><a class="reference" href="#Bytes%2Cseq%5Bbyte%5D"
+    title="Bytes(bytes: seq[byte]): Token">Bytes,seq[byte]<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">Map
+      <li><a class="reference" href="#Map%2COption%5Bint%5D"
+    title="Map(map_len: Option[int]): Token">Map,Option[int]<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">UnitStruct
+      <li><a class="reference" href="#UnitStruct%2Cstring"
+    title="UnitStruct(unitStructName: string): Token">UnitStruct,string<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">TupleEnd
+      <li><a class="reference" href="#TupleEnd"
+    title="TupleEnd(): Token">TupleEnd<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">String
+      <li><a class="reference" href="#String%2Cstring"
+    title="String(str: string): Token">String,string<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">ArrayEnd
+      <li><a class="reference" href="#ArrayEnd"
+    title="ArrayEnd(): Token">ArrayEnd<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">Tuple
+      <li><a class="reference" href="#Tuple%2Cstring%2Cint"
+    title="Tuple(tupleName: string; tupleLen: int): Token">Tuple,string,int<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">SeqMap
+      <li><a class="reference" href="#SeqMap%2COption%5Bint%5D"
+    title="SeqMap(seqMapLen: Option[int]): Token">SeqMap,Option[int]<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">Some
+      <li><a class="reference" href="#Some"
+    title="Some(): Token">Some<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">==
+      <li><a class="reference" href="#%3D%3D%2CToken%2CToken"
+    title="`==`(a: Token; b: Token): bool">==,Token,Token<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">Integer
+      <li><a class="reference" href="#Integer%2Cint"
+    title="Integer(integer: int): Token">Integer,int<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">Char
+      <li><a class="reference" href="#Char%2Cchar"
+    title="Char(char: char): Token">Char,char<span class="attachedType">Token</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">NamedTuple
+      <li><a class="reference" href="#NamedTuple%2Cstring%2Cint"
+    title="NamedTuple(namedTupleName: string; namedTupleLen: int): Token">NamedTuple,string,int<span class="attachedType">Token</span></a></li>
 
   </ul>
 
@@ -345,7 +338,21 @@ window.addEventListener('DOMContentLoaded', main);
   <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
-<div id="Token">
+<a id="TokenKind"></a>
+<dt><pre><a href="token.html#TokenKind"><span class="Identifier">TokenKind</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pure</span></span><span class="Other">.}</span></span> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">Boolean</span><span class="Other">,</span> <span class="Identifier">Integer</span><span class="Other">,</span> <span class="Identifier">Float</span><span class="Other">,</span> <span class="Identifier">Char</span><span class="Other">,</span> <span class="Identifier">String</span><span class="Other">,</span> <span class="Identifier">Bytes</span><span class="Other">,</span> <span class="Identifier">None</span><span class="Other">,</span> <span class="Identifier">Some</span><span class="Other">,</span> <span class="Identifier">UnitStruct</span><span class="Other">,</span>
+  <span class="Identifier">UnitTuple</span><span class="Other">,</span> <span class="Identifier">Array</span><span class="Other">,</span> <span class="Identifier">ArrayEnd</span><span class="Other">,</span> <span class="Identifier">Seq</span><span class="Other">,</span> <span class="Identifier">SeqEnd</span><span class="Other">,</span> <span class="Identifier">Tuple</span><span class="Other">,</span> <span class="Identifier">TupleEnd</span><span class="Other">,</span> <span class="Identifier">NamedTuple</span><span class="Other">,</span>
+  <span class="Identifier">NamedTupleEnd</span><span class="Other">,</span> <span class="Identifier">Map</span><span class="Other">,</span> <span class="Identifier">MapEnd</span><span class="Other">,</span> <span class="Identifier">Struct</span><span class="Other">,</span> <span class="Identifier">StructEnd</span><span class="Other">,</span> <span class="Identifier">SeqMap</span><span class="Other">,</span> <span class="Identifier">SeqMapEnd</span><span class="Other">,</span> <span class="Identifier">Empty</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L4"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L4" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="Token"></a>
 <dt><pre><a href="token.html#Token"><span class="Identifier">Token</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Keyword">case</span> <span class="Identifier">kind</span><span class="Operator">*</span><span class="Other">:</span> <a href="token.html#TokenKind"><span class="Identifier">TokenKind</span></a>
   <span class="Keyword">of</span> <span class="Identifier">TokenKind</span><span class="Other">.</span><span class="Identifier">Boolean</span><span class="Other">:</span>
@@ -432,343 +439,301 @@ window.addEventListener('DOMContentLoaded', main);
 &nbsp;&nbsp;<a
 href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L8"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L8" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L8" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="TokenKind">
-<dt><pre><a href="token.html#TokenKind"><span class="Identifier">TokenKind</span></a> {.<span class="Identifier">pure</span>.} <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">Boolean</span><span class="Other">,</span> <span class="Identifier">Integer</span><span class="Other">,</span> <span class="Identifier">Float</span><span class="Other">,</span> <span class="Identifier">Char</span><span class="Other">,</span> <span class="Identifier">String</span><span class="Other">,</span> <span class="Identifier">Bytes</span><span class="Other">,</span> <span class="Identifier">None</span><span class="Other">,</span> <span class="Identifier">Some</span><span class="Other">,</span> <span class="Identifier">UnitStruct</span><span class="Other">,</span>
-  <span class="Identifier">UnitTuple</span><span class="Other">,</span> <span class="Identifier">Array</span><span class="Other">,</span> <span class="Identifier">ArrayEnd</span><span class="Other">,</span> <span class="Identifier">Seq</span><span class="Other">,</span> <span class="Identifier">SeqEnd</span><span class="Other">,</span> <span class="Identifier">Tuple</span><span class="Other">,</span> <span class="Identifier">TupleEnd</span><span class="Other">,</span> <span class="Identifier">NamedTuple</span><span class="Other">,</span>
-  <span class="Identifier">NamedTupleEnd</span><span class="Other">,</span> <span class="Identifier">Map</span><span class="Other">,</span> <span class="Identifier">MapEnd</span><span class="Other">,</span> <span class="Identifier">Struct</span><span class="Other">,</span> <span class="Identifier">StructEnd</span><span class="Other">,</span> <span class="Identifier">SeqMap</span><span class="Other">,</span> <span class="Identifier">SeqMapEnd</span><span class="Other">,</span> <span class="Identifier">Empty</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L4"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L4" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
 
 </dl></div>
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
-<div id="==,Token,Token">
-<dt><pre><span class="Keyword">proc</span> <a href="#%3D%3D%2CToken%2CToken"><span class="Identifier">`==`</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a><span class="Other">;</span> <span class="Identifier">b</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<a id="==,Token,Token"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#%3D%3D%2CToken%2CToken"><span class="Identifier">`==`</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a><span class="Other">;</span> <span class="Identifier">b</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
 href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L64"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L64" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L64" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="Array,int">
-<dt><pre><span class="Keyword">proc</span> <a href="#Array%2Cint"><span class="Identifier">Array</span></a><span class="Other">(</span><span class="Identifier">arrayLen</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L151"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L151" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="ArrayEnd">
-<dt><pre><span class="Keyword">proc</span> <a href="#ArrayEnd"><span class="Identifier">ArrayEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L154"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L154" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="Boolean,bool">
-<dt><pre><span class="Keyword">proc</span> <a href="#Boolean%2Cbool"><span class="Identifier">Boolean</span></a><span class="Other">(</span><span class="Identifier">boolean</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<a id="Boolean,bool"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#Boolean%2Cbool"><span class="Identifier">Boolean</span></a><span class="Other">(</span><span class="Identifier">boolean</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
 href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L121"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L121" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L121" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="Bytes,seq[byte]">
-<dt><pre><span class="Keyword">proc</span> <a href="#Bytes%2Cseq%5Bbyte%5D"><span class="Identifier">Bytes</span></a><span class="Other">(</span><span class="Identifier">bytes</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L136"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L136" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="Char,char">
-<dt><pre><span class="Keyword">proc</span> <a href="#Char%2Cchar"><span class="Identifier">Char</span></a><span class="Other">(</span><span class="Identifier">char</span><span class="Other">:</span> <span class="Identifier">char</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L130"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L130" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="Empty">
-<dt><pre><span class="Keyword">proc</span> <a href="#Empty"><span class="Identifier">Empty</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L193"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L193" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="Float,float">
-<dt><pre><span class="Keyword">proc</span> <a href="#Float%2Cfloat"><span class="Identifier">Float</span></a><span class="Other">(</span><span class="Identifier">float</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L127"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L127" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="Integer,int">
-<dt><pre><span class="Keyword">proc</span> <a href="#Integer%2Cint"><span class="Identifier">Integer</span></a><span class="Other">(</span><span class="Identifier">integer</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<a id="Integer,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#Integer%2Cint"><span class="Identifier">Integer</span></a><span class="Other">(</span><span class="Identifier">integer</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
 href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L124"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L124" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L124" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="Map,Option[int]">
-<dt><pre><span class="Keyword">proc</span> <a href="#Map%2COption%5Bint%5D"><span class="Identifier">Map</span></a><span class="Other">(</span><span class="Identifier">map_len</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<a id="Float,float"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#Float%2Cfloat"><span class="Identifier">Float</span></a><span class="Other">(</span><span class="Identifier">float</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L175"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L127"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L175" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L127" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="MapEnd">
-<dt><pre><span class="Keyword">proc</span> <a href="#MapEnd"><span class="Identifier">MapEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<a id="Char,char"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#Char%2Cchar"><span class="Identifier">Char</span></a><span class="Other">(</span><span class="Identifier">char</span><span class="Other">:</span> <span class="Identifier">char</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L178"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L130"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L178" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L130" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="NamedTuple,string,int">
-<dt><pre><span class="Keyword">proc</span> <a href="#NamedTuple%2Cstring%2Cint"><span class="Identifier">NamedTuple</span></a><span class="Other">(</span><span class="Identifier">namedTupleName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">namedTupleLen</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span>
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L169"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L169" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="NamedTupleEnd">
-<dt><pre><span class="Keyword">proc</span> <a href="#NamedTupleEnd"><span class="Identifier">NamedTupleEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L172"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L172" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="None">
-<dt><pre><span class="Keyword">proc</span> <a href="#None"><span class="Identifier">None</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L139"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L139" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="Seq,Option[int]">
-<dt><pre><span class="Keyword">proc</span> <a href="#Seq%2COption%5Bint%5D"><span class="Identifier">Seq</span></a><span class="Other">(</span><span class="Identifier">seq_len</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L157"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L157" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="SeqEnd">
-<dt><pre><span class="Keyword">proc</span> <a href="#SeqEnd"><span class="Identifier">SeqEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L160"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L160" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="SeqMap,Option[int]">
-<dt><pre><span class="Keyword">proc</span> <a href="#SeqMap%2COption%5Bint%5D"><span class="Identifier">SeqMap</span></a><span class="Other">(</span><span class="Identifier">seqMapLen</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L187"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L187" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="SeqMapEnd">
-<dt><pre><span class="Keyword">proc</span> <a href="#SeqMapEnd"><span class="Identifier">SeqMapEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L190"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L190" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="Some">
-<dt><pre><span class="Keyword">proc</span> <a href="#Some"><span class="Identifier">Some</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L142"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L142" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="String,string">
-<dt><pre><span class="Keyword">proc</span> <a href="#String%2Cstring"><span class="Identifier">String</span></a><span class="Other">(</span><span class="Identifier">str</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<a id="String,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#String%2Cstring"><span class="Identifier">String</span></a><span class="Other">(</span><span class="Identifier">str</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
 href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L133"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L133" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L133" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="Struct,string">
-<dt><pre><span class="Keyword">proc</span> <a href="#Struct%2Cstring"><span class="Identifier">Struct</span></a><span class="Other">(</span><span class="Identifier">struct_name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<a id="Bytes,seq[byte]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#Bytes%2Cseq%5Bbyte%5D"><span class="Identifier">Bytes</span></a><span class="Other">(</span><span class="Identifier">bytes</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L181"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L136"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L181" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L136" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="StructEnd">
-<dt><pre><span class="Keyword">proc</span> <a href="#StructEnd"><span class="Identifier">StructEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<a id="None"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#None"><span class="Identifier">None</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L184"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L139"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L184" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L139" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="Tuple,string,int">
-<dt><pre><span class="Keyword">proc</span> <a href="#Tuple%2Cstring%2Cint"><span class="Identifier">Tuple</span></a><span class="Other">(</span><span class="Identifier">tupleName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tupleLen</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<a id="Some"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#Some"><span class="Identifier">Some</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L163"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L142"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L163" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L142" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="TupleEnd">
-<dt><pre><span class="Keyword">proc</span> <a href="#TupleEnd"><span class="Identifier">TupleEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L166"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L166" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="UnitStruct,string">
-<dt><pre><span class="Keyword">proc</span> <a href="#UnitStruct%2Cstring"><span class="Identifier">UnitStruct</span></a><span class="Other">(</span><span class="Identifier">unitStructName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<a id="UnitStruct,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#UnitStruct%2Cstring"><span class="Identifier">UnitStruct</span></a><span class="Other">(</span><span class="Identifier">unitStructName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
 href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L145"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L145" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L145" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
-<div id="UnitTuple,string">
-<dt><pre><span class="Keyword">proc</span> <a href="#UnitTuple%2Cstring"><span class="Identifier">UnitTuple</span></a><span class="Other">(</span><span class="Identifier">unitTupleName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> {.<span class="Identifier">used</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<a id="UnitTuple,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#UnitTuple%2Cstring"><span class="Identifier">UnitTuple</span></a><span class="Other">(</span><span class="Identifier">unitTupleName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
 href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L148"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L148" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L148" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-</div>
+<a id="Array,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#Array%2Cint"><span class="Identifier">Array</span></a><span class="Other">(</span><span class="Identifier">arrayLen</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L151"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L151" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="ArrayEnd"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#ArrayEnd"><span class="Identifier">ArrayEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L154"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L154" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="Seq,Option[int]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#Seq%2COption%5Bint%5D"><span class="Identifier">Seq</span></a><span class="Other">(</span><span class="Identifier">seq_len</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L157"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L157" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="SeqEnd"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#SeqEnd"><span class="Identifier">SeqEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L160"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L160" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="Tuple,string,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#Tuple%2Cstring%2Cint"><span class="Identifier">Tuple</span></a><span class="Other">(</span><span class="Identifier">tupleName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tupleLen</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L163"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L163" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="TupleEnd"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#TupleEnd"><span class="Identifier">TupleEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L166"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L166" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="NamedTuple,string,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#NamedTuple%2Cstring%2Cint"><span class="Identifier">NamedTuple</span></a><span class="Other">(</span><span class="Identifier">namedTupleName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">namedTupleLen</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span>
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L169"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L169" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="NamedTupleEnd"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#NamedTupleEnd"><span class="Identifier">NamedTupleEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L172"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L172" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="Map,Option[int]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#Map%2COption%5Bint%5D"><span class="Identifier">Map</span></a><span class="Other">(</span><span class="Identifier">map_len</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L175"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L175" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="MapEnd"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#MapEnd"><span class="Identifier">MapEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L178"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L178" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="Struct,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#Struct%2Cstring"><span class="Identifier">Struct</span></a><span class="Other">(</span><span class="Identifier">struct_name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L181"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L181" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="StructEnd"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#StructEnd"><span class="Identifier">StructEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L184"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L184" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="SeqMap,Option[int]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#SeqMap%2COption%5Bint%5D"><span class="Identifier">SeqMap</span></a><span class="Other">(</span><span class="Identifier">seqMapLen</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L187"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L187" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="SeqMapEnd"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#SeqMapEnd"><span class="Identifier">SeqMapEnd</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L190"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L190" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="Empty"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#Empty"><span class="Identifier">Empty</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="token.html#Token"><span class="Identifier">Token</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">used</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/test/token.nim#L193"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/test/token.nim#L193" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
 
 </dl></div>
 
@@ -779,7 +744,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-11-02 09:35:43 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-11-05 08:56:28 UTC</small>
       </div>
     </div>
   </div>
