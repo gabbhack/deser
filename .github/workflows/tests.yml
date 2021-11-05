@@ -6,13 +6,18 @@ on:
       - master
     path-ignore:
       - 'README.md'
+  
   release:
     types: [published]
 
 jobs:
   build:
     if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nim: ['1.4.0', 'stable']
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
 
@@ -27,7 +32,7 @@ jobs:
       - name: Set up Nim
         uses: jiro4989/setup-nim-action@v1
         with:
-          nim-version: stable
+          nim-version: ${{ matrix.nim }}
 
       - name: Install dependencies
         run: nimble install -d -y
