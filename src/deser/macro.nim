@@ -53,17 +53,18 @@ type
       discard
     fields: seq[Field]
 
-  Test = ref object
+  Test = object
     id {.suka1(1, "123").}: int
     lol: string
 
     case kind: bool
-    of true:
+    of false..true:
       a: int
-    else:
-      b: int
   
   Alias = Test
+
+# forward decl
+func by(T: typedesc[seq[Field]], recList: NimNode): T
 
 proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
   self.untagged = sym == bindSym("untagged")
@@ -85,6 +86,7 @@ func by(T: typedesc[ObjectTy], sym: NimNode): T =
   expectKind sym, nnkSym
 
   let typeDef = sym.getImpl
+  debugEcho typeDef.treeRepr
   expectKind typeDef, nnkTypeDef
 
   let typeImpl = typeDef[2]
@@ -112,8 +114,9 @@ func by(T: typedesc[FieldFeatures], pragmas: NimNode): T =
       result.fill(sym)
     of nnkCall:
       # For {. pragmaName(something) .}
-      let sym = pragma[0]
-      let values = if pragma.len > 1: pragma[1..pragma.len-1] else: @[]
+      let
+        sym = pragma[0]
+        values = if pragma.len > 1: pragma[1..pragma.len-1] else: @[]
       result.fill(sym, values)
     else:
       expectKind pragma, {nnkSym, nnkCall}
@@ -122,8 +125,9 @@ func by(T: typedesc[FieldFeatures], pragmas: NimNode): T =
 func by(T: typedesc[Field], identDefs: NimNode): T =
   expectKind identDefs, nnkIdentDefs
 
-  let identNode = identDefs[0]
-  let sym = identDefs[1]
+  let
+    identNode = identDefs[0]
+    sym = identDefs[1]
   expectKind sym, nnkSym
 
   case identNode.kind
@@ -131,9 +135,45 @@ func by(T: typedesc[Field], identDefs: NimNode): T =
     result = Field(ident: identNode, symType: sym)
   of nnkPragmaExpr:
     result = Field(ident: identNode[0], symType: sym)
-    result.features = FieldFeatures.by identNode[1]
+    result.features = FieldFeatures.by(pragmas=identNode[1])
   else:
     expectKind identNode, {nnkIdent, nnkPragmaExpr}
+
+
+func by(T: typedesc[Field], recCase: NimNode): T =
+  expectKind recCase, nnkRecCase
+
+  let identDefs = recCase[0]
+  var field = Field.by(identDefs=identDefs)
+  field.isCase = true
+
+  let branches = recCase[1..recCase.len-1]
+
+  for branch in branches:
+    case branch.kind
+    of nnkOfBranch:
+      let
+        # TODO condition must contain all nodes from nnkOfBranch before nnkRecList
+        condition = copy branch
+        recList = branch[1]
+        fields = seq[Field].by(recList=recList)
+
+      field.branches.add FieldBranch(
+        kind: Of,
+        condition: condition,
+        fields: fields
+      )
+    of nnkElse:
+      let
+        recList = branch[0]
+        fields = seq[Field].by(recList=recList)
+      
+      field.branches.add FieldBranch(
+        kind: Else,
+        fields: fields
+      )
+    else:
+      expectKind branch, {nnkOfBranch, nnkElse}
 
 
 func by(T: typedesc[seq[Field]], recList: NimNode): T =
@@ -144,6 +184,10 @@ func by(T: typedesc[seq[Field]], recList: NimNode): T =
     of nnkIdentDefs:
       result.add Field.by(identDefs=fieldNode)
     of nnkRecCase:
+      result.add Field.by(recCase=fieldNode)
+    of nnkNilLit:
+      # of/else:
+      #   nil
       discard
     else:
       expectKind fieldNode, {nnkIdentDefs, nnkRecCase}
