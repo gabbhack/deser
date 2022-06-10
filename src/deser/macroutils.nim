@@ -6,49 +6,50 @@ import pragmas
 
 type
   ObjectTy = object
-    isRef: bool
-    sym: NimNode
-    node: NimNode
+    isRef*: bool
+    sym*: NimNode
+    node*: NimNode
 
   Struct = object
-    isRef: bool
-    sym: NimNode
-    fields: seq[Field]
+    isRef*: bool
+    sym*: NimNode
+    fields*: seq[Field]
   
   Field = object
-    ident: NimNode
-    features: FieldFeatures
+    name*: NimNode
+    features*: FieldFeatures
 
-    case isCase: bool
+    case isCase*: bool
     of true:
-      branches: seq[FieldBranch]
+      branches*: seq[FieldBranch]
     else:
       nil
   
   FieldFeatures = object
-    skipped: bool
-    skipSerializing: bool
-    skipDeserializing: bool 
-    inlineKeys: bool
-    untagged: bool
+    skipped*: bool
+    skipSerializing*: bool
+    skipDeserializing*: bool 
+    inlineKeys*: bool
+    untagged*: bool
 
-    renameSerialize: Option[string]
-    renameDeserialize: Option[string]
-    skipSerializeIf: Option[NimNode]
-    serializeWith: Option[NimNode]
+    renameSerialize*: Option[string]
+    renameDeserialize*: Option[string]
+    skipSerializeIf*: Option[NimNode]
+    serializeWith*: Option[NimNode]
   
   FieldBranchKind = enum
     Of
     Else
 
   FieldBranch = object
-    case kind: FieldBranchKind
+    case kind*: FieldBranchKind
     of Of:
-      condition: NimNode
+      condition*: NimNode
     else:
       discard
-    fields: seq[Field]
+    fields*: seq[Field]
 
+{.push used.}
 # forward decl
 func by(T: typedesc[seq[Field]], recList: NimNode): T
 
@@ -135,9 +136,9 @@ func by(T: typedesc[Field], identDefs: NimNode): T =
 
   case identNode.kind
   of nnkIdent:
-    result = Field(ident: identNode)
+    result = Field(name: identNode)
   of nnkPragmaExpr:
-    result = Field(ident: identNode[0])
+    result = Field(name: identNode[0])
     result.features = FieldFeatures.by(pragmas=identNode[1])
   else:
     expectKind identNode, {nnkIdent, nnkPragmaExpr}
@@ -207,6 +208,8 @@ func by(T: typedesc[Struct], objectTy: ObjectTy): T =
   )
 
 
-func explore*(node: NimNode): Struct =
+func explore(node: NimNode): Struct =
   let objectTy = ObjectTy.by(sym=node)
   result = Struct.by objectTy
+
+{.pop.}
