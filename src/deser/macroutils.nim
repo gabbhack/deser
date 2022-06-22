@@ -17,6 +17,7 @@ type
   
   Field = object
     name*: NimNode
+    typ*: NimNode
     features*: FieldFeatures
 
     case isCase*: bool
@@ -136,9 +137,9 @@ func by(T: typedesc[Field], identDefs: NimNode): T =
 
   case identNode.kind
   of nnkIdent:
-    result = Field(name: identNode)
+    result = Field(name: identNode, typ: identDefs[1])
   of nnkPragmaExpr:
-    result = Field(name: identNode[0])
+    result = Field(name: identNode[0], typ: identDefs[1])
     result.features = FieldFeatures.by(pragmas=identNode[1])
   else:
     expectKind identNode, {nnkIdent, nnkPragmaExpr}
@@ -205,6 +206,13 @@ func by(T: typedesc[Struct], objectTy: ObjectTy): T =
     sym: objectTy.sym,
     isRef: objectTy.isRef,
     fields: seq[Field].by(recList=recList)
+  )
+
+
+func newExportedIdent(name: string): NimNode =
+  nnkPostfix.newTree(
+    newIdentNode("*"),
+    ident name
   )
 
 
