@@ -39,9 +39,9 @@ template implVisitor*(selfType: typed{`type`}, returnType: typed{`type`}) {.dirt
   template Value(self: selfType): typedesc = returnType
 
   # implementation expected
-  proc expecting(self: selfType): string
+  proc expecting(self: selfType): string {.inline.}
 
-  {.push noinit, inline.}
+  {.push noinit, inline, used.}
   # forward declaration
   proc visitBool[Self: selfType](self: Self, value: bool): returnType
   proc visitInt8[Self: selfType](self: Self, value: int8): returnType
@@ -190,3 +190,17 @@ template implDeserializer*(selfType: typed{`type`}) {.dirty.} =
   proc deserializeStruct(self: var selfType, visitor: auto): visitor.Value
 
   proc deserializeIdentifier(self: var selfType, visitor: auto): visitor.Value
+
+
+template getOrRaise*[T](field: Option[T], name: string): T =
+  if field.isNone:
+    raiseMissingField(name)
+  else:
+    field.unsafeGet
+
+
+template getOrBreak*[T](field: Option[T]): T {.dirty.} =
+  if field.isNone:
+    break
+  else:
+    field.unsafeGet

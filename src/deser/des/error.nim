@@ -26,6 +26,9 @@ type
 
   DuplicateField* = object of DeserializationError ## \
     ## Raised when a `Deserialize` struct type received more than one of the same field
+  
+  UnknownUntaggedVariant* = object of DeserializationError ## \
+    ## Raised when a `Deserialize` struct type cannot derive case variant
 
 
 proc raiseInvalidType*(unexp: Unexpected, exp: auto) =
@@ -50,3 +53,7 @@ proc raiseMissingField*(field: static[string]) =
 
 proc raiseDuplicateField*(field: static[string]) =
   raise newException(DuplicateField, &"duplicate field `{field}`")
+
+
+proc raiseUnknownUntaggedVariant*(struct, caseField: static[string]) =
+  raise newException(UnknownUntaggedVariant, &"not possible to derive value of case field `{field}` of struct `{struct}`")
