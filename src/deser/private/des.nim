@@ -164,25 +164,30 @@ func defKeyDeserializeBody(visitorType: NimNode): NimNode =
   )
 
 
-func defDeserializeProc(selfType, body: NimNode): NimNode =
+func defDeserializeProc(selfType, body: NimNode, public: bool): NimNode =
   let
     deserializeIdent = ident "deserialize"
+    deserializeProcIdent = block:
+      if public:
+        nnkPostfix.newTree(ident "*", deserializeIdent)
+      else:
+        deserializeIdent
     selfIdent = ident "self"
     deserializerIdent = ident "deserializer"
   
   quote do:
-    proc `deserializeIdent`(`selfIdent`: typedesc[`selfType`], `deserializerIdent`: var auto): `selfType` {.inline.} =
+    proc `deserializeProcIdent`(`selfIdent`: typedesc[`selfType`], `deserializerIdent`: var auto): `selfType` {.inline.} =
       `body`
 
 
-func defKeyDeserialize(visitorType: NimNode, keyStruct: KeyStruct): NimNode =  
+func defKeyDeserialize(visitorType: NimNode, keyStruct: KeyStruct, public: bool): NimNode =  
   let
     keysEnum = defKeysEnum(keyStruct)
     visitorTypeDef = defVisitorType(visitorType, valueType=keyStruct.enumSym)
     visitorImpl = defImplVisitor(visitorType, returnType=keyStruct.enumSym)
     expectingProc = defExpectingProc(visitorType, body=newLit("field identifier"))
     visitStringProc = defVisitStringProc(visitorType, returnType=keyStruct.enumSym, body=defStrToKeyCase(keyStruct))
-    deserializeProc = defDeserializeProc(keyStruct.enumSym, body=defKeyDeserializeBody(visitorType))
+    deserializeProc = defDeserializeProc(keyStruct.enumSym, body=defKeyDeserializeBody(visitorType), public)
   
   newStmtList(
     keysEnum,
@@ -412,7 +417,7 @@ func defValueDeserializeBody(visitorType: NimNode): NimNode =
   )
 
 
-func defValueDeserialize(visitorType: NimNode, struct: Struct, keyStruct: KeyStruct): NimNode =  
+func defValueDeserialize(visitorType: NimNode, struct: Struct, keyStruct: KeyStruct, public: bool): NimNode =  
   let
     visitorTypeDef = defVisitorType(visitorType, valueType=struct.sym)
     visitorImpl = defImplVisitor(visitorType, returnType=struct.sym)
@@ -428,7 +433,7 @@ func defValueDeserialize(visitorType: NimNode, struct: Struct, keyStruct: KeyStr
         defInitResolver(struct)
       )
     )
-    deserializeProc = defDeserializeProc(struct.sym, body=defValueDeserializeBody(visitorType))
+    deserializeProc = defDeserializeProc(struct.sym, body=defValueDeserializeBody(visitorType), public)
   
   result = newStmtList(
     visitorTypeDef,
@@ -439,7 +444,7 @@ func defValueDeserialize(visitorType: NimNode, struct: Struct, keyStruct: KeyStr
   )
   
 
-proc generate(struct: Struct): NimNode =
+proc generate(struct: Struct, public: bool): NimNode =
   let
     keyStruct = KeyStruct(
       enumSym: genSym(nskType, struct.sym.strVal),
@@ -450,7 +455,7 @@ proc generate(struct: Struct): NimNode =
     valueVisitor = genSym(nskType, "Visitor")
 
   result = newStmtList(
-    defKeyDeserialize(fieldVisitor, keyStruct),
-    defValueDeserialize(valueVisitor, struct, keyStruct)
+    defKeyDeserialize(fieldVisitor, keyStruct, public),
+    defValueDeserialize(valueVisitor, struct, keyStruct, public)
   )
 {.pop.}

@@ -1,9 +1,7 @@
-import std/[macros]
-
 import ../private/parse {.all.}
 import ../private/des {.all.}
 
 
-macro makeDeserializable*(typ: typed{`type`}) =
+macro makeDeserializable*(typ: typed{`type`}, public: static[bool] = false) =
   let struct = parse(typ)
-  result = generate(struct)
+  result = generate(struct, public)
