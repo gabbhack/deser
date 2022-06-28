@@ -397,6 +397,21 @@ func defForKeys(keyType, body: NimNode): NimNode =
   )
 
 
+func defValueDeserializeBody(visitorType: NimNode): NimNode =
+  nnkStmtList.newTree(
+    nnkMixinStmt.newTree(
+      newIdentNode("deserializeMap")
+    ),
+    nnkCall.newTree(
+      newIdentNode("deserializeMap"),
+      newIdentNode("deserializer"),
+      nnkCall.newTree(
+        visitorType
+      )
+    )
+  )
+
+
 func defValueDeserialize(visitorType: NimNode, struct: Struct, keyStruct: KeyStruct): NimNode =  
   let
     visitorTypeDef = defVisitorType(visitorType, valueType=struct.sym)
@@ -413,12 +428,14 @@ func defValueDeserialize(visitorType: NimNode, struct: Struct, keyStruct: KeyStr
         defInitResolver(struct)
       )
     )
+    deserializeProc = defDeserializeProc(struct.sym, body=defValueDeserializeBody(visitorType))
   
   result = newStmtList(
     visitorTypeDef,
     visitorImpl,
     expectingProc,
-    visitMapProc
+    visitMapProc,
+    deserializeProc
   )
   
 
