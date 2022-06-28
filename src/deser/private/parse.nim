@@ -1,7 +1,7 @@
 {.experimental: "strictFuncs".}
 import std/[macros, options, tables]
 
-import pragmas
+import ../pragmas
 
 
 type
@@ -16,7 +16,7 @@ type
     fields*: seq[Field]
   
   Field = object
-    name*: NimNode
+    ident*: NimNode
     typ*: NimNode
     features*: FieldFeatures
 
@@ -27,7 +27,6 @@ type
       nil
   
   FieldFeatures = object
-    skipped*: bool
     skipSerializing*: bool
     skipDeserializing*: bool 
     inlineKeys*: bool
@@ -55,6 +54,32 @@ type
 func by(T: typedesc[seq[Field]], recList: NimNode): T
 
 
+func isSkipSerializing(self: Field): bool = self.features.skipSerializing
+
+func isSkipDeserializing(self: Field): bool = self.features.skipDeserializing
+
+func isInlineKeys(self: Field): bool = self.features.inlineKeys
+
+func isUntagged(self: Field): bool = self.features.untagged
+
+func getSkipSerializeIf(self: Field): Option[NimNode] = self.features.skipSerializeIf
+
+func getSerializeWith(self: Field): Option[NimNode] = self.features.serializeWith
+
+func serializeName(self: Field): string =
+  if self.features.renameSerialize.isSome:
+    self.features.renameSerialize.unsafeGet
+  else:
+    self.ident.strVal
+
+
+func deserializeName(self: Field): string =
+  if self.features.renameDeserialize.isSome:
+    self.features.renameDeserialize.unsafeGet
+  else:
+    self.ident.strVal
+
+
 func copyWithoutChild(copyOf: NimNode, idx = 0, n = 1): NimNode =
   result = copy copyOf
   result.del idx, n
@@ -63,8 +88,6 @@ func copyWithoutChild(copyOf: NimNode, idx = 0, n = 1): NimNode =
 proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
   if sym == bindSym("untagged"):
     self.untagged = true
-  elif sym == bindSym("skipped"):
-    self.skipped = true
   elif sym == bindSym("skipSerializing"):
     self.skipSerializing = true
   elif sym == bindSym("skipDeserializing"):
@@ -79,6 +102,7 @@ proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
     self.renameDeserialize = some values[0].strVal
   elif sym == bindSym("skipSerializeIf"):
     self.skipSerializeIf = some values[0]
+
 
 func by(T: typedesc[ObjectTy], sym: NimNode): T =
   # Get temp `ObjectTy` from symbol of type
@@ -137,9 +161,9 @@ func by(T: typedesc[Field], identDefs: NimNode): T =
 
   case identNode.kind
   of nnkIdent:
-    result = Field(name: identNode, typ: identDefs[1])
+    result = Field(ident: identNode, typ: identDefs[1])
   of nnkPragmaExpr:
-    result = Field(name: identNode[0], typ: identDefs[1])
+    result = Field(ident: identNode[0], typ: identDefs[1])
     result.features = FieldFeatures.by(pragmas=identNode[1])
   else:
     expectKind identNode, {nnkIdent, nnkPragmaExpr}
@@ -184,25 +208,27 @@ func by(T: typedesc[Field], recCase: NimNode): T =
 
 
 func by(T: typedesc[seq[Field]], recList: NimNode): T =
-  expectKind recList, nnkRecList
+  expectKind recList, {nnkRecList, nnkEmpty}
 
-  for fieldNode in recList:
-    case fieldNode.kind
-    of nnkIdentDefs:
-      result.add Field.by(identDefs=fieldNode)
-    of nnkRecCase:
-      result.add Field.by(recCase=fieldNode)
-    of nnkNilLit:
-      # of/else:
-      #   nil
-      discard
-    else:
-      expectKind fieldNode, {nnkIdentDefs, nnkRecCase}
+  if recList.kind != nnkEmpty:
+    for fieldNode in recList:
+      case fieldNode.kind
+      of nnkIdentDefs:
+        result.add Field.by(identDefs=fieldNode)
+      of nnkRecCase:
+        result.add Field.by(recCase=fieldNode)
+      of nnkNilLit:
+        # of/else:
+        #   nil
+        discard
+      else:
+        expectKind fieldNode, {nnkIdentDefs, nnkRecCase}
 
 
 func by(T: typedesc[Struct], objectTy: ObjectTy): T =
   let recList = objectTy.node[2]
-  result = Struct(
+
+  Struct(
     sym: objectTy.sym,
     isRef: objectTy.isRef,
     fields: seq[Field].by(recList=recList)
@@ -216,8 +242,9 @@ func newExportedIdent(name: string): NimNode =
   )
 
 
-func explore(node: NimNode): Struct =
+func parse(node: NimNode): Struct =
   let objectTy = ObjectTy.by(sym=node)
-  result = Struct.by objectTy
+
+  Struct.by objectTy
 
 {.pop.}
