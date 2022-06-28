@@ -124,8 +124,19 @@ func by(T: typedesc[ObjectTy], sym: NimNode): T =
     # recursively calling ourselves
     result = ObjectTy.by typeImpl
   of nnkRefTy:
-    # For type Foo = ref object
-    result = ObjectTy(isRef: true, sym: sym, node: typeImpl[0])
+    case typeImpl[0].kind
+    of nnkSym:
+      # For type Foo = ref Bar
+      var objectTy = ObjectTy.by typeImpl[0]
+      # use alias type
+      objectTy.sym = sym
+      # hack to bypass strictFunc
+      result = objectTy
+    of nnkObjectTy:
+      # # For type Foo = ref object
+      result = ObjectTy(isRef: true, sym: sym, node: typeImpl[0])
+    else:
+      expectKind typeImpl[0], {nnkSym, nnkObjectTy}
   of nnkObjectTy:
     # # For type Foo = object
     result = ObjectTy(isRef: false, sym: sym, node: typeImpl)
