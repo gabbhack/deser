@@ -36,6 +36,7 @@ type
     renameDeserialize*: Option[string]
     skipSerializeIf*: Option[NimNode]
     serializeWith*: Option[NimNode]
+    defaultValue*: Option[NimNode]
   
   FieldBranchKind = enum
     Of
@@ -71,6 +72,8 @@ func isUntagged(self: Field | Key): bool = self.features.untagged
 func getSkipSerializeIf(self: Field | Key): Option[NimNode] = self.features.skipSerializeIf
 
 func getSerializeWith(self: Field | Key): Option[NimNode] = self.features.serializeWith
+
+func getDefaultValue(self: Field | Key): Option[NimNode] = self.features.defaultValue
 
 func serializeName(self: Field | Key): string =
   if self.features.renameSerialize.isSome:
@@ -139,6 +142,8 @@ proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
     self.renameDeserialize = some values[0].strVal
   elif sym == bindSym("skipSerializeIf"):
     self.skipSerializeIf = some values[0]
+  elif sym == bindSym("defaultValue"):
+    self.defaultValue = some values[0]
 
 
 func by(T: typedesc[ObjectTy], sym: NimNode): T =

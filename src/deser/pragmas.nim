@@ -113,7 +113,6 @@ type
 ]##
 
 
-# TODO future
 template defaultValue*(value: typed) {.pragma.} ##[
 Uses the specified value if the field was not in the input
 

@@ -28,6 +28,13 @@ template getOrBreak[T](field: Option[T]): T {.dirty.} =
     field.unsafeGet
 
 
+template getOrDefault[T](field: Option[T], defaultValue: T): T =
+  if field.isNone:
+    defaultValue
+  else:
+    field.unsafeGet
+
+
 func defVisitorType(visitorType, valueType: NimNode): NimNode =
   quote do:
     type
@@ -171,12 +178,20 @@ func defKeyDeserialize(visitorType: NimNode, keyStruct: KeyStruct, public: bool)
   )
 
 
-func defGetField(ident: NimNode, raiseOnNone: bool): NimNode =
+func defGetField(field: Field, raiseOnNone: bool): NimNode =
   let
     getOrBreakSym = bindSym "getOrBreak"
     getOrRaiseSym = bindSym "getOrRaise"
+    getOrDefaultSym = bindSym "getOrDefault"
 
-  newDotExpr(ident, if raiseOnNone: getOrRaiseSym else: getOrBreakSym)
+    defaultValue = field.getDefaultValue
+
+  if defaultValue.isSome:
+    newCall(newDotExpr(field.ident, getOrDefaultSym), defaultValue.unsafeGet)
+  elif raiseOnNone:
+    newCall(newDotExpr(field.ident, getOrRaiseSym), field.deserializeName.newLit)
+  else:
+    newDotExpr(field.ident, getOrBreakSym)
 
 
 func addToObjConstr(objConstr, ident, value: NimNode) =
@@ -197,7 +212,7 @@ template resolveUntagged {.dirty.} =
         case kind: bool
         of --> true <-- variant.condition[0]
       ]#
-      addToObjConstr(objConstr, field.ident, defGetField(variant.condition[0], raiseOnNone))
+      addToObjConstr(objConstr, field.ident, variant.condition[0])
       # on untagged case we need to try all variants
       # so, we recursively call the resolver for each variant.
       # if an error occurs during deserialization, for example, there is no required field
@@ -217,9 +232,15 @@ template resolveUntagged {.dirty.} =
 
 
 template resolveTagged {.dirty.} =
-  # get case field value from data
-  var caseStmt = nnkCaseStmt.newTree(defGetField(field.ident, raiseOnNone))
-  addToObjConstr(objConstr, field.ident, defGetField(field.ident, raiseOnNone))
+  # need to generate temp let
+  # to prove that case field value is correct
+  let
+    tempKindLetSym = genSym(nskLet, field.deserializeName)
+    # get case field value from data
+    tempKindLet = newLetStmt(tempKindLetSym, defGetField(field, raiseOnNone))
+
+  var caseStmt = nnkCaseStmt.newTree(tempKindLetSym)
+  addToObjConstr(objConstr, field.ident, tempKindLetSym)
 
   for variant in field.branches:
     case variant.kind
@@ -247,7 +268,10 @@ template resolveTagged {.dirty.} =
       let variantBody = resolve(struct, variant.fields, objConstr, raiseOnNone)
       caseStmt.add nnkElse.newTree(variantBody)
   
-  result = caseStmt
+  result = newStmtList(
+    tempKindLet,
+    caseStmt
+  )
 
 
 func resolve(struct: Struct, fields: seq[Field], objConstr: NimNode, raiseOnNone = true): NimNode =
@@ -267,7 +291,7 @@ func resolve(struct: Struct, fields: seq[Field], objConstr: NimNode, raiseOnNone
           error("Object cannot contain more than one case expression at the same level", field.ident)
         caseField = some field
       else:
-        addToObjConstr(objConstr, field.ident, defGetField(field.ident, raiseOnNone))
+        addToObjConstr(objConstr, field.ident, defGetField(field, raiseOnNone))
   
   if caseField.isNone:
     # there is no case field, so just return statement
