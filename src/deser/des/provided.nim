@@ -102,6 +102,12 @@ template implSeqAccess*(selfType: typed{`type`}) {.dirty.} =
     self.nextElementSeed(NoneSeed[Value]())
   
   proc sizeHint[Self: selfType](self: Self): Option[uint] = none(uint)
+
+  iterator items(self: var selfType, Value: typedesc): Value =
+    var elementOption = self.nextElement(Value)
+    while elementOption.isSome:
+      yield elementOption.unsafeGet
+      elementOption = self.nextElement(Value)
   {.pop.}
 
 
@@ -135,7 +141,7 @@ template implMapAccess*(selfType: typed{`type`}) {.dirty.} =
   proc nextValue(self: var selfType, Value: typedesc): Value =
     self.nextValueSeed(NoneSeed[Value]())
   
-  proc nextEntry(self: var selfType, Key, Value: typedesc): Option[(Key, Value)] =
+  proc nextEntry(self: var selfType, Key: typedesc, Value: typedesc): Option[(Key, Value)] =
     self.nextEntrySeed(NoneSeed[Key](), NoneSeed[Value]())
   
   proc sizeHint[Self: selfType](self: Self): Option[uint] = none(uint)
@@ -145,6 +151,13 @@ template implMapAccess*(selfType: typed{`type`}) {.dirty.} =
     while keyOption.isSome:
       yield keyOption.unsafeGet
       keyOption = self.nextKey(Value)
+  
+  iterator pairs(self: var selfType, Key: typedesc, Value: typedesc): (Key, Value) =
+    var entryOption = self.nextEntry(Key, Value)
+    while entryOption.isSome:
+      yield entryOption.unsafeGet
+      entryOption = self.nextEntry(Key, Value)
+  
   {.pop.}
 
 

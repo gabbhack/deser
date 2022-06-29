@@ -48,32 +48,59 @@ type
     else:
       discard
     fields*: seq[Field]
+  
+  Key = object
+    enumSym*: NimNode
+    varIdent*: NimNode
+    varType*: NimNode
+    features*: FieldFeatures
+  
+  KeyStruct {.used.} = object
+    enumSym*: NimNode
+    fields*: seq[Key]
+    unknownKeyEnumSym*: NimNode
+
 
 {.push used.}
 # forward decl
 func by(T: typedesc[seq[Field]], recList: NimNode): T
 
 
-func isSkipSerializing(self: Field): bool = self.features.skipSerializing
+func asKeys(fields: seq[Field]): seq[Key] =
+  result = newSeqOfCap[Key](fields.len)
 
-func isSkipDeserializing(self: Field): bool = self.features.skipDeserializing
+  for field in fields:
+    result.add Key(
+      enumSym: genSym(nskEnumField, field.ident.strVal),
+      varIdent: field.ident,
+      varType: field.typ
+    )
 
-func isInlineKeys(self: Field): bool = self.features.inlineKeys
+    if field.isCase:
+      for branch in field.branches:
+        result.add branch.fields.asKeys
 
-func isUntagged(self: Field): bool = self.features.untagged
 
-func getSkipSerializeIf(self: Field): Option[NimNode] = self.features.skipSerializeIf
+func isSkipSerializing(self: Field | Key): bool = self.features.skipSerializing
 
-func getSerializeWith(self: Field): Option[NimNode] = self.features.serializeWith
+func isSkipDeserializing(self: Field | Key): bool = self.features.skipDeserializing
 
-func serializeName(self: Field): string =
+func isInlineKeys(self: Field | Key): bool = self.features.inlineKeys
+
+func isUntagged(self: Field | Key): bool = self.features.untagged
+
+func getSkipSerializeIf(self: Field | Key): Option[NimNode] = self.features.skipSerializeIf
+
+func getSerializeWith(self: Field | Key): Option[NimNode] = self.features.serializeWith
+
+func serializeName(self: Field | Key): string =
   if self.features.renameSerialize.isSome:
     self.features.renameSerialize.unsafeGet
   else:
     self.ident.strVal
 
 
-func deserializeName(self: Field): string =
+func deserializeName(self: Field | Key): string =
   if self.features.renameDeserialize.isSome:
     self.features.renameDeserialize.unsafeGet
   else:

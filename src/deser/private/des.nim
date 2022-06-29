@@ -28,33 +28,6 @@ template getOrBreak[T](field: Option[T]): T {.dirty.} =
     field.unsafeGet
 
 
-type
-  Key = object
-    enumSym: NimNode
-    varIdent: NimNode
-    varType: NimNode
-  
-  KeyStruct = object
-    enumSym: NimNode
-    fields: seq[Key]
-    unknownKeyEnumSym: NimNode
-
-
-func asKeys(fields: seq[Field]): seq[Key] =
-  result = newSeqOfCap[Key](fields.len)
-
-  for field in fields:
-    result.add Key(
-      enumSym: genSym(nskEnumField, field.ident.strVal),
-      varIdent: field.ident,
-      varType: field.typ
-    )
-
-    if field.isCase:
-      for branch in field.branches:
-        result.add branch.fields.asKeys
-
-
 func defVisitorType(visitorType, valueType: NimNode): NimNode =
   quote do:
     type
