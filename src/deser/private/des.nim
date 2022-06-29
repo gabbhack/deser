@@ -80,8 +80,7 @@ func defStrToKeyCase(keyStruct: KeyStruct): NimNode =
 
   for field in keyStruct.fields:
     result.add nnkOfBranch.newTree(
-      # TODO use deserializeName
-      field.varIdent.toStrLit,
+      field.deserializeName.newLit,
       newStmtList(
         newDotExpr(
           keyStruct.enumSym,
@@ -261,16 +260,17 @@ func resolve(struct: Struct, fields: seq[Field], objConstr: NimNode, raiseOnNone
     caseField = none Field
   
   for field in fields:
-    if field.isCase:
-      if caseField.isSome:
-        # hard to implement, nobody really use
-        error("Object cannot contain more than one case expression at the same level", field.ident)
-      caseField = some field
-    else:
-      addToObjConstr(objConstr, field.ident, defGetField(field.ident, raiseOnNone))
+    if not field.isSkipDeserializing:
+      if field.isCase:
+        if caseField.isSome:
+          # hard to implement, nobody really use
+          error("Object cannot contain more than one case expression at the same level", field.ident)
+        caseField = some field
+      else:
+        addToObjConstr(objConstr, field.ident, defGetField(field.ident, raiseOnNone))
   
   if caseField.isNone:
-    # there is no case field, just return statement
+    # there is no case field, so just return statement
     result = nnkReturnStmt.newTree(objConstr)
   else:
     let
@@ -332,7 +332,7 @@ func defKeyToValueCase(keyStruct: KeyStruct): NimNode =
           nnkElifBranch.newTree(
             newCall(bindSym("isSome"), field.varIdent),
             newStmtList(
-              newCall(bindSym("raiseDuplicateField"), field.varIdent.toStrLit)
+              newCall(bindSym("raiseDuplicateField"), field.deserializeName.newLit)
             )
           )
         ),

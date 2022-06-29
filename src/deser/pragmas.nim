@@ -47,12 +47,16 @@ Serialize this field using a procedure.
 The given function must be callable as `proc[Serializer] (self: field.type, serializer: var Serializer)`
 ]##
 
+template renamed*(renamed: string) {.pragma.} ##[
+Serialize and deserialize field with the given name instead of its Nim name
+]##
+
 template renameSerialize*(renamed: string) {.pragma.} ##[
-Serialize this field with the given name instead of its Nim name
+Serialize field with the given name instead of its Nim name
 ]##
 
 template renameDeserialize*(renamed: string) {.pragma.} ##[
-Deserialize this field with the given name instead of its Nim name
+Deserialize field with the given name instead of its Nim name
 ]##
 
 template skipped*() {.pragma.} ##[
@@ -108,31 +112,16 @@ type
 ```
 ]##
 
-template inlineKeys*() {.pragma.} ##[
-Use this pragma to inline keys from the field into the parent object.
+
+# TODO future
+template defaultValue*(value: typed) {.pragma.} ##[
+Uses the specified value if the field was not in the input
 
 **Example**:
 
 ```nim
 type
-  Pagination = object
-    limit: uint64
-    offset: uint64
-    total: uint64
-  
-  Users = object
-    users: seq[User]
-    pagination {.inlineKeys.}: Pagination
-```
-
-equals to this JSON:
-
-```
-{
-  "users": [],
-  "limit": 10,
-  "offset": 10,
-  "total": 10
-}
+  User = object
+    name {.defaultValue("noname").}: string
 ```
 ]##

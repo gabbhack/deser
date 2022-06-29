@@ -62,30 +62,9 @@ type
 
 
 {.push used.}
-# forward decl
-func by(T: typedesc[seq[Field]], recList: NimNode): T
-
-
-func asKeys(fields: seq[Field]): seq[Key] =
-  result = newSeqOfCap[Key](fields.len)
-
-  for field in fields:
-    result.add Key(
-      enumSym: genSym(nskEnumField, field.ident.strVal),
-      varIdent: field.ident,
-      varType: field.typ
-    )
-
-    if field.isCase:
-      for branch in field.branches:
-        result.add branch.fields.asKeys
-
-
 func isSkipSerializing(self: Field | Key): bool = self.features.skipSerializing
 
 func isSkipDeserializing(self: Field | Key): bool = self.features.skipDeserializing
-
-func isInlineKeys(self: Field | Key): bool = self.features.inlineKeys
 
 func isUntagged(self: Field | Key): bool = self.features.untagged
 
@@ -97,14 +76,41 @@ func serializeName(self: Field | Key): string =
   if self.features.renameSerialize.isSome:
     self.features.renameSerialize.unsafeGet
   else:
-    self.ident.strVal
+    when self is Key:
+      self.varIdent.strVal
+    else:
+      self.ident.strVal
 
 
 func deserializeName(self: Field | Key): string =
   if self.features.renameDeserialize.isSome:
     self.features.renameDeserialize.unsafeGet
   else:
-    self.ident.strVal
+    when self is Key:
+      self.varIdent.strVal
+    else:
+      self.ident.strVal
+
+
+# forward decl
+func by(T: typedesc[seq[Field]], recList: NimNode): T
+
+
+func asKeys(fields: seq[Field]): seq[Key] =
+  result = newSeqOfCap[Key](fields.len)
+
+  for field in fields:
+    if not field.isSkipDeserializing:
+      result.add Key(
+        enumSym: genSym(nskEnumField, field.ident.strVal),
+        varIdent: field.ident,
+        varType: field.typ,
+        features: field.features
+      )
+
+      if field.isCase:
+        for branch in field.branches:
+          result.add branch.fields.asKeys
 
 
 func copyWithoutChild(copyOf: NimNode, idx = 0, n = 1): NimNode =
@@ -115,14 +121,18 @@ func copyWithoutChild(copyOf: NimNode, idx = 0, n = 1): NimNode =
 proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
   if sym == bindSym("untagged"):
     self.untagged = true
+  elif sym == bindSym("skipped"):
+    self.skipDeserializing = true
+    self.skipSerializing = true
   elif sym == bindSym("skipSerializing"):
     self.skipSerializing = true
   elif sym == bindSym("skipDeserializing"):
     self.skipDeserializing = true
-  elif sym == bindSym("inlineKeys"):
-    self.inlineKeys = true
   elif sym == bindSym("serializeWith"):
     self.serializeWith = some values[0]
+  elif sym == bindSym("renamed"):
+    self.renameDeserialize = some values[0].strVal
+    self.renameSerialize = some values[0].strVal
   elif sym == bindSym("renameSerialize"):
     self.renameSerialize = some values[0].strVal
   elif sym == bindSym("renameDeserialize"):
