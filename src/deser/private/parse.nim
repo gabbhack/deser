@@ -9,11 +9,16 @@ type
     isRef*: bool
     sym*: NimNode
     node*: NimNode
+    pragmas*: Option[NimNode]
 
   Struct = object
     isRef*: bool
     sym*: NimNode
     fields*: seq[Field]
+    features*: StructFeatures
+  
+  StructFeatures = object
+    onUnknownKeysValue*: Option[NimNode]
   
   Field = object
     ident*: NimNode
@@ -57,12 +62,16 @@ type
     features*: FieldFeatures
   
   KeyStruct {.used.} = object
+    structSym*: NimNode
     enumSym*: NimNode
     fields*: seq[Key]
     unknownKeyEnumSym*: NimNode
+    features*: StructFeatures
 
 
 {.push used.}
+func getOnUnknownKeysValue(self: Struct | KeyStruct): Option[NimNode] = self.features.onUnknownKeysValue
+
 func isSkipSerializing(self: Field | Key): bool = self.features.skipSerializing
 
 func isSkipDeserializing(self: Field | Key): bool = self.features.skipDeserializing
@@ -121,6 +130,11 @@ func copyWithoutChild(copyOf: NimNode, idx = 0, n = 1): NimNode =
   result.del idx, n
 
 
+proc fill(self: var StructFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
+  if sym == bindSym("onUnknownKeys"):
+    self.onUnknownKeysValue = some values[0]
+
+
 proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
   if sym == bindSym("untagged"):
     self.untagged = true
@@ -168,25 +182,41 @@ func by(T: typedesc[ObjectTy], sym: NimNode): T =
   of nnkRefTy:
     case typeImpl[0].kind
     of nnkSym:
-      # For type Foo = ref Bar
-      var objectTy = ObjectTy.by typeImpl[0]
-      # use alias type
-      objectTy.sym = sym
-      # hack to bypass strictFunc
-      result = objectTy
+      # stfu compiler
+      {.cast(noSideEffect).}:
+        # For type Foo = ref Bar
+        result = ObjectTy.by typeImpl[0]
+        # use alias type
+        result.sym = sym
     of nnkObjectTy:
-      # # For type Foo = ref object
+      # For type Foo = ref object
       result = ObjectTy(isRef: true, sym: sym, node: typeImpl[0])
     else:
       expectKind typeImpl[0], {nnkSym, nnkObjectTy}
   of nnkObjectTy:
-    # # For type Foo = object
+    # For type Foo = object
     result = ObjectTy(isRef: false, sym: sym, node: typeImpl)
   else:
     expectKind typeImpl, {nnkSym, nnkRefTy, nnkObjectTy}
+  
+  # stfu compiler
+  {.cast(noSideEffect).}:
+    #[
+        typeDef[0]
+         |-------|
+         |       |
+         v       v
+    type Test {.test.} = object
+                 |
+                 |
+                 v
+            typeDef[0][1]
+    ]#
+    if typeDef[0].kind == nnkPragmaExpr:
+      result.pragmas = some typeDef[0][1]
 
 
-func by(T: typedesc[FieldFeatures], pragmas: NimNode): T =
+func by(T: typedesc[FieldFeatures | StructFeatures], pragmas: NimNode): T =
   # Check whether the field contains our pragmas
   expectKind pragmas, nnkPragma
   
@@ -200,10 +230,13 @@ func by(T: typedesc[FieldFeatures], pragmas: NimNode): T =
       # {.pragmaName(values).}
       let
         sym = pragma[0]
+        # I do not know what is going on here
         values = if pragma.len > 1: pragma[1..pragma.len-1] else: @[]
       result.fill(sym, values)
     else:
       expectKind pragma, {nnkSym, nnkCall}
+  
+  # TODO add check for nosense
 
 
 func by(T: typedesc[Field], identDefs: NimNode): T =
@@ -281,11 +314,16 @@ func by(T: typedesc[seq[Field]], recList: NimNode): T =
 func by(T: typedesc[Struct], objectTy: ObjectTy): T =
   let recList = objectTy.node[2]
 
-  Struct(
+  result = Struct(
     sym: objectTy.sym,
     isRef: objectTy.isRef,
     fields: seq[Field].by(recList=recList)
   )
+
+  # S in Nim stands for Safety
+  {.cast(noSideEffect).}:
+    if objectTy.pragmas.isSome:
+      result.features = StructFeatures.by(objectTy.pragmas.unsafeGet)
 
 
 func newExportedIdent(name: string): NimNode =

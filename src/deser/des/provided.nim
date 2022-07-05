@@ -28,7 +28,7 @@ template implVisitor*(selfType: typed{`type`}, returnType: typed{`type`}) {.dirt
   bind UnexpectedSeq
   bind UnexpectedMap
 
-  template Value(self: selfType): typedesc = returnType
+  template Value(self: selfType): typedesc {.used.} = returnType
 
   # implementation expected
   proc expecting(self: selfType): string {.inline.}
