@@ -14,13 +14,8 @@ macro makeDeserializableStruct(typ: typed{`type`}, public: static[bool]) =
     debugEcho result.toStrLit
 
 
-template makeDeserializableEnum(typ: enum, public: static[bool]) = discard
-
-
 template makeDeserializable*(typ: typed{`type`}, public: static[bool] = false) {.dirty.} =
   bind makeDeserializableStruct
 
-  when typ is enum:
-    discard
-  else:
+  when type is object:
     makeDeserializableStruct(typ, public)
