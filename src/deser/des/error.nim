@@ -93,9 +93,9 @@ func UnexpectedFloat*(value: float64): auto {.noinit, inline.} = Unexpected(kind
 
 func UnexpectedChar*(value: char): auto {.noinit, inline.} = Unexpected(kind: Char, charValue: value)
 
-func UnexpectedString*(value: string): auto {.noinit, inline.} = Unexpected(kind: String, stringValue: value)
+func UnexpectedString*(value: sink string): auto {.noinit, inline.} = Unexpected(kind: String, stringValue: value)
 
-func UnexpectedBytes*(value: seq[byte]): auto {.noinit, inline.} = Unexpected(kind: Bytes, bytesValue: value)
+func UnexpectedBytes*(value: sink seq[byte]): auto {.noinit, inline.} = Unexpected(kind: Bytes, bytesValue: value)
 
 func UnexpectedOption*(): auto {.noinit, inline.} = Unexpected(kind: Option)
 
@@ -104,20 +104,27 @@ func UnexpectedSeq*(): auto {.noinit, inline.} = Unexpected(kind: Seq)
 func UnexpectedMap*(): auto {.noinit, inline.} = Unexpected(kind: Map)
 
 
+{.push noinline, noreturn.}
 proc raiseInvalidType*(unexp: Unexpected, exp: auto) =
-  raise newException(InvalidType, &"invalid type: {unexp}, expected {exp.expecting()}")
+  mixin expecting
+
+  raise newException(InvalidType, &"invalid type: {$unexp}, expected {exp.expecting()}")
 
 
 proc raiseInvalidValue*(unexp: Unexpected, exp: auto) =
-  raise newException(InvalidValue, &"invalid value: {unexp}, expected {exp.expecting()}")
+  mixin expecting
+
+  raise newException(InvalidValue, &"invalid value: {$unexp}, expected {exp.expecting()}")
 
 
 proc raiseInvalidLength*(unexp: uint, exp: auto) =
-  raise newException(InvalidLength, &"invalid length {unexp}, expected {exp.expecting()}")
+  mixin expecting
+
+  raise newException(InvalidLength, &"invalid length {$unexp}, expected {exp.expecting()}")
 
 
-proc raiseUnknownField*(unexp: string) =
-  raise newException(UnknownField, &"unknown field {unexp}, there are no fields")
+proc raiseUnknownField*(unexp: sink string) =
+  raise newException(UnknownField, &"unknown field {$unexp}, there are no fields")
 
 
 proc raiseMissingField*(field: static[string]) =
@@ -128,5 +135,6 @@ proc raiseDuplicateField*(field: static[string]) =
   raise newException(DuplicateField, &"duplicate field `{field}`")
 
 
-proc raiseUnknownUntaggedVariant*(struct, caseField: static[string]) =
+proc raiseUnknownUntaggedVariant*(struct: static[string], field: static[string]) =
   raise newException(UnknownUntaggedVariant, &"not possible to derive value of case field `{field}` of struct `{struct}`")
+{.pop.}

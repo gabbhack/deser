@@ -2,6 +2,6 @@
 Rewrite in progress
 ]##
 
-import deser/[pragmas, ser]
+import deser/[pragmas, des]
 
-export pragmas, ser
+export pragmas, des

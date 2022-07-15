@@ -181,3 +181,6 @@ proc showUpdateWarning(objName: static[string], fieldName: string) =
     yet = true
 ```
 ]##
+
+
+template lowerCased*() {.pragma.}

@@ -1,38 +1,28 @@
 {.experimental: "strictFuncs".}
-import std/[options, macros, enumerate]
+import std/[options, enumerate, macros]
 
 import parse {.all.}
 
-from ../des/error import raiseInvalidType, raiseDuplicateField, raiseUnknownUntaggedVariant
-from ../des/provided import implVisitor
+from ../des/error import raiseDuplicateField, raiseUnknownUntaggedVariant, raiseMissingField
+from ../des/impls import implVisitor, Visitor, IgnoredAny
+
+
+type
+  DeserStruct = object of Struct
+    flattenFields*: seq[Field]
 
 
 {.push used.}
-template getOrRaise[T](field: Option[T], name: static[string]): T =
-  if field.isNone:
-    when T is Option:
-      default(T)
-    else:
-      raiseMissingField(name)
-  else:
-    field.unsafeGet
+func flatten(fields: seq[Field]): seq[Field] =
+  result = newSeqOfCap[Field](fields.len)
 
-
-template getOrBreak[T](field: Option[T]): T =
-  if field.isNone:
-    when T is Option:
-      default(T)
-    else:
-      break
-  else:
-    field.unsafeGet
-
-
-template getOrDefault[T](field: Option[T], defaultValue: T): T =
-  if field.isNone:
-    defaultValue
-  else:
-    field.unsafeGet
+  for field in fields:
+    if not field.isSkipDeserializing:
+      if not field.isUntagged:
+        result.add field
+      if field.isCase:
+        for branch in field.branches:
+          result.add branch.fields.flatten
 
 
 macro toByteArray(str: static[string]): array =
@@ -42,23 +32,26 @@ macro toByteArray(str: static[string]): array =
     result.add s.byte.newLit
 
 
-func defVisitorType(visitorType, valueType: NimNode): NimNode =
+func defVisitorKeyType(visitorType, valueType: NimNode): NimNode =
+  let visitorSym = bindSym "Visitor"
+
   quote do:
     type
       # special type to avoid specifying the generic `Value` every time
-      HackType[Value] = object
-      `visitorType` = HackType[`valueType`]
+      `visitorType` = `visitorSym`[`valueType`]
 
 
-func defImplVisitor(selfType, returnType: NimNode): NimNode =
+func defImplVisitor(selfType, returnType: NimNode, public: bool): NimNode =
   # implVisitor(selfType, returnType)
-  let implVisitorSym = bindSym "implVisitor"
+  let
+    implVisitorSym = bindSym "implVisitor"
+    public = newLit public
 
   quote do:
-    `implVisitorSym`(`selfType`, `returnType`)
+    `implVisitorSym`(`selfType`, public=`public`)
 
 
-func defKeysEnum(keyStruct: KeyStruct): NimNode =
+func defKeysEnum(struct: DeserStruct): NimNode =
   #[
     type Enum = enum
       FirstKey
@@ -68,39 +61,44 @@ func defKeysEnum(keyStruct: KeyStruct): NimNode =
     newEmptyNode()
   )
 
-  for field in keyStruct.fields:
-    enumNode.add field.enumSym
-  
-  enumNode.add keyStruct.unknownKeyEnumSym
+  for field in struct.flattenFields:
+    enumNode.add field.enumFieldSym
+
+  enumNode.add struct.enumUnknownFieldSym
 
   nnkTypeSection.newTree(
     nnkTypeDef.newTree(
-      keyStruct.enumSym,
+      struct.enumSym,
       newEmptyNode(),
       enumNode
     )
   )
 
 
-func defToKeyElseBranch(keyStruct: KeyStruct): NimNode =
-  let onUnknownKeys = keyStruct.getOnUnknownKeysValue
+func defToKeyElseBranch(struct: Struct): NimNode =
+  let onUnknownKeys = struct.getOnUnknownKeysValue
 
   nnkElse.newTree(
     newStmtList(
       (
         if onUnknownKeys.isSome:
-          newCall(onUnknownKeys.unsafeGet, keyStruct.structSym.toStrLit, ident "value")
+          newCall(
+            onUnknownKeys.unsafeGet,
+            struct.sym.toStrLit,
+            ident "value"
+          )
         else:
           newEmptyNode()
       ),
       newDotExpr(
-          keyStruct.enumSym,
-          keyStruct.unknownKeyEnumSym
+          struct.enumSym,
+          struct.enumUnknownFieldSym
       )
     )
   ) 
+  
 
-func defStrToKeyCase(keyStruct: KeyStruct): NimNode =
+func defStrToKeyCase(struct: DeserStruct): NimNode =
   #[
     case value
     of "key":
@@ -110,63 +108,71 @@ func defStrToKeyCase(keyStruct: KeyStruct): NimNode =
     newIdentNode("value")
   )
 
-  for field in keyStruct.fields:
+  for field in struct.flattenFields:
     result.add nnkOfBranch.newTree(
       field.deserializeName.newLit,
       newStmtList(
         newDotExpr(
-          keyStruct.enumSym,
-          field.enumSym
+          struct.enumSym,
+          field.enumFieldSym
         )
       )
     )
   
+  result.add defToKeyElseBranch(struct)
 
-  result.add defToKeyElseBranch(keyStruct)
 
+func defBytesToKeyCase(struct: DeserStruct): NimNode =
+  if struct.flattenFields.len == 0:
+    # hardcode for empty objects
+    # cause if statement with only `else` branch is nonsense
+    result = newDotExpr(struct.enumSym,struct.enumUnknownFieldSym)
+  else:
+    result = nnkIfStmt.newTree()
 
-func defBytesToKeyCase(keyStruct: KeyStruct): NimNode =
-  result = nnkIfStmt.newTree()
-
-  let toByteArraySym = bindSym "toByteArray"
-
-  for field in keyStruct.fields:
-    result.add nnkElifBranch.newTree(
-      nnkInfix.newTree(
-        ident "==",
-        ident "value",
-        newCall(toByteArraySym, field.deserializeName.newLit)
-      ),
-      newStmtList(
-        newDotExpr(
-          keyStruct.enumSym,
-          field.enumSym
+    for field in struct.flattenFields:
+      result.add nnkElifBranch.newTree(
+        nnkInfix.newTree(
+          ident "==",
+          ident "value",
+          newCall(bindSym "toByteArray", field.deserializeName.newLit)
+        ),
+        newStmtList(
+          newDotExpr(
+            struct.enumSym,
+            field.enumFieldSym
+          )
         )
       )
-    )
-  
-  result.add defToKeyElseBranch(keyStruct)
+
+    result.add defToKeyElseBranch(struct)
 
 
-func defUintToKeyCase(keyStruct: KeyStruct): NimNode =
-  result = nnkIfStmt.newTree()
-
-  for num, field in enumerate(keyStruct.fields):
-    result.add nnkElifBranch.newTree(
-      nnkInfix.newTree(
-        ident "==",
-        ident "value",
-        newLit num
-      ),
-      newStmtList(
-        newDotExpr(
-          keyStruct.enumSym,
-          field.enumSym
+func defUintToKeyCase(struct: DeserStruct): NimNode =
+  # HACK: https://github.com/nim-lang/Nim/issues/20031
+  if struct.flattenFields.len == 0:
+    # hardcode for empty objects
+    # cause if statement with only `else` branch is nonsense
+    result = newDotExpr(struct.enumSym,struct.enumUnknownFieldSym)
+  else:
+    result = nnkIfStmt.newTree()
+    
+    for (num, field) in enumerate(struct.flattenFields):
+      result.add nnkElifBranch.newTree(
+        nnkInfix.newTree(
+          ident "==",
+          ident "value",
+          newLit num
+        ),
+        newStmtList(
+          newDotExpr(
+            struct.enumSym,
+            field.enumFieldSym
+          )
         )
       )
-    )
 
-  result.add defToKeyElseBranch(keyStruct)
+    result.add defToKeyElseBranch(struct)
 
 
 func defExpectingProc(selfType, body: NimNode): NimNode =
@@ -222,37 +228,61 @@ func defKeyDeserializeBody(visitorType: NimNode): NimNode =
     newCall(
       deserializeIdentifierIdent,
       ident "deserializer",
-      visitorType
+      newCall(visitorType)
     )
   )
 
 
-func defDeserializeProc(selfType, body: NimNode, public: bool): NimNode =
+func defDeserializeKeyProc(selfType, body: NimNode, public: bool): NimNode =
   let
     deserializeIdent = ident "deserialize"
-    deserializeProcIdent = block:
+    deserializeProcIdent = (
       if public:
         nnkPostfix.newTree(ident "*", deserializeIdent)
       else:
         deserializeIdent
-    selfIdent = ident "self"
-    deserializerIdent = ident "deserializer"
+    )
   
-  quote do:
-    proc `deserializeProcIdent`(`selfIdent`: typedesc[`selfType`], `deserializerIdent`: var auto): `selfType` =
-      `body`
+  result = nnkProcDef.newTree(
+    deserializeProcIdent,
+    newEmptyNode(),
+    newEmptyNode(),
+    nnkFormalParams.newTree(
+      ident "Self",
+      nnkIdentDefs.newTree(
+        ident "Self",
+        nnkBracketExpr.newTree(
+          ident "typedesc",
+          selfType
+        ),
+        newEmptyNode()
+      ),
+      nnkIdentDefs.newTree(
+        ident "deserializer",
+        nnkVarTy.newTree(
+          newIdentNode("auto")
+        ),
+        newEmptyNode()
+      )
+    ),
+    newEmptyNode(),
+    newEmptyNode(),
+    nnkStmtList.newTree(
+      body
+    )
+  )
 
 
-func defKeyDeserialize(visitorType: NimNode, keyStruct: KeyStruct, public: bool): NimNode =  
+func defKeyDeserialize(visitorType: NimNode, struct: DeserStruct, public: bool): NimNode =  
   let
-    keysEnum = defKeysEnum(keyStruct)
-    visitorTypeDef = defVisitorType(visitorType, valueType=keyStruct.enumSym)
-    visitorImpl = defImplVisitor(visitorType, returnType=keyStruct.enumSym)
+    keysEnum = defKeysEnum(struct)
+    visitorTypeDef = defVisitorKeyType(visitorType, valueType=struct.enumSym)
+    visitorImpl = defImplVisitor(visitorType, returnType=struct.enumSym, public=public)
     expectingProc = defExpectingProc(visitorType, body=newLit("field identifier"))
-    visitStringProc = defVisitStringProc(visitorType, returnType=keyStruct.enumSym, body=defStrToKeyCase(keyStruct))
-    visitBytesProc = defVisitBytesProc(visitorType, returnType=keyStruct.enumSym, body=defBytesToKeyCase(keyStruct))
-    visitUintProc = defVisitUintProc(visitorType, returnType=keyStruct.enumSym, body=defUintToKeyCase(keyStruct))
-    deserializeProc = defDeserializeProc(keyStruct.enumSym, body=defKeyDeserializeBody(visitorType), public)
+    visitStringProc = defVisitStringProc(visitorType, returnType=struct.enumSym, body=defStrToKeyCase(struct))
+    visitBytesProc = defVisitBytesProc(visitorType, returnType=struct.enumSym, body=defBytesToKeyCase(struct))
+    visitUintProc = defVisitUintProc(visitorType, returnType=struct.enumSym, body=defUintToKeyCase(struct))
+    deserializeProc = defDeserializeKeyProc(struct.enumSym, body=defKeyDeserializeBody(visitorType), public)
   
   newStmtList(
     keysEnum,
@@ -266,20 +296,62 @@ func defKeyDeserialize(visitorType: NimNode, keyStruct: KeyStruct, public: bool)
   )
 
 
-func defGetField(field: Field, raiseOnNone: bool): NimNode =
-  let
-    getOrBreakSym = bindSym "getOrBreak"
-    getOrRaiseSym = bindSym "getOrRaise"
-    getOrDefaultSym = bindSym "getOrDefault"
+template getOrDefault[T](field: Option[T], defaultValue: T): T =
+  bind isSome, unsafeGet
 
-    defaultValue = field.getDefaultValue
+  if isSome(field):
+    unsafeGet(field)
+  else:
+    defaultValue
+
+
+func defGetOrDefault(fieldIdent: NimNode, defaultValue: NimNode): NimNode =
+  newCall(bindSym "getOrDefault", fieldIdent, defaultValue)
+
+
+template getOrRaise[T](field: Option[T], name: static[string]): T =
+  bind isSome, unsafeGet, Option, none
+
+  if isSome(field):
+    unsafeGet(field)
+  else:
+    when T is Option:
+      # HACK: https://github.com/nim-lang/Nim/issues/20033
+      default(typedesc[T])
+    else:
+      raiseMissingField(name)
+
+
+func defGetOrRaise(fieldIdent: NimNode, fieldName: NimNode): NimNode =
+  newCall(bindSym "getOrRaise", fieldIdent, fieldName)
+
+
+template getOrBreak[T](field: Option[T]): T =
+  bind isSome, unsafeGet, Option, none
+
+  if isSome(field):
+    unsafeGet(field)
+  else:
+    when T is Option:
+      # HACK: https://github.com/nim-lang/Nim/issues/20033
+      default(typedesc[T])
+    else:
+      break
+
+
+func defGetOrBreak(fieldIdent: NimNode): NimNode =
+  newCall(bindSym "getOrBreak", fieldIdent)
+
+
+func defGetField(field: Field, raiseOnNone: bool): NimNode =
+  let defaultValue = field.getDefaultValue
 
   if defaultValue.isSome:
-    newCall(newDotExpr(field.ident, getOrDefaultSym), defaultValue.unsafeGet)
+    defGetOrDefault(field.ident, defaultValue.unsafeGet)
   elif raiseOnNone:
-    newCall(newDotExpr(field.ident, getOrRaiseSym), field.deserializeName.newLit)
+    defGetOrRaise(field.ident, field.deserializeName.newLit)
   else:
-    newDotExpr(field.ident, getOrBreakSym)
+    defGetOrBreak(field.ident)
 
 
 func addToObjConstr(objConstr, ident, value: NimNode) =
@@ -320,7 +392,7 @@ template resolveUntagged {.dirty.} =
 
 
 template resolveTagged {.dirty.} =
-  # need to generate temp let
+  # HACK: need to generate temp let
   # to prove that case field value is correct
   let
     tempKindLetSym = genSym(nskLet, field.deserializeName)
@@ -375,7 +447,7 @@ func resolve(struct: Struct, fields: seq[Field], objConstr: NimNode, raiseOnNone
     if not field.isSkipDeserializing:
       if field.isCase:
         if caseField.isSome:
-          # hard to implement, nobody really use
+          # hard(?) to implement, nobody really use
           error("Object cannot contain more than one case expression at the same level", field.ident)
         caseField = some field
       else:
@@ -396,66 +468,104 @@ func resolve(struct: Struct, fields: seq[Field], objConstr: NimNode, raiseOnNone
 
 
 func defInitResolver(struct: Struct): NimNode =
-  resolve(struct, struct.fields, nnkObjConstr.newTree(struct.sym))
+  let objConstr = nnkObjConstr.newTree(
+    if struct.genericParams.isSome:
+      withGenerics(struct.sym, struct.genericParams.unsafeGet)
+    else:
+      struct.sym
+  )
+  resolve(struct, struct.fields, objConstr)
 
 
-func defVisitMapProc(visitorType, returnType, body: NimNode): NimNode =
-  let
-    visitMapIdent = ident "visitMap"
-    selfIdent = ident "self"
-    mapIdent = ident "map"
+func defVisitMapProc(struct: DeserStruct, visitorType, body: NimNode): NimNode =
+  var generics, returnType, visitorTyp: NimNode
 
-  quote do:
-    proc `visitMapIdent`(`selfIdent`: `visitorType`, `mapIdent`: var auto): `returnType` =
-      `body`
+  if struct.genericParams.isSome:
+    generics = struct.genericParams.unsafeGet
+    returnType = withGenerics(struct.sym, struct.genericParams.unsafeGet)
+    visitorTyp = withGenerics(visitorType, struct.genericParams.unsafeGet)
+  else:
+    generics = newEmptyNode()
+    returnType = struct.sym
+    visitorTyp = visitorType
+
+  result = nnkProcDef.newTree(
+    ident "visitMap",
+    newEmptyNode(),
+    generics,
+    nnkFormalParams.newTree(
+      returnType,
+      nnkIdentDefs.newTree(
+        ident "self",
+        visitorTyp,
+        newEmptyNode()
+      ),
+      nnkIdentDefs.newTree(
+        ident "map",
+        nnkVarTy.newTree(
+          newIdentNode("auto")
+        ),
+        newEmptyNode()
+      )
+    ),
+    newEmptyNode(),
+    newEmptyNode(),
+    nnkStmtList.newTree(
+      body
+    )
+  )
 
 
-func defOptionFieldVars(keyStruct: KeyStruct): NimNode =
+func defOptionFieldVars(struct: DeserStruct): NimNode =
   # var fieldName = none(FieldType)
   result = newStmtList()
 
-  for field in keyStruct.fields:
+  for field in struct.flattenFields:
     result.add newVarStmt(
-      field.varIdent,
+      field.ident,
       newCall(
-        bindSym("none"), field.varType
+        nnkBracketExpr.newTree(
+          bindSym("none"), field.typ
+        )
       )
     )
 
 
-func defKeyToValueCase(keyStruct: KeyStruct): NimNode =
+func defKeyToValueCase(struct: DeserStruct): NimNode =
   #[
     case key
     of FirstField:
-      firstField = some map.nextValue(FirstFieldType)
+      firstField = some nextValue[FirstFieldType](map)
     ...
     else:
-      discard
+      nextValue[IgnoredAny](map)
   ]#
   result = nnkCaseStmt.newTree(
     ident "key"
   )
 
-  for field in keyStruct.fields:
+  for field in struct.flattenFields:
     result.add nnkOfBranch.newTree(
-      newDotExpr(keyStruct.enumSym, field.enumSym),
+      newDotExpr(struct.enumSym, field.enumFieldSym),
       newStmtList(
         nnkIfStmt.newTree(
           nnkElifBranch.newTree(
-            newCall(bindSym("isSome"), field.varIdent),
+            newCall(bindSym("isSome"), field.ident),
             newStmtList(
               newCall(bindSym("raiseDuplicateField"), field.deserializeName.newLit)
             )
           )
         ),
         newAssignment(
-          field.varIdent,
+          field.ident,
           newCall(
             bindSym("some"),
             newCall(
-              ident "nextValue",
+              nnkBracketExpr.newTree(
+                ident "nextValue",
+                field.typ
+              ),
               ident "map",
-              field.varType
             ),
           )
         )
@@ -463,31 +573,90 @@ func defKeyToValueCase(keyStruct: KeyStruct): NimNode =
     )
   
   result.add nnkElse.newTree(
-    newStmtList(
-      nnkDiscardStmt.newTree(newEmptyNode())
+    nnkDiscardStmt.newTree(
+      newCall(
+        nnkBracketExpr.newTree(
+          ident "nextValue",
+          bindSym "IgnoredAny"
+        ),
+        ident "map"
+      )
     )
   )
 
 
 func defForKeys(keyType, body: NimNode): NimNode =
   #[
-    for key in map.keys(keyType):
+    for key in map.keys[keyType]():
       body
   ]#
   nnkForStmt.newTree(
     ident "key",
     newCall(
-      newDotExpr(
-        ident "map",
-        ident "keys"
+      nnkBracketExpr.newTree(
+        ident "keys",
+        keyType
       ),
-      keyType
+      ident "map"
     ),
     body
   )
 
 
-func defValueDeserializeBody(visitorType: NimNode): NimNode =
+func defDeserializeValueProc(struct: DeserStruct, body: NimNode, public: bool): NimNode =
+  let
+    deserializeIdent = ident "deserialize"
+    deserializeProcIdent = (
+      if public:
+        nnkPostfix.newTree(ident "*", deserializeIdent)
+      else:
+        deserializeIdent
+    )
+    selfType = (
+      if struct.genericParams.isSome:
+        withGenerics(struct.sym, struct.genericParams.unsafeGet)
+      else:
+        struct.sym
+    )
+  
+  result = nnkProcDef.newTree(
+    deserializeProcIdent,
+    newEmptyNode(),
+    struct.genericParams.get(newEmptyNode()),
+    nnkFormalParams.newTree(
+      ident "Self",
+      nnkIdentDefs.newTree(
+        ident "Self",
+        nnkBracketExpr.newTree(
+          ident "typedesc",
+          selfType
+        ),
+        newEmptyNode()
+      ),
+      nnkIdentDefs.newTree(
+        ident "deserializer",
+        nnkVarTy.newTree(
+          newIdentNode("auto")
+        ),
+        newEmptyNode()
+      )
+    ),
+    newEmptyNode(),
+    newEmptyNode(),
+    nnkStmtList.newTree(
+      body
+    )
+  )
+
+
+func defValueDeserializeBody(struct: DeserStruct, visitorType: NimNode): NimNode =
+  let visitorType = (
+    if struct.genericParams.isSome:
+      withGenerics(visitorType, struct.genericParams.unsafeGet)
+    else:
+      visitorType
+  )
+
   nnkStmtList.newTree(
     nnkMixinStmt.newTree(
       newIdentNode("deserializeMap")
@@ -502,23 +671,45 @@ func defValueDeserializeBody(visitorType: NimNode): NimNode =
   )
 
 
-func defValueDeserialize(visitorType: NimNode, struct: Struct, keyStruct: KeyStruct, public: bool): NimNode =  
+func defVisitorValueType(struct: DeserStruct, visitorType, valueType: NimNode): NimNode =
+  var generics, valueTyp: NimNode
+
+  if struct.genericParams.isSome:
+    generics = struct.genericParams.unsafeGet
+    valueTyp = withGenerics(valueType, generics)
+  else:
+    generics = newEmptyNode()
+    valueTyp = valueType
+
+  result = nnkTypeSection.newTree(
+    nnkTypeDef.newTree(
+      visitorType,
+      generics,
+      nnkBracketExpr.newTree(
+        bindSym "Visitor",
+        valueTyp
+      )
+    )
+  )
+
+
+func defValueDeserialize(visitorType: NimNode, struct: DeserStruct, public: bool): NimNode =  
   let
-    visitorTypeDef = defVisitorType(visitorType, valueType=struct.sym)
-    visitorImpl = defImplVisitor(visitorType, returnType=struct.sym)
+    visitorTypeDef = defVisitorValueType(struct, visitorType, valueType=struct.sym)
+    visitorImpl = defImplVisitor(visitorType, returnType=struct.sym, public=public)
     expectingProc = defExpectingProc(visitorType, body=newLit("struct " & '`' & struct.sym.strVal & '`'))
     visitMapProc = defVisitMapProc(
+      struct,
       visitorType,
-      returnType=struct.sym,
       body=newStmtList(
         nnkMixinStmt.newTree(ident "keys"),
         nnkMixinStmt.newTree(ident "nextValue"),
-        defOptionFieldVars(keyStruct),
-        defForKeys(keyStruct.enumSym, defKeyToValueCase(keyStruct)),
+        defOptionFieldVars(struct),
+        defForKeys(struct.enumSym, defKeyToValueCase(struct)),
         defInitResolver(struct)
       )
     )
-    deserializeProc = defDeserializeProc(struct.sym, body=defValueDeserializeBody(visitorType), public)
+    deserializeProc = defDeserializeValueProc(struct, body=defValueDeserializeBody(struct, visitorType), public)
   
   result = newStmtList(
     visitorTypeDef,
@@ -543,22 +734,16 @@ func defPushPop(stmtList: NimNode): NimNode =
     )
   )
 
-func generate(struct: Struct, public: bool): NimNode =
+
+func generate(struct: DeserStruct, public: bool): NimNode =
   let
-    keyStruct = KeyStruct(
-      structSym: struct.sym,
-      enumSym: genSym(nskType, struct.sym.strVal),
-      fields: struct.fields.asKeys,
-      unknownKeyEnumSym: genSym(nskEnumField, "Unknown"),
-      features: struct.features
-    )
     fieldVisitor = genSym(nskType, "FieldVisitor") 
     valueVisitor = genSym(nskType, "Visitor")
 
   result = defPushPop(
     newStmtList(
-      defKeyDeserialize(fieldVisitor, keyStruct, public),
-      defValueDeserialize(valueVisitor, struct, keyStruct, public),
+      defKeyDeserialize(fieldVisitor, struct, public),
+      defValueDeserialize(valueVisitor, struct, public),
     )
   )
 {.pop.}

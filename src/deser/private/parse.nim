@@ -5,17 +5,14 @@ import ../pragmas
 
 
 type
-  ObjectTy = object
-    isRef*: bool
-    sym*: NimNode
-    node*: NimNode
-    pragmas*: Option[NimNode]
-
-  Struct = object
+  Struct = object of RootObj
     isRef*: bool
     sym*: NimNode
     fields*: seq[Field]
+    enumSym*: NimNode
+    enumUnknownFieldSym*: NimNode
     features*: StructFeatures
+    genericParams*: Option[NimNode]
   
   StructFeatures = object
     onUnknownKeysValue*: Option[NimNode]
@@ -23,6 +20,7 @@ type
   Field = object
     ident*: NimNode
     typ*: NimNode
+    enumFieldSym*: NimNode
     features*: FieldFeatures
 
     case isCase*: bool
@@ -54,75 +52,37 @@ type
     else:
       discard
     fields*: seq[Field]
-  
-  Key = object
-    enumSym*: NimNode
-    varIdent*: NimNode
-    varType*: NimNode
-    features*: FieldFeatures
-  
-  KeyStruct {.used.} = object
-    structSym*: NimNode
-    enumSym*: NimNode
-    fields*: seq[Key]
-    unknownKeyEnumSym*: NimNode
-    features*: StructFeatures
 
 
 {.push used.}
-func getOnUnknownKeysValue(self: Struct | KeyStruct): Option[NimNode] = self.features.onUnknownKeysValue
+func getFields(recList: NimNode): seq[Field]
 
-func isSkipSerializing(self: Field | Key): bool = self.features.skipSerializing
+func getOnUnknownKeysValue(self: Struct): Option[NimNode] = self.features.onUnknownKeysValue
 
-func isSkipDeserializing(self: Field | Key): bool = self.features.skipDeserializing
+func isSkipSerializing(self: Field): bool = self.features.skipSerializing
 
-func isUntagged(self: Field | Key): bool = self.features.untagged
+func isSkipDeserializing(self: Field): bool = self.features.skipDeserializing
 
-func getSkipSerializeIf(self: Field | Key): Option[NimNode] = self.features.skipSerializeIf
+func isUntagged(self: Field): bool = self.features.untagged
 
-func getSerializeWith(self: Field | Key): Option[NimNode] = self.features.serializeWith
+func getSkipSerializeIf(self: Field): Option[NimNode] = self.features.skipSerializeIf
 
-func getDefaultValue(self: Field | Key): Option[NimNode] = self.features.defaultValue
+func getSerializeWith(self: Field): Option[NimNode] = self.features.serializeWith
 
-func serializeName(self: Field | Key): string =
+func getDefaultValue(self: Field): Option[NimNode] = self.features.defaultValue
+
+func serializeName(self: Field): string =
   if self.features.renameSerialize.isSome:
     self.features.renameSerialize.unsafeGet
   else:
-    when self is Key:
-      self.varIdent.strVal
-    else:
-      self.ident.strVal
+    self.ident.strVal
 
 
-func deserializeName(self: Field | Key): string =
+func deserializeName(self: Field): string =
   if self.features.renameDeserialize.isSome:
     self.features.renameDeserialize.unsafeGet
   else:
-    when self is Key:
-      self.varIdent.strVal
-    else:
-      self.ident.strVal
-
-
-# forward decl
-func by(T: typedesc[seq[Field]], recList: NimNode): T
-
-
-func asKeys(fields: seq[Field]): seq[Key] =
-  result = newSeqOfCap[Key](fields.len)
-
-  for field in fields:
-    if not field.isSkipDeserializing:
-      result.add Key(
-        enumSym: genSym(nskEnumField, field.ident.strVal),
-        varIdent: field.ident,
-        varType: field.typ,
-        features: field.features
-      )
-
-      if field.isCase:
-        for branch in field.branches:
-          result.add branch.fields.asKeys
+    self.ident.strVal
 
 
 func copyWithoutChild(copyOf: NimNode, idx = 0, n = 1): NimNode =
@@ -160,63 +120,7 @@ proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
     self.defaultValue = some values[0]
 
 
-func by(T: typedesc[ObjectTy], sym: NimNode): T =
-  # Get temp `ObjectTy` from symbol of type
-  expectKind sym, nnkSym
-
-  let typeDef = sym.getImpl
-
-  if defined(debugObjectTy):
-    debugEcho typeDef.treeRepr
-
-  expectKind typeDef, nnkTypeDef
-
-  let typeImpl = typeDef[2]
-
-  case typeImpl.kind
-  of nnkSym:
-    # For alias types
-    # e.g. type Foo = Bar
-    # recursively calling ourselves
-    result = ObjectTy.by typeImpl
-  of nnkRefTy:
-    case typeImpl[0].kind
-    of nnkSym:
-      # stfu compiler
-      {.cast(noSideEffect).}:
-        # For type Foo = ref Bar
-        result = ObjectTy.by typeImpl[0]
-        # use alias type
-        result.sym = sym
-    of nnkObjectTy:
-      # For type Foo = ref object
-      result = ObjectTy(isRef: true, sym: sym, node: typeImpl[0])
-    else:
-      expectKind typeImpl[0], {nnkSym, nnkObjectTy}
-  of nnkObjectTy:
-    # For type Foo = object
-    result = ObjectTy(isRef: false, sym: sym, node: typeImpl)
-  else:
-    expectKind typeImpl, {nnkSym, nnkRefTy, nnkObjectTy}
-  
-  # stfu compiler
-  {.cast(noSideEffect).}:
-    #[
-        typeDef[0]
-         |-------|
-         |       |
-         v       v
-    type Test {.test.} = object
-                 |
-                 |
-                 v
-            typeDef[0][1]
-    ]#
-    if typeDef[0].kind == nnkPragmaExpr:
-      result.pragmas = some typeDef[0][1]
-
-
-func by(T: typedesc[FieldFeatures | StructFeatures], pragmas: NimNode): T =
+func init(Self: typedesc[FieldFeatures | StructFeatures], pragmas: NimNode): Self =
   # Check whether the field contains our pragmas
   expectKind pragmas, nnkPragma
   
@@ -239,28 +143,63 @@ func by(T: typedesc[FieldFeatures | StructFeatures], pragmas: NimNode): T =
   # TODO add check for nosense
 
 
-func by(T: typedesc[Field], identDefs: NimNode): T =
+func deSymBracketExpr(bracket: NimNode): NimNode =
+  # HACK: https://github.com/nim-lang/Nim/issues/19670
+  expectKind bracket, nnkBracketExpr
+
+  result = nnkBracketExpr.newTree(bracket[0])
+
+  for i in bracket[1..bracket.len-1]:
+    case i.kind
+    of nnkSym:
+      result.add i.strVal.ident
+    of nnkBracketExpr:
+      result.add deSymBracketExpr(i)
+    else:
+      result.add i
+
+
+func init(Self: typedesc[Field], identDefs: NimNode): Self =
   # Get field from usual statement
   expectKind identDefs, nnkIdentDefs
 
-  let identNode = identDefs[0]
+  let
+    identNode = identDefs[0]
+    typeNode = identDefs[1]
+    typ = (
+      case typeNode.kind
+      of nnkSym:
+        typeNode
+      of nnkBracketExpr:
+        deSymBracketExpr(typeNode)
+      else:
+        typeNode
+    )
 
   case identNode.kind
   of nnkIdent:
-    result = Field(ident: identNode, typ: identDefs[1])
+    result = Self(
+      ident: identNode,
+      typ: typ,
+      enumFieldSym: genSym(nskEnumField, identNode.strVal)
+    )
   of nnkPragmaExpr:
-    result = Field(ident: identNode[0], typ: identDefs[1])
-    result.features = FieldFeatures.by(pragmas=identNode[1])
+    result = Self(
+      ident: identNode[0],
+      typ: typ,
+      enumFieldSym: genSym(nskEnumField, identNode[0].strVal)
+    )
+    result.features = FieldFeatures.init(pragmas=identNode[1])
   else:
     expectKind identNode, {nnkIdent, nnkPragmaExpr}
 
 
-func by(T: typedesc[Field], recCase: NimNode): T =
+func init(Self: typedesc[Field], recCase: NimNode): Self =
   # Get field from case statement
   expectKind recCase, nnkRecCase
 
   let identDefs = recCase[0]
-  result = Field.by(identDefs=identDefs)
+  result = Self.init(identDefs=identDefs)
   result.isCase = true
 
   let branches = recCase[1..recCase.len-1]
@@ -273,7 +212,7 @@ func by(T: typedesc[Field], recCase: NimNode): T =
         # we need to safe ofBranch without body
         condition = branch.copyWithoutChild(branch.len-1)
         recList = branch[branch.len-1]
-        fields = seq[Field].by(recList=recList)
+        fields = getFields(recList=recList)
 
       result.branches.add FieldBranch(
         kind: Of,
@@ -283,7 +222,7 @@ func by(T: typedesc[Field], recCase: NimNode): T =
     of nnkElse:
       let
         recList = branch[0]
-        fields = seq[Field].by(recList=recList)
+        fields = getFields(recList=recList)
       
       result.branches.add FieldBranch(
         kind: Else,
@@ -293,16 +232,16 @@ func by(T: typedesc[Field], recCase: NimNode): T =
       expectKind branch, {nnkOfBranch, nnkElse}
 
 
-func by(T: typedesc[seq[Field]], recList: NimNode): T =
+func getFields(recList: NimNode): seq[Field] =
   expectKind recList, {nnkRecList, nnkEmpty}
 
   if recList.kind != nnkEmpty:
     for fieldNode in recList:
       case fieldNode.kind
       of nnkIdentDefs:
-        result.add Field.by(identDefs=fieldNode)
+        result.add Field.init(identDefs=fieldNode)
       of nnkRecCase:
-        result.add Field.by(recCase=fieldNode)
+        result.add Field.init(recCase=fieldNode)
       of nnkNilLit:
         # of/else:
         #   nil
@@ -311,19 +250,72 @@ func by(T: typedesc[seq[Field]], recList: NimNode): T =
         expectKind fieldNode, {nnkIdentDefs, nnkRecCase}
 
 
-func by(T: typedesc[Struct], objectTy: ObjectTy): T =
-  let recList = objectTy.node[2]
+func init(Self: typedesc[Struct], sym: NimNode): Self =
+  # Get temp `ObjectTy` from symbol of type
+  expectKind sym, nnkSym
 
-  result = Struct(
-    sym: objectTy.sym,
-    isRef: objectTy.isRef,
-    fields: seq[Field].by(recList=recList)
-  )
+  let typeDef = sym.getImpl
 
-  # S in Nim stands for Safety
+  expectKind typeDef, nnkTypeDef
+
+  let typeImpl = typeDef[2]
+
+  case typeImpl.kind
+  of nnkSym:
+    # For alias types
+    # e.g. type Foo = Bar
+    # recursively calling ourselves
+    result = Self.init typeImpl
+  of nnkRefTy:
+    case typeImpl[0].kind
+    of nnkSym:
+      # stfu compiler
+      {.cast(noSideEffect).}:
+        # For type Foo = ref Bar
+        result = Self.init typeImpl[0]
+        # use alias type
+        result.sym = sym
+    of nnkObjectTy:
+      # For type Foo = ref object
+      result = Self(
+        isRef: true,
+        sym: sym,
+        fields: getFields(recList=typeImpl[0][2]),
+        enumSym: genSym(nskType, sym.strVal),
+        enumUnknownFieldSym: genSym(nskEnumField, "Unknown")
+      )
+    else:
+      expectKind typeImpl[0], {nnkSym, nnkObjectTy}
+  of nnkObjectTy:
+    # For type Foo = object
+    result = Self(
+      isRef: false,
+      sym: sym,
+      fields: getFields(recList=typeImpl[2]),
+      enumSym: genSym(nskType, sym.strVal),
+      enumUnknownFieldSym: genSym(nskEnumField, "Unknown")
+    )
+  else:
+    expectKind typeImpl, {nnkSym, nnkRefTy, nnkObjectTy}
+  
+  # stfu compiler
   {.cast(noSideEffect).}:
-    if objectTy.pragmas.isSome:
-      result.features = StructFeatures.by(objectTy.pragmas.unsafeGet)
+    #[
+        typeDef[0]
+         |-------|
+         |       |
+         v       v
+    type Test {.test.} = object
+                 |
+                 |
+                 v
+            typeDef[0][1]
+    ]#
+    if typeDef[0].kind == nnkPragmaExpr:
+      result.features = StructFeatures.init typeDef[0]
+
+    if typeDef[1].kind == nnkGenericParams:
+      result.genericParams = some typeDef[1]
 
 
 func newExportedIdent(name: string): NimNode =
@@ -332,10 +324,13 @@ func newExportedIdent(name: string): NimNode =
     ident name
   )
 
+func withGenerics(someType: NimNode, genericParams: NimNode): NimNode =
+  expectKind someType, {nnkIdent, nnkSym}
+  expectKind genericParams, nnkGenericParams
 
-func parse(node: NimNode): Struct =
-  let objectTy = ObjectTy.by(sym=node)
+  result = nnkBracketExpr.newTree(someType)
 
-  Struct.by objectTy
-
+  for param in genericParams:
+    # HACK: https://github.com/nim-lang/Nim/issues/19670
+    result.add ident param.strVal
 {.pop.}

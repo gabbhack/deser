@@ -1,3 +1,3 @@
-import des/[error, impls, make, provided]
+import des/[error, impls, make]
 
-export error, impls, make, provided
+export error, impls, make
