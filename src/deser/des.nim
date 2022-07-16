@@ -1,3 +1,12 @@
-import des/[error, impls, make]
+import des/[
+  error,
+  helpers,
+  impls,
+  make
+]
 
-export error, impls, make
+export
+  error,
+  helpers,
+  impls,
+  make

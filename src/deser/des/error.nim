@@ -108,19 +108,17 @@ func UnexpectedMap*(): auto {.noinit, inline.} = Unexpected(kind: Map)
 proc raiseInvalidType*(unexp: Unexpected, exp: auto) =
   mixin expecting
 
-  raise newException(InvalidType, &"invalid type: {$unexp}, expected {exp.expecting()}")
+  raise newException(InvalidType, &"invalid type: {$unexp}, expected: {exp.expecting()}")
 
 
 proc raiseInvalidValue*(unexp: Unexpected, exp: auto) =
   mixin expecting
 
-  raise newException(InvalidValue, &"invalid value: {$unexp}, expected {exp.expecting()}")
+  raise newException(InvalidValue, &"invalid value: {$unexp}, expected: {exp.expecting()}")
 
 
 proc raiseInvalidLength*(unexp: uint, exp: auto) =
-  mixin expecting
-
-  raise newException(InvalidLength, &"invalid length {$unexp}, expected {exp.expecting()}")
+  raise newException(InvalidLength, &"invalid length: {$unexp}, expected: {$exp}")
 
 
 proc raiseUnknownField*(unexp: sink string) =

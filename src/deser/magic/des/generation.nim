@@ -1,10 +1,23 @@
 {.experimental: "strictFuncs".}
 import std/[options, enumerate, macros]
 
-import parse {.all.}
+from ../../des/error import
+  raiseDuplicateField,
+  raiseUnknownUntaggedVariant,
+  raiseMissingField
 
-from ../des/error import raiseDuplicateField, raiseUnknownUntaggedVariant, raiseMissingField
-from ../des/impls import implVisitor, Visitor, IgnoredAny
+from ../../des/helpers import
+  implVisitor,
+  Visitor,
+  IgnoredAny
+
+import ../intermediate {.all.}
+
+from utils {.all.} import
+  getOrBreak,
+  getOrDefault,
+  getOrRaise,
+  toByteArray
 
 
 type
@@ -13,6 +26,17 @@ type
 
 
 {.push used.}
+func withGenerics(someType: NimNode, genericParams: NimNode): NimNode =
+  expectKind someType, {nnkIdent, nnkSym}
+  expectKind genericParams, nnkGenericParams
+
+  result = nnkBracketExpr.newTree(someType)
+
+  for param in genericParams:
+    # HACK: https://github.com/nim-lang/Nim/issues/19670
+    result.add ident param.strVal
+
+
 func flatten(fields: seq[Field]): seq[Field] =
   result = newSeqOfCap[Field](fields.len)
 
@@ -23,13 +47,6 @@ func flatten(fields: seq[Field]): seq[Field] =
       if field.isCase:
         for branch in field.branches:
           result.add branch.fields.flatten
-
-
-macro toByteArray(str: static[string]): array =
-  result = nnkBracket.newTree()
-  
-  for s in str:
-    result.add s.byte.newLit
 
 
 func defVisitorKeyType(visitorType, valueType: NimNode): NimNode =
@@ -296,47 +313,12 @@ func defKeyDeserialize(visitorType: NimNode, struct: DeserStruct, public: bool):
   )
 
 
-template getOrDefault[T](field: Option[T], defaultValue: T): T =
-  bind isSome, unsafeGet
-
-  if isSome(field):
-    unsafeGet(field)
-  else:
-    defaultValue
-
-
 func defGetOrDefault(fieldIdent: NimNode, defaultValue: NimNode): NimNode =
   newCall(bindSym "getOrDefault", fieldIdent, defaultValue)
 
 
-template getOrRaise[T](field: Option[T], name: static[string]): T =
-  bind isSome, unsafeGet, Option, none
-
-  if isSome(field):
-    unsafeGet(field)
-  else:
-    when T is Option:
-      # HACK: https://github.com/nim-lang/Nim/issues/20033
-      default(typedesc[T])
-    else:
-      raiseMissingField(name)
-
-
 func defGetOrRaise(fieldIdent: NimNode, fieldName: NimNode): NimNode =
   newCall(bindSym "getOrRaise", fieldIdent, fieldName)
-
-
-template getOrBreak[T](field: Option[T]): T =
-  bind isSome, unsafeGet, Option, none
-
-  if isSome(field):
-    unsafeGet(field)
-  else:
-    when T is Option:
-      # HACK: https://github.com/nim-lang/Nim/issues/20033
-      default(typedesc[T])
-    else:
-      break
 
 
 func defGetOrBreak(fieldIdent: NimNode): NimNode =
@@ -746,4 +728,3 @@ func generate(struct: DeserStruct, public: bool): NimNode =
       defValueDeserialize(valueVisitor, struct, public),
     )
   )
-{.pop.}

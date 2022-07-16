@@ -1,7 +1,15 @@
-import std/macros
+import std/[
+  macros,
+  strutils
+]
 
-import ../private/parse {.all.}
-import ../private/des {.all.}
+from ../magic/intermediate {.all.} import 
+  init
+
+from ../magic/des/generation {.all.} import
+  DeserStruct,
+  flatten,
+  generate
 
 
 macro makeDeserializableStruct(typ: typed{`type`}, public: static[bool]) =
@@ -17,5 +25,7 @@ macro makeDeserializableStruct(typ: typed{`type`}, public: static[bool]) =
 template makeDeserializable*(typ: typed{`type`}, public: static[bool] = false) {.dirty.} =
   bind makeDeserializableStruct
 
-  when type is object:
+  when typ is object:
     makeDeserializableStruct(typ, public)
+  else:
+    {.error: "Unsupported type: `{$typ}`".}

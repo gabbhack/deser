@@ -1,349 +1,43 @@
-import std/[options, macros, strutils, strformat, typetraits, sets, tables]
+import std/[
+  options,
+  macros,
+  strutils,
+  strformat,
+  typetraits,
+  sets,
+  tables
+]
 
 from error import
-    raiseInvalidType,
-    raiseInvalidValue,
-    raiseDuplicateField,
-    UnexpectedBool,
-    UnexpectedUnsigned,
-    UnexpectedSigned,
-    UnexpectedFloat,
-    UnexpectedChar,
-    UnexpectedString,
-    UnexpectedBytes,
-    UnexpectedOption,
-    UnexpectedSeq,
-    UnexpectedMap
-
-from ../pragmas import lowerCased
-
-
-type Visitor*[Value] = object
-
-
-macro maybePublic(public: static[bool], body: untyped): untyped =
-  if not public:
-    result = body
-  else:
-    result = newStmtList()
-
-    for element in body:
-      if element.kind notin {nnkProcDef, nnkIteratorDef}:
-        result.add element
-      else:
-        element[0] = nnkPostfix.newTree(
-          ident "*",
-          element[0]
-        )
-        result.add element
-
-
-macro genPrimitive(T: typed{`type`}, deserializeMethod: untyped = nil, floats: static[bool] = false) =
-  result = newStmtList()
-  var
-    visitorSym = bindSym "Visitor"
-    selfIdent = ident "self"
-    valueIdent = ident "value"
-    deserializerIdent = ident "deserializer"
-    visitorType = genSym(nskType, "Visitor")
-    deserializeMethodIdent = (
-      if deserializeMethod.kind != nnkNilLit:
-        deserializeMethod
-      else:
-        ident "deserialize" & T.strVal.capitalizeAscii
-    )
-    typeStringLit = T.toStrLit
-    procs = @[
-      (ident "visitInt8", ident "int8"),
-      (ident "visitInt16", ident "int16"),
-      (ident "visitInt32", ident "int32"),
-      (ident "visitInt64", ident "int64"),
-      (ident "visitUint8", ident "uint8"),
-      (ident "visitUint16", ident "uint16"),
-      (ident "visitUint32", ident "uint32"),
-      (ident "visitUint64", ident "uint64"),
-    ]
-
-    body = quote do:
-      when type(value) is self.Value:
-        value
-      else:
-        when self.Value is SomeUnsignedInt:
-          when value is SomeSignedInt:
-            if not (0 <= value and value.uint64 <= self.Value.high.uint64):
-              raiseInvalidValue(UnexpectedSigned(value.int64), self)
-          elif value is SomeUnsignedInt:
-            if not (value.uint64 <= self.Value.high.uint64):
-              raiseInvalidValue(UnexpectedUnsigned(value.uint64), self)
-          else:
-            {.error: "Unknown type `" & $self.Value & "`, expected int or uint".}
-        elif self.Value is SomeSignedInt:
-          when value is SomeSignedInt:
-            if not (self.Value.low.int64 <= value.int64 and value.int64 <= self.Value.high.int64):
-              raiseInvalidValue(UnexpectedSigned(value.int64), self)
-          elif value is SomeUnsignedInt:
-            if not (value.uint64 <= self.Value.high.uint64):
-                raiseInvalidValue(UnexpectedUnsigned(value.uint64), self)
-          else:
-            {.error: "Unknown type `" & $self.Value() & "`, expected int or uint".}
-
-        self.Value(value)
-  
-  result.add quote do:
-    type `visitorType` = `visitorSym`[`T`]
-    implVisitor(`visitorType`, true)
-
-    proc expecting*(`selfIdent`: `visitorType`): string = `typeStringLit`
-
-    proc deserialize*(`selfIdent`: typedesc[`T`], `deserializerIdent`: var auto): `T` =
-      mixin `deserializeMethodIdent`
-
-      deserializer.`deserializeMethodIdent`(`visitorType`())
-  
-  if floats:
-    procs.add @[
-      (ident "visitFloat32", ident "float32"),
-      (ident "visitFloat64", ident "float64")
-    ]
-
-  for (procIdent, valueType) in procs:
-    result.add quote do:
-      proc `procIdent`*(`selfIdent`: `visitorType`, `valueIdent`: `valueType`): self.Value =
-        `body`
-
-
-type NoneSeed*[Value] = object
-
-
-proc deserialize*[T](self: NoneSeed[T], deserializer: var auto): T {.noinit, inline.} =
-  mixin deserialize
-
-  result = T.deserialize(deserializer)
-
-
-template implVisitor*(selfType: typed, public: static[bool] = false) {.dirty.} =
-  bind raiseInvalidType
-  bind UnexpectedBool
-  bind UnexpectedSigned
-  bind UnexpectedUnsigned
-  bind UnexpectedFloat
-  bind UnexpectedString
-  bind UnexpectedBytes
-  bind UnexpectedOption
-  bind UnexpectedSeq
-  bind UnexpectedMap
-  bind maybePublic
-
-  maybePublic(public):
-    # implementation expected
-    proc expecting(self: selfType): string
-
-    when defined(release):
-      {.push noinit, inline.}
-
-    {.push used.}
-    # forward declaration
-    proc visitBool[Self: selfType](self: Self, value: bool): self.Value
-    proc visitInt8[Self: selfType](self: Self, value: int8): self.Value
-    proc visitInt16[Self: selfType](self: Self, value: int16): self.Value
-    proc visitInt32[Self: selfType](self: Self, value: int32): self.Value
-    proc visitInt64[Self: selfType](self: Self, value: int64): self.Value
-
-    proc visitUint8[Self: selfType](self: Self, value: uint8): self.Value
-    proc visitUint16[Self: selfType](self: Self, value: uint16): self.Value
-    proc visitUint32[Self: selfType](self: Self, value: uint32): self.Value
-    proc visitUint64[Self: selfType](self: Self, value: uint64): self.Value
-
-    proc visitFloat32[Self: selfType](self: Self, value: float32): self.Value
-    proc visitFloat64[Self: selfType](self: Self, value: float64): self.Value
-
-    proc visitChar[Self: selfType](self: Self, value: char): self.Value
-    proc visitString[Self: selfType](self: Self, value: sink string): self.Value
-
-    proc visitBytes[Self: selfType](self: Self, value: openArray[byte]): self.Value
-
-    proc visitNone[Self: selfType](self: Self): self.Value
-    proc visitSome[Self: selfType](self: Self, deserializer: var auto): self.Value
-
-    proc visitSeq[Self: selfType](self: Self, sequence: var auto): self.Value
-    proc visitMap[Self: selfType](self: Self, map: var auto): self.Value
-
-    # default implementation
-    proc visitBool[Self: selfType](self: Self, value: bool): self.Value = raiseInvalidType(UnexpectedBool(value), self)
-
-    proc visitInt8[Self: selfType](self: Self, value: int8): self.Value = self.visitInt64(value.int64)
-    proc visitInt16[Self: selfType](self: Self, value: int16): self.Value = self.visitInt64(value.int64)
-    proc visitInt32[Self: selfType](self: Self, value: int32): self.Value = self.visitInt64(value.int64)
-    proc visitInt64[Self: selfType](self: Self, value: int64): self.Value = raiseInvalidType(UnexpectedSigned(value), self)
-
-    proc visitUint8[Self: selfType](self: Self, value: uint8): self.Value = self.visitUint64(value.uint64)
-    proc visitUint16[Self: selfType](self: Self, value: uint16): self.Value = self.visitUint64(value.uint64)
-    proc visitUint32[Self: selfType](self: Self, value: uint32): self.Value = self.visitUint64(value.uint64)
-    proc visitUint64[Self: selfType](self: Self, value: uint64): self.Value = raiseInvalidType(UnexpectedUnsigned(value), self)
-
-    proc visitFloat32[Self: selfType](self: Self, value: float32): self.Value = self.visitFloat64(value.float64)
-    proc visitFloat64[Self: selfType](self: Self, value: float64): self.Value = raiseInvalidType(UnexpectedFloat(value), self)
-
-    proc visitChar[Self: selfType](self: Self, value: char): self.Value = self.visitString($value)
-    proc visitString[Self: selfType](self: Self, value: sink string): self.Value = raiseInvalidType(UnexpectedString(value), self)
-
-    proc visitBytes[Self: selfType](self: Self, value: openArray[byte]): self.Value = raiseInvalidType(UnexpectedBytes(@value), self)
-
-    proc visitNone[Self: selfType](self: Self): self.Value = raiseInvalidType(UnexpectedOption(), self)
-    proc visitSome[Self: selfType](self: Self, deserializer: var auto): self.Value = raiseInvalidType(UnexpectedOption(), self)
-
-    proc visitSeq[Self: selfType](self: Self, sequence: var auto): self.Value = raiseInvalidType(UnexpectedSeq(), self)
-    proc visitMap[Self: selfType](self: Self, map: var auto): self.Value = raiseInvalidType(UnexpectedMap(), self)
-    {.pop.}
-
-    when defined(release):
-      {.pop.}
-
-
-template implSeqAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
-  bind Option
-  bind NoneSeed
-  bind maybePublic
-
-  maybePublic(public):
-    # implementation expected
-    proc nextElementSeed(self: var selfType, seed: auto): Option[seed.Value]
-
-    when defined(release):
-      {.push noinit, inline.}
-
-    {.push used.}
-    # default implementation
-    proc nextElement[Value](self: var selfType): Option[Value] =
-      self.nextElementSeed(NoneSeed[Value]())
-    
-    proc sizeHint[Self: selfType](self: Self): Option[int] = none(int)
-
-    iterator items[Value](self: var selfType): Value =
-      var elementOption = nextElement[Value](self)
-      while elementOption.isSome:
-        yield elementOption.unsafeGet
-        elementOption = nextElement[Value](self)
-    {.pop.}
-
-    when defined(release):
-      {.pop.}
-
-
-template implMapAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
-  bind Option
-  bind unsafeGet
-  bind isSome
-  bind some
-  bind NoneSeed
-  bind maybePublic
-
-  maybePublic(public):
-    # implementation expected
-    proc nextKeySeed(self: var selfType, seed: auto): Option[seed.Value]
-
-    proc nextValueSeed(self: var selfType, seed: auto): seed.Value
-
-    when defined(release):
-      {.push noinit, inline.}
-
-    {.push used.}
-    # default implementation
-    proc nextEntrySeed(self: var selfType, kseed: auto, vseed: auto): Option[(kseed.Value, vseed.Value)] =
-      let keyOption = self.nextKeySeed(kseed)
-      if keyOption.isSome:
-        let
-          key = keyOption.unsafeGet
-          value = self.nextValueSeed(vseed)
-        some (key, value)
-      else:
-        # HACK: none (kseed.Value, vseed.Value) -> Error: expression 'none (Value, Value)' has no type (or is ambiguous)
-        default(result.type)
-
-    proc nextKey[Key](self: var selfType): Option[Key] =
-      self.nextKeySeed(NoneSeed[Key]())
-
-    proc nextValue[Value](self: var selfType): Value =
-      self.nextValueSeed(NoneSeed[Value]())
-    
-    # named tuple because of https://github.com/nim-lang/Nim/issues/19979
-    proc nextEntry[Key, Value](self: var selfType): Option[tuple[key: Key, value: Value]] =
-      self.nextEntrySeed(NoneSeed[Key](), NoneSeed[Value]())
-    
-    proc sizeHint[Self: selfType](self: Self): Option[int] = none(int)
-
-    iterator keys[Key](self: var selfType): Key =
-      var keyOption = nextKey[Key](self)
-      while keyOption.isSome:
-        yield keyOption.unsafeGet
-        keyOption = nextKey[Key](self)
-
-    iterator pairs[Key, Value](self: var selfType): (Key, Value) =
-      var entryOption = nextEntry[Key, Value](self)
-      while entryOption.isSome:
-        yield entryOption.unsafeGet
-        entryOption = nextEntry[Key, Value](self)
-    {.pop.}
-
-    when defined(release):
-      {.pop.}
-
-
-template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
-  bind maybePublic
-
-  maybePublic(public):
-    # implementation expected
-    proc deserializeAny(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeBool(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeInt8(self: var selfType, visitor: auto): visitor.Value
-    proc deserializeInt16(self: var selfType, visitor: auto): visitor.Value
-    proc deserializeInt32(self: var selfType, visitor: auto): visitor.Value
-    proc deserializeInt64(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeUint8(self: var selfType, visitor: auto): visitor.Value
-    proc deserializeUint16(self: var selfType, visitor: auto): visitor.Value
-    proc deserializeUint32(self: var selfType, visitor: auto): visitor.Value
-    proc deserializeUint64(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeFloat32(self: var selfType, visitor: auto): visitor.Value
-    proc deserializeFloat64(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeChar(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeString(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeBytes(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeOption(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeSeq(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeMap(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeStruct(self: var selfType, name: static[string], fields: static[array], visitor: auto): visitor.Value
-
-    proc deserializeIdentifier(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeEnum(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeIgnoredAny(self: var selfType, visitor: auto): visitor.Value
-
-    proc deserializeArray(self: var selfType, len: static[int], visitor: auto): visitor.Value
+  raiseInvalidValue,
+  raiseMissingField,
+  UnexpectedString
+
+
+from ../magic/des/utils {.all.} import
+  genPrimitive,
+  genEnumCase,
+  genArray,
+  visitEnumIntBody
+
+from helpers import
+  Visitor,
+  NoneSeed,
+  IgnoredAny,
+  implVisitor
 
 
 when defined(release):
   {.push noinit, inline, checks: off.}
 
 {.push used.}
-type
-  IgnoredAny* = object
-  IgnoredAnyVisitor = Visitor[IgnoredAny]
+proc deserialize*[T](self: NoneSeed[T], deserializer: var auto): T =
+  mixin deserialize
+
+  result = T.deserialize(deserializer)
 
 
-proc deserialize*(Self: typedesc[IgnoredAny], deserializer: var auto): Self
+type IgnoredAnyVisitor = Visitor[IgnoredAny]
 
 implVisitor(IgnoredAnyVisitor, public=true)
 
@@ -398,7 +92,7 @@ proc visitMap*(self: IgnoredAnyVisitor, map: var auto): self.Value =
   mixin keys, nextValue
 
   for key in keys[IgnoredAny](map):
-    let _ = nextValue[IgnoredAny](map)
+    discard nextValue[IgnoredAny](map)
 
   IgnoredAny()
 
@@ -546,23 +240,6 @@ proc expecting*(self: ArrayVisitor): string = "array"
 
 proc expecting*[Size, T](self: ArrayVisitor[Size, T]): string = &"array[{$Size}, {$T}]"
 
-macro genArray(size: static[int], T: typedesc): array =
-  # [get(nextElement[T](sequence)), ...]
-  result = nnkBracket.newTree()
-
-  for i in 0..(size-1):
-    result.add newCall(
-      bindSym "get",
-      newCall(
-        nnkBracketExpr.newTree(
-          ident "nextElement",
-          ident "T"
-        ),
-        ident "sequence"
-      )
-    )
-
-
 proc visitSeq*[Size, T](self: ArrayVisitor[Size, T], sequence: var auto): array[Size, T] =
   mixin nextElement
 
@@ -585,66 +262,9 @@ proc expecting*(self: EnumVisitor): string = "enum"
 
 proc expecting*[T](self: EnumVisitor[T]): string = &"enum `{$T}`"
 
-macro genEnumCase(typ: typedesc[enum]): enum =
-  let
-    # some magic numbers
-    typ = typ[1][0][0][1][2][0]
-    typeDef = typ.getImpl
-    enumTy = typeDef[2]
-    lowerCasedSym = bindSym "lowerCased"
-    lowerCased = (
-      var temp = false
-      if typeDef[0].kind == nnkPragmaExpr:
-        for i in typeDef[0]:
-          if i.kind == nnkPragma and i[0] == lowerCasedSym:
-            temp = true
-            break
-      temp
-    )
-
-  result = nnkCaseStmt.newTree(ident "value")
-
-  for variant in enumTy[1..enumTy.len-1]:
-    let str = (
-      if lowerCased:
-        variant.strVal.toLowerAscii
-      else:
-        variant.strVal
-    )
-    result.add nnkOfBranch.newTree(
-      newLit str,
-      newStmtList(
-        newDotExpr(
-          typ,
-          variant
-        )
-      )
-    )
-  
-  result.add nnkElse.newTree(
-    newCall(
-      bindSym "raiseInvalidValue",
-      newCall(
-        bindSym "UnexpectedString",
-        ident "value"
-      ),
-      ident "self"
-    )
-  )
-
 proc visitString*[T](self: EnumVisitor[T], value: sink string): T =
   # HACK: you cant use generic as sym
   genEnumCase(genericParams(typeof(self)).get(0))
-
-
-template visitEnumIntBody() {.dirty.} =
-  if value.int64 in T.low.int64..T.high.int64:
-    T(value)
-  else:
-    when value is SomeSignedInt:
-      raiseInvalidValue(UnexpectedSigned(value), self)
-    else:
-      raiseInvalidValue(UnexpectedUnsigned(value), self)
 
 
 proc visitInt8*[T](self: EnumVisitor[T], value: int8): T = visitEnumIntBody()
@@ -677,8 +297,14 @@ proc visitSeq*[T](self: TupleVisitor[T], sequence: var auto): T =
 
   result = default(T)
 
-  for field in fields(result):
-    field = nextElement[field.type](sequence).get()
+  for name, field in fieldPairs(result):
+    field = (
+      let temp = nextElement[field.type](sequence)
+      if temp.isSome:
+        temp.unsafeGet
+      else:
+        raiseMissingField(name)
+    )
 
 
 proc deserialize*(Self: typedesc[tuple], deserializer: var auto): Self =

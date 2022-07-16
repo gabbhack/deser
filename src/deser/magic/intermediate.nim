@@ -316,21 +316,4 @@ func init(Self: typedesc[Struct], sym: NimNode): Self =
 
     if typeDef[1].kind == nnkGenericParams:
       result.genericParams = some typeDef[1]
-
-
-func newExportedIdent(name: string): NimNode =
-  nnkPostfix.newTree(
-    newIdentNode("*"),
-    ident name
-  )
-
-func withGenerics(someType: NimNode, genericParams: NimNode): NimNode =
-  expectKind someType, {nnkIdent, nnkSym}
-  expectKind genericParams, nnkGenericParams
-
-  result = nnkBracketExpr.newTree(someType)
-
-  for param in genericParams:
-    # HACK: https://github.com/nim-lang/Nim/issues/19670
-    result.add ident param.strVal
 {.pop.}
