@@ -4,48 +4,47 @@ import pragmas
 
 type
   Struct = object
-    symType: NimNode
-    fields: seq[Field]
+    symType*: NimNode
+    fields*: seq[Field]
   
   Field = object
-    ident: NimNode
-    symType: NimNode
-    features: FieldFeatures
+    ident*: NimNode
+    symType*: NimNode
+    features*: FieldFeatures
 
-    case isCase: bool
+    case isCase*: bool
     of true:
-      branches: seq[FieldBranch]
+      branches*: seq[FieldBranch]
     else:
       nil
   
   FieldFeatures = object
-    skipped: bool
-    skipSerializing: bool
-    skipDeserializing: bool 
-    inlineKeys: bool
-    untagged: bool
+    skipped*: bool
+    skipSerializing*: bool
+    skipDeserializing*: bool 
+    untagged*: bool
 
-    renameSerialize: Option[string]
-    renameDeserialize: Option[string]
-    skipSerializeIf: Option[NimNode]
-    serializeWith: Option[NimNode]
+    renameSerialize*: Option[string]
+    renameDeserialize*: Option[string]
+    skipSerializeIf*: Option[NimNode]
+    serializeWith*: Option[NimNode]
   
   FieldBranchKind = enum
     Of
     Else
   
   FieldBranch = object
-    case kind: FieldBranchKind
+    case kind*: FieldBranchKind
     of Of:
-      condition: NimNode
+      condition*: NimNode
     else:
       discard
-    fields: seq[Field]
+    fields*: seq[Field]
   
   ProcedureParams = object
-    name: string
-    public: bool
-    lizerArgName: string
+    name*: string
+    public*: bool
+    lizerArgName*: string
 
 {.experimental: "strictFuncs".}
 {.push compileTime, used.}
@@ -81,7 +80,6 @@ func fieldFeaturesFromPragma(pragmas: NimNode): FieldFeatures =
     skipped = pragmas.findPragma(bindSym("skipped"))
     skipSerializing = pragmas.findPragma(bindSym("skipSerializing"))
     skipDeserializing = pragmas.findPragma(bindSym("skipDeserializing"))
-    inlineKeys = pragmas.findPragma(bindSym("inlineKeys"))
     untagged = pragmas.findPragma(bindSym("untagged"))
 
   # value
@@ -93,7 +91,6 @@ func fieldFeaturesFromPragma(pragmas: NimNode): FieldFeatures =
   result.skipped = skipped.isSome
   result.skipSerializing = skipSerializing.isSome
   result.skipDeserializing = skipDeserializing.isSome
-  result.inlineKeys = inlineKeys.isSome
   result.untagged = untagged.isSome
 
   if renameSerialize.isSome:

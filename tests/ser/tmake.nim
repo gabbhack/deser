@@ -58,10 +58,6 @@ type
     limit: int64
     offset: int64
     total: int64
-  
-  Users = object
-    users: seq[User]
-    pagination {.inlineKeys.}: Pagination
 
 
 proc serialize[Serializer](self: ref int, serializer: var Serializer) =
@@ -80,7 +76,6 @@ makeSerializable(RenameObject)
 
 makeSerializable(User)
 makeSerializable(Pagination)
-makeSerializable(Users)
 
 suite "makeSerializable":
   test "simple":
@@ -184,19 +179,3 @@ suite "makeSerializable":
       String("Name"),
       StructEnd()
     ]
-  
-  test "inlineKeys":
-    serTokens Users(), [
-      Struct("Users"),
-      String("users"),
-      Seq(some 0),
-      SeqEnd(),
-      String("limit"),
-      Integer(0),
-      String("offset"),
-      Integer(0),
-      String("total"),
-      Integer(0),
-      StructEnd()
-    ]
-

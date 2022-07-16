@@ -7,6 +7,7 @@ type
   Serializer* = object
     tokens: seq[Token]
 
+
 proc serTokens*[T](value: T, tokens: openArray[Token]) =
   var ser = Serializer(tokens: @tokens)
   value.serialize(ser)
@@ -14,12 +15,14 @@ proc serTokens*[T](value: T, tokens: openArray[Token]) =
   doAssert ser.tokens.len == 0,
     "The token sequence is not empty. There may have been a copy of the Serializer instead of passing by reference."
 
+
 proc nextToken*(self: var Serializer): Option[Token] =
   if self.tokens.len == 0:
     result = none Token
   else:
     result = some self.tokens[0]
     self.tokens = self.tokens[1..self.tokens.high]
+
 
 proc remaining*(self: Serializer): int = self.tokens.len
 
@@ -56,29 +59,36 @@ proc serializeArray*(self: var Serializer, len: static[int]): var Serializer =
   assertNextToken self, Array(len)
   result = self
 
+
 proc serializeSeq*(self: var Serializer, len: Option[int]): var Serializer =
   assertNextToken self, Seq(len)
   result = self
+
 
 proc serializeTuple*(self: var Serializer, name: static[string], len: static[int]): var Serializer =
   assertNextToken self, Tuple(name, len)
   result = self
 
+
 proc serializeNamedTuple*(self: var Serializer, name: static[string], len: static[int]): var Serializer =
   assertNextToken self, NamedTuple(name, len)
   result = self
+
 
 proc serializeMap*(self: var Serializer, len: Option[int]): var Serializer =
   assertNextToken self, Map(len)
   result = self
 
+
 proc serializeStruct*(self: var Serializer, name: static[string]): var Serializer =
   assertNextToken self, Struct(name)
   result = self
 
+
 proc serializeSeqMap*(self: var Serializer, len: Option[int]): var Serializer =
   assertNextToken self, SeqMap(len)
   result = self
+
 
 # SerializeArray impl
 proc serializeArrayElement*[T](self: var Serializer, v: T) = v.serialize(self)
@@ -100,6 +110,7 @@ proc serializeNamedTupleField*[T](self: var Serializer, key: static[string], v: 
   key.serialize(self)
   v.serialize(self)
 
+
 proc endNamedTuple*(self: var Serializer) = assertNextToken self, NamedTupleEnd()
 
 # SerializeMap impl
@@ -113,6 +124,7 @@ proc endMap*(self: var Serializer) = assertNextToken self, MapEnd()
 proc serializeStructField*[T](self: var Serializer, key: static[string], v: T) =
   key.serialize(self)
   v.serialize(self)
+
 
 proc endStruct*(self: var Serializer) = assertNextToken self, StructEnd()
 

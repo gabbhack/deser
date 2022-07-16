@@ -1,10 +1,10 @@
-import std/[options, sequtils]
+import std/[options, sequtils, macros]
 
 import flat
 import ../pragmas
 import ../utils
 
-include ../macro_utils
+import ../macro_utils {.all.}
 
 {.push compileTime.}
 var globalStmt {.compileTime.}: NimNode
@@ -72,15 +72,12 @@ proc newSerializeItem(field: Field): NimNode =
     result = newDotExpr(ident "self", field.ident)
 
 proc newUncheckedSerializeField(field: Field): NimNode =
-  if field.features.inlineKeys:
-    result = newFlatStructSerialize(newSerializeItem(field))
-  else:
-    result = newCall(
-      "serializeStructField",
-      ident "state",
-      newLit field.renamedSerialize,
-      newSerializeItem(field)
-    )
+  result = newCall(
+    "serializeStructField",
+    ident "state",
+    newLit field.renamedSerialize,
+    newSerializeItem(field)
+  )
 
 proc newSerializeCheck(field: Field, happyPathBody: NimNode): NimNode =
   if field.features.skipSerializeIf.isSome:
