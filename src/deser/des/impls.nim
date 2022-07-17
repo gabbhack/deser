@@ -260,7 +260,7 @@ implVisitor(EnumVisitor, public=true)
 
 proc expecting*(self: EnumVisitor): string = "enum"
 
-proc expecting*[T](self: EnumVisitor[T]): string = &"enum `{$T}`"
+proc expecting*[T: enum](self: EnumVisitor[T]): string = &"enum `{$T}`"
 
 proc visitString*[T](self: EnumVisitor[T], value: sink string): T =
   # HACK: you cant use generic as sym
@@ -290,9 +290,9 @@ implVisitor(TupleVisitor, public=true)
 
 proc expecting*(self: TupleVisitor): string = "a tuple"
 
-proc expecting*[T](self: TupleVisitor[T]): string = &"{$T}"
+proc expecting*[T: tuple](self: TupleVisitor[T]): string = &"{$T}"
 
-proc visitSeq*[T](self: TupleVisitor[T], sequence: var auto): T =
+proc visitSeq*[T: tuple](self: TupleVisitor[T], sequence: var auto): T =
   mixin nextElement
 
   result = default(T)

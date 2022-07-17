@@ -1,3 +1,5 @@
+{.experimental: "views".}
+
 import std/options
 
 import ../ser/impls
@@ -5,11 +7,15 @@ import token
 
 type
   Serializer* = object
-    tokens: seq[Token]
+    tokens: openArray[Token]
+
+
+func init*(Self: typedesc[Serializer], tokens: openArray[Token]): Self =
+  Self(tokens: tokens.toOpenArray(tokens.low, tokens.high))
 
 
 proc serTokens*[T](value: T, tokens: openArray[Token]) =
-  var ser = Serializer(tokens: @tokens)
+  var ser = Serializer.init tokens
   value.serialize(ser)
   # check that `ser` passed by ref
   doAssert ser.tokens.len == 0,
@@ -21,10 +27,11 @@ proc nextToken*(self: var Serializer): Option[Token] =
     result = none Token
   else:
     result = some self.tokens[0]
-    self.tokens = self.tokens[1..self.tokens.high]
+    self.tokens = self.tokens.toOpenArray(1, self.tokens.high)
 
 
 proc remaining*(self: Serializer): int = self.tokens.len
+
 
 proc assertNextToken*(ser: var Serializer, actual: Token) =
   let next = ser.nextToken()
@@ -33,6 +40,7 @@ proc assertNextToken*(ser: var Serializer, actual: Token) =
     doAssert value == actual, "Expected " & $value & " but serialized as " & $actual
   else:
     doAssert Empty() == actual, "Expected end of tokens, but " & $actual & " was serialized"
+
 
 # Serializer impl
 proc serializeBool*(self: var Serializer, v: bool) = assertNextToken self, Boolean(v)

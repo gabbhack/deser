@@ -1,7 +1,7 @@
 discard """
   matrix: "; -d:release; --gc:orc; -d:release --gc:orc"
 """
-
+{.experimental: "views".}
 import std/[unittest, options, times]
 
 import deser

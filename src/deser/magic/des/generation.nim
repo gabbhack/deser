@@ -50,12 +50,11 @@ func flatten(fields: seq[Field]): seq[Field] =
 
 
 func defVisitorKeyType(visitorType, valueType: NimNode): NimNode =
-  let visitorSym = bindSym "Visitor"
-
   quote do:
     type
       # special type to avoid specifying the generic `Value` every time
-      `visitorType` = `visitorSym`[`valueType`]
+      HackType[Value] = object
+      `visitorType` = HackType[`valueType`]
 
 
 func defImplVisitor(selfType, returnType: NimNode, public: bool): NimNode =
@@ -708,7 +707,7 @@ func defPushPop(stmtList: NimNode): NimNode =
       ident "push",
       ident "used",
       ident "inline",
-      ident "noInit"
+      ident "noinit"
     ),
     stmtList,
     nnkPragma.newTree(

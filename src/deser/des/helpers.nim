@@ -254,3 +254,48 @@ template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false
     proc deserializeIgnoredAny(self: var selfType, visitor: auto): visitor.Value
 
     proc deserializeArray(self: var selfType, len: static[int], visitor: auto): visitor.Value
+
+
+template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false, defaultBody: untyped) {.dirty.} =
+  bind maybePublic
+
+  maybePublic(public):
+    # implementation expected
+    proc deserializeAny[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeBool[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeInt8[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+    proc deserializeInt16[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+    proc deserializeInt32[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+    proc deserializeInt64[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeUint8[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+    proc deserializeUint16[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+    proc deserializeUint32[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+    proc deserializeUint64[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeFloat32[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+    proc deserializeFloat64[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeChar[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeString[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeBytes[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeOption[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeSeq[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeMap[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeStruct[Self: selfType](self: var Self, name: static[string], fields: static[array], visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeIdentifier[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeEnum[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeIgnoredAny[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
+
+    proc deserializeArray[Self: selfType](self: var Self, len: static[int], visitor: auto): visitor.Value = defaultBody
