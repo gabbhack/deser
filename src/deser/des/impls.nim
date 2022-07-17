@@ -21,10 +21,10 @@ from ../magic/des/utils {.all.} import
   visitEnumIntBody
 
 from helpers import
+  implVisitor,
   Visitor,
   NoneSeed,
-  IgnoredAny,
-  implVisitor
+  IgnoredAny
 
 
 when defined(release):
