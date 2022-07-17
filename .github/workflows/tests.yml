@@ -19,7 +19,7 @@ jobs:
     if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     strategy:
       matrix:
-        nim: ['1.4.0', 'stable']
+        nim: ['stable']
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
