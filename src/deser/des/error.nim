@@ -1,4 +1,4 @@
-import std/strformat
+import std/[strformat]
 
 import ../error
 
@@ -117,7 +117,7 @@ proc raiseInvalidValue*(unexp: Unexpected, exp: auto) =
   raise newException(InvalidValue, &"invalid value: {$unexp}, expected: {exp.expecting()}")
 
 
-proc raiseInvalidLength*(unexp: uint, exp: auto) =
+proc raiseInvalidLength*(unexp: int, exp: auto) =
   raise newException(InvalidLength, &"invalid length: {$unexp}, expected: {$exp}")
 
 

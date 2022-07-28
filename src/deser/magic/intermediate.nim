@@ -1,4 +1,3 @@
-{.experimental: "strictFuncs".}
 import std/[macros, options, tables]
 
 import ../pragmas
@@ -55,37 +54,37 @@ type
 
 
 {.push used.}
-func getFields(recList: NimNode): seq[Field]
+proc getFields(recList: NimNode): seq[Field]
 
-func getOnUnknownKeysValue(self: Struct): Option[NimNode] = self.features.onUnknownKeysValue
+proc getOnUnknownKeysValue(self: Struct): Option[NimNode] = self.features.onUnknownKeysValue
 
-func isSkipSerializing(self: Field): bool = self.features.skipSerializing
+proc isSkipSerializing(self: Field): bool = self.features.skipSerializing
 
-func isSkipDeserializing(self: Field): bool = self.features.skipDeserializing
+proc isSkipDeserializing(self: Field): bool = self.features.skipDeserializing
 
-func isUntagged(self: Field): bool = self.features.untagged
+proc isUntagged(self: Field): bool = self.features.untagged
 
-func getSkipSerializeIf(self: Field): Option[NimNode] = self.features.skipSerializeIf
+proc getSkipSerializeIf(self: Field): Option[NimNode] = self.features.skipSerializeIf
 
-func getSerializeWith(self: Field): Option[NimNode] = self.features.serializeWith
+proc getSerializeWith(self: Field): Option[NimNode] = self.features.serializeWith
 
-func getDefaultValue(self: Field): Option[NimNode] = self.features.defaultValue
+proc getDefaultValue(self: Field): Option[NimNode] = self.features.defaultValue
 
-func serializeName(self: Field): string =
+proc serializeName(self: Field): string =
   if self.features.renameSerialize.isSome:
     self.features.renameSerialize.unsafeGet
   else:
     self.ident.strVal
 
 
-func deserializeName(self: Field): string =
+proc deserializeName(self: Field): string =
   if self.features.renameDeserialize.isSome:
     self.features.renameDeserialize.unsafeGet
   else:
     self.ident.strVal
 
 
-func copyWithoutChild(copyOf: NimNode, idx = 0, n = 1): NimNode =
+proc copyWithoutChild(copyOf: NimNode, idx = 0, n = 1): NimNode =
   result = copy copyOf
   result.del idx, n
 
@@ -120,10 +119,10 @@ proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
     self.defaultValue = some values[0]
 
 
-func init(Self: typedesc[FieldFeatures | StructFeatures], pragmas: NimNode): Self =
+proc init(Self: typedesc[FieldFeatures | StructFeatures], pragmas: NimNode): Self =
   # Check whether the field contains our pragmas
   expectKind pragmas, nnkPragma
-  
+
   for pragma in pragmas:
     case pragma.kind
     of nnkSym:
@@ -143,7 +142,7 @@ func init(Self: typedesc[FieldFeatures | StructFeatures], pragmas: NimNode): Sel
   # TODO add check for nosense
 
 
-func deSymBracketExpr(bracket: NimNode): NimNode =
+proc deSymBracketExpr(bracket: NimNode): NimNode =
   # HACK: https://github.com/nim-lang/Nim/issues/19670
   expectKind bracket, nnkBracketExpr
 
@@ -159,7 +158,7 @@ func deSymBracketExpr(bracket: NimNode): NimNode =
       result.add i
 
 
-func init(Self: typedesc[Field], identDefs: NimNode): Self =
+proc init(Self: typedesc[Field], identDefs: NimNode): Self =
   # Get field from usual statement
   expectKind identDefs, nnkIdentDefs
 
@@ -194,7 +193,7 @@ func init(Self: typedesc[Field], identDefs: NimNode): Self =
     expectKind identNode, {nnkIdent, nnkPragmaExpr}
 
 
-func init(Self: typedesc[Field], recCase: NimNode): Self =
+proc init(Self: typedesc[Field], recCase: NimNode): Self =
   # Get field from case statement
   expectKind recCase, nnkRecCase
 
@@ -232,7 +231,7 @@ func init(Self: typedesc[Field], recCase: NimNode): Self =
       expectKind branch, {nnkOfBranch, nnkElse}
 
 
-func getFields(recList: NimNode): seq[Field] =
+proc getFields(recList: NimNode): seq[Field] =
   expectKind recList, {nnkRecList, nnkEmpty}
 
   if recList.kind != nnkEmpty:
@@ -250,7 +249,7 @@ func getFields(recList: NimNode): seq[Field] =
         expectKind fieldNode, {nnkIdentDefs, nnkRecCase}
 
 
-func init(Self: typedesc[Struct], sym: NimNode): Self =
+proc init(Self: typedesc[Struct], sym: NimNode): Self =
   # Get temp `ObjectTy` from symbol of type
   expectKind sym, nnkSym
 
@@ -269,12 +268,10 @@ func init(Self: typedesc[Struct], sym: NimNode): Self =
   of nnkRefTy:
     case typeImpl[0].kind
     of nnkSym:
-      # stfu compiler
-      {.cast(noSideEffect).}:
-        # For type Foo = ref Bar
-        result = Self.init typeImpl[0]
-        # use alias type
-        result.sym = sym
+      # For type Foo = ref Bar
+      result = Self.init typeImpl[0]
+      # use alias type
+      result.sym = sym
     of nnkObjectTy:
       # For type Foo = ref object
       result = Self(
@@ -298,22 +295,20 @@ func init(Self: typedesc[Struct], sym: NimNode): Self =
   else:
     expectKind typeImpl, {nnkSym, nnkRefTy, nnkObjectTy}
   
-  # stfu compiler
-  {.cast(noSideEffect).}:
-    #[
-        typeDef[0]
-         |-------|
-         |       |
-         v       v
-    type Test {.test.} = object
-                 |
-                 |
-                 v
-            typeDef[0][1]
-    ]#
-    if typeDef[0].kind == nnkPragmaExpr:
-      result.features = StructFeatures.init typeDef[0]
+  #[
+      typeDef[0]
+        |-------|
+        |       |
+        v       v
+  type Test {.test.} = object
+                |
+                |
+                v
+          typeDef[0][1]
+  ]#
+  if typeDef[0].kind == nnkPragmaExpr:
+    result.features = StructFeatures.init typeDef[0]
 
-    if typeDef[1].kind == nnkGenericParams:
-      result.genericParams = some typeDef[1]
+  if typeDef[1].kind == nnkGenericParams:
+    result.genericParams = some typeDef[1]
 {.pop.}

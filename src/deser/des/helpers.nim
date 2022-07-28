@@ -21,7 +21,6 @@ from error import
 
 
 type
-  Visitor*[Value] = object
   NoneSeed*[Value] = object
   IgnoredAny* = object
 
@@ -44,17 +43,18 @@ macro maybePublic(public: static[bool], body: untyped): untyped =
 
 
 template implVisitor*(selfType: typed, public: static[bool] = false) {.dirty.} =
-  bind raiseInvalidType
-  bind UnexpectedBool
-  bind UnexpectedSigned
-  bind UnexpectedUnsigned
-  bind UnexpectedFloat
-  bind UnexpectedString
-  bind UnexpectedBytes
-  bind UnexpectedOption
-  bind UnexpectedSeq
-  bind UnexpectedMap
-  bind maybePublic
+  bind
+    raiseInvalidType,
+    UnexpectedBool,
+    UnexpectedSigned,
+    UnexpectedUnsigned,
+    UnexpectedFloat,
+    UnexpectedString,
+    UnexpectedBytes,
+    UnexpectedOption,
+    UnexpectedSeq,
+    UnexpectedMap,
+    maybePublic
 
   maybePublic(public):
     # implementation expected
@@ -123,9 +123,10 @@ template implVisitor*(selfType: typed, public: static[bool] = false) {.dirty.} =
 
 
 template implSeqAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
-  bind Option
-  bind NoneSeed
-  bind maybePublic
+  bind
+    Option,
+    NoneSeed,
+    maybePublic
 
   maybePublic(public):
     # implementation expected
@@ -153,12 +154,13 @@ template implSeqAccess*(selfType: typed{`type`}, public: static[bool] = false) {
 
 
 template implMapAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
-  bind Option
-  bind unsafeGet
-  bind isSome
-  bind some
-  bind NoneSeed
-  bind maybePublic
+  bind
+    Option,
+    unsafeGet,
+    isSome,
+    some,
+    NoneSeed,
+    maybePublic
 
   maybePublic(public):
     # implementation expected

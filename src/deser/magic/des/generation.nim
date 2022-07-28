@@ -1,4 +1,3 @@
-{.experimental: "strictFuncs".}
 import std/[options, enumerate, macros]
 
 from ../../des/error import
@@ -8,7 +7,6 @@ from ../../des/error import
 
 from ../../des/helpers import
   implVisitor,
-  Visitor,
   IgnoredAny
 
 import ../intermediate {.all.}
@@ -26,7 +24,7 @@ type
 
 
 {.push used.}
-func withGenerics(someType: NimNode, genericParams: NimNode): NimNode =
+proc withGenerics(someType: NimNode, genericParams: NimNode): NimNode =
   expectKind someType, {nnkIdent, nnkSym}
   expectKind genericParams, nnkGenericParams
 
@@ -37,7 +35,7 @@ func withGenerics(someType: NimNode, genericParams: NimNode): NimNode =
     result.add ident param.strVal
 
 
-func flatten(fields: seq[Field]): seq[Field] =
+proc flatten(fields: seq[Field]): seq[Field] =
   result = newSeqOfCap[Field](fields.len)
 
   for field in fields:
@@ -49,7 +47,7 @@ func flatten(fields: seq[Field]): seq[Field] =
           result.add branch.fields.flatten
 
 
-func defVisitorKeyType(visitorType, valueType: NimNode): NimNode =
+proc defVisitorKeyType(visitorType, valueType: NimNode): NimNode =
   quote do:
     type
       # special type to avoid specifying the generic `Value` every time
@@ -57,7 +55,7 @@ func defVisitorKeyType(visitorType, valueType: NimNode): NimNode =
       `visitorType` = HackType[`valueType`]
 
 
-func defImplVisitor(selfType, returnType: NimNode, public: bool): NimNode =
+proc defImplVisitor(selfType, returnType: NimNode, public: bool): NimNode =
   # implVisitor(selfType, returnType)
   let
     implVisitorSym = bindSym "implVisitor"
@@ -67,7 +65,7 @@ func defImplVisitor(selfType, returnType: NimNode, public: bool): NimNode =
     `implVisitorSym`(`selfType`, public=`public`)
 
 
-func defKeysEnum(struct: DeserStruct): NimNode =
+proc defKeysEnum(struct: DeserStruct): NimNode =
   #[
     type Enum = enum
       FirstKey
@@ -91,7 +89,7 @@ func defKeysEnum(struct: DeserStruct): NimNode =
   )
 
 
-func defToKeyElseBranch(struct: Struct): NimNode =
+proc defToKeyElseBranch(struct: Struct): NimNode =
   let onUnknownKeys = struct.getOnUnknownKeysValue
 
   nnkElse.newTree(
@@ -114,7 +112,7 @@ func defToKeyElseBranch(struct: Struct): NimNode =
   ) 
   
 
-func defStrToKeyCase(struct: DeserStruct): NimNode =
+proc defStrToKeyCase(struct: DeserStruct): NimNode =
   #[
     case value
     of "key":
@@ -138,7 +136,7 @@ func defStrToKeyCase(struct: DeserStruct): NimNode =
   result.add defToKeyElseBranch(struct)
 
 
-func defBytesToKeyCase(struct: DeserStruct): NimNode =
+proc defBytesToKeyCase(struct: DeserStruct): NimNode =
   if struct.flattenFields.len == 0:
     # hardcode for empty objects
     # cause if statement with only `else` branch is nonsense
@@ -164,7 +162,7 @@ func defBytesToKeyCase(struct: DeserStruct): NimNode =
     result.add defToKeyElseBranch(struct)
 
 
-func defUintToKeyCase(struct: DeserStruct): NimNode =
+proc defUintToKeyCase(struct: DeserStruct): NimNode =
   # HACK: https://github.com/nim-lang/Nim/issues/20031
   if struct.flattenFields.len == 0:
     # hardcode for empty objects
@@ -191,7 +189,7 @@ func defUintToKeyCase(struct: DeserStruct): NimNode =
     result.add defToKeyElseBranch(struct)
 
 
-func defExpectingProc(selfType, body: NimNode): NimNode =
+proc defExpectingProc(selfType, body: NimNode): NimNode =
   let
     expectingIdent = ident "expecting"
     selfIdent = ident "self"
@@ -201,7 +199,7 @@ func defExpectingProc(selfType, body: NimNode): NimNode =
       `body`
 
 
-func defVisitStringProc(selfType, returnType, body: NimNode): NimNode =
+proc defVisitStringProc(selfType, returnType, body: NimNode): NimNode =
   let
     visitStringIdent = ident "visitString"
     selfIdent = ident "self"
@@ -212,7 +210,7 @@ func defVisitStringProc(selfType, returnType, body: NimNode): NimNode =
       `body`
 
 
-func defVisitBytesProc(selfType, returnType, body: NimNode): NimNode =
+proc defVisitBytesProc(selfType, returnType, body: NimNode): NimNode =
   let
     visitStringIdent = ident "visitBytes"
     selfIdent = ident "self"
@@ -223,7 +221,7 @@ func defVisitBytesProc(selfType, returnType, body: NimNode): NimNode =
       `body`
 
 
-func defVisitUintProc(selfType, returnType, body: NimNode): NimNode =
+proc defVisitUintProc(selfType, returnType, body: NimNode): NimNode =
   let
     visitStringIdent = ident "visitUint64"
     selfIdent = ident "self"
@@ -234,7 +232,7 @@ func defVisitUintProc(selfType, returnType, body: NimNode): NimNode =
       `body`
 
 
-func defKeyDeserializeBody(visitorType: NimNode): NimNode =
+proc defKeyDeserializeBody(visitorType: NimNode): NimNode =
   let deserializeIdentifierIdent = ident "deserializeIdentifier"
 
   newStmtList(
@@ -249,7 +247,7 @@ func defKeyDeserializeBody(visitorType: NimNode): NimNode =
   )
 
 
-func defDeserializeKeyProc(selfType, body: NimNode, public: bool): NimNode =
+proc defDeserializeKeyProc(selfType, body: NimNode, public: bool): NimNode =
   let
     deserializeIdent = ident "deserialize"
     deserializeProcIdent = (
@@ -289,7 +287,7 @@ func defDeserializeKeyProc(selfType, body: NimNode, public: bool): NimNode =
   )
 
 
-func defKeyDeserialize(visitorType: NimNode, struct: DeserStruct, public: bool): NimNode =  
+proc defKeyDeserialize(visitorType: NimNode, struct: DeserStruct, public: bool): NimNode =  
   let
     keysEnum = defKeysEnum(struct)
     visitorTypeDef = defVisitorKeyType(visitorType, valueType=struct.enumSym)
@@ -312,19 +310,19 @@ func defKeyDeserialize(visitorType: NimNode, struct: DeserStruct, public: bool):
   )
 
 
-func defGetOrDefault(fieldIdent: NimNode, defaultValue: NimNode): NimNode =
+proc defGetOrDefault(fieldIdent: NimNode, defaultValue: NimNode): NimNode =
   newCall(bindSym "getOrDefault", fieldIdent, defaultValue)
 
 
-func defGetOrRaise(fieldIdent: NimNode, fieldName: NimNode): NimNode =
+proc defGetOrRaise(fieldIdent: NimNode, fieldName: NimNode): NimNode =
   newCall(bindSym "getOrRaise", fieldIdent, fieldName)
 
 
-func defGetOrBreak(fieldIdent: NimNode): NimNode =
+proc defGetOrBreak(fieldIdent: NimNode): NimNode =
   newCall(bindSym "getOrBreak", fieldIdent)
 
 
-func defGetField(field: Field, raiseOnNone: bool): NimNode =
+proc defGetField(field: Field, raiseOnNone: bool): NimNode =
   let defaultValue = field.getDefaultValue
 
   if defaultValue.isSome:
@@ -335,7 +333,7 @@ func defGetField(field: Field, raiseOnNone: bool): NimNode =
     defGetOrBreak(field.ident)
 
 
-func addToObjConstr(objConstr, ident, value: NimNode) =
+proc addToObjConstr(objConstr, ident, value: NimNode) =
   # (ident: value)
   objConstr.add newColonExpr(ident, value)
 
@@ -415,7 +413,7 @@ template resolveTagged {.dirty.} =
   )
 
 
-func resolve(struct: Struct, fields: seq[Field], objConstr: NimNode, raiseOnNone = true): NimNode =
+proc resolve(struct: Struct, fields: seq[Field], objConstr: NimNode, raiseOnNone = true): NimNode =
   let
     raiseUnknownUntaggedVariantSym = bindSym "raiseUnknownUntaggedVariant"
     structNameLit = struct.sym.toStrLit
@@ -448,7 +446,7 @@ func resolve(struct: Struct, fields: seq[Field], objConstr: NimNode, raiseOnNone
       resolveTagged
 
 
-func defInitResolver(struct: Struct): NimNode =
+proc defInitResolver(struct: Struct): NimNode =
   let objConstr = nnkObjConstr.newTree(
     if struct.genericParams.isSome:
       withGenerics(struct.sym, struct.genericParams.unsafeGet)
@@ -458,7 +456,7 @@ func defInitResolver(struct: Struct): NimNode =
   resolve(struct, struct.fields, objConstr)
 
 
-func defVisitMapProc(struct: DeserStruct, visitorType, body: NimNode): NimNode =
+proc defVisitMapProc(struct: DeserStruct, visitorType, body: NimNode): NimNode =
   var generics, returnType, visitorTyp: NimNode
 
   if struct.genericParams.isSome:
@@ -497,7 +495,7 @@ func defVisitMapProc(struct: DeserStruct, visitorType, body: NimNode): NimNode =
   )
 
 
-func defOptionFieldVars(struct: DeserStruct): NimNode =
+proc defOptionFieldVars(struct: DeserStruct): NimNode =
   # var fieldName = none(FieldType)
   result = newStmtList()
 
@@ -512,7 +510,7 @@ func defOptionFieldVars(struct: DeserStruct): NimNode =
     )
 
 
-func defKeyToValueCase(struct: DeserStruct): NimNode =
+proc defKeyToValueCase(struct: DeserStruct): NimNode =
   #[
     case key
     of FirstField:
@@ -566,7 +564,7 @@ func defKeyToValueCase(struct: DeserStruct): NimNode =
   )
 
 
-func defForKeys(keyType, body: NimNode): NimNode =
+proc defForKeys(keyType, body: NimNode): NimNode =
   #[
     for key in map.keys[keyType]():
       body
@@ -584,7 +582,7 @@ func defForKeys(keyType, body: NimNode): NimNode =
   )
 
 
-func defDeserializeValueProc(struct: DeserStruct, body: NimNode, public: bool): NimNode =
+proc defDeserializeValueProc(struct: DeserStruct, body: NimNode, public: bool): NimNode =
   let
     deserializeIdent = ident "deserialize"
     deserializeProcIdent = (
@@ -630,7 +628,7 @@ func defDeserializeValueProc(struct: DeserStruct, body: NimNode, public: bool): 
   )
 
 
-func defValueDeserializeBody(struct: DeserStruct, visitorType: NimNode): NimNode =
+proc defValueDeserializeBody(struct: DeserStruct, visitorType: NimNode): NimNode =
   let visitorType = (
     if struct.genericParams.isSome:
       withGenerics(visitorType, struct.genericParams.unsafeGet)
@@ -652,7 +650,7 @@ func defValueDeserializeBody(struct: DeserStruct, visitorType: NimNode): NimNode
   )
 
 
-func defVisitorValueType(struct: DeserStruct, visitorType, valueType: NimNode): NimNode =
+proc defVisitorValueType(struct: DeserStruct, visitorType, valueType: NimNode): NimNode =
   var generics, valueTyp: NimNode
 
   if struct.genericParams.isSome:
@@ -661,20 +659,37 @@ func defVisitorValueType(struct: DeserStruct, visitorType, valueType: NimNode): 
   else:
     generics = newEmptyNode()
     valueTyp = valueType
+  
+  let hackType = genSym(nskType, "Visitor")
 
   result = nnkTypeSection.newTree(
+    nnkTypeDef.newTree(
+      newIdentNode("Test"),
+      nnkGenericParams.newTree(
+        nnkIdentDefs.newTree(
+          hackType,
+          newEmptyNode(),
+          newEmptyNode()
+        )
+      ),
+      nnkObjectTy.newTree(
+        newEmptyNode(),
+        newEmptyNode(),
+        newEmptyNode()
+      )
+    ),
     nnkTypeDef.newTree(
       visitorType,
       generics,
       nnkBracketExpr.newTree(
-        bindSym "Visitor",
+        hackType,
         valueTyp
       )
     )
   )
 
 
-func defValueDeserialize(visitorType: NimNode, struct: DeserStruct, public: bool): NimNode =  
+proc defValueDeserialize(visitorType: NimNode, struct: DeserStruct, public: bool): NimNode =  
   let
     visitorTypeDef = defVisitorValueType(struct, visitorType, valueType=struct.sym)
     visitorImpl = defImplVisitor(visitorType, returnType=struct.sym, public=public)
@@ -701,7 +716,7 @@ func defValueDeserialize(visitorType: NimNode, struct: DeserStruct, public: bool
   )
 
 
-func defPushPop(stmtList: NimNode): NimNode =
+proc defPushPop(stmtList: NimNode): NimNode =
   newStmtList(
     nnkPragma.newTree(
       ident "push",
@@ -716,7 +731,7 @@ func defPushPop(stmtList: NimNode): NimNode =
   )
 
 
-func generate(struct: DeserStruct, public: bool): NimNode =
+proc generate(struct: DeserStruct, public: bool): NimNode =
   let
     fieldVisitor = genSym(nskType, "FieldVisitor") 
     valueVisitor = genSym(nskType, "Visitor")

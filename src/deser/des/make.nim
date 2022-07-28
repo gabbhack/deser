@@ -1,6 +1,5 @@
 import std/[
-  macros,
-  strutils
+  macros
 ]
 
 from ../magic/intermediate {.all.} import 

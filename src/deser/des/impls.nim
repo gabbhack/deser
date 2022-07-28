@@ -11,18 +11,21 @@ import std/[
 from error import
   raiseInvalidValue,
   raiseMissingField,
-  UnexpectedString
+  UnexpectedString,
+  UnexpectedSigned,
+  UnexpectedFloat
 
 
 from ../magic/des/utils {.all.} import
   genPrimitive,
-  genEnumCase,
   genArray,
-  visitEnumIntBody
+  visitEnumIntBody,
+  visitRangeIntBody,
+  visitRangeFloatBody,
+  rangeUnderlyingType
 
 from helpers import
   implVisitor,
-  Visitor,
   NoneSeed,
   IgnoredAny
 
@@ -37,7 +40,9 @@ proc deserialize*[T](self: NoneSeed[T], deserializer: var auto): T =
   result = T.deserialize(deserializer)
 
 
-type IgnoredAnyVisitor = Visitor[IgnoredAny]
+type
+  IgnoredAnyVisitorRaw[Value] = object
+  IgnoredAnyVisitor = IgnoredAnyVisitorRaw[IgnoredAny]
 
 implVisitor(IgnoredAnyVisitor, public=true)
 
@@ -103,7 +108,9 @@ proc deserialize*(Self: typedesc[IgnoredAny], deserializer: var auto): Self =
   deserializer.deserializeIgnoredAny(IgnoredAnyVisitor())
 
 
-type BoolVisitor = Visitor[bool]
+type
+  BoolVisitorRaw[Value] = object
+  BoolVisitor = BoolVisitorRaw[bool]
 
 implVisitor(BoolVisitor, public=true)
 
@@ -133,7 +140,9 @@ genPrimitive(float32, floats=true)
 genPrimitive(float64, floats=true)
 
 
-type CharVisitor = Visitor[char]
+type
+  CharVisitorRaw[Value] = object
+  CharVisitor = CharVisitorRaw[char]
 
 implVisitor(CharVisitor, public=true)
 
@@ -154,7 +163,9 @@ proc deserialize*(Self: typedesc[char], deserializer: var auto): Self =
   deserializer.deserializeChar(CharVisitor())
 
 
-type StringVisitor = Visitor[string]
+type
+  StringVisitorRaw[Value] = object
+  StringVisitor = StringVisitorRaw[string]
 
 implVisitor(StringVisitor, public=true)
 
@@ -168,24 +179,41 @@ proc deserialize*(Self: typedesc[string], deserializer: var auto): Self =
   deserializer.deserializeString(StringVisitor())
 
 
-when defined(nimHasViews) and compiles((var x: openArray[int])):
-  type BytesVisitor = Visitor[openArray[byte]]
-else:
-  type BytesVisitor = Visitor[seq[byte]]
-
+type
+  BytesVisitorRaw[Value] = object
+  BytesVisitor[T: seq or array] = BytesVisitorRaw[T]
 
 implVisitor(BytesVisitor, public=true)
 
-proc expecting*(self: BytesVisitor): string = "byte array"
+proc expecting*(self: BytesVisitor): string = "byte array or seq"
 
-proc visitBytes*(self: BytesVisitor, value: openArray[byte]): self.Value =
-  when self.Value is openArray:
-    value
+proc expecting*[T](self: BytesVisitor[T]): string = $T
+
+proc visitBytes*[T](self: BytesVisitor[T], value: openArray[byte]): T =
+  when T is array:
+    if value.len == T.len:
+      copyMem result[0].unsafeAddr, value[0].unsafeAddr, T.len * sizeof(result[0])
+    else:
+      raiseInvalidLength(value.len, T.len)
   else:
     @value
 
 
-type OptionVisitor[T] = Visitor[Option[T]]
+proc deserialize*(Self: typedesc[seq[byte]], deserializer: var auto): Self =
+  mixin deserializeBytes
+
+  deserializer.deserializeBytes(BytesVisitor[Self]())
+
+
+proc deserialize*[Size](Self: typedesc[array[Size, byte]], deserializer: var auto): Self =
+  mixin deserializeBytes
+
+  deserializer.deserializeBytes(BytesVisitor[Self]())
+
+
+type
+  OptionVisitorRaw[Value] = object
+  OptionVisitor[T] = OptionVisitorRaw[Option[T]]
 
 implVisitor(OptionVisitor, public=true)
 
@@ -207,7 +235,9 @@ proc deserialize*[T](Self: typedesc[Option[T]], deserializer: var auto): Self =
   deserializer.deserializeOption(OptionVisitor[T]())
 
 
-type SeqVisitor[T] = Visitor[seq[T]]
+type
+  SeqVisitorRaw[Value] = object
+  SeqVisitor[T] = SeqVisitorRaw[seq[T]]
 
 implVisitor(SeqVisitor, public=true)
 
@@ -232,29 +262,31 @@ proc deserialize*[T](Self: typedesc[seq[T]], deserializer: var auto): Self =
   deserializer.deserializeSeq(SeqVisitor[T]())
 
 
-type ArrayVisitor[Size, T] = Visitor[array[Size, T]]
+type
+  ArrayVisitorRaw[Value] = object
+  ArrayVisitor[T] = ArrayVisitorRaw[T]
 
 implVisitor(ArrayVisitor, public=true)
 
 proc expecting*(self: ArrayVisitor): string = "array"
 
-proc expecting*[Size, T](self: ArrayVisitor[Size, T]): string = &"array[{$Size}, {$T}]"
+proc expecting*[T](self: ArrayVisitor[T]): string = $T
 
-proc visitSeq*[Size, T](self: ArrayVisitor[Size, T], sequence: var auto): array[Size, T] =
+proc visitSeq*[T](self: ArrayVisitor[T], sequence: var auto): T =
   mixin nextElement
 
-  # Size its a range (0..S)
-  # S == len - 1
-  genArray(Size.high + 1, T)
+  genArray(T.high, type(result[0]))
 
 
-proc deserialize*[Size, T](Self: typedesc[array[Size, T]], deserializer: var auto): Self =
+proc deserialize*(Self: typedesc[array], deserializer: var auto): Self =
   mixin deserializeArray
 
-  deserializer.deserializeArray(Self.len, ArrayVisitor[Size, T]())
+  deserializer.deserializeArray(Self.len, ArrayVisitor[Self]())
 
 
-type EnumVisitor[T: enum] = Visitor[T]
+type
+  EnumVisitorRaw[Value] = object
+  EnumVisitor[T] = EnumVisitorRaw[T]
 
 implVisitor(EnumVisitor, public=true)
 
@@ -262,10 +294,7 @@ proc expecting*(self: EnumVisitor): string = "enum"
 
 proc expecting*[T: enum](self: EnumVisitor[T]): string = &"enum `{$T}`"
 
-proc visitString*[T](self: EnumVisitor[T], value: sink string): T =
-  # HACK: you cant use generic as sym
-  genEnumCase(genericParams(typeof(self)).get(0))
-
+proc visitString*[T: enum](self: EnumVisitor[T], value: sink string): T = parseEnum[T](value)
 
 proc visitInt8*[T](self: EnumVisitor[T], value: int8): T = visitEnumIntBody()
 proc visitInt16*[T](self: EnumVisitor[T], value: int16): T = visitEnumIntBody()
@@ -284,15 +313,17 @@ proc deserialize*(Self: typedesc[enum], deserializer: var auto): Self =
   deserializer.deserializeEnum(EnumVisitor[Self]())
 
 
-type TupleVisitor[T: tuple] = Visitor[T]
+type
+  TupleVisitorRaw[Value] = object
+  TupleVisitor[T] = TupleVisitorRaw[T]
 
 implVisitor(TupleVisitor, public=true)
 
 proc expecting*(self: TupleVisitor): string = "a tuple"
 
-proc expecting*[T: tuple](self: TupleVisitor[T]): string = &"{$T}"
+proc expecting*[T](self: TupleVisitor[T]): string = &"{$T}"
 
-proc visitSeq*[T: tuple](self: TupleVisitor[T], sequence: var auto): T =
+proc visitSeq*[T](self: TupleVisitor[T], sequence: var auto): T =
   mixin nextElement
 
   result = default(T)
@@ -313,7 +344,9 @@ proc deserialize*(Self: typedesc[tuple], deserializer: var auto): Self =
   deserializer.deserializeArray(tupleLen(Self), TupleVisitor[Self]())
 
 
-type SetVisitor[T] = Visitor[set[T]]
+type
+  SetVisitorRaw[Value] = object
+  SetVisitor[T] = SetVisitorRaw[set[T]]
 
 implVisitor(SetVisitor, public=true)
 
@@ -327,12 +360,15 @@ proc visitSeq*[T](self: SetVisitor[T], sequence: var auto): set[T] =
 
 
 proc deserialize*[T](Self: typedesc[set[T]], deserializer: var auto): Self =
-  mixin deserializeSeq
+  mixin
+    deserializeSeq
 
   deserializer.deserializeSeq(SetVisitor[T]())
 
 
-type OrderedSetVisitor[T] = Visitor[OrderedSet[T]]
+type
+  OrderedSetVisitorRaw[Value] = object
+  OrderedSetVisitor[T] = OrderedSetVisitorRaw[OrderedSet[T]]
 
 implVisitor(OrderedSetVisitor, public=true)
 
@@ -357,7 +393,9 @@ proc deserialize*[T](Self: typedesc[OrderedSet[T]], deserializer: var auto): Sel
   deserializer.deserializeSeq(OrderedSetVisitor[T]())
 
 
-type HashSetVisitor[T] = Visitor[HashSet[T]]
+type
+  HashSetVisitorRaw[Value] = object
+  HashSetVisitor[T] = HashSetVisitorRaw[HashSet[T]]
 
 implVisitor(HashSetVisitor, public=true)
 
@@ -382,7 +420,9 @@ proc deserialize*[T](Self: typedesc[HashSet[T]], deserializer: var auto): Self =
   deserializer.deserializeSeq(HashSetVisitor[T]())
 
 
-type TableVisitor[Key, Value] = Visitor[Table[Key, Value]]
+type
+  TableVisitorRaw[Value] = object
+  TableVisitor[Key, Value] = TableVisitorRaw[Table[Key, Value]]
 
 implVisitor(TableVisitor, public=true)
 
@@ -405,7 +445,9 @@ proc deserialize*[Key, Value](Self: typedesc[Table[Key, Value]], deserializer: v
   deserializer.deserializeMap(TableVisitor[Key, Value]())
 
 
-type OrderedTableVisitor[Key, Value] = Visitor[OrderedTable[Key, Value]]
+type
+  OrderedTableVisitorRaw[Value] = object
+  OrderedTableVisitor[Key, Value] = OrderedTableVisitorRaw[OrderedTable[Key, Value]]
 
 implVisitor(OrderedTableVisitor, public=true)
 
@@ -427,7 +469,74 @@ proc visitMap*[Key, Value](self: OrderedTableVisitor[Key, Value], map: var auto)
 proc deserialize*[Key, Value](Self: typedesc[OrderedTable[Key, Value]], deserializer: var auto): Self =
   deserializer.deserializeMap(OrderedTableVisitor[Key, Value]())
 
+
+type
+  RangeVisitorRaw[Value] = object
+  RangeVisitor[T] = RangeVisitorRaw[T]
+
+implVisitor(RangeVisitor, public=true)
+
+proc expecting*(self: RangeVisitor): string = "a range"
+
+proc expecting*[T: range](self: RangeVisitor[T]): string = $T
+
+proc visitInt8*[T: range](self: RangeVisitor[T], value: int8): T = visitRangeIntBody()
+proc visitInt16*[T: range](self: RangeVisitor[T], value: int16): T = visitRangeIntBody()
+proc visitInt32*[T: range](self: RangeVisitor[T], value: int32): T = visitRangeIntBody()
+proc visitInt64*[T: range](self: RangeVisitor[T], value: int64): T = visitRangeIntBody()
+
+proc visitUint8*[T: range](self: RangeVisitor[T], value: uint8): T = visitRangeIntBody()
+proc visitUint16*[T: range](self: RangeVisitor[T], value: uint16): T = visitRangeIntBody()
+proc visitUint32*[T: range](self: RangeVisitor[T], value: uint32): T = visitRangeIntBody()
+proc visitUint64*[T: range](self: RangeVisitor[T], value: uint64): T = visitRangeIntBody()
+
+proc visitFloat32*[T](self: RangeVisitor[T], value: float32): T = visitRangeFloatBody()
+proc visitFloat64*[T](self: RangeVisitor[T], value: float64): T = visitRangeFloatBody()
+
+proc deserialize*(Self: typedesc[range], deserializer: var auto): Self =
+  mixin
+    deserializeInt8,
+    deserializeInt16,
+    deserializeInt32,
+    deserializeInt64,
+    deserializeUint8,
+    deserializeUint16,
+    deserializeUint32,
+    deserializeUint64,
+    deserializeFloat32,
+    deserializeFloat64
+
+  type UnderlyingType = rangeUnderlyingType(Self)
+
+  when UnderlyingType is int8:
+    deserializer.deserializeInt8(RangeVisitor[Self]())
+  elif UnderlyingType is int16:
+    deserializer.deserializeInt16(RangeVisitor[Self]())
+  elif UnderlyingType is int32:
+    deserializer.deserializeInt32(RangeVisitor[Self]())
+  elif UnderlyingType is int64:
+    deserializer.deserializeInt64(RangeVisitor[Self]())
+  elif UnderlyingType is uint8:
+    deserializer.deserializeUint8(RangeVisitor[Self]())
+  elif UnderlyingType is uint16:
+    deserializer.deserializeUint16(RangeVisitor[Self]())
+  elif UnderlyingType is uint32:
+    deserializer.deserializeUint32(RangeVisitor[Self]())
+  elif UnderlyingType is uint64:
+    deserializer.deserializeUint64(RangeVisitor[Self]())
+  elif UnderlyingType is float32:
+    deserializer.deserializeFloat32(RangeVisitor[Self]())
+  elif UnderlyingType is float64:
+    deserializer.deserializeFloat64(RangeVisitor[Self]())
+  else:
+    deserializer.deserializeInt64(RangeVisitor[Self]())
 {.pop.}
+
+proc deserialize*(Self: typedesc[ref], deserializer: var auto): Self =
+  mixin deserialize
+
+  new result
+  result[] = pointerBase(Self).deserialize(deserializer)
 
 when defined(release):
   {.pop.}

@@ -4,16 +4,12 @@ import std/[
   strutils
 ]
 
-from ../../des/helpers import
-  Visitor
 from ../../des/error import
   UnexpectedSigned,
   UnexpectedUnsigned,
   UnexpectedString,
+  UnexpectedFloat,
   raiseInvalidValue
-
-
-from ../../pragmas import lowerCased
 
 
 {.push used.}
@@ -62,7 +58,6 @@ template getOrBreak[T](field: Option[T]): T =
 macro genPrimitive(T: typed{`type`}, deserializeMethod: untyped = nil, floats: static[bool] = false) =
   result = newStmtList()
   var
-    visitorSym = bindSym "Visitor"
     selfIdent = ident "self"
     valueIdent = ident "value"
     deserializerIdent = ident "deserializer"
@@ -111,7 +106,8 @@ macro genPrimitive(T: typed{`type`}, deserializeMethod: untyped = nil, floats: s
         self.Value(value)
   
   result.add quote do:
-    type `visitorType` = `visitorSym`[`T`]
+    type HackType[Value] = object
+    type `visitorType` = HackType[`T`]
     implVisitor(`visitorType`, true)
 
     proc expecting*(`selfIdent`: `visitorType`): string = `typeStringLit`
@@ -133,65 +129,17 @@ macro genPrimitive(T: typed{`type`}, deserializeMethod: untyped = nil, floats: s
         `body`
 
 
-macro genEnumCase(typ: typedesc[enum]): enum =
-  let
-    # some magic numbers
-    typ = typ[1][0][0][1][2][0]
-    typeDef = typ.getImpl
-    enumTy = typeDef[2]
-    lowerCasedSym = bindSym "lowerCased"
-    lowerCased = (
-      var temp = false
-      if typeDef[0].kind == nnkPragmaExpr:
-        for i in typeDef[0]:
-          if i.kind == nnkPragma and i[0] == lowerCasedSym:
-            temp = true
-            break
-      temp
-    )
-
-  result = nnkCaseStmt.newTree(ident "value")
-
-  for variant in enumTy[1..enumTy.len-1]:
-    let str = (
-      if lowerCased:
-        variant.strVal.toLowerAscii
-      else:
-        variant.strVal
-    )
-    result.add nnkOfBranch.newTree(
-      newLit str,
-      newStmtList(
-        newDotExpr(
-          typ,
-          variant
-        )
-      )
-    )
-  
-  result.add nnkElse.newTree(
-    newCall(
-      bindSym "raiseInvalidValue",
-      newCall(
-        bindSym "UnexpectedString",
-        ident "value"
-      ),
-      ident "self"
-    )
-  )
-
-
 macro genArray(size: static[int], T: typedesc): array =
   # [get(nextElement[T](sequence)), ...]
   result = nnkBracket.newTree()
 
-  for i in 0..(size-1):
+  for i in 0..size:
     result.add newCall(
       bindSym "get",
       newCall(
         nnkBracketExpr.newTree(
           ident "nextElement",
-          ident "T"
+          T
         ),
         ident "sequence"
       )
@@ -199,15 +147,36 @@ macro genArray(size: static[int], T: typedesc): array =
 
 
 template visitEnumIntBody {.dirty.} =
-  bind raiseInvalidValue
-  bind UnexpectedSigned
-  bind UnexpectedUnsigned
+  bind
+    raiseInvalidValue,
+    UnexpectedSigned,
+    UnexpectedUnsigned
 
   if value.int64 in T.low.int64..T.high.int64:
-    T(value)
+    value.T
   else:
     when value is SomeSignedInt:
       raiseInvalidValue(UnexpectedSigned(value), self)
     else:
       raiseInvalidValue(UnexpectedUnsigned(value), self)
+
+
+template visitRangeIntBody {.dirty.} =
+  bind visitEnumIntBody
+  
+  visitEnumIntBody()
+
+
+template visitRangeFloatBody {.dirty.} =
+  bind raiseInvalidValue, UnexpectedFloat
+
+  if value.float64 in T.low.float64..T.high.float64:
+    value.T
+  else:
+    raiseInvalidValue(UnexpectedFloat(value.float64), self)
+
+
+# https://github.com/GULPF/samson/blob/71ead61104302abfc0d4463c91f73a4126b2184c/src/samson/private/xtypetraits.nim#L29
+macro rangeUnderlyingType(typ: typedesc[range]): typedesc =
+  result = getType(getType(typ)[1][1])
 {.pop.}
