@@ -2,12 +2,11 @@ import std/[
   macros
 ]
 
-from ../magic/intermediate {.all.} import 
+from ../magic/intermediate {.all.} import
+  Struct,
   init
 
 from ../magic/des/generation {.all.} import
-  DeserStruct,
-  flatten,
   generate
 
 
@@ -15,8 +14,7 @@ macro makeDeserializable*(typ: varargs[typedesc], public: static[bool] = false) 
   result = newStmtList()
 
   for i in typ:
-    var struct = DeserStruct.init i
-    struct.flattenFields = flatten struct.fields
+    var struct = Struct.init i
     
     result.add generate(struct, public)
 

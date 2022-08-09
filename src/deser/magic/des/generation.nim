@@ -17,10 +17,10 @@ from utils {.all.} import
   getOrRaise,
   toByteArray
 
-
-type
-  DeserStruct = object of Struct
-    flattenFields*: seq[Field]
+from ../defproc {.all.} import
+  defPushPop,
+  defMaybeExportedIdent,
+  defWithType
 
 
 {.push used.}
@@ -33,18 +33,6 @@ proc withGenerics(someType: NimNode, genericParams: NimNode): NimNode =
   for param in genericParams:
     # HACK: https://github.com/nim-lang/Nim/issues/19670
     result.add ident param.strVal
-
-
-proc flatten(fields: seq[Field]): seq[Field] =
-  result = newSeqOfCap[Field](fields.len)
-
-  for field in fields:
-    if not field.isSkipDeserializing:
-      if not field.isUntagged:
-        result.add field
-      if field.isCase:
-        for branch in field.branches:
-          result.add branch.fields.flatten
 
 
 proc defVisitorKeyType(visitorType, valueType: NimNode): NimNode =
@@ -65,7 +53,7 @@ proc defImplVisitor(selfType, returnType: NimNode, public: bool): NimNode =
     `implVisitorSym`(`selfType`, public=`public`)
 
 
-proc defKeysEnum(struct: DeserStruct): NimNode =
+proc defKeysEnum(struct: Struct): NimNode =
   #[
     type Enum = enum
       FirstKey
@@ -112,7 +100,7 @@ proc defToKeyElseBranch(struct: Struct): NimNode =
   ) 
   
 
-proc defStrToKeyCase(struct: DeserStruct): NimNode =
+proc defStrToKeyCase(struct: Struct): NimNode =
   #[
     case value
     of "key":
@@ -136,7 +124,7 @@ proc defStrToKeyCase(struct: DeserStruct): NimNode =
   result.add defToKeyElseBranch(struct)
 
 
-proc defBytesToKeyCase(struct: DeserStruct): NimNode =
+proc defBytesToKeyCase(struct: Struct): NimNode =
   if struct.flattenFields.len == 0:
     # hardcode for empty objects
     # cause if statement with only `else` branch is nonsense
@@ -162,7 +150,7 @@ proc defBytesToKeyCase(struct: DeserStruct): NimNode =
     result.add defToKeyElseBranch(struct)
 
 
-proc defUintToKeyCase(struct: DeserStruct): NimNode =
+proc defUintToKeyCase(struct: Struct): NimNode =
   # HACK: https://github.com/nim-lang/Nim/issues/20031
   if struct.flattenFields.len == 0:
     # hardcode for empty objects
@@ -248,14 +236,7 @@ proc defKeyDeserializeBody(visitorType: NimNode): NimNode =
 
 
 proc defDeserializeKeyProc(selfType, body: NimNode, public: bool): NimNode =
-  let
-    deserializeIdent = ident "deserialize"
-    deserializeProcIdent = (
-      if public:
-        nnkPostfix.newTree(ident "*", deserializeIdent)
-      else:
-        deserializeIdent
-    )
+  let deserializeProcIdent = defMaybeExportedIdent(ident "deserialize", public)
   
   result = nnkProcDef.newTree(
     deserializeProcIdent,
@@ -287,7 +268,7 @@ proc defDeserializeKeyProc(selfType, body: NimNode, public: bool): NimNode =
   )
 
 
-proc defKeyDeserialize(visitorType: NimNode, struct: DeserStruct, public: bool): NimNode =  
+proc defKeyDeserialize(visitorType: NimNode, struct: Struct, public: bool): NimNode =  
   let
     keysEnum = defKeysEnum(struct)
     visitorTypeDef = defVisitorKeyType(visitorType, valueType=struct.enumSym)
@@ -456,7 +437,7 @@ proc defInitResolver(struct: Struct): NimNode =
   resolve(struct, struct.fields, objConstr)
 
 
-proc defVisitMapProc(struct: DeserStruct, visitorType, body: NimNode): NimNode =
+proc defVisitMapProc(struct: Struct, visitorType, body: NimNode): NimNode =
   var generics, returnType, visitorTyp: NimNode
 
   if struct.genericParams.isSome:
@@ -495,7 +476,7 @@ proc defVisitMapProc(struct: DeserStruct, visitorType, body: NimNode): NimNode =
   )
 
 
-proc defOptionFieldVars(struct: DeserStruct): NimNode =
+proc defOptionFieldVars(struct: Struct): NimNode =
   # var fieldName = none(FieldType)
   result = newStmtList()
 
@@ -510,7 +491,7 @@ proc defOptionFieldVars(struct: DeserStruct): NimNode =
     )
 
 
-proc defKeyToValueCase(struct: DeserStruct): NimNode =
+proc defKeyToValueCase(struct: Struct): NimNode =
   #[
     case key
     of FirstField:
@@ -523,9 +504,7 @@ proc defKeyToValueCase(struct: DeserStruct): NimNode =
     ident "key"
   )
 
-  # regenerate flatten fields
-  # cause deserializeWithType may appear
-  for field in flatten(struct.fields):
+  for field in struct.flattenFields:
     let genericTypeArgument =
       if field.deserializeWithType.isSome:
         let
@@ -602,21 +581,14 @@ proc defForKeys(keyType, body: NimNode): NimNode =
   )
 
 
-proc defDeserializeValueProc(struct: DeserStruct, body: NimNode, public: bool): NimNode =
+proc defDeserializeValueProc(struct: Struct, body: NimNode, public: bool): NimNode =
   let
-    deserializeIdent = ident "deserialize"
-    deserializeProcIdent = (
-      if public:
-        nnkPostfix.newTree(ident "*", deserializeIdent)
-      else:
-        deserializeIdent
-    )
-    selfType = (
+    deserializeProcIdent = defMaybeExportedIdent(ident "deserialize", public)
+    selfType =
       if struct.genericParams.isSome:
         withGenerics(struct.sym, struct.genericParams.unsafeGet)
       else:
         struct.sym
-    )
   
   result = nnkProcDef.newTree(
     deserializeProcIdent,
@@ -648,7 +620,7 @@ proc defDeserializeValueProc(struct: DeserStruct, body: NimNode, public: bool): 
   )
 
 
-proc defValueDeserializeBody(struct: DeserStruct, visitorType: NimNode): NimNode =
+proc defValueDeserializeBody(struct: Struct, visitorType: NimNode): NimNode =
   let visitorType = (
     if struct.genericParams.isSome:
       withGenerics(visitorType, struct.genericParams.unsafeGet)
@@ -669,39 +641,18 @@ proc defValueDeserializeBody(struct: DeserStruct, visitorType: NimNode): NimNode
     )
   )
 
-proc defDeserializeWithType(struct: var DeserStruct): NimNode =
+
+proc defDeserializeWithType(struct: Struct, public: bool): NimNode =
   result = newStmtList()
 
-  for field in struct.fields.mitems:
+  for field in struct.flattenFields:
     if field.features.deserializeWith.isSome:
       let
-        typ = genSym(nskType, "DeserializeWith")
+        typ = field.deserializeWithType.get()
         deserializeWith = field.features.deserializeWith.unsafeGet
-        deserializeIdent = ident "deserialize"
+        deserializeIdent = defMaybeExportedIdent(ident "deserialize", public)
 
-      result.add nnkTypeSection.newTree(
-        nnkTypeDef.newTree(
-          typ,
-          nnkGenericParams.newTree(
-            nnkIdentDefs.newTree(
-              newIdentNode("T"),
-              newEmptyNode(),
-              newEmptyNode()
-            )
-          ),
-          nnkObjectTy.newTree(
-            newEmptyNode(),
-            newEmptyNode(),
-            nnkRecList.newTree(
-              nnkIdentDefs.newTree(
-                newIdentNode("value"),
-                newIdentNode("T"),
-                newEmptyNode()
-              )
-            )
-          )
-        )
-      )
+      result.add defWithType(typ)
 
       result.add quote do:
         proc `deserializeIdent`[T](Self: typedesc[`typ`[T]], deserializer: var auto): Self {.inline.} =
@@ -710,10 +661,8 @@ proc defDeserializeWithType(struct: var DeserStruct): NimNode =
           else:
             result = Self(value: `deserializeWith`(deserializer))
 
-      field.deserializeWithType = some typ
 
-
-proc defVisitorValueType(struct: var DeserStruct, visitorType, valueType: NimNode): NimNode =
+proc defVisitorValueType(struct: Struct, visitorType, valueType: NimNode, public: bool): NimNode =
   result = newStmtList()
   var generics, valueTyp: NimNode
 
@@ -726,7 +675,7 @@ proc defVisitorValueType(struct: var DeserStruct, visitorType, valueType: NimNod
 
   let hackType = genSym(nskType, "HackType")
 
-  result.add defDeserializeWithType(struct)
+  result.add defDeserializeWithType(struct, public)
 
   result.add nnkTypeSection.newTree(
     nnkTypeDef.newTree(
@@ -755,7 +704,7 @@ proc defVisitorValueType(struct: var DeserStruct, visitorType, valueType: NimNod
   )
 
 
-proc defVisitSeqProc(struct: DeserStruct, visitorType, body: NimNode): NimNode =
+proc defVisitSeqProc(struct: Struct, visitorType, body: NimNode): NimNode =
   var generics, returnType, visitorTyp: NimNode
 
   if struct.genericParams.isSome:
@@ -794,13 +743,11 @@ proc defVisitSeqProc(struct: DeserStruct, visitorType, body: NimNode): NimNode =
   )
 
 
-proc defFieldLets(struct: DeserStruct): NimNode =
+proc defFieldLets(struct: Struct): NimNode =
   # let someField = nextElement[FieldType]()
   result = newStmtList()
 
-  # regenerate flatten fields
-  # cause deserializeWithType may appear
-  for field in flatten(struct.fields):
+  for field in struct.flattenFields:
     let genericTypeArgument =
       if field.deserializeWithType.isSome:
         let
@@ -859,9 +806,9 @@ proc defFieldLets(struct: DeserStruct): NimNode =
     )
 
 
-proc defValueDeserialize(visitorType: NimNode, struct: var DeserStruct, public: bool): NimNode =  
+proc defValueDeserialize(visitorType: NimNode, struct: Struct, public: bool): NimNode =  
   let
-    visitorTypeDef = defVisitorValueType(struct, visitorType, valueType=struct.sym)
+    visitorTypeDef = defVisitorValueType(struct, visitorType, valueType=struct.sym, public=public)
     visitorImpl = defImplVisitor(visitorType, returnType=struct.sym, public=public)
     expectingProc = defExpectingProc(visitorType, body=newLit("struct " & '`' & struct.sym.strVal & '`'))
     visitSeqProc = defVisitSeqProc(
@@ -900,21 +847,7 @@ proc defValueDeserialize(visitorType: NimNode, struct: var DeserStruct, public: 
   )
 
 
-proc defPushPop(stmtList: NimNode): NimNode =
-  newStmtList(
-    nnkPragma.newTree(
-      ident "push",
-      ident "used",
-      ident "inline",
-    ),
-    stmtList,
-    nnkPragma.newTree(
-      ident "pop"
-    )
-  )
-
-
-proc generate(struct: var DeserStruct, public: bool): NimNode =
+proc generate(struct: Struct, public: bool): NimNode =
   let
     fieldVisitor = genSym(nskType, "FieldVisitor") 
     valueVisitor = genSym(nskType, "Visitor")

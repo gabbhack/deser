@@ -12,7 +12,8 @@ type
     enumUnknownFieldSym*: NimNode
     features*: StructFeatures
     genericParams*: Option[NimNode]
-  
+    flattenFields*: seq[Field]
+
   StructFeatures = object
     onUnknownKeysValue*: Option[NimNode]
   
@@ -87,6 +88,18 @@ proc deserializeName(self: Field): string =
     self.features.renameDeserialize.unsafeGet
   else:
     self.ident.strVal
+  
+
+proc flatten(fields: seq[Field]): seq[Field] =
+  result = newSeqOfCap[Field](fields.len)
+
+  for field in fields:
+    if not field.isSkipDeserializing:
+      if not field.isUntagged:
+        result.add field
+      if field.isCase:
+        for branch in field.branches:
+          result.add branch.fields.flatten
 
 
 proc copyWithoutChild(copyOf: NimNode, idx = 0, n = 1): NimNode =
@@ -203,6 +216,12 @@ proc init(Self: typedesc[Field], identDefs: NimNode): Self =
       enumFieldSym: genSym(nskEnumField, identNode[0].strVal)
     )
     result.features = FieldFeatures.init(pragmas=identNode[1])
+
+    if result.features.deserializeWith.isSome:
+      result.deserializeWithType = some genSym(nskType, "DeserializeWith")
+    
+    if result.features.serializeWith.isSome:
+      result.serializeWithType = some genSym(nskType, "SerializeWith")
   else:
     expectKind identNode, {nnkIdent, nnkPragmaExpr}
 
@@ -325,4 +344,6 @@ proc init(Self: typedesc[Struct], sym: NimNode): Self =
 
   if typeDef[1].kind == nnkGenericParams:
     result.genericParams = some typeDef[1]
+  
+  result.flattenFields = flatten result.fields
 {.pop.}
