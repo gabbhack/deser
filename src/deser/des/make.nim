@@ -11,7 +11,7 @@ from ../magic/des/generation {.all.} import
   generate
 
 
-macro makeDeserializableStruct(typ: typed{`type`}, public: static[bool]) =
+macro makeDeserializable*(typ: typed{`type`}, public: static[bool] = false) =
   var struct = DeserStruct.init typ
   struct.flattenFields = flatten struct.fields
   
@@ -19,12 +19,3 @@ macro makeDeserializableStruct(typ: typed{`type`}, public: static[bool]) =
 
   if defined(debugMakeDeserializable):
     debugEcho result.toStrLit
-
-
-template makeDeserializable*(typ: typed{`type`}, public: static[bool] = false) {.dirty.} =
-  bind makeDeserializableStruct
-
-  when typ is object:
-    makeDeserializableStruct(typ, public)
-  else:
-    {.error: "Unsupported type: `{$typ}`".}

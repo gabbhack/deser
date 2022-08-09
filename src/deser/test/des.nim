@@ -49,8 +49,11 @@ proc assertDesTokens*[T](value: T, tokens: openArray[Token]) =
   var des = Deserializer.init tokens
 
   let res = T.deserialize(des)
-
-  doAssert res == value, &"The result is `{res}` but expected `{value}`"
+  
+  when T is ref:
+    doAssert res[] == value[], &"The result is `{res}` but expected `{value}`"
+  else:
+    doAssert res == value, &"The result is `{res}` but expected `{value}`"
 
   doAssert des.tokens.len == 0,
     "The token sequence is not empty. There may have been a copy of the Deserializer instead of passing by reference."
