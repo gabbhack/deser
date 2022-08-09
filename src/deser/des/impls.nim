@@ -31,7 +31,7 @@ from helpers import
 
 
 when defined(release):
-  {.push noinit, inline, checks: off.}
+  {.push inline, checks: off.}
 
 {.push used.}
 proc deserialize*[T](self: NoneSeed[T], deserializer: var auto): T =

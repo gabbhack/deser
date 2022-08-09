@@ -59,7 +59,10 @@ type
     else:
       nil
 
-func `$`*(self: Unexpected): string {.noinit, inline.} =
+
+when defined(release):
+  {.push inline.}
+func `$`*(self: Unexpected): string {.inline.} =
   case self.kind
   of Bool:
     &"boolean `{self.boolValue}`"
@@ -83,25 +86,27 @@ func `$`*(self: Unexpected): string {.noinit, inline.} =
     "map"
 
 
-func UnexpectedBool*(value: bool): auto {.noinit, inline.} = Unexpected(kind: Bool, boolValue: value)
+func UnexpectedBool*(value: bool): auto = Unexpected(kind: Bool, boolValue: value)
 
-func UnexpectedUnsigned*(value: uint64): auto {.noinit, inline.} = Unexpected(kind: Unsigned, unsignedValue: value)
+func UnexpectedUnsigned*(value: uint64): auto = Unexpected(kind: Unsigned, unsignedValue: value)
 
-func UnexpectedSigned*(value: int64): auto {.noinit, inline.} = Unexpected(kind: Signed, signedValue: value)
+func UnexpectedSigned*(value: int64): auto = Unexpected(kind: Signed, signedValue: value)
 
-func UnexpectedFloat*(value: float64): auto {.noinit, inline.} = Unexpected(kind: Float, floatValue: value)
+func UnexpectedFloat*(value: float64): auto = Unexpected(kind: Float, floatValue: value)
 
-func UnexpectedChar*(value: char): auto {.noinit, inline.} = Unexpected(kind: Char, charValue: value)
+func UnexpectedChar*(value: char): auto = Unexpected(kind: Char, charValue: value)
 
-func UnexpectedString*(value: sink string): auto {.noinit, inline.} = Unexpected(kind: String, stringValue: value)
+func UnexpectedString*(value: sink string): auto = Unexpected(kind: String, stringValue: value)
 
-func UnexpectedBytes*(value: sink seq[byte]): auto {.noinit, inline.} = Unexpected(kind: Bytes, bytesValue: value)
+func UnexpectedBytes*(value: sink seq[byte]): auto = Unexpected(kind: Bytes, bytesValue: value)
 
-func UnexpectedOption*(): auto {.noinit, inline.} = Unexpected(kind: Option)
+func UnexpectedOption*(): auto = Unexpected(kind: Option)
 
-func UnexpectedSeq*(): auto {.noinit, inline.} = Unexpected(kind: Seq)
+func UnexpectedSeq*(): auto = Unexpected(kind: Seq)
 
-func UnexpectedMap*(): auto {.noinit, inline.} = Unexpected(kind: Map)
+func UnexpectedMap*(): auto = Unexpected(kind: Map)
+when defined(release):
+  {.pop.}
 
 
 {.push noinline, noreturn.}

@@ -794,6 +794,7 @@ proc defVisitSeqProc(struct: DeserStruct, visitorType, body: NimNode): NimNode =
 
 
 proc defFieldLets(struct: DeserStruct): NimNode =
+  # let someField = nextElement[FieldType]()
   result = newStmtList()
 
   for field in flatten(struct.fields):
@@ -819,6 +820,7 @@ proc defFieldLets(struct: DeserStruct): NimNode =
       )
     
     if field.deserializeWithType.isSome:
+      # nextElement[DeserializeWith]().map(proc (x: auto): auto = x.value)
       nextElementCall = newCall(
         bindSym "map",
         nextElementCall,
@@ -901,7 +903,6 @@ proc defPushPop(stmtList: NimNode): NimNode =
       ident "push",
       ident "used",
       ident "inline",
-      ident "noinit"
     ),
     stmtList,
     nnkPragma.newTree(

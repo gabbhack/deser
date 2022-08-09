@@ -61,7 +61,7 @@ template implVisitor*(selfType: typed, public: static[bool] = false) {.dirty.} =
     proc expecting(self: selfType): string
 
     when defined(release):
-      {.push noinit, inline.}
+      {.push inline.}
 
     {.push used.}
     # forward declaration
@@ -133,7 +133,7 @@ template implSeqAccess*(selfType: typed{`type`}, public: static[bool] = false) {
     proc nextElementSeed(self: var selfType, seed: auto): Option[seed.Value]
 
     when defined(release):
-      {.push noinit, inline.}
+      {.push inline.}
 
     {.push used.}
     # default implementation
@@ -169,7 +169,7 @@ template implMapAccess*(selfType: typed{`type`}, public: static[bool] = false) {
     proc nextValueSeed(self: var selfType, seed: auto): seed.Value
 
     when defined(release):
-      {.push noinit, inline.}
+      {.push inline.}
 
     {.push used.}
     # default implementation
