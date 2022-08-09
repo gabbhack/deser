@@ -11,11 +11,14 @@ from ../magic/des/generation {.all.} import
   generate
 
 
-macro makeDeserializable*(typ: typed{`type`}, public: static[bool] = false) =
-  var struct = DeserStruct.init typ
-  struct.flattenFields = flatten struct.fields
-  
-  result = generate(struct, public)
+macro makeDeserializable*(typ: varargs[typedesc], public: static[bool] = false) =
+  result = newStmtList()
+
+  for i in typ:
+    var struct = DeserStruct.init i
+    struct.flattenFields = flatten struct.fields
+    
+    result.add generate(struct, public)
 
   if defined(debugMakeDeserializable):
     debugEcho result.toStrLit

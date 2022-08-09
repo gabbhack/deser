@@ -127,8 +127,15 @@ proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
 
 
 proc init(Self: typedesc[FieldFeatures | StructFeatures], pragmas: NimNode): Self =
-  # Check whether the field contains our pragmas
-  expectKind pragmas, nnkPragma
+  # Check whether the field or object contains our pragmas
+  expectKind pragmas, {nnkPragma, nnkPragmaExpr}
+
+  let pragmas =
+    if pragmas.kind == nnkPragma:
+      pragmas
+    else:
+      # for object
+      pragmas[1]
 
   for pragma in pragmas:
     case pragma.kind
@@ -145,7 +152,7 @@ proc init(Self: typedesc[FieldFeatures | StructFeatures], pragmas: NimNode): Sel
       result.fill(sym, values)
     else:
       expectKind pragma, {nnkSym, nnkCall}
-  
+
   # TODO add check for nosense
 
 

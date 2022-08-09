@@ -2,13 +2,16 @@ discard """
   matrix: "; -d:release; --gc:orc; -d:release --gc:orc"
 """
 {.experimental: "views".}
-import std/[unittest, times, options]
+import std/[unittest, times, options, strformat]
 
 import deser
 import deser/test
 
 
 proc fromTimestamp(deserializer: var auto): Time = fromUnix(deserialize(int64, deserializer))
+
+proc raiseError(objName, fieldValue: auto) =
+  raise newException(ValueError, &"Unknown field `{fieldValue}`")
 
 
 type
@@ -52,6 +55,12 @@ type
   
   RenameObject = object
     name {.renameDeserialize("fullname").}: string
+    kek {.renamed("lol").}: string
+
+  DefaultObject = object
+    id {.defaultValue(123).}: int
+  
+  OnUnknownObject {.onUnknownKeys(raiseError).} = object
 
 
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
@@ -65,18 +74,21 @@ proc `==`*(x, y: CaseObject | UntaggedCaseObject): bool =
 
 proc `$`*(x: ref): string = $x[]
 
-
-makeDeserializable(EmptyObject)
-makeDeserializable(Object)
-makeDeserializable(GenericObject)
-makeDeserializable(RefObject)
-makeDeserializable(ObjectWithRef)
-makeDeserializable(InheritObject)
-makeDeserializable(CaseObject)
-makeDeserializable(UntaggedCaseObject)
-makeDeserializable(SkipObject)
-makeDeserializable(DeserializeWithObject)
-makeDeserializable(RenameObject)
+makeDeserializable([
+  EmptyObject,
+  Object,
+  GenericObject,
+  RefObject,
+  ObjectWithRef,
+  InheritObject,
+  CaseObject,
+  UntaggedCaseObject,
+  SkipObject,
+  DeserializeWithObject,
+  RenameObject,
+  DefaultObject,
+  OnUnknownObject
+])
 
 
 suite "makeDeserializable":
@@ -174,13 +186,33 @@ suite "makeDeserializable":
     ]
   
   test "RenameObject":
-    assertDesTokens RenameObject(name: "123"), [
+    assertDesTokens RenameObject(name: "123", kek: "123"), [
       Struct("RenameObject", 1),
       String("fullname"),
+      String("123"),
+      String("lol"),
       String("123"),
       StructEnd()
     ]
   
+  test "DefaultObject":
+    assertDesTokens DefaultObject(id: 123), [
+      Struct("DefaultObject", 1),
+      StructEnd()
+    ]
+
+  # crash on "-d:release"
+  #[
+    test "OnUnknownObject":
+      expect(ValueError):
+        assertDesTokens OnUnknownObject(), [
+          Struct("OnUnknownObject", 1),
+          String("test"),
+          String("123"),
+          StructEnd()
+        ]
+  ]#
+
   test "Ignore extra fields":
     assertDesTokens Object(id: 123), [
       Struct("Object", 1),

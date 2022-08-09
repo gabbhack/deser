@@ -524,6 +524,7 @@ proc defKeyToValueCase(struct: DeserStruct): NimNode =
   )
 
   # regenerate flatten fields
+  # cause deserializeWithType may appear
   for field in flatten(struct.fields):
     let genericTypeArgument =
       if field.deserializeWithType.isSome:
@@ -797,6 +798,8 @@ proc defFieldLets(struct: DeserStruct): NimNode =
   # let someField = nextElement[FieldType]()
   result = newStmtList()
 
+  # regenerate flatten fields
+  # cause deserializeWithType may appear
   for field in flatten(struct.fields):
     let genericTypeArgument =
       if field.deserializeWithType.isSome:
