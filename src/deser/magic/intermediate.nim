@@ -21,6 +21,8 @@ type
     typ*: NimNode
     enumFieldSym*: NimNode
     features*: FieldFeatures
+    deserializeWithType*: Option[NimNode]
+    serializeWithType*: Option[NimNode]
 
     case isCase*: bool
     of true:
@@ -38,6 +40,7 @@ type
     renameDeserialize*: Option[string]
     skipSerializeIf*: Option[NimNode]
     serializeWith*: Option[NimNode]
+    deserializeWith*: Option[NimNode]
     defaultValue*: Option[NimNode]
   
   FieldBranchKind = enum
@@ -67,6 +70,8 @@ proc isUntagged(self: Field): bool = self.features.untagged
 proc getSkipSerializeIf(self: Field): Option[NimNode] = self.features.skipSerializeIf
 
 proc getSerializeWith(self: Field): Option[NimNode] = self.features.serializeWith
+
+proc getDeserializeWith(self: Field): Option[NimNode] = self.features.deserializeWith
 
 proc getDefaultValue(self: Field): Option[NimNode] = self.features.defaultValue
 
@@ -106,6 +111,8 @@ proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
     self.skipDeserializing = true
   elif sym == bindSym("serializeWith"):
     self.serializeWith = some values[0]
+  elif sym == bindSym("deserializeWith"):
+    self.deserializeWith = some values[0]
   elif sym == bindSym("renamed"):
     self.renameDeserialize = some values[0].strVal
     self.renameSerialize = some values[0].strVal

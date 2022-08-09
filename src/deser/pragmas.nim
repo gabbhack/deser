@@ -49,6 +49,12 @@ The given function must be callable as `proc[Serializer] (self: field.type, seri
 ]##
 
 
+template deserializeWith*(with: typed) {.pragma.} ##[
+Deserialize this field using a procedure.
+The given procedure must be callable as `proc (deserializer: var auto): FieldType` or `proc [T](deserializer: var auto): T`
+]##
+
+
 template renamed*(renamed: string) {.pragma.} ##[
 Serialize and deserialize field with the given name instead of its Nim name
 ]##

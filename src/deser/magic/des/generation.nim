@@ -523,7 +523,32 @@ proc defKeyToValueCase(struct: DeserStruct): NimNode =
     ident "key"
   )
 
-  for field in struct.flattenFields:
+  # regenerate flatten fields
+  for field in flatten(struct.fields):
+    let genericTypeArgument =
+      if field.deserializeWithType.isSome:
+        let
+          withType = field.deserializeWithType.unsafeGet
+          originType = field.typ
+        nnkBracketExpr.newTree(
+          withType,
+          originType
+        )
+      else:
+        field.typ
+    
+    var nextValueCall =
+      newCall(
+        nnkBracketExpr.newTree(
+          ident "nextValue",
+          genericTypeArgument
+        ),
+        ident "map",
+      )
+    
+    if field.deserializeWithType.isSome:
+      nextValueCall = newDotExpr(nextValueCall, ident "value")
+
     result.add nnkOfBranch.newTree(
       newDotExpr(struct.enumSym, field.enumFieldSym),
       newStmtList(
@@ -539,13 +564,7 @@ proc defKeyToValueCase(struct: DeserStruct): NimNode =
           field.ident,
           newCall(
             bindSym("some"),
-            newCall(
-              nnkBracketExpr.newTree(
-                ident "nextValue",
-                field.typ
-              ),
-              ident "map",
-            ),
+            nextValueCall
           )
         )
       )
@@ -566,7 +585,7 @@ proc defKeyToValueCase(struct: DeserStruct): NimNode =
 
 proc defForKeys(keyType, body: NimNode): NimNode =
   #[
-    for key in map.keys[keyType]():
+    for key in keys[keyType](map):
       body
   ]#
   nnkForStmt.newTree(
@@ -649,8 +668,52 @@ proc defValueDeserializeBody(struct: DeserStruct, visitorType: NimNode): NimNode
     )
   )
 
+proc defDeserializeWithType(struct: var DeserStruct): NimNode =
+  result = newStmtList()
 
-proc defVisitorValueType(struct: DeserStruct, visitorType, valueType: NimNode): NimNode =
+  for field in struct.fields.mitems:
+    if field.features.deserializeWith.isSome:
+      let
+        typ = genSym(nskType, "DeserializeWith")
+        deserializeWith = field.features.deserializeWith.unsafeGet
+        deserializeIdent = ident "deserialize"
+
+      result.add nnkTypeSection.newTree(
+        nnkTypeDef.newTree(
+          typ,
+          nnkGenericParams.newTree(
+            nnkIdentDefs.newTree(
+              newIdentNode("T"),
+              newEmptyNode(),
+              newEmptyNode()
+            )
+          ),
+          nnkObjectTy.newTree(
+            newEmptyNode(),
+            newEmptyNode(),
+            nnkRecList.newTree(
+              nnkIdentDefs.newTree(
+                newIdentNode("value"),
+                newIdentNode("T"),
+                newEmptyNode()
+              )
+            )
+          )
+        )
+      )
+
+      result.add quote do:
+        proc `deserializeIdent`[T](Self: typedesc[`typ`[T]], deserializer: var auto): Self {.inline.} =
+          when compiles(`deserializeWith`[T](deserializer)):
+            result = Self(value: `deserializeWith`[T](deserializer))
+          else:
+            result = Self(value: `deserializeWith`(deserializer))
+
+      field.deserializeWithType = some typ
+
+
+proc defVisitorValueType(struct: var DeserStruct, visitorType, valueType: NimNode): NimNode =
+  result = newStmtList()
   var generics, valueTyp: NimNode
 
   if struct.genericParams.isSome:
@@ -659,15 +722,17 @@ proc defVisitorValueType(struct: DeserStruct, visitorType, valueType: NimNode): 
   else:
     generics = newEmptyNode()
     valueTyp = valueType
-  
-  let hackType = genSym(nskType, "Visitor")
 
-  result = nnkTypeSection.newTree(
+  let hackType = genSym(nskType, "HackType")
+
+  result.add defDeserializeWithType(struct)
+
+  result.add nnkTypeSection.newTree(
     nnkTypeDef.newTree(
-      newIdentNode("Test"),
+      hackType,
       nnkGenericParams.newTree(
         nnkIdentDefs.newTree(
-          hackType,
+          ident "Value",
           newEmptyNode(),
           newEmptyNode()
         )
@@ -689,11 +754,120 @@ proc defVisitorValueType(struct: DeserStruct, visitorType, valueType: NimNode): 
   )
 
 
-proc defValueDeserialize(visitorType: NimNode, struct: DeserStruct, public: bool): NimNode =  
+proc defVisitSeqProc(struct: DeserStruct, visitorType, body: NimNode): NimNode =
+  var generics, returnType, visitorTyp: NimNode
+
+  if struct.genericParams.isSome:
+    generics = struct.genericParams.unsafeGet
+    returnType = withGenerics(struct.sym, struct.genericParams.unsafeGet)
+    visitorTyp = withGenerics(visitorType, struct.genericParams.unsafeGet)
+  else:
+    generics = newEmptyNode()
+    returnType = struct.sym
+    visitorTyp = visitorType
+
+  result = nnkProcDef.newTree(
+    ident "visitSeq",
+    newEmptyNode(),
+    generics,
+    nnkFormalParams.newTree(
+      returnType,
+      nnkIdentDefs.newTree(
+        ident "self",
+        visitorTyp,
+        newEmptyNode()
+      ),
+      nnkIdentDefs.newTree(
+        ident "sequence",
+        nnkVarTy.newTree(
+          newIdentNode("auto")
+        ),
+        newEmptyNode()
+      )
+    ),
+    newEmptyNode(),
+    newEmptyNode(),
+    nnkStmtList.newTree(
+      body
+    )
+  )
+
+
+proc defFieldLets(struct: DeserStruct): NimNode =
+  result = newStmtList()
+
+  for field in flatten(struct.fields):
+    let genericTypeArgument =
+      if field.deserializeWithType.isSome:
+        let
+          withType = field.deserializeWithType.unsafeGet
+          originType = field.typ
+        nnkBracketExpr.newTree(
+          withType,
+          originType
+        )
+      else:
+        field.typ
+    
+    var nextElementCall =
+      newCall(
+        nnkBracketExpr.newTree(
+          ident "nextElement",
+          genericTypeArgument
+        ),
+        ident "sequence",
+      )
+    
+    if field.deserializeWithType.isSome:
+      nextElementCall = newCall(
+        bindSym "map",
+        nextElementCall,
+        nnkLambda.newTree(
+          newEmptyNode(),
+          newEmptyNode(),
+          newEmptyNode(),
+          nnkFormalParams.newTree(
+            newIdentNode("auto"),
+            nnkIdentDefs.newTree(
+              newIdentNode("x"),
+              newIdentNode("auto"),
+              newEmptyNode()
+            )
+          ),
+          nnkPragma.newTree(
+            newIdentNode("inline"),
+            newIdentNode("nimcall")
+          ),
+          newEmptyNode(),
+          nnkStmtList.newTree(
+            nnkDotExpr.newTree(
+              newIdentNode("x"),
+              newIdentNode("value")
+            )
+          )
+        )
+      )
+
+    result.add newLetStmt(
+      field.ident,
+      nextElementCall
+    )
+
+
+proc defValueDeserialize(visitorType: NimNode, struct: var DeserStruct, public: bool): NimNode =  
   let
     visitorTypeDef = defVisitorValueType(struct, visitorType, valueType=struct.sym)
     visitorImpl = defImplVisitor(visitorType, returnType=struct.sym, public=public)
     expectingProc = defExpectingProc(visitorType, body=newLit("struct " & '`' & struct.sym.strVal & '`'))
+    visitSeqProc = defVisitSeqProc(
+      struct,
+      visitorType,
+      body=newStmtList(
+        nnkMixinStmt.newTree(ident "nextElement"),
+        defFieldLets(struct),
+        defInitResolver(struct)
+      )
+    )
     visitMapProc = defVisitMapProc(
       struct,
       visitorType,
@@ -705,12 +879,17 @@ proc defValueDeserialize(visitorType: NimNode, struct: DeserStruct, public: bool
         defInitResolver(struct)
       )
     )
-    deserializeProc = defDeserializeValueProc(struct, body=defValueDeserializeBody(struct, visitorType), public)
+    deserializeProc = defDeserializeValueProc(
+      struct,
+      body=defValueDeserializeBody(struct, visitorType), 
+      public=public
+    )
   
   result = newStmtList(
     visitorTypeDef,
     visitorImpl,
     expectingProc,
+    visitSeqProc,
     visitMapProc,
     deserializeProc
   )
@@ -731,7 +910,7 @@ proc defPushPop(stmtList: NimNode): NimNode =
   )
 
 
-proc generate(struct: DeserStruct, public: bool): NimNode =
+proc generate(struct: var DeserStruct, public: bool): NimNode =
   let
     fieldVisitor = genSym(nskType, "FieldVisitor") 
     valueVisitor = genSym(nskType, "Visitor")
