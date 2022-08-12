@@ -17,7 +17,7 @@ from utils {.all.} import
   getOrRaise,
   toByteArray
 
-from ../defproc {.all.} import
+from ../sharedutils {.all.} import
   defPushPop,
   defMaybeExportedIdent,
   defWithType

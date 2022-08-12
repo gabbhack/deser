@@ -1,6 +1,5 @@
 import std/[
-  options,
-  macros
+  options
 ]
 
 from error import
@@ -19,27 +18,12 @@ from error import
   UnexpectedSeq,
   UnexpectedMap
 
+from ../magic/sharedutils {.all.} import maybePublic
+
 
 type
   NoneSeed*[Value] = object
   IgnoredAny* = object
-
-
-macro maybePublic(public: static[bool], body: untyped): untyped =
-  if not public:
-    result = body
-  else:
-    result = newStmtList()
-
-    for element in body:
-      if element.kind notin {nnkProcDef, nnkIteratorDef}:
-        result.add element
-      else:
-        element[0] = nnkPostfix.newTree(
-          ident "*",
-          element[0]
-        )
-        result.add element
 
 
 template implVisitor*(selfType: typed, public: static[bool] = false) {.dirty.} =
@@ -262,7 +246,6 @@ template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false
   bind maybePublic
 
   maybePublic(public):
-    # implementation expected
     proc deserializeAny[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody
 
     proc deserializeBool[Self: selfType](self: var Self, visitor: auto): visitor.Value = defaultBody

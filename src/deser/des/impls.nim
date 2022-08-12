@@ -278,7 +278,7 @@ proc visitSeq*[T](self: ArrayVisitor[T], sequence: var auto): T =
   genArray(T.high, type(result[0]))
 
 
-proc deserialize*(Self: typedesc[array], deserializer: var auto): Self =
+proc deserialize*[Size](Self: typedesc[array[Size, not byte]], deserializer: var auto): Self =
   mixin deserializeArray
 
   deserializer.deserializeArray(Self.len, ArrayVisitor[Self]())

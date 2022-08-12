@@ -50,4 +50,21 @@ proc defWithType(name: NimNode): NimNode =
       )
     )
   )
+
+
+macro maybePublic(public: static[bool], body: untyped): untyped =
+  if not public:
+    result = body
+  else:
+    result = newStmtList()
+
+    for element in body:
+      if element.kind notin {nnkProcDef, nnkIteratorDef}:
+        result.add element
+      else:
+        element[0] = nnkPostfix.newTree(
+          ident "*",
+          element[0]
+        )
+        result.add element
 {.pop.}

@@ -24,9 +24,10 @@ variantp Token:
   Some
   Seq(seqLen: Option[int])
   SeqEnd
-  Array(tupleLen: Option[int])
+  Array(arrayLen: Option[int])
   ArrayEnd
   Map(mapLen: Option[int])
   MapEnd
   Struct(structName: string, structLen: int)
   StructEnd
+  Enum

@@ -5,16 +5,21 @@ import std/options
 import ../ser/impls
 import token
 
+from ../magic/ser/utils {.all.} import asAddr
+
+
 type
   Serializer* = object
-    tokens: openArray[Token]
+    tokens*: openArray[Token]
 
 
 func init*(Self: typedesc[Serializer], tokens: openArray[Token]): Self =
   Self(tokens: tokens.toOpenArray(tokens.low, tokens.high))
 
 
-proc serTokens*[T](value: T, tokens: openArray[Token]) =
+proc assertSerTokens*(value: auto, tokens: openArray[Token]) =
+  mixin serialize
+
   var ser = Serializer.init tokens
   value.serialize(ser)
   # check that `ser` passed by ref
@@ -32,22 +37,29 @@ proc nextToken*(self: var Serializer): Option[Token] =
 
 proc remaining*(self: Serializer): int = self.tokens.len
 
-
 proc assertNextToken*(ser: var Serializer, actual: Token) =
   let next = ser.nextToken()
   if next.isSome():
     let value = next.unsafeGet()
     doAssert value == actual, "Expected " & $value & " but serialized as " & $actual
   else:
-    doAssert Empty() == actual, "Expected end of tokens, but " & $actual & " was serialized"
+    raise newException(AssertionDefect, "Expected end of tokens, but " & $actual & " was serialized")
 
 
 # Serializer impl
-proc serializeBool*(self: var Serializer, v: bool) = assertNextToken self, Boolean(v)
+proc serializeBool*(self: var Serializer, v: bool) = assertNextToken self, Bool(v)
 
-proc serializeInt*(self: var Serializer, v: SomeInteger) = assertNextToken self, Integer(int(v))
+proc serializeInt8*(self: var Serializer, v: int8) = assertNextToken self, I8(v)
 
-proc serializeFloat*(self: var Serializer, v: SomeFloat) = assertNextToken self, Float(float(v))
+proc serializeInt16*(self: var Serializer, v: int16) = assertNextToken self, I16(v)
+
+proc serializeInt32*(self: var Serializer, v: int32) = assertNextToken self, I32(v)
+
+proc serializeInt64*(self: var Serializer, v: int64) = assertNextToken self, I64(v)
+
+proc serializeFloat32*(self: var Serializer, v: float32) = assertNextToken self, F32(v)
+
+proc serializeFloat64*(self: var Serializer, v: float32) = assertNextToken self, F64(v)
 
 proc serializeString*(self: var Serializer, v: string) = assertNextToken self, String(v)
 
@@ -57,29 +69,18 @@ proc serializeBytes*(self: var Serializer, v: openArray[byte]) = assertNextToken
 
 proc serializeNone*(self: var Serializer) = assertNextToken self, None()
 
-proc serializeSome*[T](self: var Serializer, v: T) = assertNextToken self, Some()
+proc serializeSome*(self: var Serializer, v: auto) = assertNextToken self, Some()
 
-proc serializeUnitStruct*(self: var Serializer, name: static[string]) = assertNextToken self, UnitStruct(name)
-
-proc serializeUnitTuple*(self: var Serializer, name: static[string]) = assertNextToken self, UnitTuple(name)
+proc serializeEnum*(self: var Serializer, value: enum) =
+  assertNextToken self, Enum()
 
 proc serializeArray*(self: var Serializer, len: static[int]): var Serializer =
-  assertNextToken self, Array(len)
+  assertNextToken self, Array(some len)
   result = self
 
 
 proc serializeSeq*(self: var Serializer, len: Option[int]): var Serializer =
   assertNextToken self, Seq(len)
-  result = self
-
-
-proc serializeTuple*(self: var Serializer, name: static[string], len: static[int]): var Serializer =
-  assertNextToken self, Tuple(name, len)
-  result = self
-
-
-proc serializeNamedTuple*(self: var Serializer, name: static[string], len: static[int]): var Serializer =
-  assertNextToken self, NamedTuple(name, len)
   result = self
 
 
@@ -92,53 +93,73 @@ proc serializeStruct*(self: var Serializer, name: static[string]): var Serialize
   assertNextToken self, Struct(name)
   result = self
 
-
-proc serializeSeqMap*(self: var Serializer, len: Option[int]): var Serializer =
-  assertNextToken self, SeqMap(len)
-  result = self
-
-
 # SerializeArray impl
-proc serializeArrayElement*[T](self: var Serializer, v: T) = v.serialize(self)
+proc serializeArrayElement*(self: var Serializer, v: auto) =
+  mixin serialize
+
+  v.serialize(self)
 
 proc endArray*(self: var Serializer) = assertNextToken self, ArrayEnd()
 
 # SerializeSeq impl
-proc serializeSeqElement*[T](self: var Serializer, v: T) = v.serialize(self)
+proc serializeSeqElement*(self: var Serializer, v: auto) = 
+  mixin serialize
+
+  v.serialize(self)
 
 proc endSeq*(self: var Serializer) = assertNextToken self, SeqEnd()
 
-# SerializeTuple impl
-proc serializeTupleElement*[T](self: var Serializer, v: T) = v.serialize(self)
+# SerializeMap impl
+proc serializeMapKey*(self: var Serializer, key: auto) =
+  mixin serialize
 
-proc endTuple*(self: var Serializer) = assertNextToken self, TupleEnd()
-
-# SerializeNamedTuple impl
-proc serializeNamedTupleField*[T](self: var Serializer, key: static[string], v: T) =
   key.serialize(self)
+
+proc serializeMapValue*(self: var Serializer, v: auto) =
+  mixin serialize
+
   v.serialize(self)
 
+proc serializeMapEntry*(self: var Serializer, key: auto, value: auto) =
+  self.serializeMapKey(key)
+  self.serializeMapValue(value)
 
-proc endNamedTuple*(self: var Serializer) = assertNextToken self, NamedTupleEnd()
-
-# SerializeMap impl
-proc serializeMapKey*[T](self: var Serializer, key: T) = key.serialize(self)
-
-proc serializeMapValue*[T](self: var Serializer, v: T) = v.serialize(self)
 
 proc endMap*(self: var Serializer) = assertNextToken self, MapEnd()
 
 # SerializeStruct impl
-proc serializeStructField*[T](self: var Serializer, key: static[string], v: T) =
+proc serializeStructField*(self: var Serializer, key: static[string], v: auto) =
+  mixin serialize
+
   key.serialize(self)
   v.serialize(self)
 
 
 proc endStruct*(self: var Serializer) = assertNextToken self, StructEnd()
 
-# SerializeSeqMap impl
-proc serializeSeqMapKey*[T](self: var Serializer, key: T) = key.serialize(self)
+proc collectSeq*(self: var Serializer, iter: auto) =
+  when compiles(iter.len):
+    let length = some iter.len
+  else:
+    let length = none int
 
-proc serializeSeqMapValue*[T](self: var Serializer, v: T) = v.serialize(self)
+  asAddr state, self.serializeSeq(length)
 
-proc endSeqMap*(self: var Serializer) = assertNextToken self, SeqMapEnd()
+  for value in iter:
+    state.serializeSeqElement(value)
+
+  state.endSeq()
+
+
+proc collectMap*(self: var Serializer, iter: auto) =
+  when compiles(iter.len):
+    let length = some iter.len
+  else:
+    let length = none int
+  
+  asAddr state, self.serializeMap(length)
+
+  for key, value in iter:
+    state.serializeMapEntry(key, value)
+  
+  state.endMap()

@@ -5,10 +5,11 @@ discard """
 import std/[unittest, options, times]
 
 import deser
-import deser/utils
 import deser/test
 
+
 proc toTimestamp[Serializer](date: DateTime, serializer: var Serializer) = date.toTime.toUnix.serialize(serializer)
+
 
 type
   Object = object
@@ -51,17 +52,6 @@ type
   RenameObject = object
     name {.renameSerialize("fullname").}: string
 
-  User = object
-    id: int
-
-  Pagination = object
-    limit: int64
-    offset: int64
-    total: int64
-
-
-proc serialize[Serializer](self: ref int, serializer: var Serializer) =
-  serializer.serializeInt(self[])
 
 makeSerializable(Object)
 makeSerializable(GenericObject)
@@ -74,108 +64,105 @@ makeSerializable(SkipIfObject)
 makeSerializable(SerializeWithObject)
 makeSerializable(RenameObject)
 
-makeSerializable(User)
-makeSerializable(Pagination)
-
 suite "makeSerializable":
   test "simple":
-    serTokens Object(id: 123), [
-      Struct("Object"),
+    assertSerTokens Object(id: 123), [
+      Map(none int),
       String("id"),
-      Integer(123),
-      StructEnd()
+      I64(123),
+      MapEnd()
     ]
   
   test "generic":
-    serTokens GenericObject[int](id: 123), [
-      Struct("GenericObject"),
+    assertSerTokens GenericObject[int](id: 123), [
+      Map(none int),
       String("id"),
-      Integer(123),
-      StructEnd()
+      I64(123),
+      MapEnd()
     ]
   
   test "with ref":
     let refInt = new int
     refInt[] = 123
-    serTokens ObjectWithRef(id: refInt), [
-      Struct("ObjectWithRef"),
+    assertSerTokens ObjectWithRef(id: refInt), [
+      Map(none int),
       String("id"),
-      Integer(123),
-      StructEnd()
+      I64(123),
+      MapEnd()
     ]
   
   test "ref":
-    serTokens RefObject(id: 123), [
-      Struct("RefObject"),
+    assertSerTokens RefObject(id: 123), [
+      Map(none int),
       String("id"),
-      Integer(123),
-      StructEnd()
+      I64(123),
+      MapEnd()
     ]
   
   test "inherit":
-    serTokens InheritObject(id: 123), [
-      Struct("InheritObject"),
+    assertSerTokens InheritObject(id: 123), [
+      Map(none int),
       String("id"),
-      Integer(123),
-      StructEnd()
+      I64(123),
+      MapEnd()
     ]
   
   test "case":
-    serTokens CaseObject(kind: true, yes: "yes"), [
-      Struct("CaseObject"),
+    assertSerTokens CaseObject(kind: true, yes: "yes"), [
+      Map(none int),
       String("kind"),
-      Boolean(true),
+      Bool(true),
       String("yes"),
       String("yes"),
-      StructEnd()
+      MapEnd()
     ]
 
-    serTokens CaseObject(kind: false), [
-      Struct("CaseObject"),
+    assertSerTokens CaseObject(kind: false), [
+      Map(none int),
       String("kind"),
-      Boolean(false),
-      StructEnd()
+      Bool(false),
+      MapEnd()
     ]
   
   test "untagged case":
-    serTokens UntaggedCaseObject(kind: true, yes: "yes"), [
-      Struct("UntaggedCaseObject"),
+    assertSerTokens UntaggedCaseObject(kind: true, yes: "yes"), [
+      Map(none int),
       String("yes"),
       String("yes"),
-      StructEnd()
+      MapEnd()
     ]
 
-    serTokens UntaggedCaseObject(kind: false), [
-      Struct("UntaggedCaseObject"),
-      StructEnd()
+    assertSerTokens UntaggedCaseObject(kind: false), [
+      Map(none int),
+      MapEnd()
     ]
   
   test "skipSerializeIf":
-    serTokens SkipIfObject(text: some "text"), [
-      Struct("SkipIfObject"),
+    assertSerTokens SkipIfObject(text: some "text"), [
+      Map(none int),
       String("text"),
       Some(),
-      StructEnd()
+      MapEnd()
     ]
 
-    serTokens SkipIfObject(text: none string), [
-      Struct("SkipIfObject"),
-      StructEnd()
+    assertSerTokens SkipIfObject(text: none string), [
+      Map(none int),
+      MapEnd()
     ]
   
   test "serializeWith":
     let date = now()
-    serTokens SerializeWithObject(date: date), [
-      Struct("SerializeWithObject"),
+    assertSerTokens SerializeWithObject(date: date), [
+      Map(none int),
       String("date"),
-      Integer(int(date.toTime.toUnix)),
-      StructEnd()
+      I64(int(date.toTime.toUnix)),
+      MapEnd()
     ]
   
   test "renameSerialize":
-    serTokens RenameObject(name: "Name"), [
-      Struct("RenameObject"),
+    assertSerTokens RenameObject(name: "Name"), [
+      Map(none int),
       String("fullname"),
       String("Name"),
-      StructEnd()
+      MapEnd()
     ]

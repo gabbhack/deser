@@ -2,97 +2,136 @@
 
 import std/[options, typetraits, tables, sets]
 
-import provided
-import ../utils
+from ../magic/ser/utils {.all.} import asAddr
 
 
-{.push inline.}
+when defined(release):
+  {.push inline.}
 # Basic types
-proc serialize*[Serializer](self: bool, serializer: var Serializer) =
+proc serialize*(self: bool, serializer: var auto) =
+  mixin serializeBool
+
   serializer.serializeBool(self)
 
-proc serialize*[Integer: SomeInteger, Serializer](self: Integer, serializer: var Serializer) =
-  serializer.serializeInt(self)
 
-proc serialize*[Float: SomeFloat, Serializer](self: Float, serializer: var Serializer) =
-  serializer.serializeFloat(self)
+proc serialize*(self: SomeInteger, serializer: var auto) =
+  mixin
+    serializeInt8,
+    serializeInt16,
+    serializeInt32,
+    serializeInt64,
+    serializeUint8,
+    serializeUint16,
+    serializeUint32,
+    serializeUint64
 
-proc serialize*[Serializer](self: string, serializer: var Serializer) =
+  when self is int8:
+    serializer.serializeInt8(self)
+  elif self is int16:
+    serializer.serializeInt16(self)
+  elif self is int32:
+    serializer.serializeInt32(self)
+  elif self is int64 | int:
+    serializer.serializeInt64(self)
+  elif self is uint8:
+    serializer.serializeUint8(self)
+  elif self is uint16:
+    serializer.serializeUint16(self)
+  elif self is uint32:
+    serializer.serializeUint32(self)
+  elif self is uint64 | uint:
+    serializer.serializeUint64(self)
+
+
+proc serialize*(self: SomeFloat, serializer: var auto) =
+  mixin
+    serializeFloat32,
+    serializeFloat64
+
+  when self is float32:
+    serializer.serializeFloat32(self)
+  else:
+    serializer.serializeFloat64(self)
+
+
+proc serialize*(self: string, serializer: var auto) =
+  mixin serializeString
+
   serializer.serializeString(self)
 
-proc serialize*[Serializer](self: char, serializer: var Serializer) =
+
+proc serialize*[T: char](self: T, serializer: var auto) =
+  mixin serializeChar
+
   serializer.serializeChar(self)
 
-proc serialize*[Serializer](self: enum, serializer: var Serializer) =
-  serializer.serializeString($self)
 
-proc serialize*[Set: set, Serializer](self: Set, serializer: var Serializer) =
+proc serialize*[T: enum](self: T, serializer: var auto) =
+  mixin serializeEnum
+
+  serializer.serializeEnum(self)
+
+
+proc serialize*[T: set](self: T, serializer: var auto) =
+  mixin collectSeq
+
   serializer.collectSeq(self)
 
-proc serialize*[Seq: seq or array; Serializer](self: Seq, serializer: var Serializer) =
-  when self.type is array:
-    when self.type.genericParams().get(1) is byte:
-      serializer.serializeBytes(self)
-    # example: {1: "one", 2: "two"}
-    elif self.type.genericParams().get(1) is StaticParam:
-      when self.type.genericParams().get(1).value.tupleLen == 2:
-        asAddr state, serializer.serializeSeqMap(some self.len)
-        for (key, value) in self:
-          state.serializeSeqMapKey(key)
-          state.serializeSeqMapValue(value)
-        state.endSeqMap()
-      else:
-        asAddr state, serializer.serializeArray(self.len)
-        for value in self:
-          state.serializeArrayElement(value)
-        state.endArray()
-    else:
-      asAddr state, serializer.serializeArray(self.len)
-      for value in self:
-        state.serializeArrayElement(value)
-      state.endArray()
-  else:
-    when self.type.genericParams().get(0) is byte:
-      serializer.serializeBytes(self)
-    elif self.type.genericParams().get(0) is StaticParam:
-      when self.type.genericParams().get(0).value.tupleLen == 2:
-        asAddr state, serializer.serializeSeqMap(some self.len)
-        for (key, value) in self:
-          state.serializeSeqMapKey(key)
-          state.serializeSeqMapValue(value)
-        state.endSeqMap()
-      else:
-        serializer.collectSeq(self)
-    else:
-      serializer.collectSeq(self)
 
-proc serialize*[Tuple: tuple, Serializer](self: Tuple, serializer: var Serializer) =
-  when self.tupleLen == 0:
-    serializer.serializeUnitTuple($self.type)
-  elif Tuple.isNamedTuple():
-    asAddr state, serializer.serializeNamedTuple($self.type, self.tupleLen())
-    for key, value in self.fieldPairs():
-      state.serializeNamedTupleField(key, value)
-    state.endNamedTuple()
-  else:
-    asAddr state, serializer.serializeTuple($self.type, self.tupleLen())
-    for value in self.fields():
-      state.serializeTupleElement(value)
-    state.endTuple()
+proc serialize*(self: openArray[not byte], serializer: var auto) =
+  mixin collectSeq
 
-proc serialize*[Unit: UnitConcept, Serializer](self: Unit, serializer: var Serializer) =
-  serializer.serializeUnitStruct($self.type)
+  serializer.collectSeq(self)
+
+
+proc serialize*(self: openArray[byte], serializer: var auto) =
+  mixin serializeBytes
+
+  serializer.serializeBytes(self)
+
+
+proc serialize*(self: tuple, serializer: var auto) =
+  mixin
+    serializeArray,
+    serializeArrayElement,
+    endArray
+
+  asAddr state, serializer.serializeArray(self.tupleLen())
+
+  for value in self.fields:
+    state.serializeArrayElement(value)
+
+  state.endArray()
+
 
 # other std types
-proc serialize*[Value, Serializer](self: Option[Value], serializer: var Serializer) =
+proc serialize*(self: Option, serializer: var auto) =
+  mixin
+    serializeSome,
+    serializeNone
+
   if self.isSome:
     serializer.serializeSome(self.unsafeGet)
   else:
     serializer.serializeNone()
 
-proc serialize*[SomeTable: Table | TableRef | OrderedTable | OrderedTableRef, Serializer](self: SomeTable, serializer: var Serializer) =
+
+proc serialize*[SomeTable: Table | OrderedTable](self: SomeTable, serializer: var auto) =
+  mixin collectMap
+
   serializer.collectMap(self)
 
-proc serialize*[Set: SomeSet, Serializer](self: Set, serializer: var Serializer) =
+
+proc serialize*(self: SomeSet, serializer: var auto) =
+  mixin collectSeq
+
   serializer.collectSeq(self)
-{.pop.}
+
+
+proc serialize*(self: ref, serializer: var auto) =
+  mixin serialize
+
+  serialize(self[], serializer)
+
+when defined(release):
+  {.pop.}

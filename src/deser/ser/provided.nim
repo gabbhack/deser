@@ -1,15 +1,7 @@
-## Auxiliary functions that you can use when implementing `serialize`
+import std/[options]
 
-import std/options
+from ../magic/ser/utils {.all.} import asAddr
 
-import ../utils
-
-
-proc isUnit(T: typedesc): bool {.compileTime.} =
-  var ob = default T
-  for _ in ob.fields():
-    return false
-  return true
 
 type
   MapIter* = concept self  ## Type with pairs()
@@ -19,15 +11,16 @@ type
   SeqIter* = concept self  ## Type with items()
     for key in self:
       discard
-  
-  UnitConcept* = concept type T  ## Type without fields
-    T is object
-    T.isUnit
 
 
+when defined(release):
+  {.push inline.}
+
+# TODO replace to helper implSerializer
 proc serializeMapEntry*[Serializer; Key; Value](self: var Serializer, key: Key, v: Value) =
   self.serializeMapKey(key)
   self.serializeMapValue(v)
+
 
 proc collectSeq*[Serializer; Iter: SeqIter](self: var Serializer, iter: Iter) =
   when compiles(iter.len):
@@ -42,6 +35,7 @@ proc collectSeq*[Serializer; Iter: SeqIter](self: var Serializer, iter: Iter) =
 
   state.endSeq()
 
+
 proc collectMap*[Serializer; Iter: MapIter](self: var Serializer, iter: Iter) =
   when compiles(iter.len):
     let length = some iter.len
@@ -54,6 +48,7 @@ proc collectMap*[Serializer; Iter: MapIter](self: var Serializer, iter: Iter) =
     state.serializeMapEntry(key, value)
   
   state.endMap()
+
 
 when defined(nimHasIterable):
   template collectSeq*[Serializer; Value](self: var Serializer, iter: iterable[Value]) =
@@ -71,3 +66,5 @@ when defined(nimHasIterable):
       state.serializeMapEntry(key, value)
     
     state.endMap()
+when defined(release):
+  {.pop.}

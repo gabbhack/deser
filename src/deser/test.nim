@@ -1,12 +1,12 @@
 ## A module for testing your `serialize` and `deserialize` procedures
 
 import test/[
-  # ser,
+  ser,
   des,
   token
 ]
 
 export
-  # ser, 
+  ser, 
   des, 
   token
