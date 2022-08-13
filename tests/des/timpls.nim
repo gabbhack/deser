@@ -16,10 +16,12 @@ suite "Deserialize default impls":
     assertDesTokens 0i16, [I16(0)]
     assertDesTokens 0i32, [I32(0)]
     assertDesTokens 0i64, [I64(0)]
+    assertDesTokens 0, [I64(0)]
   
   test "float":
     assertDesTokens 0f32, [F32(0.0)]
     assertDesTokens 0f64, [F64(0.0)]
+    assertDesTokens 0.0, [F64(0.0)]
   
   test "char":
     assertDesTokens 'a', [Char('a')]

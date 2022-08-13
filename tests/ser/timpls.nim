@@ -17,10 +17,12 @@ suite "Serialize default impls":
     assertSerTokens 0i16, [I16(0)]
     assertSerTokens 0i32, [I32(0)]
     assertSerTokens 0i64, [I64(0)]
+    assertSerTokens 0, [I64(0)]
   
   test "float":
     assertSerTokens 0f32, [F32(0.0)]
     assertSerTokens 0f64, [F64(0.0)]
+    assertSerTokens 0.0, [F64(0.0)]
   
   test "char":
     assertSerTokens 'a', [Char('a')]
