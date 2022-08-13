@@ -1,5 +1,5 @@
 discard """
-  matrix: "; -d:release; --gc:orc; -d:release --gc:orc"
+  matrix: "; -d:release; --gc:orc; -d:release --gc:orc; --threads:on"
 """
 {.experimental: "views".}
 import std/[unittest, options, tables, sets]
