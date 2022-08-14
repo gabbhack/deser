@@ -2,9 +2,14 @@ discard """
   matrix: "; -d:release; --gc:orc; -d:release --gc:orc; --threads:on"
 """
 {.experimental: "views".}
-import std/[unittest, options, times]
+import std/[
+  unittest,
+  options,
+  times
+]
 
-import deser
+import deser/ser
+import deser/pragmas
 import deser/test
 
 
@@ -51,18 +56,31 @@ type
   
   RenameObject = object
     name {.renameSerialize("fullname").}: string
+  
+  RenameAllObject {.renameAll(SnakeCase).} = object
+    text: string
+    firstName: string
 
+    case kind: bool
+    of true:
+      lastName: string
+    else:
+      discard
 
-makeSerializable(Object)
-makeSerializable(GenericObject)
-makeSerializable(ObjectWithRef)
-makeSerializable(RefObject)
-makeSerializable(InheritObject)
-makeSerializable(CaseObject)
-makeSerializable(UntaggedCaseObject)
-makeSerializable(SkipIfObject)
-makeSerializable(SerializeWithObject)
-makeSerializable(RenameObject)
+makeSerializable([
+  Object,
+  GenericObject,
+  ObjectWithRef,
+  RefObject,
+  InheritObject,
+  CaseObject,
+  UntaggedCaseObject,
+  SkipIfObject,
+  SerializeWithObject,
+  RenameObject,
+  RenameAllObject,
+], public=true)
+
 
 suite "makeSerializable":
   test "simple":
@@ -164,5 +182,19 @@ suite "makeSerializable":
       Map(none int),
       String("fullname"),
       String("Name"),
+      MapEnd()
+    ]
+  
+  test "RenameAllObject":
+    assertSerTokens RenameAllObject(kind: true), [
+      Map(none int),
+      String("text"),
+      String(""),
+      String("first_name"),
+      String(""),
+      String("kind"),
+      Bool(true),
+      String("last_name"),
+      String(""),
       MapEnd()
     ]

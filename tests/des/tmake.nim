@@ -2,9 +2,15 @@ discard """
   matrix: "; -d:release; --gc:orc; -d:release --gc:orc; --threads:on"
 """
 {.experimental: "views".}
-import std/[unittest, times, options, strformat]
+import std/[
+  unittest,
+  times,
+  options,
+  strformat
+]
 
-import deser
+import deser/des
+import deser/pragmas
 import deser/test
 
 
@@ -62,6 +68,16 @@ type
   
   OnUnknownObject {.onUnknownKeys(raiseError).} = object
 
+  RenameAllObject {.renameAll(SnakeCase).} = object
+    text: string
+    firstName: string
+
+    case kind: bool
+    of true:
+      lastName: string
+    else:
+      discard
+
 
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
 
@@ -69,6 +85,13 @@ proc `==`*(x, y: CaseObject | UntaggedCaseObject): bool =
   if x.kind == y.kind:
     if x.kind == true and y.kind == true:
       return x.yes == y.yes
+    return true
+  return false
+
+proc `==`*(x, y: RenameAllObject): bool =
+  if x.kind == y.kind and x.text == y.text and x.firstName == y.firstName:
+    if x.kind == true and y.kind == true:
+      return x.lastName == y.lastName
     return true
   return false
 
@@ -87,8 +110,9 @@ makeDeserializable([
   DeserializeWithObject,
   RenameObject,
   DefaultObject,
-  OnUnknownObject
-])
+  OnUnknownObject,
+  RenameAllObject
+], public=true)
 
 
 suite "makeDeserializable":
@@ -201,7 +225,7 @@ suite "makeDeserializable":
       StructEnd()
     ]
 
-  # crash on "-d:release"
+  # crash on "-d:release --gc:refc"
   #[
     test "OnUnknownObject":
       expect(ValueError):
@@ -220,5 +244,19 @@ suite "makeDeserializable":
       I64(123),
       String("text"),
       String("text"),
+      StructEnd()
+    ]
+  
+  test "RenameAllObject":
+    assertDesTokens RenameAllObject(kind: true), [
+      Struct("RenameAllObject", 2),
+      String("text"),
+      String(""),
+      String("first_name"),
+      String(""),
+      String("kind"),
+      Bool(true),
+      String("last_name"),
+      String(""),
       StructEnd()
     ]

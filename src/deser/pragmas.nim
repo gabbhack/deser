@@ -1,3 +1,10 @@
+import std/macros
+
+import magic/anycase {.all.}
+
+export RenameCase
+
+
 template untagged*() {.pragma.} ##[
 By default, the discriminant of object variants is de/serialized as a regular field:
 
@@ -38,36 +45,54 @@ let test = Test.fromJson(js)
 
 assert test.kind
 ```
-
-
 ]##
 
 
 template serializeWith*(with: typed) {.pragma.} ##[
 Serialize this field using a procedure.
-The given function must be callable as `proc[Serializer] (self: field.type, serializer: var Serializer)`
+The given function must be callable as `proc (self: FieldType, serializer: var auto)`.
 ]##
 
 
 template deserializeWith*(with: typed) {.pragma.} ##[
 Deserialize this field using a procedure.
-The given procedure must be callable as `proc (deserializer: var auto): FieldType` or `proc [T](deserializer: var auto): T`
+The given procedure must be callable as `proc (deserializer: var auto): FieldType` or `proc [T](deserializer: var auto): T`.
 ]##
 
 
 template renamed*(renamed: string) {.pragma.} ##[
-Serialize and deserialize field with the given name instead of its Nim name
+Serialize and deserialize field with the given name instead of its Nim name.
 ]##
 
 
 template renameSerialize*(renamed: string) {.pragma.} ##[
-Serialize field with the given name instead of its Nim name
+Serialize field with the given name instead of its Nim name,
 ]##
 
 
 template renameDeserialize*(renamed: string) {.pragma.} ##[
-Deserialize field with the given name instead of its Nim name
+Deserialize field with the given name instead of its Nim name,
 ]##
+
+
+macro renameAll*(renameTo: static[RenameCase], typ: untyped) = ##[
+Rename all fields to some case.
+
+**Example**:
+```nim
+import deser_json
+
+type
+  Foo {.renameAll(SnakeCase).} = object
+    firstName: string
+    lastName: string
+
+
+echo Foo().toString() == """{"first_name":"","last_name":""}"""
+```
+]##
+  renameAllInRec(typ[2][2], renameTo)
+  result = typ
 
 
 template skipped*() {.pragma.} ##[
@@ -115,7 +140,7 @@ You must specify a function or template that accepts an argument with the same t
 **Example**:
   
 ```nim
-import options
+import std/options
 
 func isZero(x: int) = x == 0
 
@@ -153,7 +178,7 @@ the field value: auto
 **Example**:
 
 ```nim
-import std/[strformat]
+import std/strformat
 
 # this example will not work with all parsers,
 # because it expects the field as a string,
