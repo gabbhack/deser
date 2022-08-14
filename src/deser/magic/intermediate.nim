@@ -95,7 +95,7 @@ proc flatten(fields: seq[Field]): seq[Field] =
 
   for field in fields:
     if not field.isSkipDeserializing:
-      if not field.isUntagged:
+      if not field.isCase or (field.isCase and not field.isUntagged):
         result.add field
       if field.isCase:
         for branch in field.branches:
@@ -166,7 +166,12 @@ proc init(Self: typedesc[FieldFeatures | StructFeatures], pragmas: NimNode): Sel
     else:
       expectKind pragma, {nnkSym, nnkCall}
 
-  # TODO add check for nosense
+  when Self is FieldFeatures:
+    if result.skipSerializing and result.serializeWith.isSome:
+      warning "`serializeWith` does not working with `skipSerializing`", pragmas
+    
+    if result.skipDeserializing and result.deserializeWith.isSome:
+      warning "`deserializeWith` does not working with `skipDeserializing`", pragmas
 
 
 proc deSymBracketExpr(bracket: NimNode): NimNode =
@@ -185,7 +190,7 @@ proc deSymBracketExpr(bracket: NimNode): NimNode =
       result.add i
 
 
-proc init(Self: typedesc[Field], identDefs: NimNode): Self =
+proc init(Self: typedesc[Field], identDefs: NimNode, isCase: bool): Self =
   # Get field from usual statement
   expectKind identDefs, nnkIdentDefs
 
@@ -207,7 +212,7 @@ proc init(Self: typedesc[Field], identDefs: NimNode): Self =
     result = Self(
       ident: identNode,
       typ: typ,
-      enumFieldSym: genSym(nskEnumField, identNode.strVal)
+      enumFieldSym: genSym(nskEnumField, identNode.strVal),
     )
   of nnkPragmaExpr:
     result = Self(
@@ -222,8 +227,13 @@ proc init(Self: typedesc[Field], identDefs: NimNode): Self =
     
     if result.features.serializeWith.isSome:
       result.serializeWithType = some genSym(nskType, "SerializeWith")
+
+    if result.isUntagged and not isCase:
+      warning "`untagged` does not working with non-case field", identNode[0]
   else:
     expectKind identNode, {nnkIdent, nnkPragmaExpr}
+  
+  result.isCase = isCase
 
 
 proc init(Self: typedesc[Field], recCase: NimNode): Self =
@@ -231,8 +241,7 @@ proc init(Self: typedesc[Field], recCase: NimNode): Self =
   expectKind recCase, nnkRecCase
 
   let identDefs = recCase[0]
-  result = Self.init(identDefs=identDefs)
-  result.isCase = true
+  result = Self.init(identDefs=identDefs, isCase=true)
 
   let branches = recCase[1..recCase.len-1]
 
@@ -271,7 +280,7 @@ proc getFields(recList: NimNode): seq[Field] =
     for fieldNode in recList:
       case fieldNode.kind
       of nnkIdentDefs:
-        result.add Field.init(identDefs=fieldNode)
+        result.add Field.init(identDefs=fieldNode, isCase=false)
       of nnkRecCase:
         result.add Field.init(recCase=fieldNode)
       of nnkNilLit:
