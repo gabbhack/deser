@@ -1,6 +1,6 @@
 import std/macros
 
-import magic/anycase {.all.}
+from magic/anycase {.all.} import RenameCase, renameAllInRec
 
 export RenameCase
 
