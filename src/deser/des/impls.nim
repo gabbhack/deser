@@ -207,7 +207,7 @@ proc visitSeq*[T](self: BytesVisitor[T], sequence: var auto): T =
     for index, i in enumerate(items[byte](sequence)):
       result[index] = i
   else:
-    result = newSeqOfCap(sequence.sizeHint.get(10))
+    result = newSeqOfCap[byte](sequence.sizeHint.get(10))
     for i in items[byte](sequence):
       result.add i
 
