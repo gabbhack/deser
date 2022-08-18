@@ -5,7 +5,8 @@ import std/[
   strformat,
   typetraits,
   sets,
-  tables
+  tables,
+  enumerate
 ]
 
 from error import
@@ -197,6 +198,18 @@ proc visitBytes*[T](self: BytesVisitor[T], value: openArray[byte]): T =
       raiseInvalidLength(value.len, T.len)
   else:
     @value
+
+
+proc visitSeq*[T](self: BytesVisitor[T], sequence: var auto): T =
+  mixin items, sizeHint
+
+  when T is array:
+    for index, i in enumerate(items[byte](sequence)):
+      result[index] = i
+  else:
+    result = newSeqOfCap(sequence.sizeHint.get(10))
+    for i in items[byte](sequence):
+      result.add i
 
 
 proc deserialize*(Self: typedesc[seq[byte]], deserializer: var auto): Self =
