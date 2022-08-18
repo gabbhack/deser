@@ -30,7 +30,7 @@ template implSerializer*(selfType: typed{`type`}, public: static[bool] = false) 
     proc serializeChar(self: var selfType, value: char)
     proc serializeString(self: var selfType, value: string)
 
-    proc serializeBytes(self: var selfType, value: openArray[bytes])
+    proc serializeBytes(self: var selfType, value: openArray[byte])
 
     proc serializeNone(self: var selfType)
     proc serializeSome(self: var selfType, value: auto)
@@ -138,6 +138,6 @@ template implSerializeStruct*(selfType: typed{`type`}, public: static[bool] = fa
   bind maybePublic
 
   maybePublic(public):
-    proc serializeField(self: var selfType, key: static[string], value: auto)
+    proc serializeStructField(self: var selfType, key: static[string], value: auto)
 
     proc endStruct(self: var selfType)
