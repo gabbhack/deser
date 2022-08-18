@@ -1,8 +1,9 @@
-# Deser ![nim-version]
+# Deser [![nim-version-img]][nim-version]
 
-[nim-version]: https://img.shields.io/badge/Nim_-v1.6.0%2B-blue
+[nim-version]: https://nim-lang.org/blog/2021/10/19/version-160-released.html
+[nim-version-img]: https://img.shields.io/badge/Nim_-v1.6.0%2B-blue
 
-**De/serialization library for Nim.**
+**Serde-like de/serialization library for Nim.**
 
 `nimble install deser`
 
@@ -25,6 +26,13 @@ Also read:
 - [Not invented here](https://en.wikipedia.org/wiki/Not_invented_here)
 
 
+## Supported formats
+ - JSON - [deser_json](https://github.com/gabbhack/deser_json)
+
+Also read:
+- [How to make bindings](https://deser.nim.town/deser.html#how-to-make-bindings)
+
+
 ## Example
 ```nim
 import std/[
@@ -40,7 +48,6 @@ proc fromTimestamp(deserializer: var auto): Time =
   fromUnix(deserialize(int64, deserializer))
 
 proc toTimestamp(self: Time, serializer: var auto) =
-  mixin serializeInt64
   serializer.serializeInt64(self.toUnix())
 
 type
@@ -56,8 +63,8 @@ type
     case kind {.renamed("type").}: ChatType
     of Private:
       firstName: string
-      lastName: Option[string]
-      bio: Option[String]
+      lastName {.skipSerializeIf(isNone).}: Option[string]
+      bio {.skipSerializeIf(isNone).}: Option[String]
     of Group:
       title: string
 
@@ -84,15 +91,20 @@ const
     firstName: "Gabben"
   )
 
-assert Chat.fromString(json) == chat
+echo Chat.fromString(json)
 echo chat.toString()
 ```
+
+Also read:
+- [Customize serialization process](https://deser.nim.town/deser.html#customize-serialization-process)
 
 ## License
 Licensed under <a href="LICENSE">MIT license</a>.
 
 Deser uses third-party libraries or other resources that may be
-distributed under licenses different than the deser. <a href="THIRD-PARTY-NOTICES.TXT">THIRD-PARTY-NOTICES.TXT</a>
+distributed under licenses different than the deser.
+
+<a href="THIRD-PARTY-NOTICES.TXT">THIRD-PARTY-NOTICES.TXT</a>
 
 
 ## Acknowledgements

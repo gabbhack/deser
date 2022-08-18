@@ -26,9 +26,11 @@ equals to this JSON:
 }
 ```
 
-However, `deser` can independently deduce the discriminant from the raw data:
+However, `deser` can deduce the discriminant from the raw data:
 
 ```nim
+import deser_json
+
 type
   Test = object
     kind {.untagged.}: bool
@@ -37,26 +39,70 @@ type
     else:
       falseField: string
 
-const js = """
+makeDeserializable(Test)
+
+const json = """
   {
     "trueField": ""
   }
-let test = Test.fromJson(js)
+let test = Test.fromString(json)
 
-assert test.kind
+assert test.kind == true
 ```
 ]##
 
 
 template serializeWith*(with: typed) {.pragma.} ##[
 Serialize this field using a procedure.
+
 The given function must be callable as `proc (self: FieldType, serializer: var auto)`.
+
+**Example:**
+```nim
+import std/times
+
+import
+  deser,
+  deser_json
+
+proc toTimestamp(self: Time, serializer: var auto) =
+  serializer.serializeInt64(self.toUnix())
+
+type
+  User = object
+    created {.serializeWith(toTimestamp).}: Time
+
+makeSerializable(User)
+
+assert User(created: fromUnix(123)).toString() == """{"created":123}"""
+```
 ]##
 
 
 template deserializeWith*(with: typed) {.pragma.} ##[
 Deserialize this field using a procedure.
+
 The given procedure must be callable as `proc (deserializer: var auto): FieldType` or `proc [T](deserializer: var auto): T`.
+
+**Example:**
+```nim
+import std/times
+
+import
+  deser,
+  deser_json
+
+proc fromTimestamp(deserializer: var auto): Time =
+  fromUnix(deserialize(int64, deserializer))
+
+type
+  User = object
+    created {.deserializeWith(fromTimestamp).}: Time
+
+makeDeserializable(User)
+
+assert User(created: fromUnix(123)) == User.fromString("""{"created": 123}""")
+```
 ]##
 
 
@@ -66,17 +112,19 @@ Serialize and deserialize field with the given name instead of its Nim name.
 
 
 template renameSerialize*(renamed: string) {.pragma.} ##[
-Serialize field with the given name instead of its Nim name,
+Serialize field with the given name instead of its Nim name.
 ]##
 
 
 template renameDeserialize*(renamed: string) {.pragma.} ##[
-Deserialize field with the given name instead of its Nim name,
+Deserialize field with the given name instead of its Nim name.
 ]##
 
 
 macro renameAll*(renameTo: static[RenameCase], typ: untyped) = ##[
 Rename all fields to some case.
+
+.. Note:: The pragma does not rename the field if one of the pragmas has already been applied: `renamed`, `renameDeserialize`, `renameSerialize`
 
 **Example**:
 ```nim
@@ -87,8 +135,9 @@ type
     firstName: string
     lastName: string
 
+makeSerializable(Foo)
 
-echo Foo().toString() == """{"first_name":"","last_name":""}"""
+assert Foo().toString() == """{"first_name":"","last_name":""}"""
 ```
 ]##
   renameAllInRec(typ[2][2], renameTo)
@@ -135,6 +184,7 @@ type
 
 template skipSerializeIf*(condition: typed) {.pragma.} ##[
 Use this pragma to skip the field during serialization based on the runtime value.
+
 You must specify a function or template that accepts an argument with the same type as the field, and return bool.
 
 **Example**:
@@ -142,7 +192,7 @@ You must specify a function or template that accepts an argument with the same t
 ```nim
 import std/options
 
-func isZero(x: int) = x == 0
+func isZero(x: int): bool = x == 0
 
 type
   Test = object
@@ -171,9 +221,9 @@ You can change this behavior by specifying a template or procedure that will be 
 
 The template or procedure must take two arguments:
 
-the name of the object: string or static[string]
+- the name of the object: string or static[string]
 
-the field value: auto 
+- the field value: auto 
 
 **Example**:
 

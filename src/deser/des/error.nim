@@ -8,25 +8,25 @@ type
     ## Error during deserialization
 
   InvalidType* = object of DeserializationError ## \
-    ## Raised when a `Deserialize` receives a type different from what it was expecting
+    ## Raised when a `Deserialize` receives a type different from what it was expecting.
   
   InvalidValue* = object of DeserializationError ## \
-    ## Raised when a `Deserialize` receives a value of the right type but that is wrong for some other reason
+    ## Raised when a `Deserialize` receives a value of the right type but that is wrong for some other reason.
 
   InvalidLength* = object of DeserializationError ## \
-    ## Raised when deserializing a sequence or map and the input data contains too many or too few elements
+    ## Raised when deserializing a sequence or map and the input data contains too many or too few elements.
 
   UnknownField* = object of DeserializationError ## \
     ## Raised when a `Deserialize` enum type received a variant with an unrecognized name.
 
   MissingField* = object of DeserializationError ## \
-    ## Raised when a `Deserialize` struct type expected to receive a required field with a particular name but that field was not present in the input
+    ## Raised when a `Deserialize` struct type expected to receive a required field with a particular name but that field was not present in the input.
 
   DuplicateField* = object of DeserializationError ## \
-    ## Raised when a `Deserialize` struct type received more than one of the same field
+    ## Raised when a `Deserialize` struct type received more than one of the same field.
   
   UnknownUntaggedVariant* = object of DeserializationError ## \
-    ## Raised when a `Deserialize` struct type cannot derive case variant
+    ## Raised when a `Deserialize` struct type cannot derive case variant.
   
   UnexpectedKind* = enum
     Bool,
