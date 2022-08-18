@@ -131,10 +131,25 @@ proc renameAllInRec(node: NimNode, to: RenameCase) =
           )
         )
       of nnkPragmaExpr:
-        i[0][1].add newCall(
-          ident "renamed",
-          newLit i[0][0].strVal.toCase to
-        )
+        const blackList = ["renamed", "renameDeserialize", "renameSerialize"]
+        block success:
+          for pragma in i[0][1]:
+            case pragma.kind
+            of nnkIdent, nnkCall:
+              let id =
+                if pragma.kind == nnkIdent:
+                  pragma
+                else:
+                  pragma[0]
+              if id.strVal in blackList:
+                break success
+            else:
+              expectKind pragma, {nnkIdent, nnkPragmaExpr}
+
+          i[0][1].add newCall(
+            ident "renamed",
+            newLit i[0][0].strVal.toCase to
+          )
       else:
         expectKind i[0], {nnkIdent, nnkPragmaExpr}
     of nnkRecCase:
