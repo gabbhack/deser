@@ -91,8 +91,8 @@ const
     firstName: "Gabben"
   )
 
-echo Chat.fromString(json)
-echo chat.toString()
+echo Chat.fromJson(json)
+echo chat.toJson()
 ```
 
 Also read:
