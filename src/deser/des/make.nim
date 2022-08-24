@@ -28,7 +28,7 @@ makeDeserializable([
   Bar
 ])
 ```
-  ]##
+]##
   result = newStmtList()
 
   for i in typ:

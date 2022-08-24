@@ -24,6 +24,7 @@ makeSerializable([
   Foo,
   Bar
 ])
+```
 ]##
   result = newStmtList()
 
