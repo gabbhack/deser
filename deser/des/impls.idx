@@ -1,0 +1,728 @@
+deserialize	deser/des/impls.html#deserialize,NoneSeed[T],auto	impls: deserialize[T](self: NoneSeed[T]; deserializer: var auto): T	
+visitBool	deser/des/impls.html#visitBool,Self,bool	impls: visitBool[Self: IgnoredAnyVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8	impls: visitInt8[Self: IgnoredAnyVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16	impls: visitInt16[Self: IgnoredAnyVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32	impls: visitInt32[Self: IgnoredAnyVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64	impls: visitInt64[Self: IgnoredAnyVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8	impls: visitUint8[Self: IgnoredAnyVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16	impls: visitUint16[Self: IgnoredAnyVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32	impls: visitUint32[Self: IgnoredAnyVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64	impls: visitUint64[Self: IgnoredAnyVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32	impls: visitFloat32[Self: IgnoredAnyVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64	impls: visitFloat64[Self: IgnoredAnyVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char	impls: visitChar[Self: IgnoredAnyVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring	impls: visitString[Self: IgnoredAnyVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]	impls: visitBytes[Self: IgnoredAnyVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self	impls: visitNone[Self: IgnoredAnyVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto	impls: visitSome[Self: IgnoredAnyVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto	impls: visitSeq[Self: IgnoredAnyVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto	impls: visitMap[Self: IgnoredAnyVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,IgnoredAnyVisitor	impls: expecting(self: IgnoredAnyVisitor): string	
+visitBool	deser/des/impls.html#visitBool,IgnoredAnyVisitor	impls: visitBool(self: IgnoredAnyVisitor): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,IgnoredAnyVisitor,int8	impls: visitInt8(self: IgnoredAnyVisitor; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,IgnoredAnyVisitor,int16	impls: visitInt16(self: IgnoredAnyVisitor; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,IgnoredAnyVisitor,int32	impls: visitInt32(self: IgnoredAnyVisitor; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,IgnoredAnyVisitor,int64	impls: visitInt64(self: IgnoredAnyVisitor; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,IgnoredAnyVisitor,uint8	impls: visitUint8(self: IgnoredAnyVisitor; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,IgnoredAnyVisitor,uint16	impls: visitUint16(self: IgnoredAnyVisitor; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,IgnoredAnyVisitor,uint32	impls: visitUint32(self: IgnoredAnyVisitor; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,IgnoredAnyVisitor,uint64	impls: visitUint64(self: IgnoredAnyVisitor; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,IgnoredAnyVisitor,float32	impls: visitFloat32(self: IgnoredAnyVisitor; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,IgnoredAnyVisitor,float64	impls: visitFloat64(self: IgnoredAnyVisitor; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,IgnoredAnyVisitor,char	impls: visitChar(self: IgnoredAnyVisitor; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,IgnoredAnyVisitor,sinkstring	impls: visitString(self: IgnoredAnyVisitor; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,IgnoredAnyVisitor,openArray[byte]	impls: visitBytes(self: IgnoredAnyVisitor; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,IgnoredAnyVisitor	impls: visitNone(self: IgnoredAnyVisitor): self.Value	
+visitSome	deser/des/impls.html#visitSome,IgnoredAnyVisitor,auto	impls: visitSome(self: IgnoredAnyVisitor; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,IgnoredAnyVisitor,auto	impls: visitSeq(self: IgnoredAnyVisitor; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,IgnoredAnyVisitor,auto	impls: visitMap(self: IgnoredAnyVisitor; map: var auto): self.Value	
+deserialize	deser/des/impls.html#deserialize,typedesc[IgnoredAny],auto	impls: deserialize(Self: typedesc[IgnoredAny]; deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_2	impls: visitBool[Self: BoolVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_2	impls: visitInt8[Self: BoolVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_2	impls: visitInt16[Self: BoolVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_2	impls: visitInt32[Self: BoolVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_2	impls: visitInt64[Self: BoolVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_2	impls: visitUint8[Self: BoolVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_2	impls: visitUint16[Self: BoolVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_2	impls: visitUint32[Self: BoolVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_2	impls: visitUint64[Self: BoolVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_2	impls: visitFloat32[Self: BoolVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_2	impls: visitFloat64[Self: BoolVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_2	impls: visitChar[Self: BoolVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_2	impls: visitString[Self: BoolVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_2	impls: visitBytes[Self: BoolVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_2	impls: visitNone[Self: BoolVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_2	impls: visitSome[Self: BoolVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_2	impls: visitSeq[Self: BoolVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_2	impls: visitMap[Self: BoolVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,BoolVisitor	impls: expecting(self: BoolVisitor): string	
+visitBool	deser/des/impls.html#visitBool,BoolVisitor,bool	impls: visitBool(self: BoolVisitor; value: bool): self.Value	
+deserialize	deser/des/impls.html#deserialize,typedesc[bool],auto	impls: deserialize(Self: typedesc[bool]; deserializer: var auto): Self:type	
+expecting	deser/des/impls.html#expecting,Visitor	impls: expecting(self: Visitor_1375732221): string	
+visitBool	deser/des/impls.html#visitBool,Self,bool_3	impls: visitBool[Self: Visitor_1375732221](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_3	impls: visitInt8[Self: Visitor_1375732221](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_3	impls: visitInt16[Self: Visitor_1375732221](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_3	impls: visitInt32[Self: Visitor_1375732221](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_3	impls: visitInt64[Self: Visitor_1375732221](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_3	impls: visitUint8[Self: Visitor_1375732221](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_3	impls: visitUint16[Self: Visitor_1375732221](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_3	impls: visitUint32[Self: Visitor_1375732221](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_3	impls: visitUint64[Self: Visitor_1375732221](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_3	impls: visitFloat32[Self: Visitor_1375732221](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_3	impls: visitFloat64[Self: Visitor_1375732221](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_3	impls: visitChar[Self: Visitor_1375732221](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_3	impls: visitString[Self: Visitor_1375732221](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_3	impls: visitBytes[Self: Visitor_1375732221](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_3	impls: visitNone[Self: Visitor_1375732221](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_3	impls: visitSome[Self: Visitor_1375732221](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_3	impls: visitSeq[Self: Visitor_1375732221](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_3	impls: visitMap[Self: Visitor_1375732221](self: Self; map: var auto): self.Value	
+deserialize	deser/des/impls.html#deserialize,,auto	impls: deserialize(self: typedesc[int8]; deserializer: var auto): int8	
+visitInt8	deser/des/impls.html#visitInt8,Visitor,int8	impls: visitInt8(self: Visitor_1375732221; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Visitor,int16	impls: visitInt16(self: Visitor_1375732221; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Visitor,int32	impls: visitInt32(self: Visitor_1375732221; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Visitor,int64	impls: visitInt64(self: Visitor_1375732221; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Visitor,uint8	impls: visitUint8(self: Visitor_1375732221; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Visitor,uint16	impls: visitUint16(self: Visitor_1375732221; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Visitor,uint32	impls: visitUint32(self: Visitor_1375732221; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Visitor,uint64	impls: visitUint64(self: Visitor_1375732221; value: uint64): self.Value	
+expecting	deser/des/impls.html#expecting,Visitor_2	impls: expecting(self: Visitor_1375732834): string	
+visitBool	deser/des/impls.html#visitBool,Self,bool_4	impls: visitBool[Self: Visitor_1375732834](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_4	impls: visitInt8[Self: Visitor_1375732834](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_4	impls: visitInt16[Self: Visitor_1375732834](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_4	impls: visitInt32[Self: Visitor_1375732834](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_4	impls: visitInt64[Self: Visitor_1375732834](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_4	impls: visitUint8[Self: Visitor_1375732834](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_4	impls: visitUint16[Self: Visitor_1375732834](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_4	impls: visitUint32[Self: Visitor_1375732834](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_4	impls: visitUint64[Self: Visitor_1375732834](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_4	impls: visitFloat32[Self: Visitor_1375732834](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_4	impls: visitFloat64[Self: Visitor_1375732834](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_4	impls: visitChar[Self: Visitor_1375732834](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_4	impls: visitString[Self: Visitor_1375732834](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_4	impls: visitBytes[Self: Visitor_1375732834](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_4	impls: visitNone[Self: Visitor_1375732834](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_4	impls: visitSome[Self: Visitor_1375732834](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_4	impls: visitSeq[Self: Visitor_1375732834](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_4	impls: visitMap[Self: Visitor_1375732834](self: Self; map: var auto): self.Value	
+deserialize	deser/des/impls.html#deserialize,,auto_2	impls: deserialize(self: typedesc[int16]; deserializer: var auto): int16	
+visitInt8	deser/des/impls.html#visitInt8,Visitor,int8_2	impls: visitInt8(self: Visitor_1375732834; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Visitor,int16_2	impls: visitInt16(self: Visitor_1375732834; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Visitor,int32_2	impls: visitInt32(self: Visitor_1375732834; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Visitor,int64_2	impls: visitInt64(self: Visitor_1375732834; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Visitor,uint8_2	impls: visitUint8(self: Visitor_1375732834; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Visitor,uint16_2	impls: visitUint16(self: Visitor_1375732834; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Visitor,uint32_2	impls: visitUint32(self: Visitor_1375732834; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Visitor,uint64_2	impls: visitUint64(self: Visitor_1375732834; value: uint64): self.Value	
+expecting	deser/des/impls.html#expecting,Visitor_3	impls: expecting(self: Visitor_1375733207): string	
+visitBool	deser/des/impls.html#visitBool,Self,bool_5	impls: visitBool[Self: Visitor_1375733207](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_5	impls: visitInt8[Self: Visitor_1375733207](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_5	impls: visitInt16[Self: Visitor_1375733207](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_5	impls: visitInt32[Self: Visitor_1375733207](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_5	impls: visitInt64[Self: Visitor_1375733207](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_5	impls: visitUint8[Self: Visitor_1375733207](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_5	impls: visitUint16[Self: Visitor_1375733207](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_5	impls: visitUint32[Self: Visitor_1375733207](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_5	impls: visitUint64[Self: Visitor_1375733207](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_5	impls: visitFloat32[Self: Visitor_1375733207](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_5	impls: visitFloat64[Self: Visitor_1375733207](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_5	impls: visitChar[Self: Visitor_1375733207](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_5	impls: visitString[Self: Visitor_1375733207](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_5	impls: visitBytes[Self: Visitor_1375733207](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_5	impls: visitNone[Self: Visitor_1375733207](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_5	impls: visitSome[Self: Visitor_1375733207](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_5	impls: visitSeq[Self: Visitor_1375733207](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_5	impls: visitMap[Self: Visitor_1375733207](self: Self; map: var auto): self.Value	
+deserialize	deser/des/impls.html#deserialize,,auto_3	impls: deserialize(self: typedesc[int32]; deserializer: var auto): int32	
+visitInt8	deser/des/impls.html#visitInt8,Visitor,int8_3	impls: visitInt8(self: Visitor_1375733207; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Visitor,int16_3	impls: visitInt16(self: Visitor_1375733207; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Visitor,int32_3	impls: visitInt32(self: Visitor_1375733207; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Visitor,int64_3	impls: visitInt64(self: Visitor_1375733207; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Visitor,uint8_3	impls: visitUint8(self: Visitor_1375733207; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Visitor,uint16_3	impls: visitUint16(self: Visitor_1375733207; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Visitor,uint32_3	impls: visitUint32(self: Visitor_1375733207; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Visitor,uint64_3	impls: visitUint64(self: Visitor_1375733207; value: uint64): self.Value	
+expecting	deser/des/impls.html#expecting,Visitor_4	impls: expecting(self: Visitor_1375733580): string	
+visitBool	deser/des/impls.html#visitBool,Self,bool_6	impls: visitBool[Self: Visitor_1375733580](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_6	impls: visitInt8[Self: Visitor_1375733580](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_6	impls: visitInt16[Self: Visitor_1375733580](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_6	impls: visitInt32[Self: Visitor_1375733580](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_6	impls: visitInt64[Self: Visitor_1375733580](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_6	impls: visitUint8[Self: Visitor_1375733580](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_6	impls: visitUint16[Self: Visitor_1375733580](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_6	impls: visitUint32[Self: Visitor_1375733580](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_6	impls: visitUint64[Self: Visitor_1375733580](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_6	impls: visitFloat32[Self: Visitor_1375733580](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_6	impls: visitFloat64[Self: Visitor_1375733580](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_6	impls: visitChar[Self: Visitor_1375733580](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_6	impls: visitString[Self: Visitor_1375733580](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_6	impls: visitBytes[Self: Visitor_1375733580](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_6	impls: visitNone[Self: Visitor_1375733580](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_6	impls: visitSome[Self: Visitor_1375733580](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_6	impls: visitSeq[Self: Visitor_1375733580](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_6	impls: visitMap[Self: Visitor_1375733580](self: Self; map: var auto): self.Value	
+deserialize	deser/des/impls.html#deserialize,,auto_4	impls: deserialize(self: typedesc[int64]; deserializer: var auto): int64	
+visitInt8	deser/des/impls.html#visitInt8,Visitor,int8_4	impls: visitInt8(self: Visitor_1375733580; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Visitor,int16_4	impls: visitInt16(self: Visitor_1375733580; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Visitor,int32_4	impls: visitInt32(self: Visitor_1375733580; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Visitor,int64_4	impls: visitInt64(self: Visitor_1375733580; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Visitor,uint8_4	impls: visitUint8(self: Visitor_1375733580; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Visitor,uint16_4	impls: visitUint16(self: Visitor_1375733580; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Visitor,uint32_4	impls: visitUint32(self: Visitor_1375733580; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Visitor,uint64_4	impls: visitUint64(self: Visitor_1375733580; value: uint64): self.Value	
+expecting	deser/des/impls.html#expecting,Visitor_5	impls: expecting(self: Visitor_1375733953): string	
+visitBool	deser/des/impls.html#visitBool,Self,bool_7	impls: visitBool[Self: Visitor_1375733953](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_7	impls: visitInt8[Self: Visitor_1375733953](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_7	impls: visitInt16[Self: Visitor_1375733953](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_7	impls: visitInt32[Self: Visitor_1375733953](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_7	impls: visitInt64[Self: Visitor_1375733953](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_7	impls: visitUint8[Self: Visitor_1375733953](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_7	impls: visitUint16[Self: Visitor_1375733953](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_7	impls: visitUint32[Self: Visitor_1375733953](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_7	impls: visitUint64[Self: Visitor_1375733953](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_7	impls: visitFloat32[Self: Visitor_1375733953](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_7	impls: visitFloat64[Self: Visitor_1375733953](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_7	impls: visitChar[Self: Visitor_1375733953](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_7	impls: visitString[Self: Visitor_1375733953](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_7	impls: visitBytes[Self: Visitor_1375733953](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_7	impls: visitNone[Self: Visitor_1375733953](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_7	impls: visitSome[Self: Visitor_1375733953](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_7	impls: visitSeq[Self: Visitor_1375733953](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_7	impls: visitMap[Self: Visitor_1375733953](self: Self; map: var auto): self.Value	
+deserialize	deser/des/impls.html#deserialize,,auto_5	impls: deserialize(self: typedesc[int]; deserializer: var auto): int	
+visitInt8	deser/des/impls.html#visitInt8,Visitor,int8_5	impls: visitInt8(self: Visitor_1375733953; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Visitor,int16_5	impls: visitInt16(self: Visitor_1375733953; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Visitor,int32_5	impls: visitInt32(self: Visitor_1375733953; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Visitor,int64_5	impls: visitInt64(self: Visitor_1375733953; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Visitor,uint8_5	impls: visitUint8(self: Visitor_1375733953; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Visitor,uint16_5	impls: visitUint16(self: Visitor_1375733953; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Visitor,uint32_5	impls: visitUint32(self: Visitor_1375733953; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Visitor,uint64_5	impls: visitUint64(self: Visitor_1375733953; value: uint64): self.Value	
+expecting	deser/des/impls.html#expecting,Visitor_6	impls: expecting(self: Visitor_1375734347): string	
+visitBool	deser/des/impls.html#visitBool,Self,bool_8	impls: visitBool[Self: Visitor_1375734347](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_8	impls: visitInt8[Self: Visitor_1375734347](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_8	impls: visitInt16[Self: Visitor_1375734347](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_8	impls: visitInt32[Self: Visitor_1375734347](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_8	impls: visitInt64[Self: Visitor_1375734347](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_8	impls: visitUint8[Self: Visitor_1375734347](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_8	impls: visitUint16[Self: Visitor_1375734347](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_8	impls: visitUint32[Self: Visitor_1375734347](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_8	impls: visitUint64[Self: Visitor_1375734347](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_8	impls: visitFloat32[Self: Visitor_1375734347](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_8	impls: visitFloat64[Self: Visitor_1375734347](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_8	impls: visitChar[Self: Visitor_1375734347](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_8	impls: visitString[Self: Visitor_1375734347](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_8	impls: visitBytes[Self: Visitor_1375734347](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_8	impls: visitNone[Self: Visitor_1375734347](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_8	impls: visitSome[Self: Visitor_1375734347](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_8	impls: visitSeq[Self: Visitor_1375734347](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_8	impls: visitMap[Self: Visitor_1375734347](self: Self; map: var auto): self.Value	
+deserialize	deser/des/impls.html#deserialize,,auto_6	impls: deserialize(self: typedesc[uint8]; deserializer: var auto): uint8	
+visitInt8	deser/des/impls.html#visitInt8,Visitor,int8_6	impls: visitInt8(self: Visitor_1375734347; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Visitor,int16_6	impls: visitInt16(self: Visitor_1375734347; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Visitor,int32_6	impls: visitInt32(self: Visitor_1375734347; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Visitor,int64_6	impls: visitInt64(self: Visitor_1375734347; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Visitor,uint8_6	impls: visitUint8(self: Visitor_1375734347; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Visitor,uint16_6	impls: visitUint16(self: Visitor_1375734347; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Visitor,uint32_6	impls: visitUint32(self: Visitor_1375734347; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Visitor,uint64_6	impls: visitUint64(self: Visitor_1375734347; value: uint64): self.Value	
+expecting	deser/des/impls.html#expecting,Visitor_7	impls: expecting(self: Visitor_1375734689): string	
+visitBool	deser/des/impls.html#visitBool,Self,bool_9	impls: visitBool[Self: Visitor_1375734689](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_9	impls: visitInt8[Self: Visitor_1375734689](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_9	impls: visitInt16[Self: Visitor_1375734689](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_9	impls: visitInt32[Self: Visitor_1375734689](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_9	impls: visitInt64[Self: Visitor_1375734689](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_9	impls: visitUint8[Self: Visitor_1375734689](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_9	impls: visitUint16[Self: Visitor_1375734689](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_9	impls: visitUint32[Self: Visitor_1375734689](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_9	impls: visitUint64[Self: Visitor_1375734689](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_9	impls: visitFloat32[Self: Visitor_1375734689](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_9	impls: visitFloat64[Self: Visitor_1375734689](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_9	impls: visitChar[Self: Visitor_1375734689](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_9	impls: visitString[Self: Visitor_1375734689](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_9	impls: visitBytes[Self: Visitor_1375734689](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_9	impls: visitNone[Self: Visitor_1375734689](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_9	impls: visitSome[Self: Visitor_1375734689](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_9	impls: visitSeq[Self: Visitor_1375734689](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_9	impls: visitMap[Self: Visitor_1375734689](self: Self; map: var auto): self.Value	
+deserialize	deser/des/impls.html#deserialize,,auto_7	impls: deserialize(self: typedesc[uint16]; deserializer: var auto): uint16	
+visitInt8	deser/des/impls.html#visitInt8,Visitor,int8_7	impls: visitInt8(self: Visitor_1375734689; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Visitor,int16_7	impls: visitInt16(self: Visitor_1375734689; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Visitor,int32_7	impls: visitInt32(self: Visitor_1375734689; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Visitor,int64_7	impls: visitInt64(self: Visitor_1375734689; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Visitor,uint8_7	impls: visitUint8(self: Visitor_1375734689; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Visitor,uint16_7	impls: visitUint16(self: Visitor_1375734689; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Visitor,uint32_7	impls: visitUint32(self: Visitor_1375734689; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Visitor,uint64_7	impls: visitUint64(self: Visitor_1375734689; value: uint64): self.Value	
+expecting	deser/des/impls.html#expecting,Visitor_8	impls: expecting(self: Visitor_1375735031): string	
+visitBool	deser/des/impls.html#visitBool,Self,bool_10	impls: visitBool[Self: Visitor_1375735031](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_10	impls: visitInt8[Self: Visitor_1375735031](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_10	impls: visitInt16[Self: Visitor_1375735031](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_10	impls: visitInt32[Self: Visitor_1375735031](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_10	impls: visitInt64[Self: Visitor_1375735031](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_10	impls: visitUint8[Self: Visitor_1375735031](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_10	impls: visitUint16[Self: Visitor_1375735031](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_10	impls: visitUint32[Self: Visitor_1375735031](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_10	impls: visitUint64[Self: Visitor_1375735031](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_10	impls: visitFloat32[Self: Visitor_1375735031](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_10	impls: visitFloat64[Self: Visitor_1375735031](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_10	impls: visitChar[Self: Visitor_1375735031](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_10	impls: visitString[Self: Visitor_1375735031](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_10	impls: visitBytes[Self: Visitor_1375735031](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_10	impls: visitNone[Self: Visitor_1375735031](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_10	impls: visitSome[Self: Visitor_1375735031](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_10	impls: visitSeq[Self: Visitor_1375735031](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_10	impls: visitMap[Self: Visitor_1375735031](self: Self; map: var auto): self.Value	
+deserialize	deser/des/impls.html#deserialize,,auto_8	impls: deserialize(self: typedesc[uint32]; deserializer: var auto): uint32	
+visitInt8	deser/des/impls.html#visitInt8,Visitor,int8_8	impls: visitInt8(self: Visitor_1375735031; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Visitor,int16_8	impls: visitInt16(self: Visitor_1375735031; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Visitor,int32_8	impls: visitInt32(self: Visitor_1375735031; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Visitor,int64_8	impls: visitInt64(self: Visitor_1375735031; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Visitor,uint8_8	impls: visitUint8(self: Visitor_1375735031; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Visitor,uint16_8	impls: visitUint16(self: Visitor_1375735031; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Visitor,uint32_8	impls: visitUint32(self: Visitor_1375735031; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Visitor,uint64_8	impls: visitUint64(self: Visitor_1375735031; value: uint64): self.Value	
+expecting	deser/des/impls.html#expecting,Visitor_9	impls: expecting(self: Visitor_1375735373): string	
+visitBool	deser/des/impls.html#visitBool,Self,bool_11	impls: visitBool[Self: Visitor_1375735373](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_11	impls: visitInt8[Self: Visitor_1375735373](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_11	impls: visitInt16[Self: Visitor_1375735373](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_11	impls: visitInt32[Self: Visitor_1375735373](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_11	impls: visitInt64[Self: Visitor_1375735373](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_11	impls: visitUint8[Self: Visitor_1375735373](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_11	impls: visitUint16[Self: Visitor_1375735373](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_11	impls: visitUint32[Self: Visitor_1375735373](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_11	impls: visitUint64[Self: Visitor_1375735373](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_11	impls: visitFloat32[Self: Visitor_1375735373](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_11	impls: visitFloat64[Self: Visitor_1375735373](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_11	impls: visitChar[Self: Visitor_1375735373](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_11	impls: visitString[Self: Visitor_1375735373](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_11	impls: visitBytes[Self: Visitor_1375735373](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_11	impls: visitNone[Self: Visitor_1375735373](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_11	impls: visitSome[Self: Visitor_1375735373](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_11	impls: visitSeq[Self: Visitor_1375735373](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_11	impls: visitMap[Self: Visitor_1375735373](self: Self; map: var auto): self.Value	
+deserialize	deser/des/impls.html#deserialize,,auto_9	impls: deserialize(self: typedesc[uint64]; deserializer: var auto): uint64	
+visitInt8	deser/des/impls.html#visitInt8,Visitor,int8_9	impls: visitInt8(self: Visitor_1375735373; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Visitor,int16_9	impls: visitInt16(self: Visitor_1375735373; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Visitor,int32_9	impls: visitInt32(self: Visitor_1375735373; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Visitor,int64_9	impls: visitInt64(self: Visitor_1375735373; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Visitor,uint8_9	impls: visitUint8(self: Visitor_1375735373; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Visitor,uint16_9	impls: visitUint16(self: Visitor_1375735373; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Visitor,uint32_9	impls: visitUint32(self: Visitor_1375735373; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Visitor,uint64_9	impls: visitUint64(self: Visitor_1375735373; value: uint64): self.Value	
+expecting	deser/des/impls.html#expecting,Visitor_10	impls: expecting(self: Visitor_1375735715): string	
+visitBool	deser/des/impls.html#visitBool,Self,bool_12	impls: visitBool[Self: Visitor_1375735715](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_12	impls: visitInt8[Self: Visitor_1375735715](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_12	impls: visitInt16[Self: Visitor_1375735715](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_12	impls: visitInt32[Self: Visitor_1375735715](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_12	impls: visitInt64[Self: Visitor_1375735715](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_12	impls: visitUint8[Self: Visitor_1375735715](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_12	impls: visitUint16[Self: Visitor_1375735715](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_12	impls: visitUint32[Self: Visitor_1375735715](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_12	impls: visitUint64[Self: Visitor_1375735715](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_12	impls: visitFloat32[Self: Visitor_1375735715](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_12	impls: visitFloat64[Self: Visitor_1375735715](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_12	impls: visitChar[Self: Visitor_1375735715](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_12	impls: visitString[Self: Visitor_1375735715](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_12	impls: visitBytes[Self: Visitor_1375735715](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_12	impls: visitNone[Self: Visitor_1375735715](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_12	impls: visitSome[Self: Visitor_1375735715](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_12	impls: visitSeq[Self: Visitor_1375735715](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_12	impls: visitMap[Self: Visitor_1375735715](self: Self; map: var auto): self.Value	
+deserialize	deser/des/impls.html#deserialize,,auto_10	impls: deserialize(self: typedesc[uint]; deserializer: var auto): uint	
+visitInt8	deser/des/impls.html#visitInt8,Visitor,int8_10	impls: visitInt8(self: Visitor_1375735715; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Visitor,int16_10	impls: visitInt16(self: Visitor_1375735715; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Visitor,int32_10	impls: visitInt32(self: Visitor_1375735715; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Visitor,int64_10	impls: visitInt64(self: Visitor_1375735715; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Visitor,uint8_10	impls: visitUint8(self: Visitor_1375735715; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Visitor,uint16_10	impls: visitUint16(self: Visitor_1375735715; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Visitor,uint32_10	impls: visitUint32(self: Visitor_1375735715; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Visitor,uint64_10	impls: visitUint64(self: Visitor_1375735715; value: uint64): self.Value	
+expecting	deser/des/impls.html#expecting,Visitor_11	impls: expecting(self: Visitor_1375736073): string	
+visitBool	deser/des/impls.html#visitBool,Self,bool_13	impls: visitBool[Self: Visitor_1375736073](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_13	impls: visitInt8[Self: Visitor_1375736073](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_13	impls: visitInt16[Self: Visitor_1375736073](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_13	impls: visitInt32[Self: Visitor_1375736073](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_13	impls: visitInt64[Self: Visitor_1375736073](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_13	impls: visitUint8[Self: Visitor_1375736073](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_13	impls: visitUint16[Self: Visitor_1375736073](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_13	impls: visitUint32[Self: Visitor_1375736073](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_13	impls: visitUint64[Self: Visitor_1375736073](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_13	impls: visitFloat32[Self: Visitor_1375736073](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_13	impls: visitFloat64[Self: Visitor_1375736073](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_13	impls: visitChar[Self: Visitor_1375736073](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_13	impls: visitString[Self: Visitor_1375736073](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_13	impls: visitBytes[Self: Visitor_1375736073](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_13	impls: visitNone[Self: Visitor_1375736073](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_13	impls: visitSome[Self: Visitor_1375736073](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_13	impls: visitSeq[Self: Visitor_1375736073](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_13	impls: visitMap[Self: Visitor_1375736073](self: Self; map: var auto): self.Value	
+deserialize	deser/des/impls.html#deserialize,,auto_11	impls: deserialize(self: typedesc[float32]; deserializer: var auto): float32	
+visitInt8	deser/des/impls.html#visitInt8,Visitor,int8_11	impls: visitInt8(self: Visitor_1375736073; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Visitor,int16_11	impls: visitInt16(self: Visitor_1375736073; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Visitor,int32_11	impls: visitInt32(self: Visitor_1375736073; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Visitor,int64_11	impls: visitInt64(self: Visitor_1375736073; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Visitor,uint8_11	impls: visitUint8(self: Visitor_1375736073; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Visitor,uint16_11	impls: visitUint16(self: Visitor_1375736073; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Visitor,uint32_11	impls: visitUint32(self: Visitor_1375736073; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Visitor,uint64_11	impls: visitUint64(self: Visitor_1375736073; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Visitor,float32	impls: visitFloat32(self: Visitor_1375736073; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Visitor,float64	impls: visitFloat64(self: Visitor_1375736073; value: float64): self.Value	
+expecting	deser/des/impls.html#expecting,Visitor_12	impls: expecting(self: Visitor_1375736367): string	
+visitBool	deser/des/impls.html#visitBool,Self,bool_14	impls: visitBool[Self: Visitor_1375736367](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_14	impls: visitInt8[Self: Visitor_1375736367](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_14	impls: visitInt16[Self: Visitor_1375736367](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_14	impls: visitInt32[Self: Visitor_1375736367](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_14	impls: visitInt64[Self: Visitor_1375736367](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_14	impls: visitUint8[Self: Visitor_1375736367](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_14	impls: visitUint16[Self: Visitor_1375736367](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_14	impls: visitUint32[Self: Visitor_1375736367](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_14	impls: visitUint64[Self: Visitor_1375736367](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_14	impls: visitFloat32[Self: Visitor_1375736367](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_14	impls: visitFloat64[Self: Visitor_1375736367](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_14	impls: visitChar[Self: Visitor_1375736367](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_14	impls: visitString[Self: Visitor_1375736367](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_14	impls: visitBytes[Self: Visitor_1375736367](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_14	impls: visitNone[Self: Visitor_1375736367](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_14	impls: visitSome[Self: Visitor_1375736367](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_14	impls: visitSeq[Self: Visitor_1375736367](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_14	impls: visitMap[Self: Visitor_1375736367](self: Self; map: var auto): self.Value	
+deserialize	deser/des/impls.html#deserialize,,auto_12	impls: deserialize(self: typedesc[float64]; deserializer: var auto): float64	
+visitInt8	deser/des/impls.html#visitInt8,Visitor,int8_12	impls: visitInt8(self: Visitor_1375736367; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Visitor,int16_12	impls: visitInt16(self: Visitor_1375736367; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Visitor,int32_12	impls: visitInt32(self: Visitor_1375736367; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Visitor,int64_12	impls: visitInt64(self: Visitor_1375736367; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Visitor,uint8_12	impls: visitUint8(self: Visitor_1375736367; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Visitor,uint16_12	impls: visitUint16(self: Visitor_1375736367; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Visitor,uint32_12	impls: visitUint32(self: Visitor_1375736367; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Visitor,uint64_12	impls: visitUint64(self: Visitor_1375736367; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Visitor,float32_2	impls: visitFloat32(self: Visitor_1375736367; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Visitor,float64_2	impls: visitFloat64(self: Visitor_1375736367; value: float64): self.Value	
+visitBool	deser/des/impls.html#visitBool,Self,bool_15	impls: visitBool[Self: CharVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_15	impls: visitInt8[Self: CharVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_15	impls: visitInt16[Self: CharVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_15	impls: visitInt32[Self: CharVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_15	impls: visitInt64[Self: CharVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_15	impls: visitUint8[Self: CharVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_15	impls: visitUint16[Self: CharVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_15	impls: visitUint32[Self: CharVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_15	impls: visitUint64[Self: CharVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_15	impls: visitFloat32[Self: CharVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_15	impls: visitFloat64[Self: CharVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_15	impls: visitChar[Self: CharVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_15	impls: visitString[Self: CharVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_15	impls: visitBytes[Self: CharVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_15	impls: visitNone[Self: CharVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_15	impls: visitSome[Self: CharVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_15	impls: visitSeq[Self: CharVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_15	impls: visitMap[Self: CharVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,CharVisitor	impls: expecting(self: CharVisitor): string	
+visitChar	deser/des/impls.html#visitChar,CharVisitor,char	impls: visitChar(self: CharVisitor; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,CharVisitor,string	impls: visitString(self: CharVisitor; value: string): self.Value	
+deserialize	deser/des/impls.html#deserialize,typedesc[char],auto	impls: deserialize(Self: typedesc[char]; deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_16	impls: visitBool[Self: StringVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_16	impls: visitInt8[Self: StringVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_16	impls: visitInt16[Self: StringVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_16	impls: visitInt32[Self: StringVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_16	impls: visitInt64[Self: StringVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_16	impls: visitUint8[Self: StringVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_16	impls: visitUint16[Self: StringVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_16	impls: visitUint32[Self: StringVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_16	impls: visitUint64[Self: StringVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_16	impls: visitFloat32[Self: StringVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_16	impls: visitFloat64[Self: StringVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_16	impls: visitChar[Self: StringVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_16	impls: visitString[Self: StringVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_16	impls: visitBytes[Self: StringVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_16	impls: visitNone[Self: StringVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_16	impls: visitSome[Self: StringVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_16	impls: visitSeq[Self: StringVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_16	impls: visitMap[Self: StringVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,StringVisitor	impls: expecting(self: StringVisitor): string	
+visitString	deser/des/impls.html#visitString,StringVisitor,string	impls: visitString(self: StringVisitor; value: string): self.Value	
+deserialize	deser/des/impls.html#deserialize,typedesc[string],auto	impls: deserialize(Self: typedesc[string]; deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_17	impls: visitBool[Self: BytesVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_17	impls: visitInt8[Self: BytesVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_17	impls: visitInt16[Self: BytesVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_17	impls: visitInt32[Self: BytesVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_17	impls: visitInt64[Self: BytesVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_17	impls: visitUint8[Self: BytesVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_17	impls: visitUint16[Self: BytesVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_17	impls: visitUint32[Self: BytesVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_17	impls: visitUint64[Self: BytesVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_17	impls: visitFloat32[Self: BytesVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_17	impls: visitFloat64[Self: BytesVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_17	impls: visitChar[Self: BytesVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_17	impls: visitString[Self: BytesVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_17	impls: visitBytes[Self: BytesVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_17	impls: visitNone[Self: BytesVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_17	impls: visitSome[Self: BytesVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_17	impls: visitSeq[Self: BytesVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_17	impls: visitMap[Self: BytesVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,BytesVisitor	impls: expecting(self: BytesVisitor): string	
+expecting	deser/des/impls.html#expecting,BytesVisitor[T]	impls: expecting[T](self: BytesVisitor[T]): string	
+visitBytes	deser/des/impls.html#visitBytes,BytesVisitor[T],openArray[byte]	impls: visitBytes[T](self: BytesVisitor[T]; value: openArray[byte]): T	
+visitSeq	deser/des/impls.html#visitSeq,BytesVisitor[T],auto	impls: visitSeq[T](self: BytesVisitor[T]; sequence: var auto): T	
+deserialize	deser/des/impls.html#deserialize,typedesc[seq[byte]],auto	impls: deserialize(Self: typedesc[seq[byte]]; deserializer: var auto): Self:type	
+deserialize	deser/des/impls.html#deserialize,typedesc[array[Size,byte]],auto	impls: deserialize[Size](Self: typedesc[array[Size, byte]]; deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_18	impls: visitBool[Self: OptionVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_18	impls: visitInt8[Self: OptionVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_18	impls: visitInt16[Self: OptionVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_18	impls: visitInt32[Self: OptionVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_18	impls: visitInt64[Self: OptionVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_18	impls: visitUint8[Self: OptionVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_18	impls: visitUint16[Self: OptionVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_18	impls: visitUint32[Self: OptionVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_18	impls: visitUint64[Self: OptionVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_18	impls: visitFloat32[Self: OptionVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_18	impls: visitFloat64[Self: OptionVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_18	impls: visitChar[Self: OptionVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_18	impls: visitString[Self: OptionVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_18	impls: visitBytes[Self: OptionVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_18	impls: visitNone[Self: OptionVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_18	impls: visitSome[Self: OptionVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_18	impls: visitSeq[Self: OptionVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_18	impls: visitMap[Self: OptionVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,OptionVisitor	impls: expecting(self: OptionVisitor): string	
+expecting	deser/des/impls.html#expecting,OptionVisitor[T]	impls: expecting[T](self: OptionVisitor[T]): string	
+visitNone	deser/des/impls.html#visitNone,OptionVisitor[T]	impls: visitNone[T](self: OptionVisitor[T]): Option[T]	
+visitSome	deser/des/impls.html#visitSome,OptionVisitor[T],auto	impls: visitSome[T](self: OptionVisitor[T]; deserializer: var auto): Option[T]	
+deserialize	deser/des/impls.html#deserialize,typedesc[Option[T]],auto	impls: deserialize[T](Self: typedesc[Option[T]]; deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_19	impls: visitBool[Self: SeqVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_19	impls: visitInt8[Self: SeqVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_19	impls: visitInt16[Self: SeqVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_19	impls: visitInt32[Self: SeqVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_19	impls: visitInt64[Self: SeqVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_19	impls: visitUint8[Self: SeqVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_19	impls: visitUint16[Self: SeqVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_19	impls: visitUint32[Self: SeqVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_19	impls: visitUint64[Self: SeqVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_19	impls: visitFloat32[Self: SeqVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_19	impls: visitFloat64[Self: SeqVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_19	impls: visitChar[Self: SeqVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_19	impls: visitString[Self: SeqVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_19	impls: visitBytes[Self: SeqVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_19	impls: visitNone[Self: SeqVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_19	impls: visitSome[Self: SeqVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_19	impls: visitSeq[Self: SeqVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_19	impls: visitMap[Self: SeqVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,SeqVisitor	impls: expecting(self: SeqVisitor): string	
+expecting	deser/des/impls.html#expecting,SeqVisitor[T]	impls: expecting[T](self: SeqVisitor[T]): string	
+visitSeq	deser/des/impls.html#visitSeq,SeqVisitor[T],auto	impls: visitSeq[T](self: SeqVisitor[T]; sequence: var auto): seq[T]	
+deserialize	deser/des/impls.html#deserialize,typedesc[seq[T]],auto	impls: deserialize[T](Self: typedesc[seq[T]]; deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_20	impls: visitBool[Self: ArrayVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_20	impls: visitInt8[Self: ArrayVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_20	impls: visitInt16[Self: ArrayVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_20	impls: visitInt32[Self: ArrayVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_20	impls: visitInt64[Self: ArrayVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_20	impls: visitUint8[Self: ArrayVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_20	impls: visitUint16[Self: ArrayVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_20	impls: visitUint32[Self: ArrayVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_20	impls: visitUint64[Self: ArrayVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_20	impls: visitFloat32[Self: ArrayVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_20	impls: visitFloat64[Self: ArrayVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_20	impls: visitChar[Self: ArrayVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_20	impls: visitString[Self: ArrayVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_20	impls: visitBytes[Self: ArrayVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_20	impls: visitNone[Self: ArrayVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_20	impls: visitSome[Self: ArrayVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_20	impls: visitSeq[Self: ArrayVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_20	impls: visitMap[Self: ArrayVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,ArrayVisitor	impls: expecting(self: ArrayVisitor): string	
+expecting	deser/des/impls.html#expecting,ArrayVisitor[T]	impls: expecting[T](self: ArrayVisitor[T]): string	
+visitSeq	deser/des/impls.html#visitSeq,ArrayVisitor[T],auto	impls: visitSeq[T](self: ArrayVisitor[T]; sequence: var auto): T	
+deserialize	deser/des/impls.html#deserialize,typedesc[array[Size,]],auto	impls: deserialize[Size](Self: typedesc[array[Size, not byte]]; deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_21	impls: visitBool[Self: EnumVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_21	impls: visitInt8[Self: EnumVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_21	impls: visitInt16[Self: EnumVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_21	impls: visitInt32[Self: EnumVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_21	impls: visitInt64[Self: EnumVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_21	impls: visitUint8[Self: EnumVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_21	impls: visitUint16[Self: EnumVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_21	impls: visitUint32[Self: EnumVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_21	impls: visitUint64[Self: EnumVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_21	impls: visitFloat32[Self: EnumVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_21	impls: visitFloat64[Self: EnumVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_21	impls: visitChar[Self: EnumVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_21	impls: visitString[Self: EnumVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_21	impls: visitBytes[Self: EnumVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_21	impls: visitNone[Self: EnumVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_21	impls: visitSome[Self: EnumVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_21	impls: visitSeq[Self: EnumVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_21	impls: visitMap[Self: EnumVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,EnumVisitor	impls: expecting(self: EnumVisitor): string	
+expecting	deser/des/impls.html#expecting,EnumVisitor[T: enum]	impls: expecting[T: enum](self: EnumVisitor[T]): string	
+visitString	deser/des/impls.html#visitString,EnumVisitor[T: enum],sinkstring	impls: visitString[T: enum](self: EnumVisitor[T]; value: sink string): T	
+visitInt8	deser/des/impls.html#visitInt8,EnumVisitor[T],int8	impls: visitInt8[T](self: EnumVisitor[T]; value: int8): T	
+visitInt16	deser/des/impls.html#visitInt16,EnumVisitor[T],int16	impls: visitInt16[T](self: EnumVisitor[T]; value: int16): T	
+visitInt32	deser/des/impls.html#visitInt32,EnumVisitor[T],int32	impls: visitInt32[T](self: EnumVisitor[T]; value: int32): T	
+visitInt64	deser/des/impls.html#visitInt64,EnumVisitor[T],int64	impls: visitInt64[T](self: EnumVisitor[T]; value: int64): T	
+visitUint8	deser/des/impls.html#visitUint8,EnumVisitor[T],uint8	impls: visitUint8[T](self: EnumVisitor[T]; value: uint8): T	
+visitUint16	deser/des/impls.html#visitUint16,EnumVisitor[T],uint16	impls: visitUint16[T](self: EnumVisitor[T]; value: uint16): T	
+visitUint32	deser/des/impls.html#visitUint32,EnumVisitor[T],uint32	impls: visitUint32[T](self: EnumVisitor[T]; value: uint32): T	
+visitUint64	deser/des/impls.html#visitUint64,EnumVisitor[T],uint64	impls: visitUint64[T](self: EnumVisitor[T]; value: uint64): T	
+deserialize	deser/des/impls.html#deserialize,typedesc[],auto	impls: deserialize(Self: typedesc[enum]; deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_22	impls: visitBool[Self: TupleVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_22	impls: visitInt8[Self: TupleVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_22	impls: visitInt16[Self: TupleVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_22	impls: visitInt32[Self: TupleVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_22	impls: visitInt64[Self: TupleVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_22	impls: visitUint8[Self: TupleVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_22	impls: visitUint16[Self: TupleVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_22	impls: visitUint32[Self: TupleVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_22	impls: visitUint64[Self: TupleVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_22	impls: visitFloat32[Self: TupleVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_22	impls: visitFloat64[Self: TupleVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_22	impls: visitChar[Self: TupleVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_22	impls: visitString[Self: TupleVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_22	impls: visitBytes[Self: TupleVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_22	impls: visitNone[Self: TupleVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_22	impls: visitSome[Self: TupleVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_22	impls: visitSeq[Self: TupleVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_22	impls: visitMap[Self: TupleVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,TupleVisitor	impls: expecting(self: TupleVisitor): string	
+expecting	deser/des/impls.html#expecting,TupleVisitor[T]	impls: expecting[T](self: TupleVisitor[T]): string	
+visitSeq	deser/des/impls.html#visitSeq,TupleVisitor[T],auto	impls: visitSeq[T](self: TupleVisitor[T]; sequence: var auto): T	
+deserialize	deser/des/impls.html#deserialize,typedesc[],auto_2	impls: deserialize(Self: typedesc[tuple]; deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_23	impls: visitBool[Self: SetVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_23	impls: visitInt8[Self: SetVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_23	impls: visitInt16[Self: SetVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_23	impls: visitInt32[Self: SetVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_23	impls: visitInt64[Self: SetVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_23	impls: visitUint8[Self: SetVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_23	impls: visitUint16[Self: SetVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_23	impls: visitUint32[Self: SetVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_23	impls: visitUint64[Self: SetVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_23	impls: visitFloat32[Self: SetVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_23	impls: visitFloat64[Self: SetVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_23	impls: visitChar[Self: SetVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_23	impls: visitString[Self: SetVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_23	impls: visitBytes[Self: SetVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_23	impls: visitNone[Self: SetVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_23	impls: visitSome[Self: SetVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_23	impls: visitSeq[Self: SetVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_23	impls: visitMap[Self: SetVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,SetVisitor	impls: expecting(self: SetVisitor): string	
+expecting	deser/des/impls.html#expecting,SetVisitor[T]	impls: expecting[T](self: SetVisitor[T]): string	
+visitSeq	deser/des/impls.html#visitSeq,SetVisitor[T],auto	impls: visitSeq[T](self: SetVisitor[T]; sequence: var auto): set[T]	
+deserialize	deser/des/impls.html#deserialize,typedesc[set[T]],auto	impls: deserialize[T](Self: typedesc[set[T]]; deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_24	impls: visitBool[Self: OrderedSetVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_24	impls: visitInt8[Self: OrderedSetVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_24	impls: visitInt16[Self: OrderedSetVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_24	impls: visitInt32[Self: OrderedSetVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_24	impls: visitInt64[Self: OrderedSetVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_24	impls: visitUint8[Self: OrderedSetVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_24	impls: visitUint16[Self: OrderedSetVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_24	impls: visitUint32[Self: OrderedSetVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_24	impls: visitUint64[Self: OrderedSetVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_24	impls: visitFloat32[Self: OrderedSetVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_24	impls: visitFloat64[Self: OrderedSetVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_24	impls: visitChar[Self: OrderedSetVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_24	impls: visitString[Self: OrderedSetVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_24	impls: visitBytes[Self: OrderedSetVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_24	impls: visitNone[Self: OrderedSetVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_24	impls: visitSome[Self: OrderedSetVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_24	impls: visitSeq[Self: OrderedSetVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_24	impls: visitMap[Self: OrderedSetVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,OrderedSetVisitor	impls: expecting(self: OrderedSetVisitor): string	
+expecting	deser/des/impls.html#expecting,OrderedSetVisitor[T]	impls: expecting[T](self: OrderedSetVisitor[T]): string	
+visitSeq	deser/des/impls.html#visitSeq,OrderedSetVisitor[T],auto	impls: visitSeq[T](self: OrderedSetVisitor[T]; sequence: var auto): OrderedSet[T]	
+deserialize	deser/des/impls.html#deserialize,typedesc[OrderedSet[T]],auto	impls: deserialize[T](Self: typedesc[OrderedSet[T]]; deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_25	impls: visitBool[Self: HashSetVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_25	impls: visitInt8[Self: HashSetVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_25	impls: visitInt16[Self: HashSetVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_25	impls: visitInt32[Self: HashSetVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_25	impls: visitInt64[Self: HashSetVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_25	impls: visitUint8[Self: HashSetVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_25	impls: visitUint16[Self: HashSetVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_25	impls: visitUint32[Self: HashSetVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_25	impls: visitUint64[Self: HashSetVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_25	impls: visitFloat32[Self: HashSetVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_25	impls: visitFloat64[Self: HashSetVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_25	impls: visitChar[Self: HashSetVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_25	impls: visitString[Self: HashSetVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_25	impls: visitBytes[Self: HashSetVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_25	impls: visitNone[Self: HashSetVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_25	impls: visitSome[Self: HashSetVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_25	impls: visitSeq[Self: HashSetVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_25	impls: visitMap[Self: HashSetVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,HashSetVisitor	impls: expecting(self: HashSetVisitor): string	
+expecting	deser/des/impls.html#expecting,HashSetVisitor[T]	impls: expecting[T](self: HashSetVisitor[T]): string	
+visitSeq	deser/des/impls.html#visitSeq,HashSetVisitor[T],auto	impls: visitSeq[T](self: HashSetVisitor[T]; sequence: var auto): HashSet[T]	
+deserialize	deser/des/impls.html#deserialize,typedesc[HashSet[T]],auto	impls: deserialize[T](Self: typedesc[HashSet[T]]; deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_26	impls: visitBool[Self: TableVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_26	impls: visitInt8[Self: TableVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_26	impls: visitInt16[Self: TableVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_26	impls: visitInt32[Self: TableVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_26	impls: visitInt64[Self: TableVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_26	impls: visitUint8[Self: TableVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_26	impls: visitUint16[Self: TableVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_26	impls: visitUint32[Self: TableVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_26	impls: visitUint64[Self: TableVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_26	impls: visitFloat32[Self: TableVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_26	impls: visitFloat64[Self: TableVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_26	impls: visitChar[Self: TableVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_26	impls: visitString[Self: TableVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_26	impls: visitBytes[Self: TableVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_26	impls: visitNone[Self: TableVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_26	impls: visitSome[Self: TableVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_26	impls: visitSeq[Self: TableVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_26	impls: visitMap[Self: TableVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,TableVisitor	impls: expecting(self: TableVisitor): string	
+expecting	deser/des/impls.html#expecting,TableVisitor[Key,Value]	impls: expecting[Key, Value](self: TableVisitor[Key, Value]): string	
+visitMap	deser/des/impls.html#visitMap,TableVisitor[Key,Value],auto	impls: visitMap[Key, Value](self: TableVisitor[Key, Value]; map: var auto): Table[Key,\n    Value]	
+deserialize	deser/des/impls.html#deserialize,typedesc[Table[Key,Value]],auto	impls: deserialize[Key, Value](Self: typedesc[Table[Key, Value]];\n                        deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_27	impls: visitBool[Self: OrderedTableVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_27	impls: visitInt8[Self: OrderedTableVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_27	impls: visitInt16[Self: OrderedTableVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_27	impls: visitInt32[Self: OrderedTableVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_27	impls: visitInt64[Self: OrderedTableVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_27	impls: visitUint8[Self: OrderedTableVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_27	impls: visitUint16[Self: OrderedTableVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_27	impls: visitUint32[Self: OrderedTableVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_27	impls: visitUint64[Self: OrderedTableVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_27	impls: visitFloat32[Self: OrderedTableVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_27	impls: visitFloat64[Self: OrderedTableVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_27	impls: visitChar[Self: OrderedTableVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_27	impls: visitString[Self: OrderedTableVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_27	impls: visitBytes[Self: OrderedTableVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_27	impls: visitNone[Self: OrderedTableVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_27	impls: visitSome[Self: OrderedTableVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_27	impls: visitSeq[Self: OrderedTableVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_27	impls: visitMap[Self: OrderedTableVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,OrderedTableVisitor	impls: expecting(self: OrderedTableVisitor): string	
+expecting	deser/des/impls.html#expecting,OrderedTableVisitor[Key,Value]	impls: expecting[Key, Value](self: OrderedTableVisitor[Key, Value]): string	
+visitMap	deser/des/impls.html#visitMap,OrderedTableVisitor[Key,Value],auto	impls: visitMap[Key, Value](self: OrderedTableVisitor[Key, Value]; map: var auto): OrderedTable[\n    Key, Value]	
+deserialize	deser/des/impls.html#deserialize,typedesc[OrderedTable[Key,Value]],auto	impls: deserialize[Key, Value](Self: typedesc[OrderedTable[Key, Value]];\n                        deserializer: var auto): Self:type	
+visitBool	deser/des/impls.html#visitBool,Self,bool_28	impls: visitBool[Self: RangeVisitor](self: Self; value: bool): self.Value	
+visitInt8	deser/des/impls.html#visitInt8,Self,int8_28	impls: visitInt8[Self: RangeVisitor](self: Self; value: int8): self.Value	
+visitInt16	deser/des/impls.html#visitInt16,Self,int16_28	impls: visitInt16[Self: RangeVisitor](self: Self; value: int16): self.Value	
+visitInt32	deser/des/impls.html#visitInt32,Self,int32_28	impls: visitInt32[Self: RangeVisitor](self: Self; value: int32): self.Value	
+visitInt64	deser/des/impls.html#visitInt64,Self,int64_28	impls: visitInt64[Self: RangeVisitor](self: Self; value: int64): self.Value	
+visitUint8	deser/des/impls.html#visitUint8,Self,uint8_28	impls: visitUint8[Self: RangeVisitor](self: Self; value: uint8): self.Value	
+visitUint16	deser/des/impls.html#visitUint16,Self,uint16_28	impls: visitUint16[Self: RangeVisitor](self: Self; value: uint16): self.Value	
+visitUint32	deser/des/impls.html#visitUint32,Self,uint32_28	impls: visitUint32[Self: RangeVisitor](self: Self; value: uint32): self.Value	
+visitUint64	deser/des/impls.html#visitUint64,Self,uint64_28	impls: visitUint64[Self: RangeVisitor](self: Self; value: uint64): self.Value	
+visitFloat32	deser/des/impls.html#visitFloat32,Self,float32_28	impls: visitFloat32[Self: RangeVisitor](self: Self; value: float32): self.Value	
+visitFloat64	deser/des/impls.html#visitFloat64,Self,float64_28	impls: visitFloat64[Self: RangeVisitor](self: Self; value: float64): self.Value	
+visitChar	deser/des/impls.html#visitChar,Self,char_28	impls: visitChar[Self: RangeVisitor](self: Self; value: char): self.Value	
+visitString	deser/des/impls.html#visitString,Self,sinkstring_28	impls: visitString[Self: RangeVisitor](self: Self; value: sink string): self.Value	
+visitBytes	deser/des/impls.html#visitBytes,Self,openArray[byte]_28	impls: visitBytes[Self: RangeVisitor](self: Self; value: openArray[byte]): self.Value	
+visitNone	deser/des/impls.html#visitNone,Self_28	impls: visitNone[Self: RangeVisitor](self: Self): self.Value	
+visitSome	deser/des/impls.html#visitSome,Self,auto_28	impls: visitSome[Self: RangeVisitor](self: Self; deserializer: var auto): self.Value	
+visitSeq	deser/des/impls.html#visitSeq,Self,auto_28	impls: visitSeq[Self: RangeVisitor](self: Self; sequence: var auto): self.Value	
+visitMap	deser/des/impls.html#visitMap,Self,auto_28	impls: visitMap[Self: RangeVisitor](self: Self; map: var auto): self.Value	
+expecting	deser/des/impls.html#expecting,RangeVisitor	impls: expecting(self: RangeVisitor): string	
+expecting	deser/des/impls.html#expecting,RangeVisitor[T: range]	impls: expecting[T: range](self: RangeVisitor[T]): string	
+visitInt8	deser/des/impls.html#visitInt8,RangeVisitor[T: range],int8	impls: visitInt8[T: range](self: RangeVisitor[T]; value: int8): T	
+visitInt16	deser/des/impls.html#visitInt16,RangeVisitor[T: range],int16	impls: visitInt16[T: range](self: RangeVisitor[T]; value: int16): T	
+visitInt32	deser/des/impls.html#visitInt32,RangeVisitor[T: range],int32	impls: visitInt32[T: range](self: RangeVisitor[T]; value: int32): T	
+visitInt64	deser/des/impls.html#visitInt64,RangeVisitor[T: range],int64	impls: visitInt64[T: range](self: RangeVisitor[T]; value: int64): T	
+visitUint8	deser/des/impls.html#visitUint8,RangeVisitor[T: range],uint8	impls: visitUint8[T: range](self: RangeVisitor[T]; value: uint8): T	
+visitUint16	deser/des/impls.html#visitUint16,RangeVisitor[T: range],uint16	impls: visitUint16[T: range](self: RangeVisitor[T]; value: uint16): T	
+visitUint32	deser/des/impls.html#visitUint32,RangeVisitor[T: range],uint32	impls: visitUint32[T: range](self: RangeVisitor[T]; value: uint32): T	
+visitUint64	deser/des/impls.html#visitUint64,RangeVisitor[T: range],uint64	impls: visitUint64[T: range](self: RangeVisitor[T]; value: uint64): T	
+visitFloat32	deser/des/impls.html#visitFloat32,RangeVisitor[T],float32	impls: visitFloat32[T](self: RangeVisitor[T]; value: float32): T	
+visitFloat64	deser/des/impls.html#visitFloat64,RangeVisitor[T],float64	impls: visitFloat64[T](self: RangeVisitor[T]; value: float64): T	
+deserialize	deser/des/impls.html#deserialize,typedesc[range],auto	impls: deserialize(Self: typedesc[range]; deserializer: var auto): Self:type	
+deserialize	deser/des/impls.html#deserialize,typedesc[ref],auto	impls: deserialize(Self: typedesc[ref]; deserializer: var auto): Self:type	

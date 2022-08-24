@@ -1,0 +1,10 @@
+CamelCase	deser/magic/anycase.html#CamelCase	RenameCase.CamelCase	
+CobolCase	deser/magic/anycase.html#CobolCase	RenameCase.CobolCase	
+KebabCase	deser/magic/anycase.html#KebabCase	RenameCase.KebabCase	
+PascalCase	deser/magic/anycase.html#PascalCase	RenameCase.PascalCase	
+PathCase	deser/magic/anycase.html#PathCase	RenameCase.PathCase	
+SnakeCase	deser/magic/anycase.html#SnakeCase	RenameCase.SnakeCase	
+PlainCase	deser/magic/anycase.html#PlainCase	RenameCase.PlainCase	
+TrainCase	deser/magic/anycase.html#TrainCase	RenameCase.TrainCase	
+UpperSnakeCase	deser/magic/anycase.html#UpperSnakeCase	RenameCase.UpperSnakeCase	
+RenameCase	deser/magic/anycase.html#RenameCase	anycase: RenameCase	

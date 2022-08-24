@@ -1,0 +1,38 @@
+DeserializationError	deser/des/error.html#DeserializationError	error: DeserializationError	
+InvalidType	deser/des/error.html#InvalidType	error: InvalidType	
+InvalidValue	deser/des/error.html#InvalidValue	error: InvalidValue	
+InvalidLength	deser/des/error.html#InvalidLength	error: InvalidLength	
+UnknownField	deser/des/error.html#UnknownField	error: UnknownField	
+MissingField	deser/des/error.html#MissingField	error: MissingField	
+DuplicateField	deser/des/error.html#DuplicateField	error: DuplicateField	
+UnknownUntaggedVariant	deser/des/error.html#UnknownUntaggedVariant	error: UnknownUntaggedVariant	
+Bool	deser/des/error.html#Bool	UnexpectedKind.Bool	
+Unsigned	deser/des/error.html#Unsigned	UnexpectedKind.Unsigned	
+Signed	deser/des/error.html#Signed	UnexpectedKind.Signed	
+Float	deser/des/error.html#Float	UnexpectedKind.Float	
+Char	deser/des/error.html#Char	UnexpectedKind.Char	
+String	deser/des/error.html#String	UnexpectedKind.String	
+Bytes	deser/des/error.html#Bytes	UnexpectedKind.Bytes	
+Option	deser/des/error.html#Option	UnexpectedKind.Option	
+Seq	deser/des/error.html#Seq	UnexpectedKind.Seq	
+Map	deser/des/error.html#Map	UnexpectedKind.Map	
+UnexpectedKind	deser/des/error.html#UnexpectedKind	error: UnexpectedKind	
+Unexpected	deser/des/error.html#Unexpected	error: Unexpected	
+`$`	deser/des/error.html#$,Unexpected	error: `$`(self: Unexpected): string	
+UnexpectedBool	deser/des/error.html#UnexpectedBool,bool	error: UnexpectedBool(value: bool): auto	
+UnexpectedUnsigned	deser/des/error.html#UnexpectedUnsigned,uint64	error: UnexpectedUnsigned(value: uint64): auto	
+UnexpectedSigned	deser/des/error.html#UnexpectedSigned,int64	error: UnexpectedSigned(value: int64): auto	
+UnexpectedFloat	deser/des/error.html#UnexpectedFloat,float64	error: UnexpectedFloat(value: float64): auto	
+UnexpectedChar	deser/des/error.html#UnexpectedChar,char	error: UnexpectedChar(value: char): auto	
+UnexpectedString	deser/des/error.html#UnexpectedString,sinkstring	error: UnexpectedString(value: sink string): auto	
+UnexpectedBytes	deser/des/error.html#UnexpectedBytes,sinkseq[byte]	error: UnexpectedBytes(value: sink seq[byte]): auto	
+UnexpectedOption	deser/des/error.html#UnexpectedOption	error: UnexpectedOption(): auto	
+UnexpectedSeq	deser/des/error.html#UnexpectedSeq	error: UnexpectedSeq(): auto	
+UnexpectedMap	deser/des/error.html#UnexpectedMap	error: UnexpectedMap(): auto	
+raiseInvalidType	deser/des/error.html#raiseInvalidType,Unexpected,auto	error: raiseInvalidType(unexp: Unexpected; exp: auto)	
+raiseInvalidValue	deser/des/error.html#raiseInvalidValue,Unexpected,auto	error: raiseInvalidValue(unexp: Unexpected; exp: auto)	
+raiseInvalidLength	deser/des/error.html#raiseInvalidLength,int,auto	error: raiseInvalidLength(unexp: int; exp: auto)	
+raiseUnknownField	deser/des/error.html#raiseUnknownField,sinkstring	error: raiseUnknownField(unexp: sink string)	
+raiseMissingField	deser/des/error.html#raiseMissingField,static[string]	error: raiseMissingField(field: static[string])	
+raiseDuplicateField	deser/des/error.html#raiseDuplicateField,static[string]	error: raiseDuplicateField(field: static[string])	
+raiseUnknownUntaggedVariant	deser/des/error.html#raiseUnknownUntaggedVariant,static[string],static[string]	error: raiseUnknownUntaggedVariant(struct: static[string]; field: static[string])	
