@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.8"
+version       = "0.2.0"
 author        = "gabbhack"
 description   = "De/serialization library for Nim"
 license       = "MIT"
@@ -17,5 +17,3 @@ task test, "Run tests":
 task docs, "Generate docs":
   rmDir "docs"
   exec "nimble doc2 --outdir:docs --project --git.url:https://github.com/gabbhack/deser --git.commit:master --index:on src/deser"
-  exec "testament html"
-  mvFile("testresults.html", "docs/testresults.html")

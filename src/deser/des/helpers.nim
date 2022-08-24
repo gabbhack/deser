@@ -1,3 +1,15 @@
+##[
+.. Note:: This section of the documentation is being supplemented.
+
+# Visitor
+
+# SeqAccess
+
+# MapAccess
+
+# Deserializer
+]##
+
 import std/[
   options
 ]
@@ -23,10 +35,15 @@ from ../magic/sharedutils {.all.} import maybePublic
 
 type
   NoneSeed*[Value] = object
-  IgnoredAny* = object
+  IgnoredAny* = object ##[
+The type to skip some elements. Used when skip pragmas are used.
+  ]##
 
 
 template implVisitor*(selfType: typed, public: static[bool] = false) {.dirty.} =
+  ##[
+Generate forward declarations and default implementation for [Visitor](#visitor).
+  ]##
   bind
     raiseInvalidType,
     UnexpectedBool,
@@ -107,6 +124,9 @@ template implVisitor*(selfType: typed, public: static[bool] = false) {.dirty.} =
 
 
 template implSeqAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
+  ##[
+Generate forward declarations and default implementation for [SeqAccess](#seqaccess).
+  ]##
   bind
     Option,
     NoneSeed,
@@ -138,6 +158,9 @@ template implSeqAccess*(selfType: typed{`type`}, public: static[bool] = false) {
 
 
 template implMapAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
+  ##[
+Generate forward declarations and default implementation for [MapAccess](#mapaccess).
+  ]##
   bind
     Option,
     unsafeGet,
@@ -198,6 +221,9 @@ template implMapAccess*(selfType: typed{`type`}, public: static[bool] = false) {
 
 
 template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
+  ##[
+Generate forward declarations for [Deserializer](#deserializer).
+  ]##
   bind maybePublic
 
   maybePublic(public):
@@ -243,6 +269,9 @@ template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false
 
 
 template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false, defaultBody: untyped) {.dirty.} =
+  ##[
+Generate [Deserializer](#deserializer) procedures with `defaultBody` as implementation.
+  ]##
   bind maybePublic
 
   maybePublic(public):
