@@ -42,11 +42,11 @@ makeSerializable(Message)
 makeDeserializable(Message)
 ```
 
-Use `toString` and `fromString` procedures from deser_json to serialize and deserialize to/from JSON:
+Use `toJson` and `fromJson` procedures from deser_json to serialize and deserialize to/from JSON:
 
 ```nim
-let chat = Message.fromString(json)
-echo chat.toString()
+let chat = Message.fromJson(json)
+echo chat.toJson()
 ```
 
 `created` field is the time in unix format, it is not convenient to work with it as `int`. But if we try to just use [Time](https://nim-lang.org/docs/times.html#Time), we get an error:
@@ -91,8 +91,8 @@ const json = """
   "created": 1660848266
 }
 """
-let chat = Message.fromString(json)
-echo chat.toString()
+let chat = Message.fromJson(json)
+echo chat.toJson()
 ```
 
 # Supported std-types

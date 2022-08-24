@@ -40,10 +40,9 @@ The type to skip some elements. Used when skip pragmas are used.
   ]##
 
 
-template implVisitor*(selfType: typed, public: static[bool] = false) {.dirty.} =
-  ##[
+template implVisitor*(selfType: typed, public: static[bool] = false) {.dirty.} = ##[
 Generate forward declarations and default implementation for [Visitor](#visitor).
-  ]##
+]##
   bind
     raiseInvalidType,
     UnexpectedBool,
@@ -123,10 +122,9 @@ Generate forward declarations and default implementation for [Visitor](#visitor)
       {.pop.}
 
 
-template implSeqAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
-  ##[
+template implSeqAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} = ##[
 Generate forward declarations and default implementation for [SeqAccess](#seqaccess).
-  ]##
+]##
   bind
     Option,
     NoneSeed,
@@ -157,10 +155,9 @@ Generate forward declarations and default implementation for [SeqAccess](#seqacc
       {.pop.}
 
 
-template implMapAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
-  ##[
+template implMapAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} = ##[
 Generate forward declarations and default implementation for [MapAccess](#mapaccess).
-  ]##
+]##
   bind
     Option,
     unsafeGet,
@@ -220,10 +217,9 @@ Generate forward declarations and default implementation for [MapAccess](#mapacc
       {.pop.}
 
 
-template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
-  ##[
+template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} = ##[
 Generate forward declarations for [Deserializer](#deserializer).
-  ]##
+]##
   bind maybePublic
 
   maybePublic(public):
@@ -268,10 +264,9 @@ Generate forward declarations for [Deserializer](#deserializer).
     proc deserializeArray(self: var selfType, len: static[int], visitor: auto): visitor.Value
 
 
-template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false, defaultBody: untyped) {.dirty.} =
-  ##[
+template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false, defaultBody: untyped) {.dirty.} = ##[
 Generate [Deserializer](#deserializer) procedures with `defaultBody` as implementation.
-  ]##
+]##
   bind maybePublic
 
   maybePublic(public):

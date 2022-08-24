@@ -45,7 +45,7 @@ const json = """
   {
     "trueField": ""
   }
-let test = Test.fromString(json)
+let test = Test.fromJson(json)
 
 assert test.kind == true
 ```
@@ -74,7 +74,7 @@ type
 
 makeSerializable(User)
 
-assert User(created: fromUnix(123)).toString() == """{"created":123}"""
+assert User(created: fromUnix(123)).toJson() == """{"created":123}"""
 ```
 ]##
 
@@ -101,7 +101,7 @@ type
 
 makeDeserializable(User)
 
-assert User(created: fromUnix(123)) == User.fromString("""{"created": 123}""")
+assert User(created: fromUnix(123)) == User.fromJson("""{"created": 123}""")
 ```
 ]##
 
@@ -137,7 +137,7 @@ type
 
 makeSerializable(Foo)
 
-assert Foo().toString() == """{"first_name":"","last_name":""}"""
+assert Foo().toJson() == """{"first_name":"","last_name":""}"""
 ```
 ]##
   renameAllInRec(typ[2][2], renameTo)
