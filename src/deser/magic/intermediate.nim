@@ -303,10 +303,11 @@ proc init(Self: typedesc[Struct], sym: NimNode): Self =
 
   case typeImpl.kind
   of nnkSym:
-    # For alias types
-    # e.g. type Foo = Bar
-    # recursively calling ourselves
-    result = Self.init typeImpl
+    # Error on aliases
+    error(
+      "Alias is not supported. Use original or distinct type instead.",
+      typeDef[0]
+    )
   of nnkRefTy:
     case typeImpl[0].kind
     of nnkSym:
@@ -335,7 +336,7 @@ proc init(Self: typedesc[Struct], sym: NimNode): Self =
       enumUnknownFieldSym: genSym(nskEnumField, "Unknown")
     )
   else:
-    expectKind typeImpl, {nnkSym, nnkRefTy, nnkObjectTy}
+    expectKind typeImpl, {nnkRefTy, nnkObjectTy}
   
   #[
       typeDef[0]
