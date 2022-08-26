@@ -41,5 +41,8 @@ jobs:
       - name: Install dependencies
         run: nimble install -d -y
       
+      - name: Check style
+        run: nim c --styleCheck:error src/deser.nim
+      
       - name: Run tests
         run: nimble test
