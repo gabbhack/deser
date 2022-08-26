@@ -297,7 +297,10 @@ proc init(Self: typedesc[Struct], sym: NimNode): Self =
 
   let typeDef = sym.getImpl
 
-  expectKind typeDef, nnkTypeDef
+  if typeDef.kind == nnkNilLit:
+    error("No type implementation. Maybe it is a built-in type.")
+  else:
+    expectKind typeDef, nnkTypeDef
 
   let typeImpl = typeDef[2]
 
@@ -335,8 +338,17 @@ proc init(Self: typedesc[Struct], sym: NimNode): Self =
       enumSym: genSym(nskType, sym.strVal),
       enumUnknownFieldSym: genSym(nskEnumField, "Unknown")
     )
+  of nnkDistinctTy:
+    debugEcho typeImpl.treeRepr
+    result = Self.init typeImpl[0]
+  of nnkEnumTy:
+    error("Enum is not supported.", typeDef[0])
+  of nnkInfix, nnkTypeClassTy:
+    error("Type class is not supported.", typeDef[0])
+  of nnkTupleConstr, nnkTupleTy:
+    error("Tuple is serializable by default.", typeDef[0])
   else:
-    expectKind typeImpl, {nnkRefTy, nnkObjectTy}
+    expectKind typeImpl, {nnkRefTy, nnkObjectTy, nnkDistinctTy}
   
   #[
       typeDef[0]
