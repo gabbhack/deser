@@ -86,25 +86,25 @@ func `$`*(self: Unexpected): string {.inline.} =
     "map"
 
 
-func UnexpectedBool*(value: bool): auto = Unexpected(kind: Bool, boolValue: value)
+func initUnexpectedBool*(value: bool): auto = Unexpected(kind: Bool, boolValue: value)
 
-func UnexpectedUnsigned*(value: uint64): auto = Unexpected(kind: Unsigned, unsignedValue: value)
+func initUnexpectedUnsigned*(value: uint64): auto = Unexpected(kind: Unsigned, unsignedValue: value)
 
-func UnexpectedSigned*(value: int64): auto = Unexpected(kind: Signed, signedValue: value)
+func initUnexpectedSigned*(value: int64): auto = Unexpected(kind: Signed, signedValue: value)
 
-func UnexpectedFloat*(value: float64): auto = Unexpected(kind: Float, floatValue: value)
+func initUnexpectedFloat*(value: float64): auto = Unexpected(kind: Float, floatValue: value)
 
-func UnexpectedChar*(value: char): auto = Unexpected(kind: Char, charValue: value)
+func initUnexpectedChar*(value: char): auto = Unexpected(kind: Char, charValue: value)
 
-func UnexpectedString*(value: sink string): auto = Unexpected(kind: String, stringValue: value)
+func initUnexpectedString*(value: sink string): auto = Unexpected(kind: String, stringValue: value)
 
-func UnexpectedBytes*(value: sink seq[byte]): auto = Unexpected(kind: Bytes, bytesValue: value)
+func initUnexpectedBytes*(value: sink seq[byte]): auto = Unexpected(kind: Bytes, bytesValue: value)
 
-func UnexpectedOption*(): auto = Unexpected(kind: Option)
+func initUnexpectedOption*(): auto = Unexpected(kind: Option)
 
-func UnexpectedSeq*(): auto = Unexpected(kind: Seq)
+func initUnexpectedSeq*(): auto = Unexpected(kind: Seq)
 
-func UnexpectedMap*(): auto = Unexpected(kind: Map)
+func initUnexpectedMap*(): auto = Unexpected(kind: Map)
 when defined(release):
   {.pop.}
 

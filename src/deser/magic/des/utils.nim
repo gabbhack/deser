@@ -5,10 +5,10 @@ import std/[
 ]
 
 from ../../des/error import
-  UnexpectedSigned,
-  UnexpectedUnsigned,
-  UnexpectedString,
-  UnexpectedFloat,
+  initUnexpectedSigned,
+  initUnexpectedUnsigned,
+  initUnexpectedString,
+  initUnexpectedFloat,
   raiseInvalidValue
 
 
@@ -55,7 +55,7 @@ template getOrBreak[T](field: Option[T]): T =
       break
 
 
-macro genPrimitive(T: typed{`type`}, deserializeMethod: untyped = nil, floats: static[bool] = false) =
+macro genPrimitive(typ: typed{`type`}, deserializeMethod: untyped = nil, floats: static[bool] = false) =
   result = newStmtList()
   var
     selfIdent = ident "self"
@@ -66,9 +66,9 @@ macro genPrimitive(T: typed{`type`}, deserializeMethod: untyped = nil, floats: s
       if deserializeMethod.kind != nnkNilLit:
         deserializeMethod
       else:
-        ident "deserialize" & T.strVal.capitalizeAscii
+        ident "deserialize" & typ.strVal.capitalizeAscii
     )
-    typeStringLit = T.toStrLit
+    typeStringLit = typ.toStrLit
     procs = @[
       (ident "visitInt8", ident "int8"),
       (ident "visitInt16", ident "int16"),
@@ -87,19 +87,19 @@ macro genPrimitive(T: typed{`type`}, deserializeMethod: untyped = nil, floats: s
         when self.Value is SomeUnsignedInt:
           when value is SomeSignedInt:
             if not (0 <= value and value.uint64 <= self.Value.high.uint64):
-              raiseInvalidValue(UnexpectedSigned(value.int64), self)
+              raiseInvalidValue(initUnexpectedSigned(value.int64), self)
           elif value is SomeUnsignedInt:
             if not (value.uint64 <= self.Value.high.uint64):
-              raiseInvalidValue(UnexpectedUnsigned(value.uint64), self)
+              raiseInvalidValue(initUnexpectedUnsigned(value.uint64), self)
           else:
             {.error: "Unknown type `" & $self.Value & "`, expected int or uint".}
         elif self.Value is SomeSignedInt:
           when value is SomeSignedInt:
             if not (self.Value.low.int64 <= value.int64 and value.int64 <= self.Value.high.int64):
-              raiseInvalidValue(UnexpectedSigned(value.int64), self)
+              raiseInvalidValue(initUnexpectedSigned(value.int64), self)
           elif value is SomeUnsignedInt:
             if not (value.uint64 <= self.Value.high.uint64):
-                raiseInvalidValue(UnexpectedUnsigned(value.uint64), self)
+                raiseInvalidValue(initUnexpectedUnsigned(value.uint64), self)
           else:
             {.error: "Unknown type `" & $self.Value() & "`, expected int or uint".}
 
@@ -107,12 +107,12 @@ macro genPrimitive(T: typed{`type`}, deserializeMethod: untyped = nil, floats: s
   
   result.add quote do:
     type HackType[Value] = object
-    type `visitorType` = HackType[`T`]
+    type `visitorType` = HackType[`typ`]
     implVisitor(`visitorType`, true)
 
     proc expecting*(`selfIdent`: `visitorType`): string = `typeStringLit`
 
-    proc deserialize*(`selfIdent`: typedesc[`T`], `deserializerIdent`: var auto): `T` =
+    proc deserialize*(`selfIdent`: typedesc[`typ`], `deserializerIdent`: var auto): `typ` =
       mixin `deserializeMethodIdent`
 
       deserializer.`deserializeMethodIdent`(`visitorType`())
@@ -149,16 +149,16 @@ macro genArray(size: static[int], T: typedesc): array =
 template visitEnumIntBody {.dirty.} =
   bind
     raiseInvalidValue,
-    UnexpectedSigned,
-    UnexpectedUnsigned
+    initUnexpectedSigned,
+    initUnexpectedUnsigned
 
   if value.int64 in T.low.int64..T.high.int64:
     value.T
   else:
     when value is SomeSignedInt:
-      raiseInvalidValue(UnexpectedSigned(value), self)
+      raiseInvalidValue(initUnexpectedSigned(value), self)
     else:
-      raiseInvalidValue(UnexpectedUnsigned(value), self)
+      raiseInvalidValue(initUnexpectedUnsigned(value), self)
 
 
 template visitRangeIntBody {.dirty.} =
@@ -168,12 +168,14 @@ template visitRangeIntBody {.dirty.} =
 
 
 template visitRangeFloatBody {.dirty.} =
-  bind raiseInvalidValue, UnexpectedFloat
+  bind
+    raiseInvalidValue,
+    initUnexpectedFloat
 
   if value.float64 in T.low.float64..T.high.float64:
     value.T
   else:
-    raiseInvalidValue(UnexpectedFloat(value.float64), self)
+    raiseInvalidValue(initUnexpectedFloat(value.float64), self)
 
 
 # https://github.com/GULPF/samson/blob/71ead61104302abfc0d4463c91f73a4126b2184c/src/samson/private/xtypetraits.nim#L29

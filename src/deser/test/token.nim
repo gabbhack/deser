@@ -4,6 +4,7 @@ import std/[
 
 import patty
 
+{.hint[Name]:off.}
 
 variantp Token:
   Bool(bool: bool)

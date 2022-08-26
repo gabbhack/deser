@@ -19,16 +19,16 @@ from error import
   raiseInvalidValue,
   raiseDuplicateField,
   raiseInvalidLength,
-  UnexpectedBool,
-  UnexpectedUnsigned,
-  UnexpectedSigned,
-  UnexpectedFloat,
-  UnexpectedChar,
-  UnexpectedString,
-  UnexpectedBytes,
-  UnexpectedOption,
-  UnexpectedSeq,
-  UnexpectedMap
+  initUnexpectedBool,
+  initUnexpectedUnsigned,
+  initUnexpectedSigned,
+  initUnexpectedFloat,
+  initUnexpectedChar,
+  initUnexpectedString,
+  initUnexpectedBytes,
+  initUnexpectedOption,
+  initUnexpectedSeq,
+  initUnexpectedMap
 
 from ../magic/sharedutils {.all.} import maybePublic
 
@@ -45,15 +45,15 @@ Generate forward declarations and default implementation for [Visitor](#visitor)
 ]##
   bind
     raiseInvalidType,
-    UnexpectedBool,
-    UnexpectedSigned,
-    UnexpectedUnsigned,
-    UnexpectedFloat,
-    UnexpectedString,
-    UnexpectedBytes,
-    UnexpectedOption,
-    UnexpectedSeq,
-    UnexpectedMap,
+    initUnexpectedBool,
+    initUnexpectedSigned,
+    initUnexpectedUnsigned,
+    initUnexpectedFloat,
+    initUnexpectedString,
+    initUnexpectedBytes,
+    initUnexpectedOption,
+    initUnexpectedSeq,
+    initUnexpectedMap,
     maybePublic
 
   maybePublic(public):
@@ -91,31 +91,31 @@ Generate forward declarations and default implementation for [Visitor](#visitor)
     proc visitMap[Self: selfType](self: Self, map: var auto): self.Value
 
     # default implementation
-    proc visitBool[Self: selfType](self: Self, value: bool): self.Value = raiseInvalidType(UnexpectedBool(value), self)
+    proc visitBool[Self: selfType](self: Self, value: bool): self.Value = raiseInvalidType(initUnexpectedBool(value), self)
 
     proc visitInt8[Self: selfType](self: Self, value: int8): self.Value = self.visitInt64(value.int64)
     proc visitInt16[Self: selfType](self: Self, value: int16): self.Value = self.visitInt64(value.int64)
     proc visitInt32[Self: selfType](self: Self, value: int32): self.Value = self.visitInt64(value.int64)
-    proc visitInt64[Self: selfType](self: Self, value: int64): self.Value = raiseInvalidType(UnexpectedSigned(value), self)
+    proc visitInt64[Self: selfType](self: Self, value: int64): self.Value = raiseInvalidType(initUnexpectedSigned(value), self)
 
     proc visitUint8[Self: selfType](self: Self, value: uint8): self.Value = self.visitUint64(value.uint64)
     proc visitUint16[Self: selfType](self: Self, value: uint16): self.Value = self.visitUint64(value.uint64)
     proc visitUint32[Self: selfType](self: Self, value: uint32): self.Value = self.visitUint64(value.uint64)
-    proc visitUint64[Self: selfType](self: Self, value: uint64): self.Value = raiseInvalidType(UnexpectedUnsigned(value), self)
+    proc visitUint64[Self: selfType](self: Self, value: uint64): self.Value = raiseInvalidType(initUnexpectedUnsigned(value), self)
 
     proc visitFloat32[Self: selfType](self: Self, value: float32): self.Value = self.visitFloat64(value.float64)
-    proc visitFloat64[Self: selfType](self: Self, value: float64): self.Value = raiseInvalidType(UnexpectedFloat(value), self)
+    proc visitFloat64[Self: selfType](self: Self, value: float64): self.Value = raiseInvalidType(initUnexpectedFloat(value), self)
 
     proc visitChar[Self: selfType](self: Self, value: char): self.Value = self.visitString($value)
-    proc visitString[Self: selfType](self: Self, value: sink string): self.Value = raiseInvalidType(UnexpectedString(value), self)
+    proc visitString[Self: selfType](self: Self, value: sink string): self.Value = raiseInvalidType(initUnexpectedString(value), self)
 
-    proc visitBytes[Self: selfType](self: Self, value: openArray[byte]): self.Value = raiseInvalidType(UnexpectedBytes(@value), self)
+    proc visitBytes[Self: selfType](self: Self, value: openArray[byte]): self.Value = raiseInvalidType(initUnexpectedBytes(@value), self)
 
-    proc visitNone[Self: selfType](self: Self): self.Value = raiseInvalidType(UnexpectedOption(), self)
-    proc visitSome[Self: selfType](self: Self, deserializer: var auto): self.Value = raiseInvalidType(UnexpectedOption(), self)
+    proc visitNone[Self: selfType](self: Self): self.Value = raiseInvalidType(initUnexpectedOption(), self)
+    proc visitSome[Self: selfType](self: Self, deserializer: var auto): self.Value = raiseInvalidType(initUnexpectedOption(), self)
 
-    proc visitSeq[Self: selfType](self: Self, sequence: var auto): self.Value = raiseInvalidType(UnexpectedSeq(), self)
-    proc visitMap[Self: selfType](self: Self, map: var auto): self.Value = raiseInvalidType(UnexpectedMap(), self)
+    proc visitSeq[Self: selfType](self: Self, sequence: var auto): self.Value = raiseInvalidType(initUnexpectedSeq(), self)
+    proc visitMap[Self: selfType](self: Self, map: var auto): self.Value = raiseInvalidType(initUnexpectedMap(), self)
     {.pop.}
 
     when defined(release):

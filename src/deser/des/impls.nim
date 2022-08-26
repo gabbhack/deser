@@ -12,9 +12,9 @@ import std/[
 from error import
   raiseInvalidValue,
   raiseMissingField,
-  UnexpectedString,
-  UnexpectedSigned,
-  UnexpectedFloat
+  initUnexpectedString,
+  initUnexpectedSigned,
+  initUnexpectedFloat
 
 
 from ../magic/des/utils {.all.} import
@@ -155,7 +155,7 @@ proc visitString*(self: CharVisitor, value: string): self.Value =
   if value.len == 1:
     value[0]
   else:
-    raiseInvalidValue(UnexpectedString(value), self)
+    raiseInvalidValue(initUnexpectedString(value), self)
 
 
 proc deserialize*(Self: typedesc[char], deserializer: var auto): Self =

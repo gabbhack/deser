@@ -655,11 +655,11 @@ proc defDeserializeWithType(struct: Struct, public: bool): NimNode =
       result.add defWithType(typ)
 
       result.add quote do:
-        proc `deserializeIdent`[T](Self: typedesc[`typ`[T]], deserializer: var auto): Self {.inline.} =
+        proc `deserializeIdent`[T](selfTy: typedesc[`typ`[T]], deserializer: var auto): selfTy {.inline.} =
           when compiles(`deserializeWith`[T](deserializer)):
-            result = Self(value: `deserializeWith`[T](deserializer))
+            result = selfTy(value: `deserializeWith`[T](deserializer))
           else:
-            result = Self(value: `deserializeWith`(deserializer))
+            result = selfTy(value: `deserializeWith`(deserializer))
 
 
 proc defVisitorValueType(struct: Struct, visitorType, valueType: NimNode, public: bool): NimNode =
