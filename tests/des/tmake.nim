@@ -39,7 +39,7 @@ type
     id: ref int
   
   InheritObject = object of RootObj
-    id: int
+    id {.renamed: "i".}: int
   
   CaseObject = object
     case kind: bool
@@ -85,6 +85,19 @@ type
   DistinctToGenericObject = distinct GenericObject[int]
   DistinctGenericObject[T] = distinct GenericObject[T]
 
+  ChildObject = object of InheritObject
+    text: string
+  
+  ChildGenericObject[T] = object of InheritObject
+    text: T
+
+  ChildGenericToObject = object of ChildGenericObject[string]
+
+  ChildRefObject = ref object of InheritObject
+    text: string
+  
+  ChildOfRefObject = object of ChildRefObject
+
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
 
 proc `==`*(x, y: CaseObject | UntaggedCaseObject): bool =
@@ -125,7 +138,12 @@ makeDeserializable([
   RenameAllObject,
   DistinctObject,
   DistinctToGenericObject,
-  DistinctGenericObject
+  DistinctGenericObject,
+  ChildObject,
+  ChildGenericObject,
+  ChildGenericToObject,
+  ChildRefObject,
+  ChildOfRefObject
 ], public=true)
 
 
@@ -173,7 +191,7 @@ suite "makeDeserializable":
   test "InheritObject":
     assertDesTokens InheritObject(id: 123), [
       Struct("InheritObject", 1),
-      String("id"),
+      String("i"),
       I64(123),
       StructEnd()
     ]
@@ -296,5 +314,55 @@ suite "makeDeserializable":
       Struct("DistinctGenericObject", 1),
       String("id"),
       I64(123),
+      StructEnd()
+    ]
+
+  test "ChildObject":
+    assertDesTokens ChildObject(id: 123, text: "123"), [
+      Struct("ChildObject", 2),
+      String("i"),
+      I64(123),
+      String("text"),
+      String("123"),
+      StructEnd()
+    ]
+  
+  test "ChildGenericObject":
+    assertDesTokens ChildGenericObject[string](id: 123, text: "123"), [
+      Struct("ChildGenericObject", 2),
+      String("i"),
+      I64(123),
+      String("text"),
+      String("123"),
+      StructEnd()
+    ]
+  
+  test "ChildRefObject":
+    assertDesTokens ChildRefObject(id: 123, text: "123"), [
+      Struct("ChildRefObject", 2),
+      String("i"),
+      I64(123),
+      String("text"),
+      String("123"),
+      StructEnd()
+    ]
+  
+  test "ChildGenericToObject":
+    assertDesTokens ChildGenericToObject(id: 123, text: "123"), [
+      Struct("ChildGenericToObject", 2),
+      String("i"),
+      I64(123),
+      String("text"),
+      String("123"),
+      StructEnd()
+    ]
+  
+  test "ChildOfRefObject":
+    assertDesTokens ChildOfRefObject(id: 123, text: "123"), [
+      Struct("ChildOfRefObject", 2),
+      String("i"),
+      I64(123),
+      String("text"),
+      String("123"),
       StructEnd()
     ]

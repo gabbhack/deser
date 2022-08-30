@@ -170,8 +170,10 @@ proc fill(self: var (FieldFeatures | StructFeatures), pragmas: NimNode) =
         sym = pragma[0]
         values = if pragma.len > 1: pragma[1..pragma.len-1] else: @[]
       self.fill(sym, values)
+    of nnkIdent:
+      discard "process only typed nodes"
     else:
-      expectKind pragma, {nnkSym, nnkCall}
+      expectKind pragma, {nnkSym, nnkCall, nnkExprColonExpr, nnkIdent}
 
   when typeof(self) is FieldFeatures:
     if self.skipSerializing and self.serializeWith.isSome:
@@ -298,6 +300,21 @@ proc getFields(recList: NimNode): seq[Field] =
         expectKind fieldNode, {nnkIdentDefs, nnkRecCase}
 
 
+proc getInheritSym(objectTy: NimNode): Option[NimNode] =
+  expectKind objectTy, nnkObjectTy
+
+  let inherit = objectTy[1]
+
+  if inherit.kind == nnkOfInherit:
+    case inherit[0].kind
+    of nnkSym:
+      result = some inherit[0]
+    of nnkBracketExpr:
+      result = some inherit[0][0]
+    else:
+      expectKind inherit[0], {nnkSym, nnkBracketExpr}
+
+
 proc init(Self: typedesc[Struct], sym: NimNode): Self =
   # Get temp `ObjectTy` from symbol of type
   expectKind sym, nnkSym
@@ -312,7 +329,7 @@ proc init(Self: typedesc[Struct], sym: NimNode): Self =
   let typeImpl = typeDef[2]
 
   case typeImpl.kind
-  of nnkSym:
+  of nnkSym:  # type Foo = Bar
     # Error on aliases
     error(
       "Alias is not supported. Use original or distinct type instead.",
@@ -320,33 +337,51 @@ proc init(Self: typedesc[Struct], sym: NimNode): Self =
     )
   of nnkRefTy:
     case typeImpl[0].kind
-    of nnkSym:
-      # For type Foo = ref Bar
+    of nnkSym:  # type Foo = ref Bar
       result = Self.init typeImpl[0]
       # use alias type
       result.sym = sym
+      # Clear generics that we get from recursive call
       reset result.genericParams
-    of nnkObjectTy:
-      # For type Foo = ref object
+    of nnkObjectTy:  # type Foo = ref object
+      # type Foo = ref object of Bar
+      let inheritSym = getInheritSym(typeImpl[0])
+      if inheritSym.isSome:
+        let parent = Struct.init inheritSym.unsafeGet
+        result.features = parent.features
+        result.fields = parent.fields
+
+      result.fields.add getFields(recList=typeImpl[0][2])
+
       result = Self(
         isRef: true,
         sym: sym,
-        fields: getFields(recList=typeImpl[0][2]),
+        fields: result.fields,
         enumSym: genSym(nskType, sym.strVal),
-        enumUnknownFieldSym: genSym(nskEnumField, "Unknown")
+        enumUnknownFieldSym: genSym(nskEnumField, "Unknown"),
+        features: result.features
       )
     else:
       expectKind typeImpl[0], {nnkSym, nnkObjectTy}
-  of nnkObjectTy:
-    # For type Foo = object
+  of nnkObjectTy:  # type Foo = object
+    # type Foo = object of Bar
+    let inheritSym = getInheritSym(typeImpl)
+    if inheritSym.isSome:
+      let parent = Struct.init inheritSym.unsafeGet
+      result.features = parent.features
+      result.fields = parent.fields
+    
+    result.fields.add getFields(recList=typeImpl[2])
+
     result = Self(
       isRef: false,
       sym: sym,
-      fields: getFields(recList=typeImpl[2]),
+      fields: result.fields,
       enumSym: genSym(nskType, sym.strVal),
-      enumUnknownFieldSym: genSym(nskEnumField, "Unknown")
+      enumUnknownFieldSym: genSym(nskEnumField, "Unknown"),
+      features: result.features
     )
-  of nnkDistinctTy:
+  of nnkDistinctTy:  # type Foo = distinct Bar
     # Get original type
     let originType =
       case typeImpl[0].kind

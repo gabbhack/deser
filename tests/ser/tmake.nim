@@ -32,8 +32,8 @@ type
     id: int
   
   InheritObject = object of RootObj
-    id: int
-  
+    id {.renamed: "i".}: int
+
   CaseObject = object
     case kind: bool
     of true:
@@ -73,6 +73,19 @@ type
   DistinctToGenericObject {.borrow: `.`.} = distinct GenericObject[int]
   DistinctGenericObject[T] {.borrow: `.`.} = distinct GenericObject[T]
 
+  ChildObject = object of InheritObject
+    text: string
+  
+  ChildGenericObject[T] = object of InheritObject
+    text: T
+
+  ChildGenericToObject = object of ChildGenericObject[string]
+
+  ChildRefObject = ref object of InheritObject
+    text: string
+  
+  ChildOfRefObject = object of ChildRefObject
+
 makeSerializable([
   Object,
   GenericObject,
@@ -87,7 +100,12 @@ makeSerializable([
   RenameAllObject,
   DistinctObject,
   DistinctToGenericObject,
-  DistinctGenericObject
+  DistinctGenericObject,
+  ChildObject,
+  ChildGenericObject,
+  ChildGenericToObject,
+  ChildRefObject,
+  ChildOfRefObject
 ], public=true)
 
 
@@ -129,7 +147,7 @@ suite "makeSerializable":
   test "inherit":
     assertSerTokens InheritObject(id: 123), [
       Map(none int),
-      String("id"),
+      String("i"),
       I64(123),
       MapEnd()
     ]
@@ -229,5 +247,55 @@ suite "makeSerializable":
       Map(none int),
       String("id"),
       I64(123),
+      MapEnd()
+    ]
+  
+  test "ChildObject":
+    assertSerTokens ChildObject(id: 123, text: "123"), [
+      Map(none int),
+      String("i"),
+      I64(123),
+      String("text"),
+      String("123"),
+      MapEnd()
+    ]
+  
+  test "ChildGenericObject":
+    assertSerTokens ChildGenericObject[string](id: 123, text: "123"), [
+      Map(none int),
+      String("i"),
+      I64(123),
+      String("text"),
+      String("123"),
+      MapEnd()
+    ]
+  
+  test "ChildRefObject":
+    assertSerTokens ChildRefObject(id: 123, text: "123"), [
+      Map(none int),
+      String("i"),
+      I64(123),
+      String("text"),
+      String("123"),
+      MapEnd()
+    ]
+  
+  test "ChildGenericToObject":
+    assertSerTokens ChildGenericToObject(id: 123, text: "123"), [
+      Map(none int),
+      String("i"),
+      I64(123),
+      String("text"),
+      String("123"),
+      MapEnd()
+    ]
+  
+  test "ChildOfRefObject":
+    assertSerTokens ChildOfRefObject(id: 123, text: "123"), [
+      Map(none int),
+      String("i"),
+      I64(123),
+      String("text"),
+      String("123"),
       MapEnd()
     ]
