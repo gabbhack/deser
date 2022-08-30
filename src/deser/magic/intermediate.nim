@@ -1,4 +1,8 @@
-import std/[macros, options, tables]
+import std/[
+  macros,
+  options,
+  tables
+]
 
 import ../pragmas
 
@@ -6,6 +10,7 @@ import ../pragmas
 type
   Struct = object of RootObj
     isRef*: bool
+    isDistinct*: bool
     sym*: NimNode
     fields*: seq[Field]
     enumSym*: NimNode
@@ -29,7 +34,7 @@ type
     of true:
       branches*: seq[FieldBranch]
     else:
-      nil
+      discard
   
   FieldFeatures = object
     skipSerializing*: bool
@@ -139,12 +144,13 @@ proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
     self.defaultValue = some values[0]
 
 
-proc init(Self: typedesc[FieldFeatures | StructFeatures], pragmas: NimNode): Self =
+proc fill(self: var (FieldFeatures | StructFeatures), pragmas: NimNode) =
   # Check whether the field or object contains our pragmas
   expectKind pragmas, {nnkPragma, nnkPragmaExpr}
 
   let pragmas =
     if pragmas.kind == nnkPragma:
+      # for field
       pragmas
     else:
       # for object
@@ -155,22 +161,23 @@ proc init(Self: typedesc[FieldFeatures | StructFeatures], pragmas: NimNode): Sel
     of nnkSym:
       # {.pragmaName.}
       let sym = pragma
-      result.fill(sym)
-    of nnkCall:
+      self.fill(sym)
+    of nnkCall, nnkExprColonExpr:
       # {.pragmaName(values).}
+      # or
+      # {.pragmaName: value.}
       let
         sym = pragma[0]
-        # I do not know what is going on here
         values = if pragma.len > 1: pragma[1..pragma.len-1] else: @[]
-      result.fill(sym, values)
+      self.fill(sym, values)
     else:
       expectKind pragma, {nnkSym, nnkCall}
 
-  when Self is FieldFeatures:
-    if result.skipSerializing and result.serializeWith.isSome:
+  when typeof(self) is FieldFeatures:
+    if self.skipSerializing and self.serializeWith.isSome:
       warning "`serializeWith` does not working with `skipSerializing`", pragmas
     
-    if result.skipDeserializing and result.deserializeWith.isSome:
+    if self.skipDeserializing and self.deserializeWith.isSome:
       warning "`deserializeWith` does not working with `skipDeserializing`", pragmas
 
 
@@ -220,7 +227,7 @@ proc init(Self: typedesc[Field], identDefs: NimNode, isCase: bool): Self =
       typ: typ,
       enumFieldSym: genSym(nskEnumField, identNode[0].strVal)
     )
-    result.features = FieldFeatures.init(pragmas=identNode[1])
+    result.features.fill(pragmas=identNode[1])
 
     if result.features.deserializeWith.isSome:
       result.deserializeWithType = some genSym(nskType, "DeserializeWith")
@@ -318,6 +325,7 @@ proc init(Self: typedesc[Struct], sym: NimNode): Self =
       result = Self.init typeImpl[0]
       # use alias type
       result.sym = sym
+      reset result.genericParams
     of nnkObjectTy:
       # For type Foo = ref object
       result = Self(
@@ -339,10 +347,25 @@ proc init(Self: typedesc[Struct], sym: NimNode): Self =
       enumUnknownFieldSym: genSym(nskEnumField, "Unknown")
     )
   of nnkDistinctTy:
-    debugEcho typeImpl.treeRepr
-    result = Self.init typeImpl[0]
+    # Get original type
+    let originType =
+      case typeImpl[0].kind
+      of nnkSym:
+        typeImpl[0]
+      of nnkBracketExpr:
+        typeImpl[0][0]
+      else:
+        expectKind typeImpl[0], {nnkSym, nnkBracketExpr}
+        nil
+
+    result = Self.init originType
+    # Use sym from distinct type
+    result.sym = sym
+    result.isDistinct = true
+    # Clear generics that we get from recursive call
+    reset result.genericParams
   of nnkEnumTy:
-    error("Enum is not supported.", typeDef[0])
+    error("Enum is serializable by default.", typeDef[0])
   of nnkInfix, nnkTypeClassTy:
     error("Type class is not supported.", typeDef[0])
   of nnkTupleConstr, nnkTupleTy:
@@ -356,13 +379,13 @@ proc init(Self: typedesc[Struct], sym: NimNode): Self =
         |       |
         v       v
   type Test {.test.} = object
+                ^
                 |
                 |
-                v
           typeDef[0][1]
   ]#
   if typeDef[0].kind == nnkPragmaExpr:
-    result.features = StructFeatures.init typeDef[0]
+    result.features.fill(pragmas=typeDef[0])
 
   if typeDef[1].kind == nnkGenericParams:
     result.genericParams = some typeDef[1]

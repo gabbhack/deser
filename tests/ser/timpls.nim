@@ -2,9 +2,17 @@ discard """
   matrix: "; -d:release; --gc:orc; -d:release --gc:orc; --threads:on"
 """
 {.experimental: "views".}
-import std/[unittest, options, tables, sets]
-import deser
-import deser/test
+import std/[
+  unittest,
+  options,
+  tables,
+  sets
+]
+
+import deser/[
+  ser,
+  test
+]
 
 
 suite "Serialize default impls":

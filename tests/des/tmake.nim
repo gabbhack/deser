@@ -6,12 +6,15 @@ import std/[
   unittest,
   times,
   options,
-  strformat
+  strformat,
+  typetraits
 ]
 
-import deser/des
-import deser/pragmas
-import deser/test
+import deser/[
+  des,
+  pragmas,
+  test
+]
 
 
 proc fromTimestamp(deserializer: var auto): Time = fromUnix(deserialize(int64, deserializer))
@@ -78,6 +81,9 @@ type
     else:
       discard
 
+  DistinctObject = distinct Object
+  DistinctToGenericObject = distinct GenericObject[int]
+  DistinctGenericObject[T] = distinct GenericObject[T]
 
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
 
@@ -97,6 +103,11 @@ proc `==`*(x, y: RenameAllObject): bool =
 
 proc `$`*(x: ref): string = $x[]
 
+proc `$`*(x: DistinctObject | DistinctToGenericObject | DistinctGenericObject): string = $distinctBase(typeof(x))(x)
+
+proc `==`*(x, y: DistinctObject | DistinctToGenericObject | DistinctGenericObject): bool =
+  distinctBase(typeof(x))(x) == distinctBase(typeof(y))(y)
+
 makeDeserializable([
   EmptyObject,
   Object,
@@ -111,7 +122,10 @@ makeDeserializable([
   RenameObject,
   DefaultObject,
   OnUnknownObject,
-  RenameAllObject
+  RenameAllObject,
+  DistinctObject,
+  DistinctToGenericObject,
+  DistinctGenericObject
 ], public=true)
 
 
@@ -258,5 +272,29 @@ suite "makeDeserializable":
       Bool(true),
       String("last_name"),
       String(""),
+      StructEnd()
+    ]
+  
+  test "DistinctObject":
+    assertDesTokens DistinctObject(Object(id: 123)), [
+      Struct("istinctObject", 1),
+      String("id"),
+      I64(123),
+      StructEnd()
+    ]
+  
+  test "DistinctToGenericObject":
+    assertDesTokens DistinctToGenericObject(GenericObject[int](id: 123)), [
+      Struct("DistinctToGenericObject", 1),
+      String("id"),
+      I64(123),
+      StructEnd()
+    ]
+  
+  test "DistinctGenericObject":
+    assertDesTokens DistinctGenericObject[int](GenericObject[int](id: 123)), [
+      Struct("DistinctGenericObject", 1),
+      String("id"),
+      I64(123),
       StructEnd()
     ]

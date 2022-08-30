@@ -8,9 +8,11 @@ import std/[
   times
 ]
 
-import deser/ser
-import deser/pragmas
-import deser/test
+import deser/[
+  ser,
+  pragmas,
+  test
+]
 
 
 proc toTimestamp[Serializer](date: DateTime, serializer: var Serializer) = date.toTime.toUnix.serialize(serializer)
@@ -66,6 +68,10 @@ type
       lastName: string
     else:
       discard
+  
+  DistinctObject {.borrow: `.`.} = distinct Object
+  DistinctToGenericObject {.borrow: `.`.} = distinct GenericObject[int]
+  DistinctGenericObject[T] {.borrow: `.`.} = distinct GenericObject[T]
 
 makeSerializable([
   Object,
@@ -79,6 +85,9 @@ makeSerializable([
   SerializeWithObject,
   RenameObject,
   RenameAllObject,
+  DistinctObject,
+  DistinctToGenericObject,
+  DistinctGenericObject
 ], public=true)
 
 
@@ -196,5 +205,29 @@ suite "makeSerializable":
       Bool(true),
       String("last_name"),
       String(""),
+      MapEnd()
+    ]
+  
+  test "DistinctObject":
+    assertSerTokens DistinctObject(Object(id: 123)), [
+      Map(none int),
+      String("id"),
+      I64(123),
+      MapEnd()
+    ]
+  
+  test "DistinctToGenericObject":
+    assertSerTokens DistinctToGenericObject(GenericObject[int](id: 123)), [
+      Map(none int),
+      String("id"),
+      I64(123),
+      MapEnd()
+    ]
+  
+  test "DistinctGenericObject":
+    assertSerTokens DistinctGenericObject[int](GenericObject[int](id: 123)), [
+      Map(none int),
+      String("id"),
+      I64(123),
       MapEnd()
     ]

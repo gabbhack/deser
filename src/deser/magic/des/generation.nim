@@ -1,4 +1,9 @@
-import std/[options, enumerate, macros]
+import std/[
+  options,
+  enumerate,
+  macros,
+  typetraits
+]
 
 from ../../des/error import
   raiseDuplicateField,
@@ -314,9 +319,54 @@ proc defGetField(field: Field, raiseOnNone: bool): NimNode =
     defGetOrBreak(field.ident)
 
 
+proc defStructType(struct: Struct): NimNode =
+  if struct.genericParams.isSome:
+    withGenerics(struct.sym, struct.genericParams.unsafeGet)
+  else:
+    struct.sym
+
+
+proc defDistinctStructBaseType(struct: Struct): NimNode =
+  assert struct.isDistinct
+  let structType = defStructType(struct)
+
+  result = quote do:
+    typeof(default(distinctBase(`structType`)))
+
+
+proc defFieldType(struct: Struct, field: Field): NimNode =
+  let hackVar =
+    if struct.isDistinct:
+      let structType = defStructType(struct)
+      quote do:
+        default(distinctBase(`structType`))
+    else:
+      ident "result"
+
+  result = newCall(
+    ident "typeof",
+    newDotExpr(
+      hackVar,
+      field.ident
+    )
+  )
+
+
 proc addToObjConstr(objConstr, ident, value: NimNode) =
   # (ident: value)
   objConstr.add newColonExpr(ident, value)
+
+
+proc defReturnStmt(struct: Struct, objConstr: NimNode): NimNode =
+  if struct.isDistinct:
+    nnkReturnStmt.newTree(
+      newCall(
+        defStructType(struct),
+        objConstr
+      )
+    )
+  else:
+    nnkReturnStmt.newTree(objConstr)
 
 
 template resolveUntagged {.dirty.} =
@@ -394,6 +444,7 @@ template resolveTagged {.dirty.} =
   )
 
 
+
 proc resolve(struct: Struct, fields: seq[Field], objConstr: NimNode, raiseOnNone = true): NimNode =
   let
     raiseUnknownUntaggedVariantSym = bindSym "raiseUnknownUntaggedVariant"
@@ -415,7 +466,7 @@ proc resolve(struct: Struct, fields: seq[Field], objConstr: NimNode, raiseOnNone
   
   if caseField.isNone:
     # there is no case field, so just return statement
-    result = nnkReturnStmt.newTree(objConstr)
+    result = defReturnStmt(struct, objConstr)
   else:
     let
       field = caseField.unsafeGet
@@ -429,12 +480,13 @@ proc resolve(struct: Struct, fields: seq[Field], objConstr: NimNode, raiseOnNone
 
 proc defInitResolver(struct: Struct): NimNode =
   let objConstr = nnkObjConstr.newTree(
-    if struct.genericParams.isSome:
-      withGenerics(struct.sym, struct.genericParams.unsafeGet)
+    if struct.isDistinct:
+      defDistinctStructBaseType(struct)
     else:
-      struct.sym
+      defStructType(struct)
   )
-  resolve(struct, struct.fields, objConstr)
+
+  result = resolve(struct, struct.fields, objConstr)
 
 
 proc defVisitMapProc(struct: Struct, visitorType, body: NimNode): NimNode =
@@ -485,7 +537,8 @@ proc defOptionFieldVars(struct: Struct): NimNode =
       field.ident,
       newCall(
         nnkBracketExpr.newTree(
-          bindSym("none"), field.typ
+          bindSym("none"),
+          defFieldType(struct, field)
         )
       )
     )
@@ -509,13 +562,13 @@ proc defKeyToValueCase(struct: Struct): NimNode =
       if field.deserializeWithType.isSome:
         let
           withType = field.deserializeWithType.unsafeGet
-          originType = field.typ
+          originType = defFieldType(struct, field)
         nnkBracketExpr.newTree(
           withType,
           originType
         )
       else:
-        field.typ
+        defFieldType(struct, field)
     
     var nextValueCall =
       newCall(
@@ -752,13 +805,13 @@ proc defFieldLets(struct: Struct): NimNode =
       if field.deserializeWithType.isSome:
         let
           withType = field.deserializeWithType.unsafeGet
-          originType = field.typ
+          originType = defFieldType(struct, field)
         nnkBracketExpr.newTree(
           withType,
           originType
         )
       else:
-        field.typ
+        defFieldType(struct, field)
     
     var nextElementCall =
       newCall(

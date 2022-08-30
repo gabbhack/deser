@@ -1,6 +1,17 @@
-import std/macros
-from std/strutils import isUpperAscii, toLowerAscii, toUpperAscii, join, capitalizeAscii
-from std/sequtils import map, concat
+import std/[
+  macros
+]
+
+from std/strutils import
+  isUpperAscii,
+  toLowerAscii,
+  toUpperAscii,
+  join,
+  capitalizeAscii
+
+from std/sequtils import
+  map,
+  concat
 
 
 type
