@@ -19,6 +19,7 @@ import ../intermediate {.all.}
 from utils {.all.} import
   getOrBreak,
   getOrDefault,
+  getOrDefaultValue,
   getOrRaise,
   toByteArray
 
@@ -296,8 +297,12 @@ proc defKeyDeserialize(visitorType: NimNode, struct: Struct, public: bool): NimN
   )
 
 
-proc defGetOrDefault(fieldIdent: NimNode, defaultValue: NimNode): NimNode =
-  newCall(bindSym "getOrDefault", fieldIdent, defaultValue)
+proc defGetOrDefault(fieldIdent: NimNode): NimNode =
+  newCall(bindSym "getOrDefault", fieldIdent)
+
+
+proc defGetOrDefaultValue(fieldIdent: NimNode, defaultValue: NimNode): NimNode =
+  newCall(bindSym "getOrDefaultValue", fieldIdent, defaultValue)
 
 
 proc defGetOrRaise(fieldIdent: NimNode, fieldName: NimNode): NimNode =
@@ -312,7 +317,11 @@ proc defGetField(field: Field, raiseOnNone: bool): NimNode =
   let defaultValue = field.getDefaultValue
 
   if defaultValue.isSome:
-    defGetOrDefault(field.ident, defaultValue.unsafeGet)
+    let defaultValueNode = defaultValue.unsafeGet
+    if defaultValueNode.kind == nnkEmpty:
+      defGetOrDefault(field.ident)
+    else:
+      defGetOrDefaultValue(field.ident, defaultValueNode)
   elif raiseOnNone:
     defGetOrRaise(field.ident, field.deserializeName.newLit)
   else:

@@ -202,7 +202,7 @@ type
 ]##
 
 
-template defaultValue*(value: typed) {.pragma.} ##[
+template defaultValue*(value: typed = nil) {.pragma.} ##[
 Uses the specified value if the field was not in the input.
 
 **Example**:
@@ -211,6 +211,18 @@ Uses the specified value if the field was not in the input.
 type
   User = object
     name {.defaultValue("noname").}: string
+```
+
+Do not specify a value, then default(FieldType) will be used
+
+```nim
+import deser_json
+
+type
+  Foo = object
+    id {.defaultValue.}: int
+
+assert Foo.fromJson("""{}""").id == 0
 ```
 ]##
 

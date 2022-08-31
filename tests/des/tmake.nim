@@ -68,6 +68,7 @@ type
 
   DefaultObject = object
     id {.defaultValue(123).}: int
+    integer {.defaultValue.}: int
   
   OnUnknownObject {.onUnknownKeys(raiseError).} = object
 
@@ -252,7 +253,7 @@ suite "makeDeserializable":
     ]
   
   test "DefaultObject":
-    assertDesTokens DefaultObject(id: 123), [
+    assertDesTokens DefaultObject(id: 123, integer: 0), [
       Struct("DefaultObject", 1),
       StructEnd()
     ]

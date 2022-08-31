@@ -20,7 +20,17 @@ macro toByteArray(str: static[string]): array =
     result.add s.byte.newLit
 
 
-template getOrDefault[T](field: Option[T], defaultValue: T): T =
+template getOrDefault[T](field: Option[T]): T =
+  bind isSome, unsafeGet
+
+  if isSome(field):
+    unsafeGet(field)
+  else:
+    # HACK: https://github.com/nim-lang/Nim/issues/20033
+    default(typedesc[T])
+
+
+template getOrDefaultValue[T](field: Option[T], defaultValue: T): T =
   bind isSome, unsafeGet
 
   if isSome(field):

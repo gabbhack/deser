@@ -141,7 +141,10 @@ proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
   elif sym == bindSym("skipSerializeIf"):
     self.skipSerializeIf = some values[0]
   elif sym == bindSym("defaultValue"):
-    self.defaultValue = some values[0]
+    if values[0].kind == nnkNilLit:
+      self.defaultValue = some newEmptyNode()
+    else:
+      self.defaultValue = some values[0]
 
 
 proc fill(self: var (FieldFeatures | StructFeatures), pragmas: NimNode) =
