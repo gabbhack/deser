@@ -31,7 +31,7 @@ type
   RefObject = ref object
     id: int
   
-  InheritObject = object of RootObj
+  InheritObject {.renameAll: SnakeCase.} = object of RootObj
     id {.renamed: "i".}: int
 
   CaseObject = object
@@ -61,7 +61,7 @@ type
   
   RenameAllObject {.renameAll(SnakeCase).} = object
     text: string
-    firstName: string
+    firstName {.renameSerialize("firstName").}: string
 
     case kind: bool
     of true:
@@ -86,6 +86,10 @@ type
   
   ChildOfRefObject = object of ChildRefObject
 
+  InfectedChild = object of InheritObject
+    firstName: string
+
+
 makeSerializable([
   Object,
   GenericObject,
@@ -105,7 +109,8 @@ makeSerializable([
   ChildGenericObject,
   ChildGenericToObject,
   ChildRefObject,
-  ChildOfRefObject
+  ChildOfRefObject,
+  InfectedChild
 ], public=true)
 
 
@@ -217,7 +222,7 @@ suite "makeSerializable":
       Map(none int),
       String("text"),
       String(""),
-      String("first_name"),
+      String("firstName"),
       String(""),
       String("kind"),
       Bool(true),
@@ -296,6 +301,16 @@ suite "makeSerializable":
       String("i"),
       I64(123),
       String("text"),
+      String("123"),
+      MapEnd()
+    ]
+  
+  test "InfectedChild":
+    assertSerTokens InfectedChild(id: 123, firstName: "123"), [
+      Map(none int),
+      String("i"),
+      I64(123),
+      String("first_name"),
       String("123"),
       MapEnd()
     ]

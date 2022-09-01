@@ -5,6 +5,7 @@ import std/[
 ]
 
 import ../pragmas
+from anycase {.all.} import toCase, RenameCase
 
 
 type
@@ -21,6 +22,7 @@ type
 
   StructFeatures = object
     onUnknownKeysValue*: Option[NimNode]
+    renameAll*: Option[NimNode]
   
   Field = object
     ident*: NimNode
@@ -64,6 +66,8 @@ type
 
 {.push used.}
 proc getFields(recList: NimNode): seq[Field]
+
+proc init(Self: typedesc[Struct], sym: NimNode): Self
 
 proc getOnUnknownKeysValue(self: Struct): Option[NimNode] = self.features.onUnknownKeysValue
 
@@ -115,6 +119,8 @@ proc copyWithoutChild(copyOf: NimNode, idx = 0, n = 1): NimNode =
 proc fill(self: var StructFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
   if sym == bindSym("onUnknownKeys"):
     self.onUnknownKeysValue = some values[0]
+  elif sym == bindSym("renameAll"):
+    self.renameAll = some values[0]
 
 
 proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
@@ -147,16 +153,54 @@ proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
       self.defaultValue = some values[0]
 
 
+proc nodeToRenameCase(sym: NimNode): RenameCase =
+  expectKind sym, nnkSym
+
+  if sym == bindSym("CamelCase"):
+    result = CamelCase
+  elif sym == bindSym("CobolCase"):
+    result = CobolCase
+  elif sym == bindSym("KebabCase"):
+    result = KebabCase
+  elif sym == bindSym("PascalCase"):
+    result = PascalCase
+  elif sym == bindSym("PathCase"):
+    result = PathCase
+  elif sym == bindSym("SnakeCase"):
+    result = SnakeCase
+  elif sym == bindSym("PlainCase"):
+    result = PlainCase
+  elif sym == bindSym("TrainCase"):
+    result = TrainCase
+  elif sym == bindSym("UpperSnakeCase"):
+    result = UpperSnakeCase
+  else:
+    error("Unsupported RenameCase node", sym)
+
+
+proc fill(self: var Field, structFeatures: StructFeatures) =
+  if structFeatures.renameAll.isSome:
+    let
+      renameAllValue = structFeatures.renameAll.unsafeGet
+      renameCase = nodeToRenameCase(renameAllValue)
+
+    if self.features.renameSerialize.isNone:
+      self.features.renameSerialize = some self.ident.strVal.toCase(renameCase)
+    
+    if self.features.renameDeserialize.isNone:
+      self.features.renameDeserialize = some self.ident.strVal.toCase(renameCase)
+
+
 proc fill(self: var (FieldFeatures | StructFeatures), pragmas: NimNode) =
   # Check whether the field or object contains our pragmas
   expectKind pragmas, {nnkPragma, nnkPragmaExpr}
 
   let pragmas =
     if pragmas.kind == nnkPragma:
-      # for field
+      # field
       pragmas
     else:
-      # for object
+      # object
       pragmas[1]
 
   for pragma in pragmas:
@@ -303,19 +347,34 @@ proc getFields(recList: NimNode): seq[Field] =
         expectKind fieldNode, {nnkIdentDefs, nnkRecCase}
 
 
-proc getInheritSym(objectTy: NimNode): Option[NimNode] =
+proc fillFromParent(self: var Struct, objectTy: NimNode) =
   expectKind objectTy, nnkObjectTy
 
   let inherit = objectTy[1]
 
   if inherit.kind == nnkOfInherit:
-    case inherit[0].kind
-    of nnkSym:
-      result = some inherit[0]
-    of nnkBracketExpr:
-      result = some inherit[0][0]
-    else:
-      expectKind inherit[0], {nnkSym, nnkBracketExpr}
+    let parentSym =
+      case inherit[0].kind
+      of nnkSym:
+        inherit[0]
+      of nnkBracketExpr:
+        inherit[0][0]
+      else:
+        expectKind inherit[0], {nnkSym, nnkBracketExpr}
+        nil
+
+    let parent = Struct.init parentSym
+    self.features = parent.features
+    self.fields = parent.fields
+
+
+proc infectFieldsWithStructFeatures(fields: var seq[Field], structFeatures: StructFeatures) =
+  for field in fields.mitems:
+    field.fill(structFeatures)
+
+    if field.isCase:
+      for branch in field.branches.mitems:
+        infectFieldsWithStructFeatures(branch.fields, structFeatures)
 
 
 proc init(Self: typedesc[Struct], sym: NimNode): Self =
@@ -348,11 +407,7 @@ proc init(Self: typedesc[Struct], sym: NimNode): Self =
       reset result.genericParams
     of nnkObjectTy:  # type Foo = ref object
       # type Foo = ref object of Bar
-      let inheritSym = getInheritSym(typeImpl[0])
-      if inheritSym.isSome:
-        let parent = Struct.init inheritSym.unsafeGet
-        result.features = parent.features
-        result.fields = parent.fields
+      result.fillFromParent(typeImpl[0])
 
       result.fields.add getFields(recList=typeImpl[0][2])
 
@@ -368,11 +423,7 @@ proc init(Self: typedesc[Struct], sym: NimNode): Self =
       expectKind typeImpl[0], {nnkSym, nnkObjectTy}
   of nnkObjectTy:  # type Foo = object
     # type Foo = object of Bar
-    let inheritSym = getInheritSym(typeImpl)
-    if inheritSym.isSome:
-      let parent = Struct.init inheritSym.unsafeGet
-      result.features = parent.features
-      result.fields = parent.fields
+    result.fillFromParent(typeImpl)
     
     result.fields.add getFields(recList=typeImpl[2])
 
@@ -427,6 +478,8 @@ proc init(Self: typedesc[Struct], sym: NimNode): Self =
 
   if typeDef[1].kind == nnkGenericParams:
     result.genericParams = some typeDef[1]
+  
+  infectFieldsWithStructFeatures(result.fields, result.features)
   
   result.flattenFields = flatten result.fields
 {.pop.}

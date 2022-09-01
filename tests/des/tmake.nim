@@ -38,7 +38,7 @@ type
   ObjectWithRef = object
     id: ref int
   
-  InheritObject = object of RootObj
+  InheritObject {.renameAll: SnakeCase.} = object of RootObj
     id {.renamed: "i".}: int
   
   CaseObject = object
@@ -74,7 +74,7 @@ type
 
   RenameAllObject {.renameAll(SnakeCase).} = object
     text: string
-    firstName: string
+    firstName {.renameDeserialize("firstName").}: string
 
     case kind: bool
     of true:
@@ -99,6 +99,10 @@ type
   
   ChildOfRefObject = object of ChildRefObject
 
+  InfectedChild = object of InheritObject
+    firstName: string
+
+
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
 
 proc `==`*(x, y: CaseObject | UntaggedCaseObject): bool =
@@ -122,6 +126,7 @@ proc `$`*(x: DistinctObject | DistinctToGenericObject | DistinctGenericObject): 
 proc `==`*(x, y: DistinctObject | DistinctToGenericObject | DistinctGenericObject): bool =
   distinctBase(typeof(x))(x) == distinctBase(typeof(y))(y)
 
+
 makeDeserializable([
   EmptyObject,
   Object,
@@ -144,7 +149,8 @@ makeDeserializable([
   ChildGenericObject,
   ChildGenericToObject,
   ChildRefObject,
-  ChildOfRefObject
+  ChildOfRefObject,
+  InfectedChild
 ], public=true)
 
 
@@ -285,7 +291,7 @@ suite "makeDeserializable":
       Struct("RenameAllObject", 2),
       String("text"),
       String(""),
-      String("first_name"),
+      String("firstName"),
       String(""),
       String("kind"),
       Bool(true),
@@ -364,6 +370,16 @@ suite "makeDeserializable":
       String("i"),
       I64(123),
       String("text"),
+      String("123"),
+      StructEnd()
+    ]
+  
+  test "InfectedChild":
+    assertDesTokens InfectedChild(id: 123, firstName: "123"), [
+      Struct("InfectedChild", 2),
+      String("i"),
+      I64(123),
+      String("first_name"),
       String("123"),
       StructEnd()
     ]

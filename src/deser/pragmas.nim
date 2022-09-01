@@ -1,6 +1,4 @@
-import std/macros
-
-from magic/anycase {.all.} import RenameCase, renameAllInRec
+from magic/anycase {.all.} import RenameCase
 
 export RenameCase
 
@@ -121,7 +119,7 @@ Deserialize field with the given name instead of its Nim name.
 ]##
 
 
-macro renameAll*(renameTo: static[RenameCase], typ: untyped) = ##[
+template renameAll*(renameTo: RenameCase) {.pragma.} ##[
 Rename all fields to some case.
 
 .. Note:: The pragma does not rename the field if one of the pragmas has already been applied: `renamed`, `renameDeserialize`, `renameSerialize`
@@ -140,8 +138,6 @@ makeSerializable(Foo)
 assert Foo().toJson() == """{"first_name":"","last_name":""}"""
 ```
 ]##
-  renameAllInRec(typ[2][2], renameTo)
-  result = typ
 
 
 template skipped*() {.pragma.} ##[
