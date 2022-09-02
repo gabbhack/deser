@@ -119,10 +119,11 @@ Deserialize field with the given name instead of its Nim name.
 ]##
 
 
+
 template renameAll*(renameTo: RenameCase) {.pragma.} ##[
 Rename all fields to some case.
 
-.. Note:: The pragma does not rename the field if one of the pragmas has already been applied: `renamed`, `renameDeserialize`, `renameSerialize`
+.. Note:: Pragma respects other `rename` pragmas. For example, if a field has the `renameSerialize` pragma, only deserialization will be affected.
 
 **Example**:
 ```nim
