@@ -199,6 +199,48 @@ type
 ]##
 
 
+template skipPrivate* {.pragma.} ##[
+Use this pragma to skip all private fields during serialization and deserialization.
+
+**Example**:
+```nim
+type
+  User {.skipPrivate.} = object
+    id*: int
+    name*: string
+    passwordHash: string
+```
+]##
+
+
+template skipPrivateSerializing* {.pragma.} ##[
+Use this pragma to skip all private fields during serialization
+
+**Example**:
+```nim
+type
+  User {.skipPrivateSerializing.} = object
+    id*: int
+    name*: string
+    passwordHash: string
+```
+]##
+
+
+template skipPrivateDeserializing* {.pragma.} ##[
+Use this pragma to skip all private fields during deserialization
+
+**Example**:
+```nim
+type
+  User {.skipPrivateDeserializing.} = object
+    id*: int
+    name*: string
+    passwordHash: string
+```
+]##
+
+
 template defaultValue*(value: typed = nil) {.pragma.} ##[
 Uses the specified value if the field was not in the input.
 

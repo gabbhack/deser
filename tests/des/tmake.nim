@@ -58,10 +58,10 @@ type
   SkipObject = object
     alwaysSkipped {.skipped.}: int
     serializeSkipped {.skipDeserializing.}: int
-  
+
   DeserializeWithObject = object
     date {.deserializeWith(fromTimestamp).}: Time
-  
+
   RenameObject = object
     name {.renameDeserialize("fullname").}: string
     kek {.renamed("lol").}: string
@@ -101,6 +101,14 @@ type
 
   InfectedChild = object of InheritObject
     firstName: string
+
+  SkipAllPrivateObject {.skipPrivate.} = object
+    public*: int
+    private: int
+  
+  SkipDesPrivateObject {.skipPrivateDeserializing.} = object
+    public*: int
+    private: int
 
 
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
@@ -150,7 +158,9 @@ makeDeserializable([
   ChildGenericToObject,
   ChildRefObject,
   ChildOfRefObject,
-  InfectedChild
+  InfectedChild,
+  SkipAllPrivateObject,
+  SkipDesPrivateObject
 ], public=true)
 
 
@@ -381,5 +391,21 @@ suite "makeDeserializable":
       I64(123),
       String("first_name"),
       String("123"),
+      StructEnd()
+    ]
+  
+  test "SkipAllPrivateObject":
+    assertDesTokens SkipAllPrivateObject(public: 123), [
+      Struct("SkipAllPrivateObject", 1),
+      String("public"),
+      I64(123),
+      StructEnd()
+    ]
+  
+  test "SkipDesPrivateObject":
+    assertDesTokens SkipDesPrivateObject(public: 123), [
+      Struct("SkipAllPrivateObject", 1),
+      String("public"),
+      I64(123),
       StructEnd()
     ]

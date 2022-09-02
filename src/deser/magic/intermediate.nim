@@ -23,6 +23,8 @@ type
   StructFeatures = object
     onUnknownKeysValue*: Option[NimNode]
     renameAll*: Option[NimNode]
+    skipPrivateSerializing*: bool
+    skipPrivateDeserializing*: bool
   
   Field = object
     ident*: NimNode
@@ -122,6 +124,13 @@ proc fill(self: var StructFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
     self.onUnknownKeysValue = some values[0]
   elif sym == bindSym("renameAll"):
     self.renameAll = some values[0]
+  elif sym == bindSym("skipPrivate"):
+    self.skipPrivateSerializing = true
+    self.skipPrivateDeserializing = true
+  elif sym == bindSym("skipPrivateSerializing"):
+    self.skipPrivateSerializing = true
+  elif sym == bindSym("skipPrivateDeserializing"):
+    self.skipPrivateDeserializing = true
 
 
 proc fill(self: var FieldFeatures, sym: NimNode, values: seq[NimNode] = @[]) =
@@ -190,6 +199,12 @@ proc fill(self: var Field, structFeatures: StructFeatures) =
     
     if self.features.renameDeserialize.isNone:
       self.features.renameDeserialize = some self.ident.strVal.toCase(renameCase)
+  
+  if structFeatures.skipPrivateDeserializing and not self.isPublic:
+    self.features.skipDeserializing = true
+
+  if structFeatures.skipPrivateSerializing and not self.isPublic:
+    self.features.skipSerializing = true
 
 
 proc fill(self: var (FieldFeatures | StructFeatures), pragmas: NimNode) =

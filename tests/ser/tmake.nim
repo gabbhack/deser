@@ -88,6 +88,14 @@ type
 
   InfectedChild = object of InheritObject
     firstName: string
+  
+  SkipAllPrivateObject {.skipPrivate.} = object
+    public*: int
+    private: int
+  
+  SkipSerPrivateObject {.skipPrivateSerializing.} = object
+    public*: int
+    private: int
 
 
 makeSerializable([
@@ -110,7 +118,9 @@ makeSerializable([
   ChildGenericToObject,
   ChildRefObject,
   ChildOfRefObject,
-  InfectedChild
+  InfectedChild,
+  SkipAllPrivateObject,
+  SkipSerPrivateObject
 ], public=true)
 
 
@@ -312,5 +322,21 @@ suite "makeSerializable":
       I64(123),
       String("first_name"),
       String("123"),
+      MapEnd()
+    ]
+  
+  test "SkipAllPrivateObject":
+    assertSerTokens SkipAllPrivateObject(public: 123), [
+      Map(none int),
+      String("public"),
+      I64(123),
+      MapEnd()
+    ]
+  
+  test "SkipDesPrivateObject":
+    assertSerTokens SkipSerPrivateObject(public: 123), [
+      Map(none int),
+      String("public"),
+      I64(123),
       MapEnd()
     ]
