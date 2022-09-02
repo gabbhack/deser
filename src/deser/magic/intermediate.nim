@@ -31,6 +31,7 @@ type
     features*: FieldFeatures
     deserializeWithType*: Option[NimNode]
     serializeWithType*: Option[NimNode]
+    isPublic*: bool
 
     case isCase*: bool
     of true:
@@ -265,16 +266,36 @@ proc init(Self: typedesc[Field], identDefs: NimNode, isCase: bool): Self =
 
   case identNode.kind
   of nnkIdent:
+    let ident = identNode
     result = Self(
       ident: identNode,
       typ: typ,
-      enumFieldSym: genSym(nskEnumField, identNode.strVal),
+      enumFieldSym: genSym(nskEnumField, ident.strVal),
+    )
+  of nnkPostfix:
+    let ident = identNode[1]
+    result = Self(
+      ident: ident,
+      typ: typ,
+      enumFieldSym: genSym(nskEnumField, ident.strVal),
+      isPublic: true
     )
   of nnkPragmaExpr:
+    let (ident, isPublic) =
+      case identNode[0].kind
+      of nnkIdent:
+        (identNode[0], false)
+      of nnkPostfix:
+        (identNode[0][1], true)
+      else:
+        expectKind identNode[0], {nnkIdent, nnkPostfix}
+        (nil, false)
+
     result = Self(
-      ident: identNode[0],
+      ident: ident,
       typ: typ,
-      enumFieldSym: genSym(nskEnumField, identNode[0].strVal)
+      enumFieldSym: genSym(nskEnumField, ident.strVal),
+      isPublic: isPublic
     )
     result.features.fill(pragmas=identNode[1])
 
@@ -287,7 +308,7 @@ proc init(Self: typedesc[Field], identDefs: NimNode, isCase: bool): Self =
     if result.isUntagged and not isCase:
       warning "`untagged` does not working with non-case field", identNode[0]
   else:
-    expectKind identNode, {nnkIdent, nnkPragmaExpr}
+    expectKind identNode, {nnkIdent, nnkPostfix, nnkPragmaExpr}
   
   result.isCase = isCase
 

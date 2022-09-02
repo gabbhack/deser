@@ -20,7 +20,7 @@ proc toTimestamp[Serializer](date: DateTime, serializer: var Serializer) = date.
 
 type
   Object = object
-    id: int
+    id*: int
 
   GenericObject[T] = object
     id: T
@@ -32,7 +32,7 @@ type
     id: int
   
   InheritObject {.renameAll: SnakeCase.} = object of RootObj
-    id {.renamed: "i".}: int
+    id* {.renamed: "i".}: int
 
   CaseObject = object
     case kind: bool

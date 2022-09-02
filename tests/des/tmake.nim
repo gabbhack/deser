@@ -27,7 +27,7 @@ type
   EmptyObject = object
 
   Object = object
-    id: int
+    id*: int
 
   GenericObject[T] = object
     id: T
@@ -39,7 +39,7 @@ type
     id: ref int
   
   InheritObject {.renameAll: SnakeCase.} = object of RootObj
-    id {.renamed: "i".}: int
+    id* {.renamed: "i".}: int
   
   CaseObject = object
     case kind: bool
