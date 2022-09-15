@@ -57,14 +57,14 @@ type
 
   Chat {.renameAll(SnakeCase).} = object
     id: int64
-    username: Option[string]
+    username {.skipSerializeIf(isNone).}: Option[string]
     created {.serializeWith(toTimestamp), deserializeWith(fromTimestamp).}: Time
 
     case kind {.renamed("type").}: ChatType
     of Private:
       firstName: string
       lastName {.skipSerializeIf(isNone).}: Option[string]
-      bio {.skipSerializeIf(isNone).}: Option[String]
+      bio {.skipSerializeIf(isNone).}: Option[string]
     of Group:
       title: string
 
