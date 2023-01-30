@@ -1,6 +1,14 @@
-from magic/anycase {.all.} import RenameCase
-
-export RenameCase
+type
+  RenameCase* = enum
+    CamelCase
+    CobolCase
+    KebabCase
+    PascalCase
+    PathCase
+    SnakeCase
+    PlainCase
+    TrainCase
+    UpperSnakeCase
 
 
 template untagged*() {.pragma.} ##[
@@ -49,7 +57,6 @@ assert test.kind == true
 ```
 ]##
 
-
 template serializeWith*(with: typed) {.pragma.} ##[
 Serialize this field using a procedure.
 
@@ -75,7 +82,6 @@ makeSerializable(User)
 assert User(created: fromUnix(123)).toJson() == """{"created":123}"""
 ```
 ]##
-
 
 template deserializeWith*(with: typed) {.pragma.} ##[
 Deserialize this field using a procedure.
@@ -103,43 +109,17 @@ assert User(created: fromUnix(123)) == User.fromJson("""{"created": 123}""")
 ```
 ]##
 
-
-template renamed*(renamed: string) {.pragma.} ##[
+template renamed*(renamed: string | RenameCase) {.pragma.} ##[
 Serialize and deserialize field with the given name instead of its Nim name.
 ]##
 
-
-template renameSerialize*(renamed: string) {.pragma.} ##[
+template renameSerialize*(renamed: string | RenameCase) {.pragma.} ##[
 Serialize field with the given name instead of its Nim name.
 ]##
 
-
-template renameDeserialize*(renamed: string) {.pragma.} ##[
+template renameDeserialize*(renamed: string | RenameCase) {.pragma.} ##[
 Deserialize field with the given name instead of its Nim name.
 ]##
-
-
-
-template renameAll*(renameTo: RenameCase) {.pragma.} ##[
-Rename all fields to some case.
-
-.. Note:: Pragma respects other `rename` pragmas. For example, if a field has the `renameSerialize` pragma, only deserialization will be affected.
-
-**Example**:
-```nim
-import deser_json
-
-type
-  Foo {.renameAll(SnakeCase).} = object
-    firstName: string
-    lastName: string
-
-makeSerializable(Foo)
-
-assert Foo().toJson() == """{"first_name":"","last_name":""}"""
-```
-]##
-
 
 template skipped*() {.pragma.} ##[
 Use this pragma to skip the field during serialization and deserialization.
@@ -153,7 +133,6 @@ type
 ```
 ]##
 
-
 template skipSerializing*() {.pragma.} ##[
 Use this pragma to skip the field during serialization.
 
@@ -164,7 +143,6 @@ type
     skipOnSerialization {.skipSerializing.}: int
 ```
 ]##
-
 
 template skipDeserializing*() {.pragma.} ##[
 Use this pragma to skip the field during deserialization.
@@ -177,7 +155,6 @@ type
     skipOnDeserialization {.skipDeserializing.}: int
 ```
 ]##
-
 
 template skipSerializeIf*(condition: typed) {.pragma.} ##[
 Use this pragma to skip the field during serialization based on the runtime value.
@@ -197,49 +174,6 @@ type
     someInt {.skipSerializeIf(isZero).}: int
 ```
 ]##
-
-
-template skipPrivate* {.pragma.} ##[
-Use this pragma to skip all private fields during serialization and deserialization.
-
-**Example**:
-```nim
-type
-  User {.skipPrivate.} = object
-    id*: int
-    name*: string
-    passwordHash: string
-```
-]##
-
-
-template skipPrivateSerializing* {.pragma.} ##[
-Use this pragma to skip all private fields during serialization
-
-**Example**:
-```nim
-type
-  User {.skipPrivateSerializing.} = object
-    id*: int
-    name*: string
-    passwordHash: string
-```
-]##
-
-
-template skipPrivateDeserializing* {.pragma.} ##[
-Use this pragma to skip all private fields during deserialization
-
-**Example**:
-```nim
-type
-  User {.skipPrivateDeserializing.} = object
-    id*: int
-    name*: string
-    passwordHash: string
-```
-]##
-
 
 template defaultValue*(value: typed = nil) {.pragma.} ##[
 Uses the specified value if the field was not in the input.
@@ -264,7 +198,6 @@ type
 assert Foo.fromJson("""{}""").id == 0
 ```
 ]##
-
 
 template onUnknownKeys*(call: typed) {.pragma.} ##[
 By default, the deserializer skips unknown fields.
@@ -313,3 +246,62 @@ proc showUpdateWarning(objName: static[string], fieldName: string) =
     yet = true
 ```
 ]##
+
+template renameAll*(renameTo: RenameCase) {.pragma.} ##[
+Rename all fields to some case.
+
+.. Note:: Pragma respects other `rename` pragmas. For example, if a field has the `renameSerialize` pragma, only deserialization will be affected.
+
+**Example**:
+```nim
+import deser_json
+
+type
+  Foo {.renameAll(SnakeCase).} = object
+    firstName: string
+    lastName: string
+
+makeSerializable(Foo)
+
+assert Foo().toJson() == """{"first_name":"","last_name":""}"""
+```
+]##
+
+template skipPrivateSerializing* {.pragma.} ##[
+Use this pragma to skip all private fields during serialization
+
+**Example**:
+```nim
+type
+  User {.skipPrivateSerializing.} = object
+    id*: int
+    name*: string
+    passwordHash: string
+```
+]##
+
+template skipPrivateDeserializing* {.pragma.} ##[
+Use this pragma to skip all private fields during deserialization
+
+**Example**:
+```nim
+type
+  User {.skipPrivateDeserializing.} = object
+    id*: int
+    name*: string
+    passwordHash: string
+```
+]##
+
+template skipPrivate* {.pragma.} ##[
+Use this pragma to skip all private fields during serialization and deserialization.
+
+**Example**:
+```nim
+type
+  User {.skipPrivate.} = object
+    id*: int
+    name*: string
+    passwordHash: string
+```
+]##  

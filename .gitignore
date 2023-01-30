@@ -32,3 +32,5 @@ bin/*
 outputGotten.txt
 tests/megatest.nim
 outputExpected.txt
+
+.idea/

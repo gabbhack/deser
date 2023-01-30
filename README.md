@@ -109,4 +109,5 @@ distributed under licenses different than the deser.
 
 ## Acknowledgements
 - [serde.rs](https://serde.rs), for all the ideas I stole
-- [patty](https://github.com/andreaferretti/patty), for making it easier to work with object variants
+- [fusion/matching](https://github.com/nim-lang/fusion/blob/master/src/fusion/matching.nim), for making it easier to work with object variants
+- [anycase](https://github.com/epszaw/anycase)

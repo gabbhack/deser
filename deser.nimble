@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.2.1"
+version       = "0.2.2"
 author        = "gabbhack"
 description   = "De/serialization library for Nim"
 license       = "MIT"
@@ -11,8 +11,14 @@ srcDir        = "src"
 
 requires "nim >= 1.6.0"
 
+# Tasks
+import std/[os, strformat]
+
 task test, "Run tests":
   exec "testament all"
+
+  for dir in walkDirRec(srcDir, yieldFilter = {pcDir}, followFilter = {pcDir}):
+    exec fmt"testament pattern {dir}/*.nim"
 
 task docs, "Generate docs":
   rmDir "docs"

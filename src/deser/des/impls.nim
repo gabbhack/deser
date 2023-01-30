@@ -9,7 +9,7 @@ import std/[
   enumerate
 ]
 
-from error import
+from errors import
   raiseInvalidValue,
   raiseMissingField,
   initUnexpectedString,
@@ -17,7 +17,7 @@ from error import
   initUnexpectedFloat
 
 
-from ../magic/des/utils {.all.} import
+from deser/macroutils/generation/des/utils import
   genPrimitive,
   genArray,
   visitEnumIntBody,
@@ -32,7 +32,7 @@ from helpers import
 
 
 when defined(release):
-  {.push inline, checks: off.}
+  {.push inline.}
 
 {.push used.}
 proc deserialize*[T](self: NoneSeed[T], deserializer: var auto): T =

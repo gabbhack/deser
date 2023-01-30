@@ -1,27 +1,30 @@
-{.experimental: "views".}
+##[
 
+]##
+{.experimental: "caseStmtMacros".}
 import std/[
   options,
   strformat,
   sugar
 ]
 
-import ../des/[impls, helpers]
+import deser/des/[impls, helpers]
 
-import token, patty
+import deser/macroutils/matching
 
+import token
 
 type
-  Deserializer* = object
-    tokens: openArray[Token]
-  
+  Deserializer* = ref object
+    tokens: seq[Token]
+
   SeqVisitor = object
-    de: var Deserializer
+    de: Deserializer
     len: Option[uint]
     endToken: Token
 
   MapVisitor = object
-    de: var Deserializer
+    de: Deserializer
     len: Option[uint]
     endToken: Token
 
@@ -29,18 +32,14 @@ type
 template endOfTokens =
   raise newException(AssertionDefect, "unexpected end of tokens")
 
-
 template unexpected(token: Token) =
   raise newException(AssertionDefect, &"deserialization did not expect this token: {token.kind}")
 
-
 func init*(Self: typedesc[Deserializer], tokens: openArray[Token]): Self =
-  Self(tokens: tokens.toOpenArray(tokens.low, tokens.high))
+  Self(tokens: @tokens)
 
-
-func init*(Self: typedesc[SeqVisitor | MapVisitor], de: var Deserializer, len: Option[uint], endToken: Token): Self =
+func init*(Self: typedesc[SeqVisitor | MapVisitor], de: Deserializer, len: Option[uint], endToken: Token): Self =
   Self(de: de, len: len, endToken: endToken)
-
 
 proc assertDesTokens*[T](value: T, tokens: openArray[Token]) =
   mixin
@@ -58,13 +57,11 @@ proc assertDesTokens*[T](value: T, tokens: openArray[Token]) =
   doAssert des.tokens.len == 0,
     "The token sequence is not empty. There may have been a copy of the Deserializer instead of passing by reference."
 
-
 proc peekTokenOpt*(self: Deserializer): Option[Token] =
   if self.tokens.len == 0:
     none Token
   else:
     some self.tokens[0]
-
 
 proc peekToken*(self: Deserializer): Token =
   if self.tokens.len == 0:
@@ -72,16 +69,14 @@ proc peekToken*(self: Deserializer): Token =
 
   self.tokens[0]
 
-
-proc nextTokenOpt*(self: var Deserializer): Option[Token] =
+proc nextTokenOpt*(self: Deserializer): Option[Token] =
   if self.tokens.len == 0:
     result = none Token
   else:
     result = some self.tokens[0]
-    self.tokens = self.tokens.toOpenArray(1, self.tokens.high)
+    self.tokens = self.tokens[1..^1]
 
-
-proc assertNextToken*(self: var Deserializer, expected: Token) =
+proc assertNextToken*(self: Deserializer, expected: Token) =
   let next = self.nextTokenOpt()
 
   if next.isSome:
@@ -91,17 +86,14 @@ proc assertNextToken*(self: var Deserializer, expected: Token) =
   else:
     raise newException(AssertionDefect, &"end of tokens byt deserialization wants Token.{expected.kind}"  )
 
-
-proc nextToken*(self: var Deserializer): Token =
+proc nextToken*(self: Deserializer): Token =
   if self.tokens.len == 0:
     endOfTokens
   
   result = self.tokens[0]
-  self.tokens = self.tokens.toOpenArray(1, self.tokens.high)
-
+  self.tokens = self.tokens[1..^1]
 
 proc remaining*(self: Deserializer): int = self.tokens.len
-
 
 proc visitSeq*(self: var Deserializer, len: Option[int], endToken: Token, visitor: auto): visitor.Value =
   mixin visitSeq
@@ -112,7 +104,6 @@ proc visitSeq*(self: var Deserializer, len: Option[int], endToken: Token, visito
 
   assertNextToken self, endToken
 
-
 proc visitMap*(self: var Deserializer, len: Option[int], endToken: Token, visitor: auto): visitor.Value =
   mixin visitMap
 
@@ -122,13 +113,11 @@ proc visitMap*(self: var Deserializer, len: Option[int], endToken: Token, visito
 
   assertNextToken self, endToken
 
-
 proc deserializeAny*(self: var Deserializer, visitor: auto): visitor.Value
 
 # forward to deserializeAny
 implDeserializer(Deserializer, public=true):
   self.deserializeAny(visitor)
-
 
 proc deserializeAny*(self: var Deserializer, visitor: auto): visitor.Value =
   mixin
@@ -151,81 +140,79 @@ proc deserializeAny*(self: var Deserializer, visitor: auto): visitor.Value =
 
   let token = self.nextToken()
 
-  match token:
-    Bool(v):
-      visitor.visitBool(v)
-    I8(v):
-      visitor.visitInt8(v)
-    I16(v):
-      visitor.visitInt16(v)
-    I32(v):
-      visitor.visitInt32(v)
-    I64(v):
-      visitor.visitInt64(v)
-    U8(v):
-      visitor.visitUint8(v)
-    U16(v):
-      visitor.visitUint16(v)
-    U32(v):
-      visitor.visitUint32(v)
-    U64(v):
-      visitor.visitUint64(v)
-    F32(v):
-      visitor.visitFloat32(v)
-    F64(v):
-      visitor.visitFloat64(v)
-    Char(v):
-      visitor.visitChar(v)
-    String(v):
-      visitor.visitString(v)
-    Bytes(v):
-      visitor.visitBytes(v)
-    None:
-      visitor.visitNone()
-    Some:
-      visitor.visitSome(self)
-    Seq(length):
-      self.visitSeq(length, SeqEnd(), visitor)
-    Array(length):
-      self.visitSeq(length, ArrayEnd(), visitor)
-    Map(length):
-      self.visitMap(length, MapEnd(), visitor)
-    Struct(_, length):
-      self.visitMap(some length, StructEnd(), visitor)
-    _:
-      unexpected token
-
+  case token.kind
+  of Bool:
+    visitor.visitBool(token.`bool`)
+  of I8:
+    visitor.visitInt8(token.i8)
+  of I16:
+    visitor.visitInt16(token.i16)
+  of I32:
+    visitor.visitInt32(token.i32)
+  of I64:
+    visitor.visitInt64(token.i64)
+  of U8:
+    visitor.visitUint8(token.u8)
+  of U16:
+    visitor.visitUint16(token.u16)
+  of U32:
+    visitor.visitUint32(token.u32)
+  of U64:
+    visitor.visitUint64(token.u64)
+  of F32:
+    visitor.visitFloat32(token.f32)
+  of F64:
+    visitor.visitFloat64(token.f64)
+  of Char:
+    visitor.visitChar(token.`char`)
+  of String:
+    visitor.visitString(token.`string`)
+  of Bytes:
+    visitor.visitBytes(token.bytes)
+  of None:
+    visitor.visitNone()
+  of Some:
+    visitor.visitSome(self)
+  of Seq:
+    self.visitSeq(token.seqLen, initSeqEndToken(), visitor)
+  of Array:
+    self.visitSeq(token.arrayLen, initArrayEndToken(), visitor)
+  of Map:
+    self.visitMap(token.mapLen, initMapEndToken(), visitor)
+  of Struct:
+    self.visitMap(some token.structLen, initStructEndToken(), visitor)
+  else:
+    unexpected token
 
 proc deserializeOption*(self: var Deserializer, visitor: auto): visitor.Value =
   mixin
     visitNone,
     visitSome
-  
-  match self.peekToken():
-    None:
-      discard self.nextToken()
-      visitor.visitNone()
-    Some:
-      discard self.nextToken()
-      visitor.visitSome(self)
-    _:
-      self.deserializeAny(visitor)
 
+  let token = self.peekToken()
+
+  case token.kind:
+  of None:
+    discard self.nextToken()
+    visitor.visitNone()
+  of Some:
+    discard self.nextToken()
+    visitor.visitSome(self)
+  else:
+    self.deserializeAny(visitor)
 
 proc deserializeStruct*(self: var Deserializer, name: static[string], fields: static[array], visitor: auto): visitor.Value =
-  match self.peekToken():
-    Struct(_, len):
-      assertNextToken self, Struct(name, len)
-      self.visitMap(some(fields.len), StructEnd(), visitor)
-    Map(len):
-      self.nextToken()
-      self.visitMap(some(fields.len), MapEnd(), visitor)
-    _:
-      self.deserializeAny(visitor)
-
+  case self.peekToken():
+  of Struct(structLen: @len):
+    assertNextToken self, initStructToken(name, len)
+    self.visitMap(some(fields.len), initStructEndToken(), visitor)
+  of Map(mapLen: @len):
+    self.nextToken()
+    self.visitMap(some(fields.len), initMapEndToken(), visitor)
+  else:
+    self.deserializeAny(visitor)
 
 implSeqAccess(SeqVisitor, public=true)
-
 
 proc nextElementSeed*(self: var SeqVisitor, seed: auto): Option[seed.Value] =
   mixin
@@ -238,12 +225,9 @@ proc nextElementSeed*(self: var SeqVisitor, seed: auto): Option[seed.Value] =
 
   result = some seed.deserialize(self.de)
 
-
 proc sizeHint*(self: SeqVisitor): Option[int] = self.len.map((x) => x.int)
 
-
 implMapAccess(MapVisitor, public=true)
-
 
 proc nextKeySeed*(self: var MapVisitor, seed: auto): Option[seed.Value] =
   mixin
@@ -256,12 +240,10 @@ proc nextKeySeed*(self: var MapVisitor, seed: auto): Option[seed.Value] =
   
   result = some seed.deserialize(self.de)
 
-
 proc nextValueSeed*(self: var MapVisitor, seed: auto): seed.Value =
   mixin
     deserialize
 
   seed.deserialize(self.de)
-
 
 proc sizeHint*(self: MapVisitor): Option[int] = self.len.map((x) => x.int)

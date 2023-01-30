@@ -1,7 +1,6 @@
 discard """
   matrix: "; -d:release; --gc:orc; -d:release --gc:orc; --threads:on"
 """
-{.experimental: "views".}
 import std/[
   unittest,
   times,
@@ -17,7 +16,8 @@ import deser/[
 ]
 
 
-proc fromTimestamp(deserializer: var auto): Time = fromUnix(deserialize(int64, deserializer))
+proc fromTimestamp(deserializer: var auto): Time =
+  fromUnix(deserialize(int64, deserializer))
 
 proc raiseError(objName, fieldValue: auto) =
   raise newException(ValueError, &"Unknown field `{fieldValue}`")
@@ -82,10 +82,6 @@ type
     else:
       discard
 
-  DistinctObject = distinct Object
-  DistinctToGenericObject = distinct GenericObject[int]
-  DistinctGenericObject[T] = distinct GenericObject[T]
-
   ChildObject = object of InheritObject
     text: string
   
@@ -110,6 +106,49 @@ type
     public*: int
     private: int
 
+  MultiCaseObject = object
+    case kind: bool
+    of true:
+      yes: string
+    else:
+      no: string
+
+    case kind2: bool
+    of true:
+      yes2: string
+    else:
+      no2: string
+
+  MultiCaseObjectUntagged = object
+    case kind {.untagged.}: bool
+    of true:
+      yes: string
+    of false:
+      no: string
+
+    case kind2: bool
+    of true:
+      yes2: string
+    else:
+      no2: string
+
+  MultiCaseObjectAllUntagged = object
+    case kind {.untagged.}: bool
+    of true:
+      yes: string
+    of false:
+      no: string
+
+    case kind2 {.untagged.}: bool
+    of true:
+      yes2: string
+    of false:
+      no2: string
+  
+  RenameWithCase = object
+    lolKek {.renameDeserialize(SnakeCase).}: string
+    kekLol {.renamed(SnakeCase).}: string
+
 
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
 
@@ -127,13 +166,22 @@ proc `==`*(x, y: RenameAllObject): bool =
     return true
   return false
 
+proc `==`*(x, y: MultiCaseObject | MultiCaseObjectUntagged | MultiCaseObjectAllUntagged): bool =
+  if x.kind == y.kind and x.kind2 == y.kind2:
+    case x.kind
+    of true:
+      if x.kind2:
+        return x.yes == y.yes and x.yes2 == y.yes2
+      else:
+        return x.yes == y.yes and x.no2 == y.no2
+    of false:
+      if x.kind2:
+        return x.no == y.no and x.yes2 == y.yes2
+      else:
+        return x.no == y.no and x.no2 == y.no2
+  return false
+
 proc `$`*(x: ref): string = $x[]
-
-proc `$`*(x: DistinctObject | DistinctToGenericObject | DistinctGenericObject): string = $distinctBase(typeof(x))(x)
-
-proc `==`*(x, y: DistinctObject | DistinctToGenericObject | DistinctGenericObject): bool =
-  distinctBase(typeof(x))(x) == distinctBase(typeof(y))(y)
-
 
 makeDeserializable([
   EmptyObject,
@@ -150,9 +198,6 @@ makeDeserializable([
   DefaultObject,
   OnUnknownObject,
   RenameAllObject,
-  DistinctObject,
-  DistinctToGenericObject,
-  DistinctGenericObject,
   ChildObject,
   ChildGenericObject,
   ChildGenericToObject,
@@ -160,118 +205,129 @@ makeDeserializable([
   ChildOfRefObject,
   InfectedChild,
   SkipAllPrivateObject,
-  SkipDesPrivateObject
+  SkipDesPrivateObject,
+  MultiCaseObject,
+  MultiCaseObjectUntagged,
+  MultiCaseObjectAllUntagged,
+  RenameWithCase
 ], public=true)
 
 
 suite "makeDeserializable":
+  test "Deserialize at CT":
+    static:
+      assertDesTokens EmptyObject(), [
+        initStructToken("EmptyObject", 0),
+        initStructEndToken()
+      ]
+
   test "EmptyObject":
     assertDesTokens EmptyObject(), [
-      Struct("EmptyObject", 0),
-      StructEnd()
+      initStructToken("EmptyObject", 0),
+      initStructEndToken()
     ]
 
   test "Object":
     assertDesTokens Object(id: 123), [
-      Struct("Object", 1),
-      String("id"),
-      I64(123),
-      StructEnd()
+      initStructToken("Object", 1),
+      initStringToken("id"),
+      initI64Token(123),
+      initStructEndToken()
     ]
   
   test "GenericObject":
     assertDesTokens GenericObject[int](id: 123), [
-      Struct("GenericObject", 1),
-      String("id"),
-      I64(123),
-      StructEnd()
+      initStructToken("GenericObject", 1),
+      initStringToken("id"),
+      initI64Token(123),
+      initStructEndToken()
     ]
   
   test "RefObject":
     assertDesTokens RefObject(id: 123), [
-      Struct("RefObject", 1),
-      String("id"),
-      I64(123),
-      StructEnd()
+      initStructToken("RefObject", 1),
+      initStringToken("id"),
+      initI64Token(123),
+      initStructEndToken()
     ]
   
   test "ObjectWithRef":
     let temp = new int
     temp[] = 123
     assertDesTokens ObjectWithRef(id: temp), [
-      Struct("ObjectWithRef", 1),
-      String("id"),
-      I64(123),
-      StructEnd()
+      initStructToken("ObjectWithRef", 1),
+      initStringToken("id"),
+      initI64Token(123),
+      initStructEndToken()
     ]
   
   test "InheritObject":
     assertDesTokens InheritObject(id: 123), [
-      Struct("InheritObject", 1),
-      String("i"),
-      I64(123),
-      StructEnd()
+      initStructToken("InheritObject", 1),
+      initStringToken("i"),
+      initI64Token(123),
+      initStructEndToken()
     ]
   
   test "CaseObject":
     assertDesTokens CaseObject(kind: true), [
-      Map(none int),
-      String("kind"),
-      Bool(true),
-      String("yes"),
-      String(""),
-      MapEnd()
+      initMapToken(none int),
+      initStringToken("kind"),
+      initBoolToken(true),
+      initStringToken("yes"),
+      initStringToken(""),
+      initMapEndToken()
     ]
 
     assertDesTokens CaseObject(kind: false), [
-      Map(none int),
-      String("kind"),
-      Bool(false),
-      MapEnd()
+      initMapToken(none int),
+      initStringToken("kind"),
+      initBoolToken(false),
+      initMapEndToken()
     ]
 
 
   test "UntaggedCaseObject":
     assertDesTokens UntaggedCaseObject(kind: true), [
-      Map(none int),
-      String("yes"),
-      String(""),
-      MapEnd()
+      initMapToken(none int),
+      initStringToken("yes"),
+      initStringToken(""),
+      initMapEndToken()
     ]
 
     assertDesTokens UntaggedCaseObject(kind: false), [
-      Map(none int),
-      MapEnd()
+      initMapToken(none int),
+      initMapEndToken()
     ]
 
   test "SkipObject":
     assertDesTokens SkipObject(), [
-      Struct("SkipObject", 0),
-      StructEnd()
+      initStructToken("SkipObject", 0),
+      initStructEndToken()
     ]
   
   test "DeserializeWithObject":
     assertDesTokens DeserializeWithObject(date: fromUnix(123)), [
-      Struct("DeserializeWithObject", 1),
-      String("date"),
-      I64(123),
-      StructEnd()
+      initStructToken("DeserializeWithObject", 1),
+      initStringToken("date"),
+      initI64Token(123),
+      initStructEndToken()
     ]
   
   test "RenameObject":
     assertDesTokens RenameObject(name: "123", kek: "123"), [
-      Struct("RenameObject", 1),
-      String("fullname"),
-      String("123"),
-      String("lol"),
-      String("123"),
-      StructEnd()
+      initStructToken("RenameObject", 1),
+      initStringToken("fullname"),
+      initStringToken("123"),
+      initStringToken("lol"),
+      initStringToken("123"),
+      initStructEndToken()
     ]
   
   test "DefaultObject":
     assertDesTokens DefaultObject(id: 123, integer: 0), [
-      Struct("DefaultObject", 1),
-      StructEnd()
+      initStructToken("DefaultObject", 1),
+      initStructEndToken()
     ]
 
   # crash on "-d:release --gc:refc"
@@ -279,133 +335,155 @@ suite "makeDeserializable":
     test "OnUnknownObject":
       expect(ValueError):
         assertDesTokens OnUnknownObject(), [
-          Struct("OnUnknownObject", 1),
-          String("test"),
-          String("123"),
-          StructEnd()
+          initStructToken("OnUnknownObject", 1),
+          initStringToken("test"),
+          initStringToken("123"),
+          initStructEndToken()
         ]
   ]#
 
   test "Ignore extra fields":
     assertDesTokens Object(id: 123), [
-      Struct("Object", 1),
-      String("id"),
-      I64(123),
-      String("text"),
-      String("text"),
-      StructEnd()
+      initStructToken("Object", 1),
+      initStringToken("id"),
+      initI64Token(123),
+      initStringToken("text"),
+      initStringToken("text"),
+      initStructEndToken()
     ]
   
   test "RenameAllObject":
     assertDesTokens RenameAllObject(kind: true), [
-      Struct("RenameAllObject", 2),
-      String("text"),
-      String(""),
-      String("firstName"),
-      String(""),
-      String("kind"),
-      Bool(true),
-      String("last_name"),
-      String(""),
-      StructEnd()
-    ]
-  
-  test "DistinctObject":
-    assertDesTokens DistinctObject(Object(id: 123)), [
-      Struct("istinctObject", 1),
-      String("id"),
-      I64(123),
-      StructEnd()
-    ]
-  
-  test "DistinctToGenericObject":
-    assertDesTokens DistinctToGenericObject(GenericObject[int](id: 123)), [
-      Struct("DistinctToGenericObject", 1),
-      String("id"),
-      I64(123),
-      StructEnd()
-    ]
-  
-  test "DistinctGenericObject":
-    assertDesTokens DistinctGenericObject[int](GenericObject[int](id: 123)), [
-      Struct("DistinctGenericObject", 1),
-      String("id"),
-      I64(123),
-      StructEnd()
+      initStructToken("RenameAllObject", 2),
+      initStringToken("text"),
+      initStringToken(""),
+      initStringToken("firstName"),
+      initStringToken(""),
+      initStringToken("kind"),
+      initBoolToken(true),
+      initStringToken("last_name"),
+      initStringToken(""),
+      initStructEndToken()
     ]
 
   test "ChildObject":
     assertDesTokens ChildObject(id: 123, text: "123"), [
-      Struct("ChildObject", 2),
-      String("i"),
-      I64(123),
-      String("text"),
-      String("123"),
-      StructEnd()
+      initStructToken("ChildObject", 2),
+      initStringToken("i"),
+      initI64Token(123),
+      initStringToken("text"),
+      initStringToken("123"),
+      initStructEndToken()
     ]
   
   test "ChildGenericObject":
     assertDesTokens ChildGenericObject[string](id: 123, text: "123"), [
-      Struct("ChildGenericObject", 2),
-      String("i"),
-      I64(123),
-      String("text"),
-      String("123"),
-      StructEnd()
+      initStructToken("ChildGenericObject", 2),
+      initStringToken("i"),
+      initI64Token(123),
+      initStringToken("text"),
+      initStringToken("123"),
+      initStructEndToken()
     ]
   
   test "ChildRefObject":
     assertDesTokens ChildRefObject(id: 123, text: "123"), [
-      Struct("ChildRefObject", 2),
-      String("i"),
-      I64(123),
-      String("text"),
-      String("123"),
-      StructEnd()
+      initStructToken("ChildRefObject", 2),
+      initStringToken("i"),
+      initI64Token(123),
+      initStringToken("text"),
+      initStringToken("123"),
+      initStructEndToken()
     ]
   
   test "ChildGenericToObject":
     assertDesTokens ChildGenericToObject(id: 123, text: "123"), [
-      Struct("ChildGenericToObject", 2),
-      String("i"),
-      I64(123),
-      String("text"),
-      String("123"),
-      StructEnd()
+      initStructToken("ChildGenericToObject", 2),
+      initStringToken("i"),
+      initI64Token(123),
+      initStringToken("text"),
+      initStringToken("123"),
+      initStructEndToken()
     ]
   
   test "ChildOfRefObject":
     assertDesTokens ChildOfRefObject(id: 123, text: "123"), [
-      Struct("ChildOfRefObject", 2),
-      String("i"),
-      I64(123),
-      String("text"),
-      String("123"),
-      StructEnd()
+      initStructToken("ChildOfRefObject", 2),
+      initStringToken("i"),
+      initI64Token(123),
+      initStringToken("text"),
+      initStringToken("123"),
+      initStructEndToken()
     ]
   
   test "InfectedChild":
     assertDesTokens InfectedChild(id: 123, firstName: "123"), [
-      Struct("InfectedChild", 2),
-      String("i"),
-      I64(123),
-      String("first_name"),
-      String("123"),
-      StructEnd()
+      initStructToken("InfectedChild", 2),
+      initStringToken("i"),
+      initI64Token(123),
+      initStringToken("first_name"),
+      initStringToken("123"),
+      initStructEndToken()
     ]
   
   test "SkipAllPrivateObject":
     assertDesTokens SkipAllPrivateObject(public: 123), [
-      Struct("SkipAllPrivateObject", 1),
-      String("public"),
-      I64(123),
-      StructEnd()
+      initStructToken("SkipAllPrivateObject", 1),
+      initStringToken("public"),
+      initI64Token(123),
+      initStructEndToken()
     ]
   
   test "SkipDesPrivateObject":
     assertDesTokens SkipDesPrivateObject(public: 123), [
-      Struct("SkipAllPrivateObject", 1),
-      String("public"),
-      I64(123),
-      StructEnd()
+      initStructToken("SkipAllPrivateObject", 1),
+      initStringToken("public"),
+      initI64Token(123),
+      initStructEndToken()
+    ]
+
+  test "MultiCaseObject":
+    assertDesTokens MultiCaseObject(kind: true, yes: "yes", kind2: false, no2: "no"), [
+      initMapToken(none int),
+      initStringToken("kind"),
+      initBoolToken(true),
+      initStringToken("yes"),
+      initStringToken("yes"),
+      initStringToken("kind2"),
+      initBoolToken(false),
+      initStringToken("no2"),
+      initStringToken("no"),
+      initMapEndToken()
+    ]
+  
+  test "MultiCaseObjectUntagged":
+    assertDesTokens MultiCaseObjectUntagged(kind: true, yes: "yes", kind2: false, no2: "no"), [
+      initMapToken(none int),
+      initStringToken("yes"),
+      initStringToken("yes"),
+      initStringToken("kind2"),
+      initBoolToken(false),
+      initStringToken("no2"),
+      initStringToken("no"),
+      initMapEndToken()
+    ]
+  
+  test "MultiCaseObjectAllUntagged":
+    assertDesTokens MultiCaseObjectAllUntagged(kind: true, yes: "yes", kind2: false, no2: "no"), [
+      initMapToken(none int),
+      initStringToken("yes"),
+      initStringToken("yes"),
+      initStringToken("no2"),
+      initStringToken("no"),
+      initMapEndToken()
+    ]
+  
+  test "RenameWithCase":
+    assertDesTokens RenameWithCase(), [
+      initMapToken(none int),
+      initStringToken("lol_kek"),
+      initStringToken(""),
+      initStringToken("kek_lol"),
+      initStringToken(""),
+      initMapEndToken()
     ]

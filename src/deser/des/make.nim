@@ -2,21 +2,24 @@ import std/[
   macros
 ]
 
-from ../magic/intermediate {.all.} import
-  Struct,
-  init
+from deser/macroutils/types import
+  Struct
 
-from ../magic/des/generation {.all.} import
-  generate
+from deser/macroutils/parsing/struct import
+  fromTypeSym
+
+from deser/macroutils/generation/des import
+  defDeserialize
 
 
-macro makeDeserializable*(typ: varargs[typedesc], public: static[bool] = false) =
+macro makeDeserializable*(types: varargs[typedesc], public: static[bool] = false) =
   ##[
 Generate `deserialize` procedure for your type. Use `public` parameter to export.
 
 Works only for objects and ref objects.
 
 Compile with `-d:debugMakeDeserializable` to see macro output.
+Compile with `-d:debugMakeDeserializableTree` to see macro output as NimNode tree.
 
 **Example**:
 ```nim
@@ -31,10 +34,13 @@ makeDeserializable([
 ]##
   result = newStmtList()
 
-  for i in typ:
-    var struct = Struct.init i
+  for typeSym in types:
+    var struct = Struct.fromTypeSym(typeSym)
     
-    result.add generate(struct, public)
+    result.add defDeserialize(struct, public)
 
   if defined(debugMakeDeserializable):
     debugEcho result.toStrLit
+  
+  if defined(debugMakeDeserializableTree):
+    debugEcho result.treeRepr

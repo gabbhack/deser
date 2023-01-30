@@ -14,7 +14,7 @@ import std/[
   options
 ]
 
-from error import
+from errors import
   raiseInvalidType,
   raiseInvalidValue,
   raiseDuplicateField,
@@ -30,7 +30,7 @@ from error import
   initUnexpectedSeq,
   initUnexpectedMap
 
-from ../magic/sharedutils {.all.} import maybePublic
+from deser/macroutils/generation/utils import maybePublic
 
 
 type
