@@ -3,8 +3,7 @@ discard """
 """
 import std/[
   macros,
-  options,
-  sugar
+  options
 ]
 
 from deser/macroutils/types import
