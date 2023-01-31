@@ -52,7 +52,7 @@ func fromRecCase*(fieldTy: typedesc[Field], recCase: NimNode): Field
 
 func fromPragma*(featuresTy: typedesc[FieldFeatures], pragma: Option[NimNode]): FieldFeatures
 
-func fromBranch*(branchTy: typedesc[FieldBranch], branch: NimNode): FieldBranch
+func fromBranch*(branchTy: typedesc[FieldBranch], branch: NimNode): seq[FieldBranch]
 
 func getType(identDefs: NimNode): NimNode
 
@@ -164,23 +164,27 @@ func fromRecCase*(fieldTy: typedesc[Field], recCase: NimNode): Field =
     branches=branches
   )
 
-func fromBranch*(branchTy: typedesc[FieldBranch], branch: NimNode): FieldBranch =
+func fromBranch*(branchTy: typedesc[FieldBranch], branch: NimNode): seq[FieldBranch] =
   ## Parse a field branch from a branch node
 
   assertMatch branch:
     OfBranch[until @condition is RecList(), @recList] |
     Else[@recList]
-  
-  let conditionOfBranch =
-    if condition.len == 0:
-      none NimNode
-    else:
-      some nnkOfBranch.newTree(condition)
 
-  initFieldBranch(
-    fields=fieldsFromRecList(recList),
-    conditionOfBranch=conditionOfBranch
-  )
+  let fields = fieldsFromRecList(recList)
+
+  if condition.len > 0:
+    result = newSeqOfCap[FieldBranch](condition.len)
+    for cond in condition:
+      result.add initFieldBranch(
+        fields=fields,
+        conditionOfBranch=some nnkOfBranch.newTree(cond)
+      )
+  else:
+    result.add initFieldBranch(
+      fields=fields,
+      conditionOfBranch=none NimNode
+    )
 
 func fromPragma*(featuresTy: typedesc[FieldFeatures], pragma: Option[NimNode]): FieldFeatures =
   ## Parse features from a pragma
