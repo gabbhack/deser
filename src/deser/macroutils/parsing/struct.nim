@@ -197,7 +197,7 @@ func fromPragma*(featuresTy: typedesc[StructFeatures], pragma: Option[NimNode]):
 func showUnsupportedObjectError(symbol: NimNode, nodeKind: NimNodeKind) {.noreturn.} =
   case nodeKind
   of nnkSym:
-    error("Aliases are not supported.", symbol)
+    error("Aliases are not supported. Call the `make(De)Serializable` macro for the base type.", symbol)
   of nnkEnumTy:
     error("Enums are serializable by default.", symbol)
   of nnkInfix, nnkTypeClassTy:
