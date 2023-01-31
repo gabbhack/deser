@@ -36,6 +36,20 @@ func defExpectingProc*(selfType, body: NimNode): NimNode =
     proc `expectingIdent`(`selfIdent`: `selfType`): string =
       `body`
 
+func defFieldNamesLit*(names: seq[string]): NimNode =
+  doAssert names.len > 0
+
+  if names.len == 0:
+    newLit names[0]
+  else:
+    var str = ""
+    for num, name in names:
+      str.add name
+      if num != names.high:
+        str.add "|"
+
+    newLit str
+
 macro toByteArray*(str: static[string]): array =
   result = nnkBracket.newTree()
   

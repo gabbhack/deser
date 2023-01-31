@@ -159,6 +159,12 @@ type
     of Third, Fourth:
       second: string
 
+  AliasesPragma = object
+    nickName {.aliases("username", "name", SnakeCase).}: string
+  
+  AliasesWithRenameAllPragma {.renameAll(SnakeCase).} = object
+    nickName {.aliases("username", "name").}: string
+
 
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
 
@@ -229,7 +235,9 @@ makeDeserializable([
   MultiCaseObjectUntagged,
   MultiCaseObjectAllUntagged,
   RenameWithCase,
-  CaseObjectMultiBranch
+  CaseObjectMultiBranch,
+  AliasesPragma,
+  AliasesWithRenameAllPragma
 ], public=true)
 
 
@@ -525,4 +533,63 @@ suite "makeDeserializable":
       initStringToken("second"),
       initStringToken("123"),
       initMapEndToken()
+    ]
+  
+  test "AliasesPragma":
+    assertDesTokens AliasesPragma(nickName: "Name"), [
+      initStructToken("AliasesPragma", 1),
+      initStringToken("name"),
+      initStringToken("Name"),
+      initStructEndToken()
+    ]
+
+    assertDesTokens AliasesPragma(nickName: "Name"), [
+      initStructToken("AliasesPragma", 1),
+      initStringToken("username"),
+      initStringToken("Name"),
+      initStructEndToken()
+    ]
+
+    assertDesTokens AliasesPragma(nickName: "Name"), [
+      initStructToken("AliasesPragma", 1),
+      initStringToken("nick_name"),
+      initStringToken("Name"),
+      initStructEndToken()
+    ]
+
+    assertDesTokens AliasesPragma(nickName: "Name"), [
+      initStructToken("AliasesPragma", 1),
+      initStringToken("nickName"),
+      initStringToken("Name"),
+      initStructEndToken()
+    ]
+  
+  test "AliasesWithRenameAllPragma":
+    assertDesTokens AliasesWithRenameAllPragma(nickName: "Name"), [
+      initStructToken("AliasesWithRenameAllPragma", 1),
+      initStringToken("name"),
+      initStringToken("Name"),
+      initStructEndToken()
+    ]
+
+    assertDesTokens AliasesWithRenameAllPragma(nickName: "Name"), [
+      initStructToken("AliasesWithRenameAllPragma", 1),
+      initStringToken("username"),
+      initStringToken("Name"),
+      initStructEndToken()
+    ]
+
+    doAssertRaises(MissingField):
+      assertDesTokens AliasesWithRenameAllPragma(nickName: "Name"), [
+        initStructToken("AliasesWithRenameAllPragma", 1),
+        initStringToken("nick_name"),
+        initStringToken("Name"),
+        initStructEndToken()
+      ]
+
+    assertDesTokens AliasesWithRenameAllPragma(nickName: "Name"), [
+      initStructToken("AliasesWithRenameAllPragma", 1),
+      initStringToken("nickName"),
+      initStringToken("Name"),
+      initStructEndToken()
     ]

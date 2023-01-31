@@ -195,16 +195,17 @@ func defStrToKeyCase(struct: Struct): NimNode =
   )
 
   for field in struct.flattenFields:
-    result.add nnkOfBranch.newTree(
-      newLit field.deserializeName,
-      newStmtList(
-        newDotExpr(
-          struct.nskTypeEnumSym,
-          field.nskEnumFieldSym
+    for name in field.deserializeName:
+      result.add nnkOfBranch.newTree(
+        newLit name,
+        newStmtList(
+          newDotExpr(
+            struct.nskTypeEnumSym,
+            field.nskEnumFieldSym
+          )
         )
       )
-    )
-  
+
   result.add defToKeyElseBranch(struct)
 
 func defBytesToKeyCase(struct: Struct): NimNode =
@@ -216,19 +217,20 @@ func defBytesToKeyCase(struct: Struct): NimNode =
     result = nnkIfStmt.newTree()
 
     for field in struct.flattenFields:
-      result.add nnkElifBranch.newTree(
-        nnkInfix.newTree(
-          ident "==",
-          ident "value",
-          newCall(bindSym "toByteArray", newLit field.deserializeName)
-        ),
-        newStmtList(
-          newDotExpr(
-            struct.nskTypeEnumSym,
-            field.nskEnumFieldSym
+      for name in field.deserializeName:
+        result.add nnkElifBranch.newTree(
+          nnkInfix.newTree(
+            ident "==",
+            ident "value",
+            newCall(bindSym "toByteArray", newLit name)
+          ),
+          newStmtList(
+            newDotExpr(
+              struct.nskTypeEnumSym,
+              field.nskEnumFieldSym
+            )
           )
         )
-      )
 
     result.add defToKeyElseBranch(struct)
 

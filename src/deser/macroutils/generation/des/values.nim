@@ -45,6 +45,7 @@ from deser/macroutils/types import
 from utils as des_utils import
   defImplVisitor,
   defExpectingProc,
+  defFieldNamesLit,
   getOrDefault,
   getOrDefaultValue,
   getOrRaise,
@@ -343,6 +344,7 @@ template resolveUntagged {.dirty.} =
 
   # exception is raised only for the top level case field
   if raiseOnNone:
+    let fieldNameLit = newLit field.nameIdent.strVal
     body.add quote do:
       `raiseUnknownUntaggedVariantSym`(`structNameLit`, `fieldNameLit`)
   result = body
@@ -352,7 +354,7 @@ template resolveTagged {.dirty.} =
   # HACK: need to generate temp let
   # to prove that case field value is correct
   let
-    tempKindLetSym = genSym(nskLet, field.deserializeName)
+    tempKindLetSym = genSym(nskLet, field.nameIdent.strVal)
     # get case field value from data
     tempKindLet = newLetStmt(tempKindLetSym, defGetField(field, raiseOnNone))
 
@@ -412,9 +414,7 @@ func resolve(struct: Struct, fields: seq[Field], objConstr: NimNode, raiseOnNone
     # there is no case field, so just return statement
     result = nnkReturnStmt.newTree(objConstr)
   else:
-    let
-      field = caseField.unsafeGet
-      fieldNameLit = field.deserializeName
+    let field = caseField.unsafeGet
 
     if field.features.untagged:
       resolveUntagged
@@ -431,8 +431,8 @@ func defGetField(field: Field, raiseOnNone: bool): NimNode =
       defGetOrDefault(field.nameIdent)
     else:
       defGetOrDefaultValue(field.nameIdent, defaultValueNode)
-  elif raiseOnNone:
-    defGetOrRaise(field.nameIdent, field.deserializeName.newLit)
+  elif raiseOnNone:  
+    defGetOrRaise(field.nameIdent, defFieldNamesLit(field.deserializeName))
   else:
     defGetOrBreak(field.nameIdent)
 
@@ -552,7 +552,7 @@ func defKeyToValueCase(struct: Struct): NimNode =
         ),
         ident "map",
       )
-    
+
     if field.features.deserializeWith.isSome:
       nextValueCall = newDotExpr(nextValueCall, ident "value")
 
@@ -563,7 +563,7 @@ func defKeyToValueCase(struct: Struct): NimNode =
           nnkElifBranch.newTree(
             newCall(bindSym("isSome"), field.nameIdent),
             newStmtList(
-              newCall(bindSym("raiseDuplicateField"), field.deserializeName.newLit)
+              newCall(bindSym("raiseDuplicateField"), defFieldNamesLit(field.deserializeName))
             )
           )
         ),

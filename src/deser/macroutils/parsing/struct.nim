@@ -29,6 +29,7 @@ from deser/macroutils/types as macro_types import
   public,
   features,
   fields,
+  aliases,
   renameSerialize,
   renameDeserialize,
   `skipSerializing=`,
@@ -235,10 +236,11 @@ proc propagateFeatures(fields: var seq[Field], features: StructFeatures) =
     if types.skipPrivateDeserializing(features) and not public field:
       field.features.skipDeserializing = true
 
+    # do not check aliases here, because they are useless for serialization
     if field.features.renameSerialize.isNone:
       field.features.renameSerialize = types.renameAll(features)
 
-    if field.features.renameDeserialize.isNone:
+    if field.features.renameDeserialize.isNone and field.features.aliases.len == 0:
       field.features.renameDeserialize = types.renameAll(features)
 
     if field.isCase:

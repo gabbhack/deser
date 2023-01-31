@@ -305,3 +305,15 @@ type
     passwordHash: string
 ```
 ]##  
+
+template aliases*(aliases: varargs[typed]) {.pragma.} ##[
+Deserialize field from the given names or from its Nim name.
+Accepts strings and `RenameCase` values.
+
+**Example**:
+```nim
+type
+  User = object
+    nickName {.aliases("username", "login", SnakeCase).}: string
+```
+]##

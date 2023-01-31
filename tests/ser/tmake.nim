@@ -30,7 +30,7 @@ type
   
   RefObject = ref object
     id: int
-  
+
   InheritObject {.renameAll: SnakeCase.} = object of RootObj
     id* {.renamed: "i".}: int
 

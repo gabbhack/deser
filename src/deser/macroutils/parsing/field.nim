@@ -38,7 +38,8 @@ from deser/pragmas import
   renameSerialize,
   renameDeserialize,
   skipSerializeIf,
-  defaultValue
+  defaultValue,
+  aliases
 
 # for pattern matching and assertKind
 import deser/macroutils/matching
@@ -153,7 +154,9 @@ func fromRecCase*(fieldTy: typedesc[Field], recCase: NimNode): Field =
   var branches = newSeqOfCap[FieldBranch](recCase.len-1)
 
   for branch in rawBranches:
+    {.warning[UnsafeSetLen]: off.}
     branches.add FieldBranch.fromBranch(branch)
+    {.warning[UnsafeSetLen]: on.}
 
   initField(
     nameIdent=getNameIdent(identDefs),
@@ -204,6 +207,7 @@ func fromPragma*(featuresTy: typedesc[FieldFeatures], pragma: Option[NimNode]): 
       renameDeserializeSym = bindSym("renameDeserialize")
       skipSerializeIfSym = bindSym("skipSerializeIf")
       defaultValueSym = bindSym("defaultValue")
+      aliasesSym = bindSym("aliases")
 
     var
       untagged = false
@@ -215,6 +219,7 @@ func fromPragma*(featuresTy: typedesc[FieldFeatures], pragma: Option[NimNode]): 
       renameSerialize = none NimNode
       skipSerializeIf = none NimNode
       defaultValue = none NimNode
+      aliases = newSeqOfCap[NimNode](0)
 
     for symbol, values in parsePragma(pragma):
       if symbol == untaggedSym:
@@ -244,9 +249,16 @@ func fromPragma*(featuresTy: typedesc[FieldFeatures], pragma: Option[NimNode]): 
           defaultValue = some newEmptyNode()
         else:
           defaultValue = some values[0]
+      elif symbol == aliasesSym:
+        assertKind values[0], {nnkHiddenStdConv}
+        assertMatch values[0]:
+          HiddenStdConv[Empty(), Bracket[all @values]]
+        aliases = values
 
+    if aliases.len > 0 and renameDeserialize.isSome:
+      error("Cannot use both `aliases` and `renameDeserialize` on the same field.", pragma)
 
-    initFieldFeatures(
+    result = initFieldFeatures(
       skipSerializing = skipSerializing,
       skipDeserializing = skipDeserializing,
       untagged = untagged,
@@ -255,10 +267,11 @@ func fromPragma*(featuresTy: typedesc[FieldFeatures], pragma: Option[NimNode]): 
       skipSerializeIf = skipSerializeIf,
       serializeWith = serializeWith,
       deserializeWith = deserializeWith,
-      defaultValue = defaultValue
+      defaultValue = defaultValue,
+      aliases = aliases
     )
   else:
-    initEmptyFieldFeatures()
+    result = initEmptyFieldFeatures()
 
 func getType(identDefs: NimNode): NimNode =
   ## Get the type of the field from an identDefs node

@@ -31,10 +31,10 @@ type
   Struct* {.requiresInit.} = object
     ## Intermediate representation of type.
     ## 
-    ## Usually `Struct` is initialized using the [fromTypeSym](parse_struct.html#fromTypeSym%2Ctypedesc%5BStruct%5D%2CNimNode) constructor.
+    ## Usually `Struct` is initialized using the `fromTypeSym` constructor.
     ## 
     ## You can initialize `Struct` manually using the
-    ## [initStruct](#initStruct%2CNimNode%2Cseq%5BField%5D%2CStructFeatures%2COption%5BNimNode%5D) constructor.
+    ## `initStruct` constructor.
     ##
     ## It is **not recommended** to initialize `Struct` another way to avoid using the wrong `NimNode`.
     typeSym: NimNode
@@ -49,15 +49,15 @@ type
     ## Intermediate representation of type field.
     ## 
     ## Usually `Field` is initialized using
-    ## [fromIdentDefs](parse_field.html#fromIdentDefs%2Ctypedesc%5BField%5D%2CNimNode) and
-    ## [fromRecCase](parse_field.html#fromRecCase%2Ctypedesc%5BField%5D%2CNimNode) constructors.
+    ## `fromIdentDefs` and
+    ## `fromRecCase` constructors.
     ## 
     ## The list of fields can be obtained with procedures
-    ## [fieldsFromRecList](parse_field.html#fieldsFromRecList%2CNimNode) and
-    ## [parseFields](parse_field.html#parseFields%2CTypeInfo).
+    ## `fieldsFromRecList` and
+    ## `parseFields`.
     ## 
     ## You can initialize `Field` manually using the
-    ## [initField](#initField%2CNimNode%2CNimNode%2CFieldFeatures%2Cbool%2Cbool%2Cseq%5BFieldBranch%5D) constructor.
+    ## `initField` constructor.
     ## 
     ## It is **not recommended** to initialize `Field` another way to avoid using the wrong `NimNode`.
     nameIdent: NimNode
@@ -77,10 +77,10 @@ type
     ## Features derived from pragmas.
     ## 
     ## Usually `StructFeatures` is initialized using
-    ## [fromPragma](parse_struct.html#fromPragma%2Ctypedesc%5BStructFeatures%5D%2COption%5BNimNode%5D) constructor.
+    ## `fromPragma` constructor.
     ## 
     ## You can initialize `StructFeatures` manually using the
-    ## [initStructFeatures](#initStructFeatures%2COption%5BNimNode%5D%2COption%5BNimNode%5D) constructor.
+    ## `initStructFeatures` constructor.
     onUnknownKeys: Option[NimNode]
     renameAll: Option[NimNode]
     skipPrivateSerializing: bool
@@ -90,10 +90,10 @@ type
     ## Features derived from pragmas.
     ## 
     ## Usually `FieldFeatures` is initialized using
-    ## [fromPragma](parse_field.html#fromPragma%2Ctypedesc%5BFieldFeatures%5D%2COption%5BNimNode%5D) constructor.
+    ## `fromPragma` constructor.
     ## 
     ## You can initialize `FieldFeatures` manually using the
-    ## [initFieldFeatures](#initFieldFeatures%2Cbool%2Cbool%2Cbool%2COption%5Bstring%5D%2COption%5Bstring%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D) constructor.
+    ## `initFieldFeatures` constructor.
     skipSerializing: bool
     skipDeserializing: bool
     untagged: bool
@@ -104,6 +104,7 @@ type
     serializeWith: Option[NimNode]
     deserializeWith: Option[NimNode]
     defaultValue: Option[NimNode]
+    aliases: seq[NimNode]
 
   FieldBranchKind* = enum
     Of
@@ -113,10 +114,10 @@ type
     ## Represents branch of case field.
     ## 
     ## Usually `FieldBranch` is initialized using
-    ## [fromBranch](parse_field.html#fromBranch%2Ctypedesc%5BFieldBranch%5D%2CNimNode) constructor.
+    ## `fromBranch` constructor.
     ## 
     ## You can initialize `FieldBranch` manually using the
-    ## [initFieldBranch](#initFieldBranch%2CFieldBranchKind%2Cseq%5BField%5D%2CNimNode) constructor.
+    ## `initFieldBranch` constructor.
     ## 
     ## It is **not recommended** to initialize `FieldBranch` another way to avoid using the wrong `NimNode`.
     case kind: FieldBranchKind
@@ -131,10 +132,10 @@ type
     ## Used when we not need to parse `NimNode` to `Struct`, `Field`, `*Features`, etc.
     ## 
     ## Usually `TypeInfo` is initialized using
-    ## [fromTypeSym](parse_struct.html#fromTypeSym%2Ctypedesc%5BTypeInfo%5D%2CNimNode) constructor.
+    ## `fromTypeSym` constructor.
     ## 
     ## You can initialize `TypeInfo` manually using the
-    ## [initTypeInfo](#initTypeInfo%2CNimNode%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D) constructor.
+    ## `initTypeInfo` constructor.
     ## 
     ## It is **not recommended** to initialize `TypeInfo` another way to avoid using the wrong `NimNode`.
     typeSym: NimNode
@@ -335,15 +336,23 @@ func serializeName*(self: Field): string =
   else:
     self.nameIdent.strVal
 
-func deserializeName*(self: Field): string =
+func deserializeName*(self: Field): seq[string] =
   ## Returns the string from the `renameDeserialize` pragma if presented, otherwise the field name.
   if Some(@rename) ?= self.features.renameDeserialize:
     if Some(@renameCase) ?= getRenameCase(rename):
-      self.nameIdent.strVal.toCase renameCase
+      result = @[self.nameIdent.strVal.toCase renameCase]
     else:
-      rename.strVal
+      result = @[rename.strVal]
+  elif self.features.aliases.len > 0:
+    result = newSeqOfCap[string](self.features.aliases.len + 1)
+    for alias in self.features.aliases:
+      if Some(@renameCase) ?= getRenameCase(alias):
+        result.add self.nameIdent.strVal.toCase renameCase
+      else:
+        result.add alias.strVal
+    result.add self.nameIdent.strVal
   else:
-    self.nameIdent.strVal
+    result = @[self.nameIdent.strVal]
 
 proc merge*(self: var Field, another: Field) =
   ## Add `another` field to all branches of first field.
@@ -416,7 +425,14 @@ func initFieldFeatures*(
   serializeWith: Option[NimNode],
   deserializeWith: Option[NimNode],
   defaultValue: Option[NimNode],
+  aliases: seq[NimNode]
 ): FieldFeatures =
+  ##[
+Throws a `ValueError` exception if both `renameDeserialize` and `aliases` are passed.
+  ]##
+  if renameDeserialize.isSome and aliases.len > 0:
+    raise newException(ValueError, "Cannot use both `aliases` and `renameDeserialize` on the same field.")
+
   FieldFeatures(
     skipSerializing: skipSerializing,
     skipDeserializing: skipDeserializing,
@@ -426,7 +442,8 @@ func initFieldFeatures*(
     skipSerializeIf: skipSerializeIf,
     serializeWith: serializeWith,
     deserializeWith: deserializeWith,
-    defaultValue: defaultValue
+    defaultValue: defaultValue,
+    aliases: aliases
   )
 
 func initEmptyFieldFeatures*(): FieldFeatures =
@@ -439,7 +456,8 @@ func initEmptyFieldFeatures*(): FieldFeatures =
     skipSerializeIf: none NimNode,
     serializeWith: none NimNode,
     deserializeWith: none NimNode,
-    defaultValue: none NimNode
+    defaultValue: none NimNode,
+    aliases: @[]
   )
 
 # FieldFeatures getters
@@ -478,6 +496,10 @@ func deserializeWith*(self: FieldFeatures): Option[NimNode] =
 func defaultValue*(self: FieldFeatures): Option[NimNode] =
   ## Value from `defaultValue` pragma.
   self.defaultValue
+
+func aliases*(self: FieldFeatures): seq[NimNode] =
+  ## Value from `aliases` pragma.
+  self.aliases
 
 # setters
 proc `skipSerializing=`*(self: var FieldFeatures, value: bool) =
@@ -705,7 +727,7 @@ when isMainModule:
           fields=newSeqOfCap[Field](0),
           conditionOfBranch=some nnkOfBranch.newTree()
         )
-        
+
         nestedField = initField(
           nameIdent=ident"nested",
           typeNode=bindSym"Test",
@@ -892,7 +914,8 @@ when isMainModule:
                     skipSerializeIf=none NimNode,
                     serializeWith=none NimNode,
                     deserializeWith=none NimNode,
-                    defaultValue=none NimNode
+                    defaultValue=none NimNode,
+                    aliases = @[]
                   ),
                   public=false,
                   isCase=true,
@@ -937,7 +960,8 @@ when isMainModule:
                     skipSerializeIf=none NimNode,
                     serializeWith=none NimNode,
                     deserializeWith=none NimNode,
-                    defaultValue=none NimNode
+                    defaultValue=none NimNode,
+                    aliases = @[]
                   ),
                   public=false,
                   isCase=true,
@@ -987,7 +1011,8 @@ when isMainModule:
           skipSerializeIf=none NimNode,
           serializeWith=none NimNode,
           deserializeWith=none NimNode,
-          defaultValue=none NimNode
+          defaultValue=none NimNode,
+          aliases = @[]
         ),
         public=false,
         isCase=false,
@@ -995,6 +1020,6 @@ when isMainModule:
       )
 
       doAssert serializeName(field) == "Serialize"
-      doAssert deserializeName(field) == "Deserialize"
+      doAssert deserializeName(field) == @["Deserialize"]
 
   run()
