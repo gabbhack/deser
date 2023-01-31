@@ -14,7 +14,8 @@ from deser/des/errors import
   initUnexpectedUnsigned,
   initUnexpectedString,
   initUnexpectedFloat,
-  raiseInvalidValue
+  raiseInvalidValue,
+  raiseMissingField
 
 
 func defImplVisitor*(selfType: NimNode, public: bool): NimNode =
@@ -67,7 +68,8 @@ template getOrRaise*[T](field: Option[T], name: static[string]): T =
     Option,
     isSome,
     unsafeGet,
-    none
+    none,
+    raiseMissingField
 
   if isSome(field):
     unsafeGet(field)
