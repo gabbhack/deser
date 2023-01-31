@@ -169,12 +169,18 @@ func fromBranch*(branchTy: typedesc[FieldBranch], branch: NimNode): FieldBranch 
   ## Parse a field branch from a branch node
 
   assertMatch branch:
-    OfBranch[@condition, @recList] |
+    OfBranch[until @condition is RecList(), @recList] |
     Else[@recList]
+  
+  let conditionOfBranch =
+    if condition.len == 0:
+      none NimNode
+    else:
+      some nnkOfBranch.newTree(condition)
 
   initFieldBranch(
     fields=fieldsFromRecList(recList),
-    conditionOfBranch=condition.map(x => nnkOfBranch.newTree(x))
+    conditionOfBranch=conditionOfBranch
   )
 
 func fromPragma*(featuresTy: typedesc[FieldFeatures], pragma: Option[NimNode]): FieldFeatures =

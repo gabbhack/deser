@@ -136,6 +136,15 @@ type
     lolKek {.renameSerialize(SnakeCase).}: string
     kekLol {.renamed(SnakeCase).}: string
 
+  CaseObjectMultiBranchKind = enum
+    First, Second, Third, Fourth
+
+  CaseObjectMultiBranch = object
+    case kind: CaseObjectMultiBranchKind
+    of First, Second:
+      first: string
+    of Third, Fourth:
+      second: string
 
 
 makeSerializable([
@@ -161,7 +170,8 @@ makeSerializable([
   MultiCaseObject,
   MultiCaseObjectUntagged,
   MultiCaseObjectAllUntagged,
-  RenameWithCase
+  RenameWithCase,
+  CaseObjectMultiBranch
 ], public=true)
 
 
@@ -410,5 +420,24 @@ suite "makeSerializable":
       initStringToken(""),
       initStringToken("kek_lol"),
       initStringToken(""),
+      initMapEndToken()
+    ]
+
+  test "CaseObjectMultiBranch":
+    assertSerTokens CaseObjectMultiBranch(kind: First, first: "123"), [
+      initMapToken(none int),
+      initStringToken("kind"),
+      initEnumToken(),
+      initStringToken("first"),
+      initStringToken("123"),
+      initMapEndToken()
+    ]
+
+    assertSerTokens CaseObjectMultiBranch(kind: Third, second: "123"), [
+      initMapToken(none int),
+      initStringToken("kind"),
+      initEnumToken(),
+      initStringToken("second"),
+      initStringToken("123"),
       initMapEndToken()
     ]

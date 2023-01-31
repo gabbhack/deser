@@ -148,6 +148,16 @@ type
   RenameWithCase = object
     lolKek {.renameDeserialize(SnakeCase).}: string
     kekLol {.renamed(SnakeCase).}: string
+  
+  CaseObjectMultiBranchKind = enum
+    First, Second, Third, Fourth
+
+  CaseObjectMultiBranch = object
+    case kind: CaseObjectMultiBranchKind
+    of First, Second:
+      first: string
+    of Third, Fourth:
+      second: string
 
 
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
@@ -181,6 +191,15 @@ proc `==`*(x, y: MultiCaseObject | MultiCaseObjectUntagged | MultiCaseObjectAllU
         return x.no == y.no and x.no2 == y.no2
   return false
 
+proc `==`*(x, y: CaseObjectMultiBranch): bool =
+  if x.kind == y.kind:
+    case x.kind
+    of First, Second:
+      return x.first == y.first
+    of Third, Fourth:
+      return x.second == y.second
+  return false
+
 proc `$`*(x: ref): string = $x[]
 
 makeDeserializable([
@@ -209,7 +228,8 @@ makeDeserializable([
   MultiCaseObject,
   MultiCaseObjectUntagged,
   MultiCaseObjectAllUntagged,
-  RenameWithCase
+  RenameWithCase,
+  CaseObjectMultiBranch
 ], public=true)
 
 
@@ -485,5 +505,24 @@ suite "makeDeserializable":
       initStringToken(""),
       initStringToken("kek_lol"),
       initStringToken(""),
+      initMapEndToken()
+    ]
+
+  test "CaseObjectMultiBranch":
+    assertDesTokens CaseObjectMultiBranch(kind: First, first: "123"), [
+      initMapToken(none int),
+      initStringToken("kind"),
+      initStringToken("First"),
+      initStringToken("first"),
+      initStringToken("123"),
+      initMapEndToken()
+    ]
+
+    assertDesTokens CaseObjectMultiBranch(kind: Third, second: "123"), [
+      initMapToken(none int),
+      initStringToken("kind"),
+      initStringToken("Third"),
+      initStringToken("second"),
+      initStringToken("123"),
       initMapEndToken()
     ]
