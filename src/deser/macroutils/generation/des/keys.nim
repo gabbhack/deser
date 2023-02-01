@@ -262,9 +262,8 @@ func defUintToKeyCase(struct: Struct): NimNode =
 
 func defToKeyElseBranch(struct: Struct): NimNode =
   let
-    onUnknownKeys = struct.features.onUnknownKeys
     callOnUnknownKeys = block:
-      if Some(@onUnknownKeys) ?= onUnknownKeys:
+      if Some(@onUnknownKeys) ?= struct.features.onUnknownKeys:
         newCall(
           onUnknownKeys,
           toStrLit struct.typeSym,
