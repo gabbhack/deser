@@ -28,8 +28,6 @@ from deser/macroutils/types import
   deserializeName,
   nameIdent,
   nskTypeDeserializeWithSym,
-  # StructFeatures
-  onUnknownKeys,
   # FieldFeatures
   deserializeWith,
   skipDeserializing,
