@@ -119,7 +119,10 @@ proc serialize*(self: SomeSet, serializer: var auto) =
 proc serialize*(self: ref, serializer: var auto) =
   mixin serialize
 
-  serialize(self[], serializer)
+  if not self.isNil:
+    serialize(self[], serializer)
+  else:
+    serializer.serializeNone()
 
 when defined(release):
   {.pop.}

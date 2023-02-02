@@ -58,6 +58,8 @@ func defSelfDotField(field: Field): NimNode
 
 func defCheckedSerializeField(field: Field, checker, body: NimNode): NimNode
 
+func defNilCheck(): NimNode
+
 
 func defSerialize*(struct: var Struct, public: bool): NimNode =
   defPushPop:
@@ -126,10 +128,23 @@ func defSerializeBody(struct: Struct): NimNode =
     nnkMixinStmt.newTree(
       ident "endMap"
     ),
+    defNilCheck(),
     defState(),
     defSerializeFields(struct.fields),
     defEndMap()
   )
+
+func defNilCheck(): NimNode =
+  let
+    selfIdent = ident "self"
+    serializerIdent = ident "serializer"
+    serializeNoneIdent = ident "serializeNone"
+
+  quote do:
+    when `selfIdent` is ref:
+      if `selfIdent`.isNil:
+        `serializeNoneIdent`(`serializerIdent`)
+        return
 
 func defState(): NimNode =
   newCall(

@@ -441,3 +441,16 @@ suite "makeSerializable":
       initStringToken("123"),
       initMapEndToken()
     ]
+
+  test "Serialize nil ref as none":
+    # ref without generated `serialize`
+    var temp: ref int
+    assertSerTokens temp, [
+      initNoneToken()
+    ]
+
+    # ref with generated `serialize`
+    var temp2: ChildRefObject
+    assertSerTokens temp2, [
+      initNoneToken()
+    ]
