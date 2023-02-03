@@ -1,0 +1,34 @@
+name: Feature request
+description: Report features you would like to see or improve in the library.
+labels:
+  - enhancement
+body:
+  - type: textarea
+    attributes:
+      label: Problem
+      description: Is your feature request related to a specific problem? If not, please describe the general idea of your request.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Possible solution
+      description: Describe the solution you would like to see in the library.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: References
+      description: If you have seen a similar feature in another library/framework/lanugage.
+
+  - type: textarea
+    attributes:
+      label: Code example
+      description: A small code example that demonstrates the behavior you would like to see.
+      render: nim
+
+  - type: textarea
+    attributes:
+      label: Additional information
+      description: Any additional information you would like to provide.
