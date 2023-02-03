@@ -170,10 +170,49 @@ echo seq[EvenInt].fromJson("[1, 3, 5, 7, 9]")
 ```
 
 # SeqAccess
+To gain access to the elements of the sequence, the `Visitor` gets a `SeqAccess` object in the `visitSeq` method.
+
+`SeqAccess` has the following methods:
+```nim
+proc nextElementSeed(self: var Self, seed: auto): Option[seed.Value]
+
+proc nextElement[Value](self: var Self): Option[Value]
+
+proc sizeHint(self: Self): Option[int]
+
+iterator items[Value](self: var Self): Value
+```
+
+All methods except `nextElementSeed` are implemented by default using the [implSeqAccess](#implSeqAccess.t%2C%2Cstatic[bool]) template.
 
 # MapAccess
+To gain access to the elements of the map, the `Visitor` gets a `MapAccess` object in the `visitMap` method.
+
+`MapAccess` has the following methods:
+```nim
+proc nextKeySeed(self: var Self, seed: auto): Option[seed.Value]
+
+proc nextValueSeed(self: var Self, seed: auto): seed.Value
+
+proc nextEntrySeed(self: var Self, kseed: auto, vseed: auto): Option[(kseed.Value, vseed.Value)]
+
+proc nextKey[Key](self: var Self): Option[Key]
+
+proc nextValue[Value](self: var Self): Value
+
+proc nextEntry[Key, Value](self: var Self): Option[tuple[key: Key, value: Value]]
+
+proc sizeHint[Self: Self](self: Self): Option[int] = none(int)
+
+iterator keys[Key](self: var Self): Key
+
+iterator pairs[Key, Value](self: var Self): (Key, Value)
+```
+
+All methods except `nextKeySeed` and `nextValueSeed` are implemented by default using the [implMapAccess](#implMapAccess.t%2C%2Cstatic[bool]) template.
 
 # Deserializer
+
 ]##
 
 import std/[
@@ -288,7 +327,6 @@ Generate forward declarations and default implementation for [Visitor](#visitor)
     when defined(release):
       {.pop.}
 
-
 template implSeqAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} = ##[
 Generate forward declarations and default implementation for [SeqAccess](#seqaccess).
 ]##
@@ -308,7 +346,7 @@ Generate forward declarations and default implementation for [SeqAccess](#seqacc
     # default implementation
     proc nextElement[Value](self: var selfType): Option[Value] =
       self.nextElementSeed(NoneSeed[Value]())
-    
+
     proc sizeHint[Self: selfType](self: Self): Option[int] = none(int)
 
     iterator items[Value](self: var selfType): Value =
@@ -320,7 +358,6 @@ Generate forward declarations and default implementation for [SeqAccess](#seqacc
 
     when defined(release):
       {.pop.}
-
 
 template implMapAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} = ##[
 Generate forward declarations and default implementation for [MapAccess](#mapaccess).
@@ -383,7 +420,6 @@ Generate forward declarations and default implementation for [MapAccess](#mapacc
     when defined(release):
       {.pop.}
 
-
 template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} = ##[
 Generate forward declarations for [Deserializer](#deserializer).
 ]##
@@ -429,7 +465,6 @@ Generate forward declarations for [Deserializer](#deserializer).
     proc deserializeIgnoredAny(self: var selfType, visitor: auto): visitor.Value
 
     proc deserializeArray(self: var selfType, len: static[int], visitor: auto): visitor.Value
-
 
 template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false, defaultBody: untyped) {.dirty.} = ##[
 Generate [Deserializer](#deserializer) procedures with `defaultBody` as implementation.
