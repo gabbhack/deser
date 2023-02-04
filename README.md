@@ -11,8 +11,8 @@
 
 ---
 
-## Motivation
-
+<details> 
+  <summary>Motivation</summary>
 Many serializers have already been written for Nim. You can probably find at least two serializers for each format. 
 
 The problem is that each library's API and customization options are different. I can't declare an object with renamed or skipped fields once and change the data format with one line.
@@ -24,6 +24,7 @@ Thus, there was no library for Nim that standardized the serialization process, 
 Also read:
 - [Standards](https://xkcd.com/927/)
 - [Not invented here](https://en.wikipedia.org/wiki/Not_invented_here)
+</details>
 
 
 ## Supported formats
