@@ -1,0 +1,4 @@
+defWithType	deser/macroutils/generation/utils.html#defWithType,NimNode	utils: defWithType(name: NimNode): NimNode	
+defMaybeExportedIdent	deser/macroutils/generation/utils.html#defMaybeExportedIdent,NimNode,bool	utils: defMaybeExportedIdent(id: NimNode; public: bool): NimNode	
+maybePublic	deser/macroutils/generation/utils.html#maybePublic.m,static[bool],untyped	utils: maybePublic(public: static[bool]; body: untyped): untyped	
+defPushPop	deser/macroutils/generation/utils.html#defPushPop,NimNode	utils: defPushPop(stmtList: NimNode): NimNode	

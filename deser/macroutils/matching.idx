@@ -1,0 +1,63 @@
+nnkStrKinds	deser/macroutils/matching.html#nnkStrKinds	matching: nnkStrKinds	
+nnkIntKinds	deser/macroutils/matching.html#nnkIntKinds	matching: nnkIntKinds	
+nnkFloatKinds	deser/macroutils/matching.html#nnkFloatKinds	matching: nnkFloatKinds	
+nnkIdentKinds	deser/macroutils/matching.html#nnkIdentKinds	matching: nnkIdentKinds	
+nnkTokenKinds	deser/macroutils/matching.html#nnkTokenKinds	matching: nnkTokenKinds	
+varOfIteration	deser/macroutils/matching.html#varOfIteration.t,untyped	matching: varOfIteration(arg: untyped): untyped	
+assertKind	deser/macroutils/matching.html#assertKind.t,NimNode,set[NimNodeKind]	matching: assertKind(node: NimNode; kindSet: set[NimNodeKind]): untyped	
+getKindNames	deser/macroutils/matching.html#getKindNames,NimNode	matching: getKindNames(head: NimNode): (string, seq[string])	
+hasKindImpl	deser/macroutils/matching.html#hasKindImpl.m,typed,untyped	matching: hasKindImpl(head: typed; kind: untyped): untyped	
+hasKind	deser/macroutils/matching.html#hasKind.t,untyped,untyped	matching: hasKind(head, kindExpr: untyped): untyped	
+FieldIndex	deser/macroutils/matching.html#FieldIndex	matching: FieldIndex	
+`==`	deser/macroutils/matching.html#==,FieldIndex,SomeInteger	matching: `==`(idx: FieldIndex; i: SomeInteger): bool	
+`[]`	deser/macroutils/matching.html#[].t,,static[FieldIndex]	matching: `[]`(t: tuple; idx: static[FieldIndex]): untyped	
+kItem	deser/macroutils/matching.html#kItem	MatchKind.kItem	
+kSeq	deser/macroutils/matching.html#kSeq	MatchKind.kSeq	
+kTuple	deser/macroutils/matching.html#kTuple	MatchKind.kTuple	
+kPairs	deser/macroutils/matching.html#kPairs	MatchKind.kPairs	
+kObject	deser/macroutils/matching.html#kObject	MatchKind.kObject	
+kSet	deser/macroutils/matching.html#kSet	MatchKind.kSet	
+kAlt	deser/macroutils/matching.html#kAlt	MatchKind.kAlt	
+MatchKind	deser/macroutils/matching.html#MatchKind	matching: MatchKind	
+lkAny	deser/macroutils/matching.html#lkAny	SeqKeyword.lkAny	
+lkAll	deser/macroutils/matching.html#lkAll	SeqKeyword.lkAll	
+lkNone	deser/macroutils/matching.html#lkNone	SeqKeyword.lkNone	
+lkOpt	deser/macroutils/matching.html#lkOpt	SeqKeyword.lkOpt	
+lkUntil	deser/macroutils/matching.html#lkUntil	SeqKeyword.lkUntil	
+lkPref	deser/macroutils/matching.html#lkPref	SeqKeyword.lkPref	
+lkPos	deser/macroutils/matching.html#lkPos	SeqKeyword.lkPos	
+lkSlice	deser/macroutils/matching.html#lkSlice	SeqKeyword.lkSlice	
+lkTrail	deser/macroutils/matching.html#lkTrail	SeqKeyword.lkTrail	
+SeqKeyword	deser/macroutils/matching.html#SeqKeyword	matching: SeqKeyword	
+SeqStructure	deser/macroutils/matching.html#SeqStructure	matching: SeqStructure	
+imkInfixEq	deser/macroutils/matching.html#imkInfixEq	ItemMatchKind.imkInfixEq	
+imkSubPattern	deser/macroutils/matching.html#imkSubPattern	ItemMatchKind.imkSubPattern	
+imkPredicate	deser/macroutils/matching.html#imkPredicate	ItemMatchKind.imkPredicate	
+ItemMatchKind	deser/macroutils/matching.html#ItemMatchKind	matching: ItemMatchKind	
+KVPair	deser/macroutils/matching.html#KVPair	matching: KVPair	
+MatchError	deser/macroutils/matching.html#MatchError	matching: MatchError	
+Match	deser/macroutils/matching.html#Match	matching: Match	
+vkRegular	deser/macroutils/matching.html#vkRegular	VarKind.vkRegular	
+vkSequence	deser/macroutils/matching.html#vkSequence	VarKind.vkSequence	
+vkOption	deser/macroutils/matching.html#vkOption	VarKind.vkOption	
+vkSet	deser/macroutils/matching.html#vkSet	VarKind.vkSet	
+vkAlt	deser/macroutils/matching.html#vkAlt	VarKind.vkAlt	
+VarKind	deser/macroutils/matching.html#VarKind	matching: VarKind	
+VarSpec	deser/macroutils/matching.html#VarSpec	matching: VarSpec	
+`$`	deser/macroutils/matching.html#$,Path	matching: `$`(path: Path): string	
+`$`	deser/macroutils/matching.html#$,KVPair	matching: `$`(kvp: KVPair): string	
+`$`	deser/macroutils/matching.html#$,SeqStructure	matching: `$`(ss: SeqStructure): string	
+`$`	deser/macroutils/matching.html#$,Match	matching: `$`(match: Match): string	
+toAccs	deser/macroutils/matching.html#toAccs,Path,NimNode,bool	matching: toAccs(path: Path; name: NimNode; pathForType: bool): NimNode	
+parseMatchExpr	deser/macroutils/matching.html#parseMatchExpr,NimNode	matching: parseMatchExpr(n: NimNode): Match	
+makeMatchExpr	deser/macroutils/matching.html#makeMatchExpr,Match,NimNode,bool,NimNode	matching: makeMatchExpr(m: Match; mainExpr: NimNode; doRaise: bool;\n              originalMainExpr: NimNode): tuple[expr: NimNode, vtable: VarTable,\n    mixident: seq[string]]	
+expand	deser/macroutils/matching.html#expand.m,typed	matching: expand(body: typed): untyped	
+`case`	deser/macroutils/matching.html#case.m,untyped	matching: `case`(n: untyped): untyped	
+assertMatch	deser/macroutils/matching.html#assertMatch.m,untyped,untyped	matching: assertMatch(input, pattern: untyped): untyped	
+matches	deser/macroutils/matching.html#matches.m,untyped,untyped	matching: matches(input, pattern: untyped): untyped	
+kind=	deser/macroutils/matching.html#kind=,NimNode,NimNodeKind	matching: kind=(node: var NimNode; kind: NimNodeKind)	
+str	deser/macroutils/matching.html#str,NimNode	matching: str(node: NimNode): string	
+str=	deser/macroutils/matching.html#str=,NimNode,string	matching: str=(node: var NimNode; val: string)	
+makeTree	deser/macroutils/matching.html#makeTree.t,typed,untyped	matching: makeTree(T: typed; pattern: untyped): untyped	
+`:=`	deser/macroutils/matching.html#:=.t,untyped,untyped	matching: `:=`(lhs, rhs: untyped): untyped	
+`?=`	deser/macroutils/matching.html#?=.t,untyped,untyped	matching: `?=`(lhs, rhs: untyped): untyped	

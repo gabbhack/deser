@@ -17,7 +17,7 @@
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
-<title>src/deser/des/make</title>
+<title>deser/des/make</title>
 <link rel="stylesheet" type="text/css" href="../../nimdoc.out.css">
 
 <script type="text/javascript" src="../../dochack.js"></script>
@@ -69,7 +69,7 @@ window.addEventListener('DOMContentLoaded', main);
 <body>
 <div class="document" id="documentId">
   <div class="container">
-    <h1 class="title">src/deser/des/make</h1>
+    <h1 class="title">deser/des/make</h1>
     <div class="row">
   <div class="three columns">
   <div class="theme-switch-wrapper">
@@ -115,7 +115,7 @@ window.addEventListener('DOMContentLoaded', main);
   <ul class="simple simple-toc-section">
       <ul class="simple nested-toc-section">makeDeserializable
       <li><a class="reference" href="#makeDeserializable.m%2Cvarargs%5Btypedesc%5D%2Cstatic%5Bbool%5D"
-    title="makeDeserializable(typ: varargs[typedesc]; public: static[bool] = false)">makeDeserializable(typ: varargs[typedesc]; public: static[bool] = false)</a></li>
+    title="makeDeserializable(types: varargs[typedesc]; public: static[bool] = false)">makeDeserializable(types: varargs[typedesc]; public: static[bool] = false)</a></li>
 
   </ul>
 
@@ -133,18 +133,18 @@ window.addEventListener('DOMContentLoaded', main);
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="../magic/intermediate.html">../magic/intermediate</a>, <a class="reference external" href="../magic/des/generation.html">../magic/des/generation</a>
+<a class="reference external" href="../macroutils/types.html">../macroutils/types</a>, <a class="reference external" href="../macroutils/parsing/struct.html">../macroutils/parsing/struct</a>, <a class="reference external" href="../macroutils/generation/des.html">../macroutils/generation/des</a>
 </dl></div>
 <div class="section" id="17">
 <h1><a class="toc-backref" href="#17">Macros</a></h1>
 <dl class="item">
 <div id="makeDeserializable.m,varargs[typedesc],static[bool]">
-<dt><pre><span class="Keyword">macro</span> <a href="#makeDeserializable.m%2Cvarargs%5Btypedesc%5D%2Cstatic%5Bbool%5D"><span class="Identifier">makeDeserializable</span></a><span class="Other">(</span><span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">typedesc</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">public</span><span class="Other">:</span> <span class="Identifier">static</span><span class="Other">[</span><span class="Identifier">bool</span><span class="Other">]</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span></pre></dt>
+<dt><pre><span class="Keyword">macro</span> <a href="#makeDeserializable.m%2Cvarargs%5Btypedesc%5D%2Cstatic%5Bbool%5D"><span class="Identifier">makeDeserializable</span></a><span class="Other">(</span><span class="Identifier">types</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">typedesc</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">public</span><span class="Other">:</span> <span class="Identifier">static</span><span class="Other">[</span><span class="Identifier">bool</span><span class="Other">]</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span></pre></dt>
 <dd>
 
 <p>Generate <tt class="docutils literal"><span class="pre"><span class="Identifier">deserialize</span></span></tt> procedure for your type. Use <tt class="docutils literal"><span class="pre"><span class="Identifier">public</span></span></tt> parameter to export.</p>
 <p>Works only for objects and ref objects.</p>
-<p>Compile with <tt class="docutils literal"><span class="pre"><span class="Operator">-</span><span class="Identifier">d</span><span class="Punctuation">:</span><span class="Identifier">debugMakeDeserializable</span></span></tt> to see macro output.</p>
+<p>Compile with <tt class="docutils literal"><span class="pre"><span class="Operator">-</span><span class="Identifier">d</span><span class="Punctuation">:</span><span class="Identifier">debugMakeDeserializable</span></span></tt> to see macro output. Compile with <tt class="docutils literal"><span class="pre"><span class="Operator">-</span><span class="Identifier">d</span><span class="Punctuation">:</span><span class="Identifier">debugMakeDeserializableTree</span></span></tt> to see macro output as NimNode tree.</p>
 <p><strong>Example</strong>:</p>
 <p><pre class="listing"><span class="Identifier">makeDeserializable</span><span class="Punctuation">(</span><span class="Identifier">Foo</span><span class="Punctuation">)</span>
 
@@ -156,9 +156,9 @@ window.addEventListener('DOMContentLoaded', main);
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/des/make.nim#L13"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/des/make.nim#L15"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/des/make.nim#L13" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/des/make.nim#L15" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -172,7 +172,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-09-15 06:47:48 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-02-04 15:08:37 UTC</small>
       </div>
     </div>
   </div>

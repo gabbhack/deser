@@ -1,0 +1,1 @@
+toCase	deser/macroutils/anycase.html#toCase,string,RenameCase	anycase: toCase(str: string; renameCase: RenameCase): string	

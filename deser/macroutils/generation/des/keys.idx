@@ -1,0 +1,1 @@
+defKeyDeserialize	deser/macroutils/generation/des/keys.html#defKeyDeserialize,NimNode,Struct,bool	keys: defKeyDeserialize(visitorType: NimNode; struct: Struct; public: bool): NimNode	

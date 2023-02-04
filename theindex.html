@@ -70,42 +70,140 @@ window.addEventListener('DOMContentLoaded', main);
 <div class="document" id="documentId">
   <div class="container">
     <h1 class="title">Index</h1>
-    Modules: <a href="deser.html">deser</a>, <a href="deser/des/error.html">deser/des/error</a>, <a href="deser/des/helpers.html">deser/des/helpers</a>, <a href="deser/des/impls.html">deser/des/impls</a>, <a href="deser/des/make.html">deser/des/make</a>, <a href="deser/error.html">deser/error</a>, <a href="deser/magic/anycase.html">deser/magic/anycase</a>, <a href="deser/pragmas.html">deser/pragmas</a>, <a href="deser/ser/helpers.html">deser/ser/helpers</a>, <a href="deser/ser/impls.html">deser/ser/impls</a>, <a href="deser/ser/make.html">deser/ser/make</a>.<br/><p /><h2>API symbols</h2>
+    Modules: <a href="deser.html">deser</a>, <a href="deser/base_error.html">deser/base_error</a>, <a href="deser/des/errors.html">deser/des/errors</a>, <a href="deser/des/helpers.html">deser/des/helpers</a>, <a href="deser/des/impls.html">deser/des/impls</a>, <a href="deser/des/make.html">deser/des/make</a>, <a href="deser/macroutils/anycase.html">deser/macroutils/anycase</a>, <a href="deser/macroutils/generation/des.html">deser/macroutils/generation/des</a>, <a href="deser/macroutils/generation/des/keys.html">deser/macroutils/generation/des/keys</a>, <a href="deser/macroutils/generation/des/utils.html">deser/macroutils/generation/des/utils</a>, <a href="deser/macroutils/generation/des/values.html">deser/macroutils/generation/des/values</a>, <a href="deser/macroutils/generation/ser/ser.html">deser/macroutils/generation/ser/ser</a>, <a href="deser/macroutils/generation/utils.html">deser/macroutils/generation/utils</a>, <a href="deser/macroutils/matching.html">deser/macroutils/matching</a>, <a href="deser/macroutils/parsing/field.html">deser/macroutils/parsing/field</a>, <a href="deser/macroutils/parsing/pragmas.html">deser/macroutils/parsing/pragmas</a>, <a href="deser/macroutils/parsing/struct.html">deser/macroutils/parsing/struct</a>, <a href="deser/macroutils/types.html">deser/macroutils/types</a>, <a href="deser/pragmas.html">deser/pragmas</a>, <a href="deser/ser/helpers.html">deser/ser/helpers</a>, <a href="deser/ser/impls.html">deser/ser/impls</a>, <a href="deser/ser/make.html">deser/ser/make</a>.<br/><p /><h2>API symbols</h2>
 <dl><dt><a name="%60%24%60" href="#%60%24%60"><span>`$`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: `$`(self: Unexpected): string" href="deser/des/error.html#%24%2CUnexpected">error: `$`(self: Unexpected): string</a></li>
+          data-doc-search-tag="errors: `$`(self: Unexpected): string" href="deser/des/errors.html#%24%2CUnexpected">errors: `$`(self: Unexpected): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="matching: `$`(kvp: KVPair): string" href="deser/macroutils/matching.html#%24%2CKVPair">matching: `$`(kvp: KVPair): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="matching: `$`(match: Match): string" href="deser/macroutils/matching.html#%24%2CMatch">matching: `$`(match: Match): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="matching: `$`(path: Path): string" href="deser/macroutils/matching.html#%24%2CPath">matching: `$`(path: Path): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="matching: `$`(ss: SeqStructure): string" href="deser/macroutils/matching.html#%24%2CSeqStructure">matching: `$`(ss: SeqStructure): string</a></li>
+          </ul></dd>
+<dt><a name="%60%3A%3D%60" href="#%60%3A%3D%60"><span>`:=`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: `:=`(lhs, rhs: untyped): untyped" href="deser/macroutils/matching.html#%3A%3D.t%2Cuntyped%2Cuntyped">matching: `:=`(lhs, rhs: untyped): untyped</a></li>
+          </ul></dd>
+<dt><a name="%60%3D%3D%60" href="#%60%3D%3D%60"><span>`==`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: `==`(idx: FieldIndex; i: SomeInteger): bool" href="deser/macroutils/matching.html#%3D%3D%2CFieldIndex%2CSomeInteger">matching: `==`(idx: FieldIndex; i: SomeInteger): bool</a></li>
+          </ul></dd>
+<dt><a name="%60%3F%3D%60" href="#%60%3F%3D%60"><span>`?=`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: `?=`(lhs, rhs: untyped): untyped" href="deser/macroutils/matching.html#%3F%3D.t%2Cuntyped%2Cuntyped">matching: `?=`(lhs, rhs: untyped): untyped</a></li>
+          </ul></dd>
+<dt><a name="%60%5B%5D%60" href="#%60%5B%5D%60"><span>`[]`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: `[]`(t: tuple; idx: static[FieldIndex]): untyped" href="deser/macroutils/matching.html#%5B%5D.t%2C%2Cstatic%5BFieldIndex%5D">matching: `[]`(t: tuple; idx: static[FieldIndex]): untyped</a></li>
+          </ul></dd>
+<dt><a name="%60case%60" href="#%60case%60"><span>`case`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: `case`(n: untyped): untyped" href="deser/macroutils/matching.html#case.m%2Cuntyped">matching: `case`(n: untyped): untyped</a></li>
+          </ul></dd>
+<dt><a name="aliases" href="#aliases"><span>aliases:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: aliases(self: FieldFeatures): seq[NimNode]" href="deser/macroutils/types.html#aliases%2CFieldFeatures">types: aliases(self: FieldFeatures): seq[NimNode]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="pragmas: aliases(aliases: varargs[typed])" href="deser/pragmas.html#aliases.t%2Cvarargs%5Btyped%5D">pragmas: aliases(aliases: varargs[typed])</a></li>
+          </ul></dd>
+<dt><a name="asAddr" href="#asAddr"><span>asAddr:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="helpers: asAddr(ident: untyped; exp: untyped): untyped" href="deser/ser/helpers.html#asAddr.t%2Cuntyped%2Cuntyped">helpers: asAddr(ident: untyped; exp: untyped): untyped</a></li>
+          </ul></dd>
+<dt><a name="assertKind" href="#assertKind"><span>assertKind:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: assertKind(node: NimNode; kindSet: set[NimNodeKind]): untyped" href="deser/macroutils/matching.html#assertKind.t%2CNimNode%2Cset%5BNimNodeKind%5D">matching: assertKind(node: NimNode; kindSet: set[NimNodeKind]): untyped</a></li>
+          </ul></dd>
+<dt><a name="assertMatch" href="#assertMatch"><span>assertMatch:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: assertMatch(input, pattern: untyped): untyped" href="deser/macroutils/matching.html#assertMatch.m%2Cuntyped%2Cuntyped">matching: assertMatch(input, pattern: untyped): untyped</a></li>
           </ul></dd>
 <dt><a name="Bool" href="#Bool"><span>Bool:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="UnexpectedKind.Bool" href="deser/des/error.html#Bool">UnexpectedKind.Bool</a></li>
+          data-doc-search-tag="UnexpectedKind.Bool" href="deser/des/errors.html#Bool">UnexpectedKind.Bool</a></li>
+          </ul></dd>
+<dt><a name="branches" href="#branches"><span>branches:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: branches(self: Field): seq[FieldBranch]" href="deser/macroutils/types.html#branches%2CField">types: branches(self: Field): seq[FieldBranch]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="types: branches(self: var Field): var seq[FieldBranch]" href="deser/macroutils/types.html#branches%2CField_2">types: branches(self: var Field): var seq[FieldBranch]</a></li>
           </ul></dd>
 <dt><a name="Bytes" href="#Bytes"><span>Bytes:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="UnexpectedKind.Bytes" href="deser/des/error.html#Bytes">UnexpectedKind.Bytes</a></li>
+          data-doc-search-tag="UnexpectedKind.Bytes" href="deser/des/errors.html#Bytes">UnexpectedKind.Bytes</a></li>
           </ul></dd>
 <dt><a name="CamelCase" href="#CamelCase"><span>CamelCase:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="RenameCase.CamelCase" href="deser/magic/anycase.html#CamelCase">RenameCase.CamelCase</a></li>
+          data-doc-search-tag="RenameCase.CamelCase" href="deser/pragmas.html#CamelCase">RenameCase.CamelCase</a></li>
           </ul></dd>
 <dt><a name="Char" href="#Char"><span>Char:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="UnexpectedKind.Char" href="deser/des/error.html#Char">UnexpectedKind.Char</a></li>
+          data-doc-search-tag="UnexpectedKind.Char" href="deser/des/errors.html#Char">UnexpectedKind.Char</a></li>
           </ul></dd>
 <dt><a name="CobolCase" href="#CobolCase"><span>CobolCase:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="RenameCase.CobolCase" href="deser/magic/anycase.html#CobolCase">RenameCase.CobolCase</a></li>
+          data-doc-search-tag="RenameCase.CobolCase" href="deser/pragmas.html#CobolCase">RenameCase.CobolCase</a></li>
+          </ul></dd>
+<dt><a name="conditionOfBranch" href="#conditionOfBranch"><span>conditionOfBranch:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: conditionOfBranch(self: FieldBranch): NimNode" href="deser/macroutils/types.html#conditionOfBranch%2CFieldBranch">types: conditionOfBranch(self: FieldBranch): NimNode</a></li>
           </ul></dd>
 <dt><a name="defaultValue" href="#defaultValue"><span>defaultValue:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="pragmas: defaultValue(value: typed)" href="deser/pragmas.html#defaultValue.t%2Ctyped">pragmas: defaultValue(value: typed)</a></li>
+          data-doc-search-tag="types: defaultValue(self: FieldFeatures): Option[NimNode]" href="deser/macroutils/types.html#defaultValue%2CFieldFeatures">types: defaultValue(self: FieldFeatures): Option[NimNode]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="pragmas: defaultValue(value: typed = nil)" href="deser/pragmas.html#defaultValue.t%2Ctyped">pragmas: defaultValue(value: typed = nil)</a></li>
+          </ul></dd>
+<dt><a name="defDeserialize" href="#defDeserialize"><span>defDeserialize:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="des: defDeserialize(struct: Struct; public: bool): NimNode" href="deser/macroutils/generation/des.html#defDeserialize%2CStruct%2Cbool">des: defDeserialize(struct: Struct; public: bool): NimNode</a></li>
+          </ul></dd>
+<dt><a name="defExpectingProc" href="#defExpectingProc"><span>defExpectingProc:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: defExpectingProc(selfType, body: NimNode): NimNode" href="deser/macroutils/generation/des/utils.html#defExpectingProc%2CNimNode%2CNimNode">utils: defExpectingProc(selfType, body: NimNode): NimNode</a></li>
+          </ul></dd>
+<dt><a name="defFieldNamesLit" href="#defFieldNamesLit"><span>defFieldNamesLit:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: defFieldNamesLit(names: seq[string]): NimNode" href="deser/macroutils/generation/des/utils.html#defFieldNamesLit%2Cseq%5Bstring%5D">utils: defFieldNamesLit(names: seq[string]): NimNode</a></li>
+          </ul></dd>
+<dt><a name="defImplVisitor" href="#defImplVisitor"><span>defImplVisitor:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: defImplVisitor(selfType: NimNode; public: bool): NimNode" href="deser/macroutils/generation/des/utils.html#defImplVisitor%2CNimNode%2Cbool">utils: defImplVisitor(selfType: NimNode; public: bool): NimNode</a></li>
+          </ul></dd>
+<dt><a name="defKeyDeserialize" href="#defKeyDeserialize"><span>defKeyDeserialize:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="keys: defKeyDeserialize(visitorType: NimNode; struct: Struct; public: bool): NimNode" href="deser/macroutils/generation/des/keys.html#defKeyDeserialize%2CNimNode%2CStruct%2Cbool">keys: defKeyDeserialize(visitorType: NimNode; struct: Struct; public: bool): NimNode</a></li>
+          </ul></dd>
+<dt><a name="defMaybeExportedIdent" href="#defMaybeExportedIdent"><span>defMaybeExportedIdent:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: defMaybeExportedIdent(id: NimNode; public: bool): NimNode" href="deser/macroutils/generation/utils.html#defMaybeExportedIdent%2CNimNode%2Cbool">utils: defMaybeExportedIdent(id: NimNode; public: bool): NimNode</a></li>
+          </ul></dd>
+<dt><a name="defPushPop" href="#defPushPop"><span>defPushPop:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: defPushPop(stmtList: NimNode): NimNode" href="deser/macroutils/generation/utils.html#defPushPop%2CNimNode">utils: defPushPop(stmtList: NimNode): NimNode</a></li>
+          </ul></dd>
+<dt><a name="defSerialize" href="#defSerialize"><span>defSerialize:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ser: defSerialize(struct: var Struct; public: bool): NimNode" href="deser/macroutils/generation/ser/ser.html#defSerialize%2CStruct%2Cbool">ser: defSerialize(struct: var Struct; public: bool): NimNode</a></li>
+          </ul></dd>
+<dt><a name="defValueDeserialize" href="#defValueDeserialize"><span>defValueDeserialize:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="values: defValueDeserialize(visitorType: NimNode; struct: Struct; public: bool): NimNode" href="deser/macroutils/generation/des/values.html#defValueDeserialize%2CNimNode%2CStruct%2Cbool">values: defValueDeserialize(visitorType: NimNode; struct: Struct; public: bool): NimNode</a></li>
+          </ul></dd>
+<dt><a name="defWithType" href="#defWithType"><span>defWithType:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: defWithType(name: NimNode): NimNode" href="deser/macroutils/generation/utils.html#defWithType%2CNimNode">utils: defWithType(name: NimNode): NimNode</a></li>
           </ul></dd>
 <dt><a name="DeserError" href="#DeserError"><span>DeserError:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: DeserError" href="deser/error.html#DeserError">error: DeserError</a></li>
+          data-doc-search-tag="base_error: DeserError" href="deser/base_error.html#DeserError">base_error: DeserError</a></li>
           </ul></dd>
 <dt><a name="DeserializationError" href="#DeserializationError"><span>DeserializationError:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: DeserializationError" href="deser/des/error.html#DeserializationError">error: DeserializationError</a></li>
+          data-doc-search-tag="errors: DeserializationError" href="deser/des/errors.html#DeserializationError">errors: DeserializationError</a></li>
           </ul></dd>
 <dt><a name="deserialize" href="#deserialize"><span>deserialize:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -175,13 +273,27 @@ window.addEventListener('DOMContentLoaded', main);
                         deserializer: var auto): Self:type" href="deser/des/impls.html#deserialize%2Ctypedesc%5BTable%5BKey%2CValue%5D%5D%2Cauto">impls: deserialize[Key, Value](Self: typedesc[Table[Key, Value]];
                         deserializer: var auto): Self:type</a></li>
           </ul></dd>
+<dt><a name="deserializeName" href="#deserializeName"><span>deserializeName:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: deserializeName(self: Field): seq[string]" href="deser/macroutils/types.html#deserializeName%2CField">types: deserializeName(self: Field): seq[string]</a></li>
+          </ul></dd>
 <dt><a name="deserializeWith" href="#deserializeWith"><span>deserializeWith:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="types: deserializeWith(self: FieldFeatures): Option[NimNode]" href="deser/macroutils/types.html#deserializeWith%2CFieldFeatures">types: deserializeWith(self: FieldFeatures): Option[NimNode]</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="pragmas: deserializeWith(with: typed)" href="deser/pragmas.html#deserializeWith.t%2Ctyped">pragmas: deserializeWith(with: typed)</a></li>
           </ul></dd>
 <dt><a name="DuplicateField" href="#DuplicateField"><span>DuplicateField:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: DuplicateField" href="deser/des/error.html#DuplicateField">error: DuplicateField</a></li>
+          data-doc-search-tag="errors: DuplicateField" href="deser/des/errors.html#DuplicateField">errors: DuplicateField</a></li>
+          </ul></dd>
+<dt><a name="Else" href="#Else"><span>Else:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="FieldBranchKind.Else" href="deser/macroutils/types.html#Else">FieldBranchKind.Else</a></li>
+          </ul></dd>
+<dt><a name="expand" href="#expand"><span>expand:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: expand(body: typed): untyped" href="deser/macroutils/matching.html#expand.m%2Ctyped">matching: expand(body: typed): untyped</a></li>
           </ul></dd>
 <dt><a name="expecting" href="#expecting"><span>expecting:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -265,13 +377,137 @@ window.addEventListener('DOMContentLoaded', main);
           <li><a class="reference external"
           data-doc-search-tag="impls: expecting(self: Visitor_1375735373): string" href="deser/des/impls.html#expecting%2CVisitor_9">impls: expecting(self: Visitor_1375735373): string</a></li>
           </ul></dd>
+<dt><a name="features" href="#features"><span>features:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: features(self: Field): FieldFeatures" href="deser/macroutils/types.html#features%2CField">types: features(self: Field): FieldFeatures</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="types: features(self: var Field): var FieldFeatures" href="deser/macroutils/types.html#features%2CField_2">types: features(self: var Field): var FieldFeatures</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="types: features(self: Struct): StructFeatures" href="deser/macroutils/types.html#features%2CStruct">types: features(self: Struct): StructFeatures</a></li>
+          </ul></dd>
+<dt><a name="Field" href="#Field"><span>Field:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: Field" href="deser/macroutils/types.html#Field">types: Field</a></li>
+          </ul></dd>
+<dt><a name="FieldBranch" href="#FieldBranch"><span>FieldBranch:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: FieldBranch" href="deser/macroutils/types.html#FieldBranch">types: FieldBranch</a></li>
+          </ul></dd>
+<dt><a name="FieldBranchKind" href="#FieldBranchKind"><span>FieldBranchKind:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: FieldBranchKind" href="deser/macroutils/types.html#FieldBranchKind">types: FieldBranchKind</a></li>
+          </ul></dd>
+<dt><a name="FieldFeatures" href="#FieldFeatures"><span>FieldFeatures:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: FieldFeatures" href="deser/macroutils/types.html#FieldFeatures">types: FieldFeatures</a></li>
+          </ul></dd>
+<dt><a name="FieldIndex" href="#FieldIndex"><span>FieldIndex:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: FieldIndex" href="deser/macroutils/matching.html#FieldIndex">matching: FieldIndex</a></li>
+          </ul></dd>
+<dt><a name="fields" href="#fields"><span>fields:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: fields(self: FieldBranch): seq[Field]" href="deser/macroutils/types.html#fields%2CFieldBranch">types: fields(self: FieldBranch): seq[Field]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="types: fields(self: var FieldBranch): var seq[Field]" href="deser/macroutils/types.html#fields%2CFieldBranch_2">types: fields(self: var FieldBranch): var seq[Field]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="types: fields(self: Struct): seq[Field]" href="deser/macroutils/types.html#fields%2CStruct">types: fields(self: Struct): seq[Field]</a></li>
+          </ul></dd>
+<dt><a name="fieldsFromRecList" href="#fieldsFromRecList"><span>fieldsFromRecList:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="field: fieldsFromRecList(recList: NimNode): seq[Field]" href="deser/macroutils/parsing/field.html#fieldsFromRecList%2CNimNode">field: fieldsFromRecList(recList: NimNode): seq[Field]</a></li>
+          </ul></dd>
+<dt><a name="flattenFields" href="#flattenFields"><span>flattenFields:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: flattenFields(self: Struct): seq[Field]" href="deser/macroutils/types.html#flattenFields%2CStruct">types: flattenFields(self: Struct): seq[Field]</a></li>
+          </ul></dd>
 <dt><a name="Float" href="#Float"><span>Float:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="UnexpectedKind.Float" href="deser/des/error.html#Float">UnexpectedKind.Float</a></li>
+          data-doc-search-tag="UnexpectedKind.Float" href="deser/des/errors.html#Float">UnexpectedKind.Float</a></li>
+          </ul></dd>
+<dt><a name="fromBranch" href="#fromBranch"><span>fromBranch:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="field: fromBranch(branchTy: typedesc[FieldBranch]; branch: NimNode): seq[FieldBranch]" href="deser/macroutils/parsing/field.html#fromBranch%2Ctypedesc%5BFieldBranch%5D%2CNimNode">field: fromBranch(branchTy: typedesc[FieldBranch]; branch: NimNode): seq[FieldBranch]</a></li>
+          </ul></dd>
+<dt><a name="fromIdentDefs" href="#fromIdentDefs"><span>fromIdentDefs:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="field: fromIdentDefs(fieldTy: typedesc[Field]; identDefs: NimNode): Field" href="deser/macroutils/parsing/field.html#fromIdentDefs%2Ctypedesc%5BField%5D%2CNimNode">field: fromIdentDefs(fieldTy: typedesc[Field]; identDefs: NimNode): Field</a></li>
+          </ul></dd>
+<dt><a name="fromPragma" href="#fromPragma"><span>fromPragma:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="field: fromPragma(featuresTy: typedesc[FieldFeatures]; pragma: Option[NimNode]): FieldFeatures" href="deser/macroutils/parsing/field.html#fromPragma%2Ctypedesc%5BFieldFeatures%5D%2COption%5BNimNode%5D">field: fromPragma(featuresTy: typedesc[FieldFeatures]; pragma: Option[NimNode]): FieldFeatures</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="struct: fromPragma(featuresTy: typedesc[StructFeatures]; pragma: Option[NimNode]): StructFeatures" href="deser/macroutils/parsing/struct.html#fromPragma%2Ctypedesc%5BStructFeatures%5D%2COption%5BNimNode%5D">struct: fromPragma(featuresTy: typedesc[StructFeatures]; pragma: Option[NimNode]): StructFeatures</a></li>
+          </ul></dd>
+<dt><a name="fromRecCase" href="#fromRecCase"><span>fromRecCase:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="field: fromRecCase(fieldTy: typedesc[Field]; recCase: NimNode): Field" href="deser/macroutils/parsing/field.html#fromRecCase%2Ctypedesc%5BField%5D%2CNimNode">field: fromRecCase(fieldTy: typedesc[Field]; recCase: NimNode): Field</a></li>
+          </ul></dd>
+<dt><a name="fromTypeSym" href="#fromTypeSym"><span>fromTypeSym:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="struct: fromTypeSym(structTy: typedesc[Struct]; typeSym: NimNode): Struct" href="deser/macroutils/parsing/struct.html#fromTypeSym%2Ctypedesc%5BStruct%5D%2CNimNode">struct: fromTypeSym(structTy: typedesc[Struct]; typeSym: NimNode): Struct</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="struct: fromTypeSym(typeInfoTy: typedesc[TypeInfo]; typeSym: NimNode): TypeInfo" href="deser/macroutils/parsing/struct.html#fromTypeSym%2Ctypedesc%5BTypeInfo%5D%2CNimNode">struct: fromTypeSym(typeInfoTy: typedesc[TypeInfo]; typeSym: NimNode): TypeInfo</a></li>
+          </ul></dd>
+<dt><a name="genArray" href="#genArray"><span>genArray:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: genArray(size: static[int]; T: typedesc): array" href="deser/macroutils/generation/des/utils.html#genArray.m%2Cstatic%5Bint%5D%2Ctypedesc">utils: genArray(size: static[int]; T: typedesc): array</a></li>
+          </ul></dd>
+<dt><a name="genericParams" href="#genericParams"><span>genericParams:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: genericParams(self: Struct): Option[NimNode]" href="deser/macroutils/types.html#genericParams%2CStruct">types: genericParams(self: Struct): Option[NimNode]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="types: genericParams(self: TypeInfo): Option[NimNode]" href="deser/macroutils/types.html#genericParams%2CTypeInfo">types: genericParams(self: TypeInfo): Option[NimNode]</a></li>
+          </ul></dd>
+<dt><a name="genPrimitive" href="#genPrimitive"><span>genPrimitive:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: genPrimitive(typ: typed{`type`}; deserializeMethod: untyped = nil;
+             floats: static[bool] = false)" href="deser/macroutils/generation/des/utils.html#genPrimitive.m%2C%2Cuntyped%2Cstatic%5Bbool%5D">utils: genPrimitive(typ: typed{`type`}; deserializeMethod: untyped = nil;
+             floats: static[bool] = false)</a></li>
+          </ul></dd>
+<dt><a name="getKindNames" href="#getKindNames"><span>getKindNames:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: getKindNames(head: NimNode): (string, seq[string])" href="deser/macroutils/matching.html#getKindNames%2CNimNode">matching: getKindNames(head: NimNode): (string, seq[string])</a></li>
+          </ul></dd>
+<dt><a name="getOrBreak" href="#getOrBreak"><span>getOrBreak:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: getOrBreak[T](field: Option[T]): T" href="deser/macroutils/generation/des/utils.html#getOrBreak.t%2COption%5BT%5D">utils: getOrBreak[T](field: Option[T]): T</a></li>
+          </ul></dd>
+<dt><a name="getOrDefault" href="#getOrDefault"><span>getOrDefault:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: getOrDefault[T](field: Option[T]): T" href="deser/macroutils/generation/des/utils.html#getOrDefault.t%2COption%5BT%5D">utils: getOrDefault[T](field: Option[T]): T</a></li>
+          </ul></dd>
+<dt><a name="getOrDefaultValue" href="#getOrDefaultValue"><span>getOrDefaultValue:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: getOrDefaultValue[T](field: Option[T]; defaultValue: T): T" href="deser/macroutils/generation/des/utils.html#getOrDefaultValue.t%2COption%5BT%5D%2CT">utils: getOrDefaultValue[T](field: Option[T]; defaultValue: T): T</a></li>
+          </ul></dd>
+<dt><a name="getOrRaise" href="#getOrRaise"><span>getOrRaise:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: getOrRaise[T](field: Option[T]; name: static[string]): T" href="deser/macroutils/generation/des/utils.html#getOrRaise.t%2COption%5BT%5D%2Cstatic%5Bstring%5D">utils: getOrRaise[T](field: Option[T]; name: static[string]): T</a></li>
+          </ul></dd>
+<dt><a name="hasKind" href="#hasKind"><span>hasKind:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: hasKind(head, kindExpr: untyped): untyped" href="deser/macroutils/matching.html#hasKind.t%2Cuntyped%2Cuntyped">matching: hasKind(head, kindExpr: untyped): untyped</a></li>
+          </ul></dd>
+<dt><a name="hasKindImpl" href="#hasKindImpl"><span>hasKindImpl:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: hasKindImpl(head: typed; kind: untyped): untyped" href="deser/macroutils/matching.html#hasKindImpl.m%2Ctyped%2Cuntyped">matching: hasKindImpl(head: typed; kind: untyped): untyped</a></li>
           </ul></dd>
 <dt><a name="IgnoredAny" href="#IgnoredAny"><span>IgnoredAny:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="helpers: IgnoredAny" href="deser/des/helpers.html#IgnoredAny">helpers: IgnoredAny</a></li>
+          </ul></dd>
+<dt><a name="imkInfixEq" href="#imkInfixEq"><span>imkInfixEq:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ItemMatchKind.imkInfixEq" href="deser/macroutils/matching.html#imkInfixEq">ItemMatchKind.imkInfixEq</a></li>
+          </ul></dd>
+<dt><a name="imkPredicate" href="#imkPredicate"><span>imkPredicate:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ItemMatchKind.imkPredicate" href="deser/macroutils/matching.html#imkPredicate">ItemMatchKind.imkPredicate</a></li>
+          </ul></dd>
+<dt><a name="imkSubPattern" href="#imkSubPattern"><span>imkSubPattern:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="ItemMatchKind.imkSubPattern" href="deser/macroutils/matching.html#imkSubPattern">ItemMatchKind.imkSubPattern</a></li>
           </ul></dd>
 <dt><a name="implDeserializer" href="#implDeserializer"><span>implDeserializer:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -313,113 +549,425 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="helpers: implVisitor(selfType: typed; public: static[bool] = false)" href="deser/des/helpers.html#implVisitor.t%2Ctyped%2Cstatic%5Bbool%5D">helpers: implVisitor(selfType: typed; public: static[bool] = false)</a></li>
           </ul></dd>
+<dt><a name="initEmptyFieldFeatures" href="#initEmptyFieldFeatures"><span>initEmptyFieldFeatures:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: initEmptyFieldFeatures(): FieldFeatures" href="deser/macroutils/types.html#initEmptyFieldFeatures">types: initEmptyFieldFeatures(): FieldFeatures</a></li>
+          </ul></dd>
+<dt><a name="initEmptyStructFeatures" href="#initEmptyStructFeatures"><span>initEmptyStructFeatures:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: initEmptyStructFeatures(): StructFeatures" href="deser/macroutils/types.html#initEmptyStructFeatures">types: initEmptyStructFeatures(): StructFeatures</a></li>
+          </ul></dd>
+<dt><a name="initField" href="#initField"><span>initField:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: initField(nameIdent: NimNode; typeNode: NimNode; features: FieldFeatures;
+          public: bool; isCase: bool; branches: seq[FieldBranch]): Field" href="deser/macroutils/types.html#initField%2CNimNode%2CNimNode%2CFieldFeatures%2Cbool%2Cbool%2Cseq%5BFieldBranch%5D">types: initField(nameIdent: NimNode; typeNode: NimNode; features: FieldFeatures;
+          public: bool; isCase: bool; branches: seq[FieldBranch]): Field</a></li>
+          </ul></dd>
+<dt><a name="initFieldBranch" href="#initFieldBranch"><span>initFieldBranch:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: initFieldBranch(fields: seq[Field]; conditionOfBranch: Option[NimNode]): FieldBranch" href="deser/macroutils/types.html#initFieldBranch%2Cseq%5BField%5D%2COption%5BNimNode%5D">types: initFieldBranch(fields: seq[Field]; conditionOfBranch: Option[NimNode]): FieldBranch</a></li>
+          </ul></dd>
+<dt><a name="initFieldFeatures" href="#initFieldFeatures"><span>initFieldFeatures:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: initFieldFeatures(skipSerializing: bool; skipDeserializing: bool;
+                  untagged: bool; renameSerialize: Option[NimNode];
+                  renameDeserialize: Option[NimNode];
+                  skipSerializeIf: Option[NimNode];
+                  serializeWith: Option[NimNode];
+                  deserializeWith: Option[NimNode];
+                  defaultValue: Option[NimNode]; aliases: seq[NimNode]): FieldFeatures" href="deser/macroutils/types.html#initFieldFeatures%2Cbool%2Cbool%2Cbool%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2Cseq%5BNimNode%5D">types: initFieldFeatures(skipSerializing: bool; skipDeserializing: bool;
+                  untagged: bool; renameSerialize: Option[NimNode];
+                  renameDeserialize: Option[NimNode];
+                  skipSerializeIf: Option[NimNode];
+                  serializeWith: Option[NimNode];
+                  deserializeWith: Option[NimNode];
+                  defaultValue: Option[NimNode]; aliases: seq[NimNode]): FieldFeatures</a></li>
+          </ul></dd>
+<dt><a name="initStruct" href="#initStruct"><span>initStruct:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: initStruct(typeSym: NimNode; fields: seq[Field]; features: StructFeatures;
+           genericParams: Option[NimNode]): Struct" href="deser/macroutils/types.html#initStruct%2CNimNode%2Cseq%5BField%5D%2CStructFeatures%2COption%5BNimNode%5D">types: initStruct(typeSym: NimNode; fields: seq[Field]; features: StructFeatures;
+           genericParams: Option[NimNode]): Struct</a></li>
+          </ul></dd>
+<dt><a name="initStructFeatures" href="#initStructFeatures"><span>initStructFeatures:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: initStructFeatures(onUnknownKeys: Option[NimNode]; renameAll: Option[NimNode];
+                   skipPrivateSerializing: bool; skipPrivateDeserializing: bool): StructFeatures" href="deser/macroutils/types.html#initStructFeatures%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2Cbool%2Cbool">types: initStructFeatures(onUnknownKeys: Option[NimNode]; renameAll: Option[NimNode];
+                   skipPrivateSerializing: bool; skipPrivateDeserializing: bool): StructFeatures</a></li>
+          </ul></dd>
+<dt><a name="initTypeInfo" href="#initTypeInfo"><span>initTypeInfo:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: initTypeInfo(typeSym: NimNode; pragma: Option[NimNode];
+             recList: Option[NimNode]; genericParams: Option[NimNode]): TypeInfo" href="deser/macroutils/types.html#initTypeInfo%2CNimNode%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D">types: initTypeInfo(typeSym: NimNode; pragma: Option[NimNode];
+             recList: Option[NimNode]; genericParams: Option[NimNode]): TypeInfo</a></li>
+          </ul></dd>
+<dt><a name="initUnexpectedBool" href="#initUnexpectedBool"><span>initUnexpectedBool:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="errors: initUnexpectedBool(value: bool): auto" href="deser/des/errors.html#initUnexpectedBool%2Cbool">errors: initUnexpectedBool(value: bool): auto</a></li>
+          </ul></dd>
+<dt><a name="initUnexpectedBytes" href="#initUnexpectedBytes"><span>initUnexpectedBytes:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="errors: initUnexpectedBytes(value: sink seq[byte]): auto" href="deser/des/errors.html#initUnexpectedBytes%2Csinkseq%5Bbyte%5D">errors: initUnexpectedBytes(value: sink seq[byte]): auto</a></li>
+          </ul></dd>
+<dt><a name="initUnexpectedChar" href="#initUnexpectedChar"><span>initUnexpectedChar:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="errors: initUnexpectedChar(value: char): auto" href="deser/des/errors.html#initUnexpectedChar%2Cchar">errors: initUnexpectedChar(value: char): auto</a></li>
+          </ul></dd>
+<dt><a name="initUnexpectedFloat" href="#initUnexpectedFloat"><span>initUnexpectedFloat:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="errors: initUnexpectedFloat(value: float64): auto" href="deser/des/errors.html#initUnexpectedFloat%2Cfloat64">errors: initUnexpectedFloat(value: float64): auto</a></li>
+          </ul></dd>
+<dt><a name="initUnexpectedMap" href="#initUnexpectedMap"><span>initUnexpectedMap:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="errors: initUnexpectedMap(): auto" href="deser/des/errors.html#initUnexpectedMap">errors: initUnexpectedMap(): auto</a></li>
+          </ul></dd>
+<dt><a name="initUnexpectedOption" href="#initUnexpectedOption"><span>initUnexpectedOption:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="errors: initUnexpectedOption(): auto" href="deser/des/errors.html#initUnexpectedOption">errors: initUnexpectedOption(): auto</a></li>
+          </ul></dd>
+<dt><a name="initUnexpectedSeq" href="#initUnexpectedSeq"><span>initUnexpectedSeq:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="errors: initUnexpectedSeq(): auto" href="deser/des/errors.html#initUnexpectedSeq">errors: initUnexpectedSeq(): auto</a></li>
+          </ul></dd>
+<dt><a name="initUnexpectedSigned" href="#initUnexpectedSigned"><span>initUnexpectedSigned:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="errors: initUnexpectedSigned(value: int64): auto" href="deser/des/errors.html#initUnexpectedSigned%2Cint64">errors: initUnexpectedSigned(value: int64): auto</a></li>
+          </ul></dd>
+<dt><a name="initUnexpectedString" href="#initUnexpectedString"><span>initUnexpectedString:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="errors: initUnexpectedString(value: sink string): auto" href="deser/des/errors.html#initUnexpectedString%2Csinkstring">errors: initUnexpectedString(value: sink string): auto</a></li>
+          </ul></dd>
+<dt><a name="initUnexpectedUnsigned" href="#initUnexpectedUnsigned"><span>initUnexpectedUnsigned:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="errors: initUnexpectedUnsigned(value: uint64): auto" href="deser/des/errors.html#initUnexpectedUnsigned%2Cuint64">errors: initUnexpectedUnsigned(value: uint64): auto</a></li>
+          </ul></dd>
 <dt><a name="InvalidLength" href="#InvalidLength"><span>InvalidLength:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: InvalidLength" href="deser/des/error.html#InvalidLength">error: InvalidLength</a></li>
+          data-doc-search-tag="errors: InvalidLength" href="deser/des/errors.html#InvalidLength">errors: InvalidLength</a></li>
           </ul></dd>
 <dt><a name="InvalidType" href="#InvalidType"><span>InvalidType:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: InvalidType" href="deser/des/error.html#InvalidType">error: InvalidType</a></li>
+          data-doc-search-tag="errors: InvalidType" href="deser/des/errors.html#InvalidType">errors: InvalidType</a></li>
           </ul></dd>
 <dt><a name="InvalidValue" href="#InvalidValue"><span>InvalidValue:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: InvalidValue" href="deser/des/error.html#InvalidValue">error: InvalidValue</a></li>
+          data-doc-search-tag="errors: InvalidValue" href="deser/des/errors.html#InvalidValue">errors: InvalidValue</a></li>
+          </ul></dd>
+<dt><a name="isCase" href="#isCase"><span>isCase:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: isCase(self: Field): bool" href="deser/macroutils/types.html#isCase%2CField">types: isCase(self: Field): bool</a></li>
+          </ul></dd>
+<dt><a name="ItemMatchKind" href="#ItemMatchKind"><span>ItemMatchKind:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: ItemMatchKind" href="deser/macroutils/matching.html#ItemMatchKind">matching: ItemMatchKind</a></li>
+          </ul></dd>
+<dt><a name="kAlt" href="#kAlt"><span>kAlt:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="MatchKind.kAlt" href="deser/macroutils/matching.html#kAlt">MatchKind.kAlt</a></li>
           </ul></dd>
 <dt><a name="KebabCase" href="#KebabCase"><span>KebabCase:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="RenameCase.KebabCase" href="deser/magic/anycase.html#KebabCase">RenameCase.KebabCase</a></li>
+          data-doc-search-tag="RenameCase.KebabCase" href="deser/pragmas.html#KebabCase">RenameCase.KebabCase</a></li>
+          </ul></dd>
+<dt><a name="kind" href="#kind"><span>kind:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: kind(self: FieldBranch): FieldBranchKind" href="deser/macroutils/types.html#kind%2CFieldBranch">types: kind(self: FieldBranch): FieldBranchKind</a></li>
+          </ul></dd>
+<dt><a name="kind%3D" href="#kind%3D"><span>kind=:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: kind=(node: var NimNode; kind: NimNodeKind)" href="deser/macroutils/matching.html#kind%3D%2CNimNode%2CNimNodeKind">matching: kind=(node: var NimNode; kind: NimNodeKind)</a></li>
+          </ul></dd>
+<dt><a name="kItem" href="#kItem"><span>kItem:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="MatchKind.kItem" href="deser/macroutils/matching.html#kItem">MatchKind.kItem</a></li>
+          </ul></dd>
+<dt><a name="kObject" href="#kObject"><span>kObject:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="MatchKind.kObject" href="deser/macroutils/matching.html#kObject">MatchKind.kObject</a></li>
+          </ul></dd>
+<dt><a name="kPairs" href="#kPairs"><span>kPairs:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="MatchKind.kPairs" href="deser/macroutils/matching.html#kPairs">MatchKind.kPairs</a></li>
+          </ul></dd>
+<dt><a name="kSeq" href="#kSeq"><span>kSeq:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="MatchKind.kSeq" href="deser/macroutils/matching.html#kSeq">MatchKind.kSeq</a></li>
+          </ul></dd>
+<dt><a name="kSet" href="#kSet"><span>kSet:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="MatchKind.kSet" href="deser/macroutils/matching.html#kSet">MatchKind.kSet</a></li>
+          </ul></dd>
+<dt><a name="kTuple" href="#kTuple"><span>kTuple:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="MatchKind.kTuple" href="deser/macroutils/matching.html#kTuple">MatchKind.kTuple</a></li>
+          </ul></dd>
+<dt><a name="KVPair" href="#KVPair"><span>KVPair:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: KVPair" href="deser/macroutils/matching.html#KVPair">matching: KVPair</a></li>
+          </ul></dd>
+<dt><a name="lkAll" href="#lkAll"><span>lkAll:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="SeqKeyword.lkAll" href="deser/macroutils/matching.html#lkAll">SeqKeyword.lkAll</a></li>
+          </ul></dd>
+<dt><a name="lkAny" href="#lkAny"><span>lkAny:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="SeqKeyword.lkAny" href="deser/macroutils/matching.html#lkAny">SeqKeyword.lkAny</a></li>
+          </ul></dd>
+<dt><a name="lkNone" href="#lkNone"><span>lkNone:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="SeqKeyword.lkNone" href="deser/macroutils/matching.html#lkNone">SeqKeyword.lkNone</a></li>
+          </ul></dd>
+<dt><a name="lkOpt" href="#lkOpt"><span>lkOpt:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="SeqKeyword.lkOpt" href="deser/macroutils/matching.html#lkOpt">SeqKeyword.lkOpt</a></li>
+          </ul></dd>
+<dt><a name="lkPos" href="#lkPos"><span>lkPos:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="SeqKeyword.lkPos" href="deser/macroutils/matching.html#lkPos">SeqKeyword.lkPos</a></li>
+          </ul></dd>
+<dt><a name="lkPref" href="#lkPref"><span>lkPref:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="SeqKeyword.lkPref" href="deser/macroutils/matching.html#lkPref">SeqKeyword.lkPref</a></li>
+          </ul></dd>
+<dt><a name="lkSlice" href="#lkSlice"><span>lkSlice:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="SeqKeyword.lkSlice" href="deser/macroutils/matching.html#lkSlice">SeqKeyword.lkSlice</a></li>
+          </ul></dd>
+<dt><a name="lkTrail" href="#lkTrail"><span>lkTrail:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="SeqKeyword.lkTrail" href="deser/macroutils/matching.html#lkTrail">SeqKeyword.lkTrail</a></li>
+          </ul></dd>
+<dt><a name="lkUntil" href="#lkUntil"><span>lkUntil:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="SeqKeyword.lkUntil" href="deser/macroutils/matching.html#lkUntil">SeqKeyword.lkUntil</a></li>
           </ul></dd>
 <dt><a name="makeDeserializable" href="#makeDeserializable"><span>makeDeserializable:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="make: makeDeserializable(typ: varargs[typedesc]; public: static[bool] = false)" href="deser/des/make.html#makeDeserializable.m%2Cvarargs%5Btypedesc%5D%2Cstatic%5Bbool%5D">make: makeDeserializable(typ: varargs[typedesc]; public: static[bool] = false)</a></li>
+          data-doc-search-tag="make: makeDeserializable(types: varargs[typedesc]; public: static[bool] = false)" href="deser/des/make.html#makeDeserializable.m%2Cvarargs%5Btypedesc%5D%2Cstatic%5Bbool%5D">make: makeDeserializable(types: varargs[typedesc]; public: static[bool] = false)</a></li>
+          </ul></dd>
+<dt><a name="makeMatchExpr" href="#makeMatchExpr"><span>makeMatchExpr:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: makeMatchExpr(m: Match; mainExpr: NimNode; doRaise: bool;
+              originalMainExpr: NimNode): tuple[expr: NimNode, vtable: VarTable,
+    mixident: seq[string]]" href="deser/macroutils/matching.html#makeMatchExpr%2CMatch%2CNimNode%2Cbool%2CNimNode">matching: makeMatchExpr(m: Match; mainExpr: NimNode; doRaise: bool;
+              originalMainExpr: NimNode): tuple[expr: NimNode, vtable: VarTable,
+    mixident: seq[string]]</a></li>
           </ul></dd>
 <dt><a name="makeSerializable" href="#makeSerializable"><span>makeSerializable:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="make: makeSerializable(typ: varargs[typedesc]; public: static[bool] = false)" href="deser/ser/make.html#makeSerializable.m%2Cvarargs%5Btypedesc%5D%2Cstatic%5Bbool%5D">make: makeSerializable(typ: varargs[typedesc]; public: static[bool] = false)</a></li>
+          data-doc-search-tag="make: makeSerializable(types: varargs[typedesc]; public: static[bool] = false)" href="deser/ser/make.html#makeSerializable.m%2Cvarargs%5Btypedesc%5D%2Cstatic%5Bbool%5D">make: makeSerializable(types: varargs[typedesc]; public: static[bool] = false)</a></li>
+          </ul></dd>
+<dt><a name="makeTree" href="#makeTree"><span>makeTree:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: makeTree(T: typed; pattern: untyped): untyped" href="deser/macroutils/matching.html#makeTree.t%2Ctyped%2Cuntyped">matching: makeTree(T: typed; pattern: untyped): untyped</a></li>
           </ul></dd>
 <dt><a name="Map" href="#Map"><span>Map:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="UnexpectedKind.Map" href="deser/des/error.html#Map">UnexpectedKind.Map</a></li>
+          data-doc-search-tag="UnexpectedKind.Map" href="deser/des/errors.html#Map">UnexpectedKind.Map</a></li>
+          </ul></dd>
+<dt><a name="Match" href="#Match"><span>Match:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: Match" href="deser/macroutils/matching.html#Match">matching: Match</a></li>
+          </ul></dd>
+<dt><a name="MatchError" href="#MatchError"><span>MatchError:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: MatchError" href="deser/macroutils/matching.html#MatchError">matching: MatchError</a></li>
+          </ul></dd>
+<dt><a name="matches" href="#matches"><span>matches:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: matches(input, pattern: untyped): untyped" href="deser/macroutils/matching.html#matches.m%2Cuntyped%2Cuntyped">matching: matches(input, pattern: untyped): untyped</a></li>
+          </ul></dd>
+<dt><a name="MatchKind" href="#MatchKind"><span>MatchKind:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: MatchKind" href="deser/macroutils/matching.html#MatchKind">matching: MatchKind</a></li>
+          </ul></dd>
+<dt><a name="maybePublic" href="#maybePublic"><span>maybePublic:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: maybePublic(public: static[bool]; body: untyped): untyped" href="deser/macroutils/generation/utils.html#maybePublic.m%2Cstatic%5Bbool%5D%2Cuntyped">utils: maybePublic(public: static[bool]; body: untyped): untyped</a></li>
+          </ul></dd>
+<dt><a name="merge" href="#merge"><span>merge:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: merge(self: var Field; another: Field)" href="deser/macroutils/types.html#merge%2CField%2CField">types: merge(self: var Field; another: Field)</a></li>
           </ul></dd>
 <dt><a name="MissingField" href="#MissingField"><span>MissingField:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: MissingField" href="deser/des/error.html#MissingField">error: MissingField</a></li>
+          data-doc-search-tag="errors: MissingField" href="deser/des/errors.html#MissingField">errors: MissingField</a></li>
+          </ul></dd>
+<dt><a name="nameIdent" href="#nameIdent"><span>nameIdent:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: nameIdent(self: Field): NimNode" href="deser/macroutils/types.html#nameIdent%2CField">types: nameIdent(self: Field): NimNode</a></li>
+          </ul></dd>
+<dt><a name="nnkFloatKinds" href="#nnkFloatKinds"><span>nnkFloatKinds:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: nnkFloatKinds" href="deser/macroutils/matching.html#nnkFloatKinds">matching: nnkFloatKinds</a></li>
+          </ul></dd>
+<dt><a name="nnkIdentKinds" href="#nnkIdentKinds"><span>nnkIdentKinds:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: nnkIdentKinds" href="deser/macroutils/matching.html#nnkIdentKinds">matching: nnkIdentKinds</a></li>
+          </ul></dd>
+<dt><a name="nnkIntKinds" href="#nnkIntKinds"><span>nnkIntKinds:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: nnkIntKinds" href="deser/macroutils/matching.html#nnkIntKinds">matching: nnkIntKinds</a></li>
+          </ul></dd>
+<dt><a name="nnkStrKinds" href="#nnkStrKinds"><span>nnkStrKinds:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: nnkStrKinds" href="deser/macroutils/matching.html#nnkStrKinds">matching: nnkStrKinds</a></li>
+          </ul></dd>
+<dt><a name="nnkTokenKinds" href="#nnkTokenKinds"><span>nnkTokenKinds:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: nnkTokenKinds" href="deser/macroutils/matching.html#nnkTokenKinds">matching: nnkTokenKinds</a></li>
           </ul></dd>
 <dt><a name="NoneSeed" href="#NoneSeed"><span>NoneSeed:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="helpers: NoneSeed" href="deser/des/helpers.html#NoneSeed">helpers: NoneSeed</a></li>
           </ul></dd>
+<dt><a name="nskEnumFieldSym" href="#nskEnumFieldSym"><span>nskEnumFieldSym:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: nskEnumFieldSym(self: Field): NimNode" href="deser/macroutils/types.html#nskEnumFieldSym%2CField">types: nskEnumFieldSym(self: Field): NimNode</a></li>
+          </ul></dd>
+<dt><a name="nskEnumFieldUnknownSym" href="#nskEnumFieldUnknownSym"><span>nskEnumFieldUnknownSym:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: nskEnumFieldUnknownSym(self: Struct): NimNode" href="deser/macroutils/types.html#nskEnumFieldUnknownSym%2CStruct">types: nskEnumFieldUnknownSym(self: Struct): NimNode</a></li>
+          </ul></dd>
+<dt><a name="nskTypeDeserializeWithSym" href="#nskTypeDeserializeWithSym"><span>nskTypeDeserializeWithSym:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: nskTypeDeserializeWithSym(self: Field): NimNode" href="deser/macroutils/types.html#nskTypeDeserializeWithSym%2CField">types: nskTypeDeserializeWithSym(self: Field): NimNode</a></li>
+          </ul></dd>
+<dt><a name="nskTypeEnumSym" href="#nskTypeEnumSym"><span>nskTypeEnumSym:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: nskTypeEnumSym(self: Struct): NimNode" href="deser/macroutils/types.html#nskTypeEnumSym%2CStruct">types: nskTypeEnumSym(self: Struct): NimNode</a></li>
+          </ul></dd>
+<dt><a name="nskTypeSerializeWithSym" href="#nskTypeSerializeWithSym"><span>nskTypeSerializeWithSym:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: nskTypeSerializeWithSym(self: Field): NimNode" href="deser/macroutils/types.html#nskTypeSerializeWithSym%2CField">types: nskTypeSerializeWithSym(self: Field): NimNode</a></li>
+          </ul></dd>
+<dt><a name="Of" href="#Of"><span>Of:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="FieldBranchKind.Of" href="deser/macroutils/types.html#Of">FieldBranchKind.Of</a></li>
+          </ul></dd>
 <dt><a name="onUnknownKeys" href="#onUnknownKeys"><span>onUnknownKeys:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="types: onUnknownKeys(self: StructFeatures): Option[NimNode]" href="deser/macroutils/types.html#onUnknownKeys%2CStructFeatures">types: onUnknownKeys(self: StructFeatures): Option[NimNode]</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="pragmas: onUnknownKeys(call: typed)" href="deser/pragmas.html#onUnknownKeys.t%2Ctyped">pragmas: onUnknownKeys(call: typed)</a></li>
           </ul></dd>
 <dt><a name="Option" href="#Option"><span>Option:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="UnexpectedKind.Option" href="deser/des/error.html#Option">UnexpectedKind.Option</a></li>
+          data-doc-search-tag="UnexpectedKind.Option" href="deser/des/errors.html#Option">UnexpectedKind.Option</a></li>
+          </ul></dd>
+<dt><a name="parseFields" href="#parseFields"><span>parseFields:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="field: parseFields(typeInfo: TypeInfo): seq[Field]" href="deser/macroutils/parsing/field.html#parseFields%2CTypeInfo">field: parseFields(typeInfo: TypeInfo): seq[Field]</a></li>
+          </ul></dd>
+<dt><a name="parseMatchExpr" href="#parseMatchExpr"><span>parseMatchExpr:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: parseMatchExpr(n: NimNode): Match" href="deser/macroutils/matching.html#parseMatchExpr%2CNimNode">matching: parseMatchExpr(n: NimNode): Match</a></li>
+          </ul></dd>
+<dt><a name="parsePragma" href="#parsePragma"><span>parsePragma:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="pragmas: parsePragma(pragmas: NimNode): (NimNode, seq[NimNode])" href="deser/macroutils/parsing/pragmas.html#parsePragma.i%2CNimNode">pragmas: parsePragma(pragmas: NimNode): (NimNode, seq[NimNode])</a></li>
           </ul></dd>
 <dt><a name="PascalCase" href="#PascalCase"><span>PascalCase:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="RenameCase.PascalCase" href="deser/magic/anycase.html#PascalCase">RenameCase.PascalCase</a></li>
+          data-doc-search-tag="RenameCase.PascalCase" href="deser/pragmas.html#PascalCase">RenameCase.PascalCase</a></li>
           </ul></dd>
 <dt><a name="PathCase" href="#PathCase"><span>PathCase:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="RenameCase.PathCase" href="deser/magic/anycase.html#PathCase">RenameCase.PathCase</a></li>
+          data-doc-search-tag="RenameCase.PathCase" href="deser/pragmas.html#PathCase">RenameCase.PathCase</a></li>
           </ul></dd>
 <dt><a name="PlainCase" href="#PlainCase"><span>PlainCase:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="RenameCase.PlainCase" href="deser/magic/anycase.html#PlainCase">RenameCase.PlainCase</a></li>
+          data-doc-search-tag="RenameCase.PlainCase" href="deser/pragmas.html#PlainCase">RenameCase.PlainCase</a></li>
+          </ul></dd>
+<dt><a name="pragma" href="#pragma"><span>pragma:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: pragma(self: TypeInfo): Option[NimNode]" href="deser/macroutils/types.html#pragma%2CTypeInfo">types: pragma(self: TypeInfo): Option[NimNode]</a></li>
+          </ul></dd>
+<dt><a name="public" href="#public"><span>public:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: public(self: Field): bool" href="deser/macroutils/types.html#public%2CField">types: public(self: Field): bool</a></li>
           </ul></dd>
 <dt><a name="raiseDuplicateField" href="#raiseDuplicateField"><span>raiseDuplicateField:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: raiseDuplicateField(field: static[string])" href="deser/des/error.html#raiseDuplicateField%2Cstatic%5Bstring%5D">error: raiseDuplicateField(field: static[string])</a></li>
+          data-doc-search-tag="errors: raiseDuplicateField(field: static[string])" href="deser/des/errors.html#raiseDuplicateField%2Cstatic%5Bstring%5D">errors: raiseDuplicateField(field: static[string])</a></li>
           </ul></dd>
 <dt><a name="raiseInvalidLength" href="#raiseInvalidLength"><span>raiseInvalidLength:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: raiseInvalidLength(unexp: int; exp: auto)" href="deser/des/error.html#raiseInvalidLength%2Cint%2Cauto">error: raiseInvalidLength(unexp: int; exp: auto)</a></li>
+          data-doc-search-tag="errors: raiseInvalidLength(unexp: int; exp: auto)" href="deser/des/errors.html#raiseInvalidLength%2Cint%2Cauto">errors: raiseInvalidLength(unexp: int; exp: auto)</a></li>
           </ul></dd>
 <dt><a name="raiseInvalidType" href="#raiseInvalidType"><span>raiseInvalidType:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: raiseInvalidType(unexp: Unexpected; exp: auto)" href="deser/des/error.html#raiseInvalidType%2CUnexpected%2Cauto">error: raiseInvalidType(unexp: Unexpected; exp: auto)</a></li>
+          data-doc-search-tag="errors: raiseInvalidType(unexp: Unexpected; exp: auto)" href="deser/des/errors.html#raiseInvalidType%2CUnexpected%2Cauto">errors: raiseInvalidType(unexp: Unexpected; exp: auto)</a></li>
           </ul></dd>
 <dt><a name="raiseInvalidValue" href="#raiseInvalidValue"><span>raiseInvalidValue:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: raiseInvalidValue(unexp: Unexpected; exp: auto)" href="deser/des/error.html#raiseInvalidValue%2CUnexpected%2Cauto">error: raiseInvalidValue(unexp: Unexpected; exp: auto)</a></li>
+          data-doc-search-tag="errors: raiseInvalidValue(unexp: Unexpected; exp: auto)" href="deser/des/errors.html#raiseInvalidValue%2CUnexpected%2Cauto">errors: raiseInvalidValue(unexp: Unexpected; exp: auto)</a></li>
           </ul></dd>
 <dt><a name="raiseMissingField" href="#raiseMissingField"><span>raiseMissingField:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: raiseMissingField(field: static[string])" href="deser/des/error.html#raiseMissingField%2Cstatic%5Bstring%5D">error: raiseMissingField(field: static[string])</a></li>
+          data-doc-search-tag="errors: raiseMissingField(field: static[string])" href="deser/des/errors.html#raiseMissingField%2Cstatic%5Bstring%5D">errors: raiseMissingField(field: static[string])</a></li>
           </ul></dd>
 <dt><a name="raiseUnknownField" href="#raiseUnknownField"><span>raiseUnknownField:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: raiseUnknownField(unexp: sink string)" href="deser/des/error.html#raiseUnknownField%2Csinkstring">error: raiseUnknownField(unexp: sink string)</a></li>
+          data-doc-search-tag="errors: raiseUnknownField(unexp: sink string)" href="deser/des/errors.html#raiseUnknownField%2Csinkstring">errors: raiseUnknownField(unexp: sink string)</a></li>
           </ul></dd>
 <dt><a name="raiseUnknownUntaggedVariant" href="#raiseUnknownUntaggedVariant"><span>raiseUnknownUntaggedVariant:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: raiseUnknownUntaggedVariant(struct: static[string]; field: static[string])" href="deser/des/error.html#raiseUnknownUntaggedVariant%2Cstatic%5Bstring%5D%2Cstatic%5Bstring%5D">error: raiseUnknownUntaggedVariant(struct: static[string]; field: static[string])</a></li>
+          data-doc-search-tag="errors: raiseUnknownUntaggedVariant(struct: static[string]; field: static[string])" href="deser/des/errors.html#raiseUnknownUntaggedVariant%2Cstatic%5Bstring%5D%2Cstatic%5Bstring%5D">errors: raiseUnknownUntaggedVariant(struct: static[string]; field: static[string])</a></li>
+          </ul></dd>
+<dt><a name="rangeUnderlyingType" href="#rangeUnderlyingType"><span>rangeUnderlyingType:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: rangeUnderlyingType(typ: typedesc[range]): typedesc" href="deser/macroutils/generation/des/utils.html#rangeUnderlyingType.m%2Ctypedesc%5Brange%5D">utils: rangeUnderlyingType(typ: typedesc[range]): typedesc</a></li>
+          </ul></dd>
+<dt><a name="recList" href="#recList"><span>recList:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: recList(self: TypeInfo): Option[NimNode]" href="deser/macroutils/types.html#recList%2CTypeInfo">types: recList(self: TypeInfo): Option[NimNode]</a></li>
           </ul></dd>
 <dt><a name="renameAll" href="#renameAll"><span>renameAll:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="pragmas: renameAll(renameTo: static[RenameCase]; typ: untyped)" href="deser/pragmas.html#renameAll.m%2Cstatic%5BRenameCase%5D%2Cuntyped">pragmas: renameAll(renameTo: static[RenameCase]; typ: untyped)</a></li>
+          data-doc-search-tag="types: renameAll(self: StructFeatures): Option[NimNode]" href="deser/macroutils/types.html#renameAll%2CStructFeatures">types: renameAll(self: StructFeatures): Option[NimNode]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="pragmas: renameAll(renameTo: RenameCase)" href="deser/pragmas.html#renameAll.t%2CRenameCase">pragmas: renameAll(renameTo: RenameCase)</a></li>
           </ul></dd>
 <dt><a name="RenameCase" href="#RenameCase"><span>RenameCase:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="anycase: RenameCase" href="deser/magic/anycase.html#RenameCase">anycase: RenameCase</a></li>
+          data-doc-search-tag="pragmas: RenameCase" href="deser/pragmas.html#RenameCase">pragmas: RenameCase</a></li>
           </ul></dd>
 <dt><a name="renamed" href="#renamed"><span>renamed:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="pragmas: renamed(renamed: string)" href="deser/pragmas.html#renamed.t%2Cstring">pragmas: renamed(renamed: string)</a></li>
+          data-doc-search-tag="pragmas: renamed(renamed: string | RenameCase)" href="deser/pragmas.html#renamed.t">pragmas: renamed(renamed: string | RenameCase)</a></li>
           </ul></dd>
 <dt><a name="renameDeserialize" href="#renameDeserialize"><span>renameDeserialize:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="pragmas: renameDeserialize(renamed: string)" href="deser/pragmas.html#renameDeserialize.t%2Cstring">pragmas: renameDeserialize(renamed: string)</a></li>
+          data-doc-search-tag="types: renameDeserialize(self: FieldFeatures): Option[NimNode]" href="deser/macroutils/types.html#renameDeserialize%2CFieldFeatures">types: renameDeserialize(self: FieldFeatures): Option[NimNode]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="pragmas: renameDeserialize(renamed: string | RenameCase)" href="deser/pragmas.html#renameDeserialize.t">pragmas: renameDeserialize(renamed: string | RenameCase)</a></li>
+          </ul></dd>
+<dt><a name="renameDeserialize%3D" href="#renameDeserialize%3D"><span>renameDeserialize=:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: renameDeserialize=(self: var FieldFeatures; value: Option[NimNode])" href="deser/macroutils/types.html#renameDeserialize%3D%2CFieldFeatures%2COption%5BNimNode%5D">types: renameDeserialize=(self: var FieldFeatures; value: Option[NimNode])</a></li>
           </ul></dd>
 <dt><a name="renameSerialize" href="#renameSerialize"><span>renameSerialize:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="pragmas: renameSerialize(renamed: string)" href="deser/pragmas.html#renameSerialize.t%2Cstring">pragmas: renameSerialize(renamed: string)</a></li>
+          data-doc-search-tag="types: renameSerialize(self: FieldFeatures): Option[NimNode]" href="deser/macroutils/types.html#renameSerialize%2CFieldFeatures">types: renameSerialize(self: FieldFeatures): Option[NimNode]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="pragmas: renameSerialize(renamed: string | RenameCase)" href="deser/pragmas.html#renameSerialize.t">pragmas: renameSerialize(renamed: string | RenameCase)</a></li>
+          </ul></dd>
+<dt><a name="renameSerialize%3D" href="#renameSerialize%3D"><span>renameSerialize=:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: renameSerialize=(self: var FieldFeatures; value: Option[NimNode])" href="deser/macroutils/types.html#renameSerialize%3D%2CFieldFeatures%2COption%5BNimNode%5D">types: renameSerialize=(self: var FieldFeatures; value: Option[NimNode])</a></li>
           </ul></dd>
 <dt><a name="Seq" href="#Seq"><span>Seq:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="UnexpectedKind.Seq" href="deser/des/error.html#Seq">UnexpectedKind.Seq</a></li>
+          data-doc-search-tag="UnexpectedKind.Seq" href="deser/des/errors.html#Seq">UnexpectedKind.Seq</a></li>
+          </ul></dd>
+<dt><a name="SeqKeyword" href="#SeqKeyword"><span>SeqKeyword:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: SeqKeyword" href="deser/macroutils/matching.html#SeqKeyword">matching: SeqKeyword</a></li>
+          </ul></dd>
+<dt><a name="SeqStructure" href="#SeqStructure"><span>SeqStructure:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: SeqStructure" href="deser/macroutils/matching.html#SeqStructure">matching: SeqStructure</a></li>
           </ul></dd>
 <dt><a name="serialize" href="#serialize"><span>serialize:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -451,109 +999,161 @@ window.addEventListener('DOMContentLoaded', main);
           <li><a class="reference external"
           data-doc-search-tag="impls: serialize[T: set](self: T; serializer: var auto)" href="deser/ser/impls.html#serialize%2CT%2Cauto_3">impls: serialize[T: set](self: T; serializer: var auto)</a></li>
           </ul></dd>
+<dt><a name="serializeName" href="#serializeName"><span>serializeName:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: serializeName(self: Field): string" href="deser/macroutils/types.html#serializeName%2CField">types: serializeName(self: Field): string</a></li>
+          </ul></dd>
 <dt><a name="serializeWith" href="#serializeWith"><span>serializeWith:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="types: serializeWith(self: FieldFeatures): Option[NimNode]" href="deser/macroutils/types.html#serializeWith%2CFieldFeatures">types: serializeWith(self: FieldFeatures): Option[NimNode]</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="pragmas: serializeWith(with: typed)" href="deser/pragmas.html#serializeWith.t%2Ctyped">pragmas: serializeWith(with: typed)</a></li>
           </ul></dd>
 <dt><a name="Signed" href="#Signed"><span>Signed:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="UnexpectedKind.Signed" href="deser/des/error.html#Signed">UnexpectedKind.Signed</a></li>
+          data-doc-search-tag="UnexpectedKind.Signed" href="deser/des/errors.html#Signed">UnexpectedKind.Signed</a></li>
           </ul></dd>
 <dt><a name="skipDeserializing" href="#skipDeserializing"><span>skipDeserializing:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="types: skipDeserializing(self: FieldFeatures): bool" href="deser/macroutils/types.html#skipDeserializing%2CFieldFeatures">types: skipDeserializing(self: FieldFeatures): bool</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="pragmas: skipDeserializing()" href="deser/pragmas.html#skipDeserializing.t">pragmas: skipDeserializing()</a></li>
+          </ul></dd>
+<dt><a name="skipDeserializing%3D" href="#skipDeserializing%3D"><span>skipDeserializing=:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: skipDeserializing=(self: var FieldFeatures; value: bool)" href="deser/macroutils/types.html#skipDeserializing%3D%2CFieldFeatures%2Cbool">types: skipDeserializing=(self: var FieldFeatures; value: bool)</a></li>
           </ul></dd>
 <dt><a name="skipped" href="#skipped"><span>skipped:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="pragmas: skipped()" href="deser/pragmas.html#skipped.t">pragmas: skipped()</a></li>
           </ul></dd>
+<dt><a name="skipPrivate" href="#skipPrivate"><span>skipPrivate:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="pragmas: skipPrivate()" href="deser/pragmas.html#skipPrivate.t">pragmas: skipPrivate()</a></li>
+          </ul></dd>
+<dt><a name="skipPrivateDeserializing" href="#skipPrivateDeserializing"><span>skipPrivateDeserializing:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: skipPrivateDeserializing(self: StructFeatures): bool" href="deser/macroutils/types.html#skipPrivateDeserializing%2CStructFeatures">types: skipPrivateDeserializing(self: StructFeatures): bool</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="pragmas: skipPrivateDeserializing()" href="deser/pragmas.html#skipPrivateDeserializing.t">pragmas: skipPrivateDeserializing()</a></li>
+          </ul></dd>
+<dt><a name="skipPrivateSerializing" href="#skipPrivateSerializing"><span>skipPrivateSerializing:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: skipPrivateSerializing(self: StructFeatures): bool" href="deser/macroutils/types.html#skipPrivateSerializing%2CStructFeatures">types: skipPrivateSerializing(self: StructFeatures): bool</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="pragmas: skipPrivateSerializing()" href="deser/pragmas.html#skipPrivateSerializing.t">pragmas: skipPrivateSerializing()</a></li>
+          </ul></dd>
 <dt><a name="skipSerializeIf" href="#skipSerializeIf"><span>skipSerializeIf:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="types: skipSerializeIf(self: FieldFeatures): Option[NimNode]" href="deser/macroutils/types.html#skipSerializeIf%2CFieldFeatures">types: skipSerializeIf(self: FieldFeatures): Option[NimNode]</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="pragmas: skipSerializeIf(condition: typed)" href="deser/pragmas.html#skipSerializeIf.t%2Ctyped">pragmas: skipSerializeIf(condition: typed)</a></li>
           </ul></dd>
 <dt><a name="skipSerializing" href="#skipSerializing"><span>skipSerializing:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="types: skipSerializing(self: FieldFeatures): bool" href="deser/macroutils/types.html#skipSerializing%2CFieldFeatures">types: skipSerializing(self: FieldFeatures): bool</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="pragmas: skipSerializing()" href="deser/pragmas.html#skipSerializing.t">pragmas: skipSerializing()</a></li>
+          </ul></dd>
+<dt><a name="skipSerializing%3D" href="#skipSerializing%3D"><span>skipSerializing=:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: skipSerializing=(self: var FieldFeatures; value: bool)" href="deser/macroutils/types.html#skipSerializing%3D%2CFieldFeatures%2Cbool">types: skipSerializing=(self: var FieldFeatures; value: bool)</a></li>
           </ul></dd>
 <dt><a name="SnakeCase" href="#SnakeCase"><span>SnakeCase:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="RenameCase.SnakeCase" href="deser/magic/anycase.html#SnakeCase">RenameCase.SnakeCase</a></li>
+          data-doc-search-tag="RenameCase.SnakeCase" href="deser/pragmas.html#SnakeCase">RenameCase.SnakeCase</a></li>
+          </ul></dd>
+<dt><a name="str" href="#str"><span>str:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: str(node: NimNode): string" href="deser/macroutils/matching.html#str%2CNimNode">matching: str(node: NimNode): string</a></li>
+          </ul></dd>
+<dt><a name="str%3D" href="#str%3D"><span>str=:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: str=(node: var NimNode; val: string)" href="deser/macroutils/matching.html#str%3D%2CNimNode%2Cstring">matching: str=(node: var NimNode; val: string)</a></li>
           </ul></dd>
 <dt><a name="String" href="#String"><span>String:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="UnexpectedKind.String" href="deser/des/error.html#String">UnexpectedKind.String</a></li>
+          data-doc-search-tag="UnexpectedKind.String" href="deser/des/errors.html#String">UnexpectedKind.String</a></li>
+          </ul></dd>
+<dt><a name="Struct" href="#Struct"><span>Struct:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: Struct" href="deser/macroutils/types.html#Struct">types: Struct</a></li>
+          </ul></dd>
+<dt><a name="StructFeatures" href="#StructFeatures"><span>StructFeatures:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: StructFeatures" href="deser/macroutils/types.html#StructFeatures">types: StructFeatures</a></li>
+          </ul></dd>
+<dt><a name="toAccs" href="#toAccs"><span>toAccs:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: toAccs(path: Path; name: NimNode; pathForType: bool): NimNode" href="deser/macroutils/matching.html#toAccs%2CPath%2CNimNode%2Cbool">matching: toAccs(path: Path; name: NimNode; pathForType: bool): NimNode</a></li>
+          </ul></dd>
+<dt><a name="toByteArray" href="#toByteArray"><span>toByteArray:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: toByteArray(str: static[string]): array" href="deser/macroutils/generation/des/utils.html#toByteArray.m%2Cstatic%5Bstring%5D">utils: toByteArray(str: static[string]): array</a></li>
+          </ul></dd>
+<dt><a name="toCase" href="#toCase"><span>toCase:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="anycase: toCase(str: string; renameCase: RenameCase): string" href="deser/macroutils/anycase.html#toCase%2Cstring%2CRenameCase">anycase: toCase(str: string; renameCase: RenameCase): string</a></li>
           </ul></dd>
 <dt><a name="TrainCase" href="#TrainCase"><span>TrainCase:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="RenameCase.TrainCase" href="deser/magic/anycase.html#TrainCase">RenameCase.TrainCase</a></li>
+          data-doc-search-tag="RenameCase.TrainCase" href="deser/pragmas.html#TrainCase">RenameCase.TrainCase</a></li>
+          </ul></dd>
+<dt><a name="TypeInfo" href="#TypeInfo"><span>TypeInfo:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: TypeInfo" href="deser/macroutils/types.html#TypeInfo">types: TypeInfo</a></li>
+          </ul></dd>
+<dt><a name="typeNode" href="#typeNode"><span>typeNode:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: typeNode(self: Field): NimNode" href="deser/macroutils/types.html#typeNode%2CField">types: typeNode(self: Field): NimNode</a></li>
+          </ul></dd>
+<dt><a name="typeSym" href="#typeSym"><span>typeSym:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="types: typeSym(self: Struct): NimNode" href="deser/macroutils/types.html#typeSym%2CStruct">types: typeSym(self: Struct): NimNode</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="types: typeSym(self: TypeInfo): NimNode" href="deser/macroutils/types.html#typeSym%2CTypeInfo">types: typeSym(self: TypeInfo): NimNode</a></li>
           </ul></dd>
 <dt><a name="Unexpected" href="#Unexpected"><span>Unexpected:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: Unexpected" href="deser/des/error.html#Unexpected">error: Unexpected</a></li>
-          </ul></dd>
-<dt><a name="UnexpectedBool" href="#UnexpectedBool"><span>UnexpectedBool:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="error: UnexpectedBool(value: bool): auto" href="deser/des/error.html#UnexpectedBool%2Cbool">error: UnexpectedBool(value: bool): auto</a></li>
-          </ul></dd>
-<dt><a name="UnexpectedBytes" href="#UnexpectedBytes"><span>UnexpectedBytes:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="error: UnexpectedBytes(value: sink seq[byte]): auto" href="deser/des/error.html#UnexpectedBytes%2Csinkseq%5Bbyte%5D">error: UnexpectedBytes(value: sink seq[byte]): auto</a></li>
-          </ul></dd>
-<dt><a name="UnexpectedChar" href="#UnexpectedChar"><span>UnexpectedChar:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="error: UnexpectedChar(value: char): auto" href="deser/des/error.html#UnexpectedChar%2Cchar">error: UnexpectedChar(value: char): auto</a></li>
-          </ul></dd>
-<dt><a name="UnexpectedFloat" href="#UnexpectedFloat"><span>UnexpectedFloat:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="error: UnexpectedFloat(value: float64): auto" href="deser/des/error.html#UnexpectedFloat%2Cfloat64">error: UnexpectedFloat(value: float64): auto</a></li>
+          data-doc-search-tag="errors: Unexpected" href="deser/des/errors.html#Unexpected">errors: Unexpected</a></li>
           </ul></dd>
 <dt><a name="UnexpectedKind" href="#UnexpectedKind"><span>UnexpectedKind:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: UnexpectedKind" href="deser/des/error.html#UnexpectedKind">error: UnexpectedKind</a></li>
-          </ul></dd>
-<dt><a name="UnexpectedMap" href="#UnexpectedMap"><span>UnexpectedMap:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="error: UnexpectedMap(): auto" href="deser/des/error.html#UnexpectedMap">error: UnexpectedMap(): auto</a></li>
-          </ul></dd>
-<dt><a name="UnexpectedOption" href="#UnexpectedOption"><span>UnexpectedOption:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="error: UnexpectedOption(): auto" href="deser/des/error.html#UnexpectedOption">error: UnexpectedOption(): auto</a></li>
-          </ul></dd>
-<dt><a name="UnexpectedSeq" href="#UnexpectedSeq"><span>UnexpectedSeq:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="error: UnexpectedSeq(): auto" href="deser/des/error.html#UnexpectedSeq">error: UnexpectedSeq(): auto</a></li>
-          </ul></dd>
-<dt><a name="UnexpectedSigned" href="#UnexpectedSigned"><span>UnexpectedSigned:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="error: UnexpectedSigned(value: int64): auto" href="deser/des/error.html#UnexpectedSigned%2Cint64">error: UnexpectedSigned(value: int64): auto</a></li>
-          </ul></dd>
-<dt><a name="UnexpectedString" href="#UnexpectedString"><span>UnexpectedString:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="error: UnexpectedString(value: sink string): auto" href="deser/des/error.html#UnexpectedString%2Csinkstring">error: UnexpectedString(value: sink string): auto</a></li>
-          </ul></dd>
-<dt><a name="UnexpectedUnsigned" href="#UnexpectedUnsigned"><span>UnexpectedUnsigned:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="error: UnexpectedUnsigned(value: uint64): auto" href="deser/des/error.html#UnexpectedUnsigned%2Cuint64">error: UnexpectedUnsigned(value: uint64): auto</a></li>
+          data-doc-search-tag="errors: UnexpectedKind" href="deser/des/errors.html#UnexpectedKind">errors: UnexpectedKind</a></li>
           </ul></dd>
 <dt><a name="UnknownField" href="#UnknownField"><span>UnknownField:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: UnknownField" href="deser/des/error.html#UnknownField">error: UnknownField</a></li>
+          data-doc-search-tag="errors: UnknownField" href="deser/des/errors.html#UnknownField">errors: UnknownField</a></li>
           </ul></dd>
 <dt><a name="UnknownUntaggedVariant" href="#UnknownUntaggedVariant"><span>UnknownUntaggedVariant:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="error: UnknownUntaggedVariant" href="deser/des/error.html#UnknownUntaggedVariant">error: UnknownUntaggedVariant</a></li>
+          data-doc-search-tag="errors: UnknownUntaggedVariant" href="deser/des/errors.html#UnknownUntaggedVariant">errors: UnknownUntaggedVariant</a></li>
           </ul></dd>
 <dt><a name="Unsigned" href="#Unsigned"><span>Unsigned:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="UnexpectedKind.Unsigned" href="deser/des/error.html#Unsigned">UnexpectedKind.Unsigned</a></li>
+          data-doc-search-tag="UnexpectedKind.Unsigned" href="deser/des/errors.html#Unsigned">UnexpectedKind.Unsigned</a></li>
           </ul></dd>
 <dt><a name="untagged" href="#untagged"><span>untagged:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="types: untagged(self: FieldFeatures): bool" href="deser/macroutils/types.html#untagged%2CFieldFeatures">types: untagged(self: FieldFeatures): bool</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="pragmas: untagged()" href="deser/pragmas.html#untagged.t">pragmas: untagged()</a></li>
           </ul></dd>
 <dt><a name="UpperSnakeCase" href="#UpperSnakeCase"><span>UpperSnakeCase:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="RenameCase.UpperSnakeCase" href="deser/magic/anycase.html#UpperSnakeCase">RenameCase.UpperSnakeCase</a></li>
+          data-doc-search-tag="RenameCase.UpperSnakeCase" href="deser/pragmas.html#UpperSnakeCase">RenameCase.UpperSnakeCase</a></li>
+          </ul></dd>
+<dt><a name="VarKind" href="#VarKind"><span>VarKind:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: VarKind" href="deser/macroutils/matching.html#VarKind">matching: VarKind</a></li>
+          </ul></dd>
+<dt><a name="varOfIteration" href="#varOfIteration"><span>varOfIteration:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: varOfIteration(arg: untyped): untyped" href="deser/macroutils/matching.html#varOfIteration.t%2Cuntyped">matching: varOfIteration(arg: untyped): untyped</a></li>
+          </ul></dd>
+<dt><a name="VarSpec" href="#VarSpec"><span>VarSpec:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="matching: VarSpec" href="deser/macroutils/matching.html#VarSpec">matching: VarSpec</a></li>
           </ul></dd>
 <dt><a name="visitBool" href="#visitBool"><span>visitBool:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -740,6 +1340,10 @@ window.addEventListener('DOMContentLoaded', main);
           data-doc-search-tag="impls: visitChar[Self: Visitor_1375734347](self: Self; value: char): self.Value" href="deser/des/impls.html#visitChar%2CSelf%2Cchar_8">impls: visitChar[Self: Visitor_1375734347](self: Self; value: char): self.Value</a></li>
           <li><a class="reference external"
           data-doc-search-tag="impls: visitChar[Self: Visitor_1375734689](self: Self; value: char): self.Value" href="deser/des/impls.html#visitChar%2CSelf%2Cchar_9">impls: visitChar[Self: Visitor_1375734689](self: Self; value: char): self.Value</a></li>
+          </ul></dd>
+<dt><a name="visitEnumIntBody" href="#visitEnumIntBody"><span>visitEnumIntBody:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: visitEnumIntBody()" href="deser/macroutils/generation/des/utils.html#visitEnumIntBody.t">utils: visitEnumIntBody()</a></li>
           </ul></dd>
 <dt><a name="visitFloat32" href="#visitFloat32"><span>visitFloat32:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -1355,6 +1959,14 @@ window.addEventListener('DOMContentLoaded', main);
           <li><a class="reference external"
           data-doc-search-tag="impls: visitNone[Self: Visitor_1375734689](self: Self): self.Value" href="deser/des/impls.html#visitNone%2CSelf_9">impls: visitNone[Self: Visitor_1375734689](self: Self): self.Value</a></li>
           </ul></dd>
+<dt><a name="visitRangeFloatBody" href="#visitRangeFloatBody"><span>visitRangeFloatBody:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: visitRangeFloatBody()" href="deser/macroutils/generation/des/utils.html#visitRangeFloatBody.t">utils: visitRangeFloatBody()</a></li>
+          </ul></dd>
+<dt><a name="visitRangeIntBody" href="#visitRangeIntBody"><span>visitRangeIntBody:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="utils: visitRangeIntBody()" href="deser/macroutils/generation/des/utils.html#visitRangeIntBody.t">utils: visitRangeIntBody()</a></li>
+          </ul></dd>
 <dt><a name="visitSeq" href="#visitSeq"><span>visitSeq:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="impls: visitSeq[T](self: ArrayVisitor[T]; sequence: var auto): T" href="deser/des/impls.html#visitSeq%2CArrayVisitor%5BT%5D%2Cauto">impls: visitSeq[T](self: ArrayVisitor[T]; sequence: var auto): T</a></li>
@@ -1909,12 +2521,32 @@ window.addEventListener('DOMContentLoaded', main);
           <li><a class="reference external"
           data-doc-search-tag="impls: visitUint8(self: Visitor_1375735373; value: uint8): self.Value" href="deser/des/impls.html#visitUint8%2CVisitor%2Cuint8_9">impls: visitUint8(self: Visitor_1375735373; value: uint8): self.Value</a></li>
           </ul></dd>
+<dt><a name="vkAlt" href="#vkAlt"><span>vkAlt:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="VarKind.vkAlt" href="deser/macroutils/matching.html#vkAlt">VarKind.vkAlt</a></li>
+          </ul></dd>
+<dt><a name="vkOption" href="#vkOption"><span>vkOption:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="VarKind.vkOption" href="deser/macroutils/matching.html#vkOption">VarKind.vkOption</a></li>
+          </ul></dd>
+<dt><a name="vkRegular" href="#vkRegular"><span>vkRegular:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="VarKind.vkRegular" href="deser/macroutils/matching.html#vkRegular">VarKind.vkRegular</a></li>
+          </ul></dd>
+<dt><a name="vkSequence" href="#vkSequence"><span>vkSequence:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="VarKind.vkSequence" href="deser/macroutils/matching.html#vkSequence">VarKind.vkSequence</a></li>
+          </ul></dd>
+<dt><a name="vkSet" href="#vkSet"><span>vkSet:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="VarKind.vkSet" href="deser/macroutils/matching.html#vkSet">VarKind.vkSet</a></li>
+          </ul></dd>
 </dl>
     <div class="row">
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-09-15 06:47:48 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-02-04 15:08:37 UTC</small>
       </div>
     </div>
   </div>

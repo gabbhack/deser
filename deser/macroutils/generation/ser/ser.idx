@@ -1,0 +1,1 @@
+defSerialize	deser/macroutils/generation/ser/ser.html#defSerialize,Struct,bool	ser: defSerialize(struct: var Struct; public: bool): NimNode	

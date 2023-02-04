@@ -1,0 +1,3 @@
+fromTypeSym	deser/macroutils/parsing/struct.html#fromTypeSym,typedesc[Struct],NimNode	struct: fromTypeSym(structTy: typedesc[Struct]; typeSym: NimNode): Struct	
+fromTypeSym	deser/macroutils/parsing/struct.html#fromTypeSym,typedesc[TypeInfo],NimNode	struct: fromTypeSym(typeInfoTy: typedesc[TypeInfo]; typeSym: NimNode): TypeInfo	
+fromPragma	deser/macroutils/parsing/struct.html#fromPragma,typedesc[StructFeatures],Option[NimNode]	struct: fromPragma(featuresTy: typedesc[StructFeatures]; pragma: Option[NimNode]): StructFeatures	

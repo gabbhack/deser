@@ -1,0 +1,1 @@
+defValueDeserialize	deser/macroutils/generation/des/values.html#defValueDeserialize,NimNode,Struct,bool	values: defValueDeserialize(visitorType: NimNode; struct: Struct; public: bool): NimNode	

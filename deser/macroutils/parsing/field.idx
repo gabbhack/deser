@@ -1,0 +1,6 @@
+parseFields	deser/macroutils/parsing/field.html#parseFields,TypeInfo	field: parseFields(typeInfo: TypeInfo): seq[Field]	
+fieldsFromRecList	deser/macroutils/parsing/field.html#fieldsFromRecList,NimNode	field: fieldsFromRecList(recList: NimNode): seq[Field]	
+fromIdentDefs	deser/macroutils/parsing/field.html#fromIdentDefs,typedesc[Field],NimNode	field: fromIdentDefs(fieldTy: typedesc[Field]; identDefs: NimNode): Field	
+fromRecCase	deser/macroutils/parsing/field.html#fromRecCase,typedesc[Field],NimNode	field: fromRecCase(fieldTy: typedesc[Field]; recCase: NimNode): Field	
+fromBranch	deser/macroutils/parsing/field.html#fromBranch,typedesc[FieldBranch],NimNode	field: fromBranch(branchTy: typedesc[FieldBranch]; branch: NimNode): seq[FieldBranch]	
+fromPragma	deser/macroutils/parsing/field.html#fromPragma,typedesc[FieldFeatures],Option[NimNode]	field: fromPragma(featuresTy: typedesc[FieldFeatures]; pragma: Option[NimNode]): FieldFeatures	

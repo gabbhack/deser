@@ -1,1 +1,1 @@
-makeDeserializable	deser/des/make.html#makeDeserializable.m,varargs[typedesc],static[bool]	make: makeDeserializable(typ: varargs[typedesc]; public: static[bool] = false)	
+makeDeserializable	deser/des/make.html#makeDeserializable.m,varargs[typedesc],static[bool]	make: makeDeserializable(types: varargs[typedesc]; public: static[bool] = false)	

@@ -3,4 +3,3 @@ Supported std-types	deser.html#supported-stdminustypes	 Supported std-types
 Supported formats	deser.html#supported-formats	 Supported formats	
 Customize serialization process	deser.html#customize-serialization-process	 Customize serialization process	
 How to make bindings	deser.html#how-to-make-bindings	 How to make bindings	
-Write serialize and deserialize by hand	deser.html#write-nimserialize-and-nimdeserialize-by-hand	 Write <tt class="docutils literal"><span class="pre"><span class="Identifier">serialize</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">deserialize</span></span></tt> by hand	

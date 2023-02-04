@@ -1,0 +1,14 @@
+defImplVisitor	deser/macroutils/generation/des/utils.html#defImplVisitor,NimNode,bool	utils: defImplVisitor(selfType: NimNode; public: bool): NimNode	
+defExpectingProc	deser/macroutils/generation/des/utils.html#defExpectingProc,NimNode,NimNode	utils: defExpectingProc(selfType, body: NimNode): NimNode	
+defFieldNamesLit	deser/macroutils/generation/des/utils.html#defFieldNamesLit,seq[string]	utils: defFieldNamesLit(names: seq[string]): NimNode	
+toByteArray	deser/macroutils/generation/des/utils.html#toByteArray.m,static[string]	utils: toByteArray(str: static[string]): array	
+getOrDefault	deser/macroutils/generation/des/utils.html#getOrDefault.t,Option[T]	utils: getOrDefault[T](field: Option[T]): T	
+getOrDefaultValue	deser/macroutils/generation/des/utils.html#getOrDefaultValue.t,Option[T],T	utils: getOrDefaultValue[T](field: Option[T]; defaultValue: T): T	
+getOrRaise	deser/macroutils/generation/des/utils.html#getOrRaise.t,Option[T],static[string]	utils: getOrRaise[T](field: Option[T]; name: static[string]): T	
+getOrBreak	deser/macroutils/generation/des/utils.html#getOrBreak.t,Option[T]	utils: getOrBreak[T](field: Option[T]): T	
+genPrimitive	deser/macroutils/generation/des/utils.html#genPrimitive.m,,untyped,static[bool]	utils: genPrimitive(typ: typed{`type`}; deserializeMethod: untyped = nil;\n             floats: static[bool] = false)	
+genArray	deser/macroutils/generation/des/utils.html#genArray.m,static[int],typedesc	utils: genArray(size: static[int]; T: typedesc): array	
+visitEnumIntBody	deser/macroutils/generation/des/utils.html#visitEnumIntBody.t	utils: visitEnumIntBody()	
+visitRangeIntBody	deser/macroutils/generation/des/utils.html#visitRangeIntBody.t	utils: visitRangeIntBody()	
+visitRangeFloatBody	deser/macroutils/generation/des/utils.html#visitRangeFloatBody.t	utils: visitRangeFloatBody()	
+rangeUnderlyingType	deser/macroutils/generation/des/utils.html#rangeUnderlyingType.m,typedesc[range]	utils: rangeUnderlyingType(typ: typedesc[range]): typedesc	

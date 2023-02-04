@@ -17,7 +17,7 @@
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
-<title>src/deser/pragmas</title>
+<title>deser/pragmas</title>
 <link rel="stylesheet" type="text/css" href="../nimdoc.out.css">
 
 <script type="text/javascript" src="../dochack.js"></script>
@@ -69,7 +69,7 @@ window.addEventListener('DOMContentLoaded', main);
 <body>
 <div class="document" id="documentId">
   <div class="container">
-    <h1 class="title">src/deser/pragmas</h1>
+    <h1 class="title">deser/pragmas</h1>
     <div class="row">
   <div class="three columns">
   <div class="theme-switch-wrapper">
@@ -105,28 +105,26 @@ window.addEventListener('DOMContentLoaded', main);
   </div>
   <ul class="simple simple-toc" id="toc-list">
 <li>
-  <a class="reference reference-toplevel" href="#6" id="56">Imports</a>
+  <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
-    
-  </ul>
-</li>
-<li>
-  <a class="reference reference-toplevel" href="#17" id="67">Macros</a>
-  <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">renameAll
-      <li><a class="reference" href="#renameAll.m%2Cstatic%5BRenameCase%5D%2Cuntyped"
-    title="renameAll(renameTo: static[RenameCase]; typ: untyped)">renameAll(renameTo: static[RenameCase]; typ: untyped)</a></li>
-
-  </ul>
+      <li><a class="reference" href="#RenameCase"
+    title="RenameCase = enum
+  CamelCase, CobolCase, KebabCase, PascalCase, PathCase, SnakeCase, PlainCase,
+  TrainCase, UpperSnakeCase">RenameCase</a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#18" id="68">Templates</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">defaultValue
+      <ul class="simple nested-toc-section">aliases
+      <li><a class="reference" href="#aliases.t%2Cvarargs%5Btyped%5D"
+    title="aliases(aliases: varargs[typed])">aliases(aliases: varargs[typed])</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">defaultValue
       <li><a class="reference" href="#defaultValue.t%2Ctyped"
-    title="defaultValue(value: typed)">defaultValue(value: typed)</a></li>
+    title="defaultValue(value: typed = nil)">defaultValue(value: typed = nil)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">deserializeWith
@@ -139,19 +137,24 @@ window.addEventListener('DOMContentLoaded', main);
     title="onUnknownKeys(call: typed)">onUnknownKeys(call: typed)</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">renameAll
+      <li><a class="reference" href="#renameAll.t%2CRenameCase"
+    title="renameAll(renameTo: RenameCase)">renameAll(renameTo: RenameCase)</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">renamed
-      <li><a class="reference" href="#renamed.t%2Cstring"
-    title="renamed(renamed: string)">renamed(renamed: string)</a></li>
+      <li><a class="reference" href="#renamed.t"
+    title="renamed(renamed: string | RenameCase)">renamed(renamed: string | RenameCase)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">renameDeserialize
-      <li><a class="reference" href="#renameDeserialize.t%2Cstring"
-    title="renameDeserialize(renamed: string)">renameDeserialize(renamed: string)</a></li>
+      <li><a class="reference" href="#renameDeserialize.t"
+    title="renameDeserialize(renamed: string | RenameCase)">renameDeserialize(renamed: string | RenameCase)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">renameSerialize
-      <li><a class="reference" href="#renameSerialize.t%2Cstring"
-    title="renameSerialize(renamed: string)">renameSerialize(renamed: string)</a></li>
+      <li><a class="reference" href="#renameSerialize.t"
+    title="renameSerialize(renamed: string | RenameCase)">renameSerialize(renamed: string | RenameCase)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">serializeWith
@@ -167,6 +170,21 @@ window.addEventListener('DOMContentLoaded', main);
   <ul class="simple nested-toc-section">skipped
       <li><a class="reference" href="#skipped.t"
     title="skipped()">skipped()</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">skipPrivate
+      <li><a class="reference" href="#skipPrivate.t"
+    title="skipPrivate()">skipPrivate()</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">skipPrivateDeserializing
+      <li><a class="reference" href="#skipPrivateDeserializing.t"
+    title="skipPrivateDeserializing()">skipPrivateDeserializing()</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">skipPrivateSerializing
+      <li><a class="reference" href="#skipPrivateSerializing.t"
+    title="skipPrivateSerializing()">skipPrivateSerializing()</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">skipSerializeIf
@@ -187,12 +205,6 @@ window.addEventListener('DOMContentLoaded', main);
 
   </ul>
 </li>
-<li>
-  <a class="reference reference-toplevel" href="#19" id="69">Exports</a>
-  <ul class="simple simple-toc-section">
-    
-  </ul>
-</li>
 
 </ul>
 
@@ -202,37 +214,20 @@ window.addEventListener('DOMContentLoaded', main);
   <div id="tocRoot"></div>
   
   <p class="module-desc"></p>
-  <div class="section" id="6">
-<h1><a class="toc-backref" href="#6">Imports</a></h1>
+  <div class="section" id="7">
+<h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
-<a class="reference external" href="magic/anycase.html">magic/anycase</a>
-</dl></div>
-<div class="section" id="17">
-<h1><a class="toc-backref" href="#17">Macros</a></h1>
-<dl class="item">
-<div id="renameAll.m,static[RenameCase],untyped">
-<dt><pre><span class="Keyword">macro</span> <a href="#renameAll.m%2Cstatic%5BRenameCase%5D%2Cuntyped"><span class="Identifier">renameAll</span></a><span class="Other">(</span><span class="Identifier">renameTo</span><span class="Other">:</span> <span class="Identifier">static</span><span class="Other">[</span><a href="magic/anycase.html#RenameCase"><span class="Identifier">RenameCase</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
+<div id="RenameCase">
+<dt><pre><a href="pragmas.html#RenameCase"><span class="Identifier">RenameCase</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">CamelCase</span><span class="Other">,</span> <span class="Identifier">CobolCase</span><span class="Other">,</span> <span class="Identifier">KebabCase</span><span class="Other">,</span> <span class="Identifier">PascalCase</span><span class="Other">,</span> <span class="Identifier">PathCase</span><span class="Other">,</span> <span class="Identifier">SnakeCase</span><span class="Other">,</span> <span class="Identifier">PlainCase</span><span class="Other">,</span>
+  <span class="Identifier">TrainCase</span><span class="Other">,</span> <span class="Identifier">UpperSnakeCase</span></pre></dt>
 <dd>
 
-Rename all fields to some case.<div class="admonition admonition-info"><span class="admonition-info-text"><b>Note:</b></span>
-The pragma does not rename the field if one of the pragmas has already been applied: <tt class="docutils literal"><span class="pre"><span class="Identifier">renamed</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">renameDeserialize</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">renameSerialize</span></span></tt></div>
-<p><strong>Example</strong>:</p>
-<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">deser_json</span>
-
-<span class="Keyword">type</span>
-  <span class="Identifier">Foo</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">renameAll</span><span class="Punctuation">(</span><span class="Identifier">SnakeCase</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Keyword">object</span>
-    <span class="Identifier">firstName</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
-    <span class="Identifier">lastName</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
-
-<span class="Identifier">makeSerializable</span><span class="Punctuation">(</span><span class="Identifier">Foo</span><span class="Punctuation">)</span>
-
-<span class="Identifier">assert</span> <span class="Identifier">Foo</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">toJson</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="LongStringLit">&quot;&quot;&quot;{&quot;first_name&quot;:&quot;&quot;,&quot;last_name&quot;:&quot;&quot;}&quot;&quot;&quot;</span>
-</pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L124"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L2"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L124" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L2" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -241,8 +236,26 @@ class="link-seesrc" target="_blank">Source</a>
 <div class="section" id="18">
 <h1><a class="toc-backref" href="#18">Templates</a></h1>
 <dl class="item">
+<div id="aliases.t,varargs[typed]">
+<dt><pre><span class="Keyword">template</span> <a href="#aliases.t%2Cvarargs%5Btyped%5D"><span class="Identifier">aliases</span></a><span class="Other">(</span><span class="Identifier">aliases</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">typed</span><span class="Other">]</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<dd>
+
+<p>Deserialize field from the given names or from its Nim name. Accepts strings and <tt class="docutils literal"><span class="pre"><span class="Identifier">RenameCase</span></span></tt> values.</p>
+<p><strong>Example</strong>:</p>
+<p><pre class="listing"><span class="Keyword">type</span>
+  <span class="Identifier">User</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">nickName</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">aliases</span><span class="Punctuation">(</span><span class="StringLit">&quot;username&quot;</span><span class="Punctuation">,</span> <span class="StringLit">&quot;login&quot;</span><span class="Punctuation">,</span> <span class="Identifier">SnakeCase</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
+</pre> </p>
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L309"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L309" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
 <div id="defaultValue.t,typed">
-<dt><pre><span class="Keyword">template</span> <a href="#defaultValue.t%2Ctyped"><span class="Identifier">defaultValue</span></a><span class="Other">(</span><span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">typed</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<dt><pre><span class="Keyword">template</span> <a href="#defaultValue.t%2Ctyped"><span class="Identifier">defaultValue</span></a><span class="Other">(</span><span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">typed</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
 <dd>
 
 <p>Uses the specified value if the field was not in the input.</p>
@@ -250,12 +263,21 @@ class="link-seesrc" target="_blank">Source</a>
 <p><pre class="listing"><span class="Keyword">type</span>
   <span class="Identifier">User</span> <span class="Operator">=</span> <span class="Keyword">object</span>
     <span class="Identifier">name</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">defaultValue</span><span class="Punctuation">(</span><span class="StringLit">&quot;noname&quot;</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
+</pre></p>
+<p>Do not specify a value, then default(FieldType) will be used</p>
+<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">deser_json</span>
+
+<span class="Keyword">type</span>
+  <span class="Identifier">Foo</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">id</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">defaultValue</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
+
+<span class="Identifier">assert</span> <span class="Identifier">Foo</span><span class="Operator">.</span><span class="Identifier">fromJson</span><span class="Punctuation">(</span><span class="LongStringLit">&quot;&quot;&quot;{}&quot;&quot;&quot;</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">id</span> <span class="Operator">==</span> <span class="DecNumber">0</span>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L205"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L178"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L205" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L178" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -285,9 +307,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L82"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L86"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L82" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L86" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -333,45 +355,71 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L218"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L202"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L218" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L202" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
-<div id="renamed.t,string">
-<dt><pre><span class="Keyword">template</span> <a href="#renamed.t%2Cstring"><span class="Identifier">renamed</span></a><span class="Other">(</span><span class="Identifier">renamed</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<div id="renameAll.t,RenameCase">
+<dt><pre><span class="Keyword">template</span> <a href="#renameAll.t%2CRenameCase"><span class="Identifier">renameAll</span></a><span class="Other">(</span><span class="Identifier">renameTo</span><span class="Other">:</span> <a href="pragmas.html#RenameCase"><span class="Identifier">RenameCase</span></a><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<dd>
+
+Rename all fields to some case.<div class="admonition admonition-info"><span class="admonition-info-text"><b>Note:</b></span>
+Pragma respects other <tt class="docutils literal"><span class="pre"><span class="Identifier">rename</span></span></tt> pragmas. For example, if a field has the <tt class="docutils literal"><span class="pre"><span class="Identifier">renameSerialize</span></span></tt> pragma, only deserialization will be affected.</div>
+<p><strong>Example</strong>:</p>
+<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">deser_json</span>
+
+<span class="Keyword">type</span>
+  <span class="Identifier">Foo</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">renameAll</span><span class="Punctuation">(</span><span class="Identifier">SnakeCase</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">firstName</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
+    <span class="Identifier">lastName</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
+
+<span class="Identifier">makeSerializable</span><span class="Punctuation">(</span><span class="Identifier">Foo</span><span class="Punctuation">)</span>
+
+<span class="Identifier">assert</span> <span class="Identifier">Foo</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">toJson</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="LongStringLit">&quot;&quot;&quot;{&quot;first_name&quot;:&quot;&quot;,&quot;last_name&quot;:&quot;&quot;}&quot;&quot;&quot;</span>
+</pre> </p>
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L250"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L250" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="renamed.t">
+<dt><pre><span class="Keyword">template</span> <a href="#renamed.t"><span class="Identifier">renamed</span></a><span class="Other">(</span><span class="Identifier">renamed</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Operator">|</span> <a href="pragmas.html#RenameCase"><span class="Identifier">RenameCase</span></a><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
 <dd>
 
 Serialize and deserialize field with the given name instead of its Nim name. 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L109"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L112"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L109" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L112" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
-<div id="renameDeserialize.t,string">
-<dt><pre><span class="Keyword">template</span> <a href="#renameDeserialize.t%2Cstring"><span class="Identifier">renameDeserialize</span></a><span class="Other">(</span><span class="Identifier">renamed</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<div id="renameDeserialize.t">
+<dt><pre><span class="Keyword">template</span> <a href="#renameDeserialize.t"><span class="Identifier">renameDeserialize</span></a><span class="Other">(</span><span class="Identifier">renamed</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Operator">|</span> <a href="pragmas.html#RenameCase"><span class="Identifier">RenameCase</span></a><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
 <dd>
 
 Deserialize field with the given name instead of its Nim name. 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L119"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L120"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L119" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L120" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
-<div id="renameSerialize.t,string">
-<dt><pre><span class="Keyword">template</span> <a href="#renameSerialize.t%2Cstring"><span class="Identifier">renameSerialize</span></a><span class="Other">(</span><span class="Identifier">renamed</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<div id="renameSerialize.t">
+<dt><pre><span class="Keyword">template</span> <a href="#renameSerialize.t"><span class="Identifier">renameSerialize</span></a><span class="Other">(</span><span class="Identifier">renamed</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Operator">|</span> <a href="pragmas.html#RenameCase"><span class="Identifier">RenameCase</span></a><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
 <dd>
 
 Serialize field with the given name instead of its Nim name. 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L114"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L116"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L114" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L116" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -401,9 +449,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L55"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L60"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L55" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L60" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -419,9 +467,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L172"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L147"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L172" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L147" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -437,9 +485,69 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L147"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L124"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L147" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L124" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="skipPrivate.t">
+<dt><pre><span class="Keyword">template</span> <a href="#skipPrivate.t"><span class="Identifier">skipPrivate</span></a><span class="Other">(</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<dd>
+
+<p>Use this pragma to skip all private fields during serialization and deserialization.</p>
+<p><strong>Example</strong>:</p>
+<p><pre class="listing"><span class="Keyword">type</span>
+  <span class="Identifier">User</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipPrivate</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">id</span><span class="Operator">*:</span> <span class="Identifier">int</span>
+    <span class="Identifier">name</span><span class="Operator">*:</span> <span class="Identifier">string</span>
+    <span class="Identifier">passwordHash</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
+</pre> </p>
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L296"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L296" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="skipPrivateDeserializing.t">
+<dt><pre><span class="Keyword">template</span> <a href="#skipPrivateDeserializing.t"><span class="Identifier">skipPrivateDeserializing</span></a><span class="Other">(</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<dd>
+
+<p>Use this pragma to skip all private fields during deserialization</p>
+<p><strong>Example</strong>:</p>
+<p><pre class="listing"><span class="Keyword">type</span>
+  <span class="Identifier">User</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipPrivateDeserializing</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">id</span><span class="Operator">*:</span> <span class="Identifier">int</span>
+    <span class="Identifier">name</span><span class="Operator">*:</span> <span class="Identifier">string</span>
+    <span class="Identifier">passwordHash</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
+</pre> </p>
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L283"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L283" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="skipPrivateSerializing.t">
+<dt><pre><span class="Keyword">template</span> <a href="#skipPrivateSerializing.t"><span class="Identifier">skipPrivateSerializing</span></a><span class="Other">(</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<dd>
+
+<p>Use this pragma to skip all private fields during serialization</p>
+<p><strong>Example</strong>:</p>
+<p><pre class="listing"><span class="Keyword">type</span>
+  <span class="Identifier">User</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">skipPrivateSerializing</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">id</span><span class="Operator">*:</span> <span class="Identifier">int</span>
+    <span class="Identifier">name</span><span class="Operator">*:</span> <span class="Identifier">string</span>
+    <span class="Identifier">passwordHash</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
+</pre> </p>
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L270"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L270" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -461,9 +569,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L185"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L159"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L185" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L159" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -479,9 +587,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L160"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L136"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L160" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L136" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -527,18 +635,13 @@ assert test.kind == true
 </span></pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L8"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L14"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L8" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L14" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
 
-</dl></div>
-<div class="section" id="19">
-<h1><a class="toc-backref" href="#19">Exports</a></h1>
-<dl class="item">
-<a href="magic/anycase.html#RenameCase"><span class="Identifier">RenameCase</span></a>
 </dl></div>
 
   </div>
@@ -548,7 +651,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-09-15 06:47:48 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-02-04 15:08:34 UTC</small>
       </div>
     </div>
   </div>

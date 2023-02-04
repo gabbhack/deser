@@ -17,10 +17,10 @@
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
-<title>deser/ser/make</title>
-<link rel="stylesheet" type="text/css" href="../../nimdoc.out.css">
+<title>deser/macroutils/parsing/struct</title>
+<link rel="stylesheet" type="text/css" href="../../../nimdoc.out.css">
 
-<script type="text/javascript" src="../../dochack.js"></script>
+<script type="text/javascript" src="../../../dochack.js"></script>
 
 <script type="text/javascript">
 function main() {
@@ -69,7 +69,7 @@ window.addEventListener('DOMContentLoaded', main);
 <body>
 <div class="document" id="documentId">
   <div class="container">
-    <h1 class="title">deser/ser/make</h1>
+    <h1 class="title">deser/macroutils/parsing/struct</h1>
     <div class="row">
   <div class="three columns">
   <div class="theme-switch-wrapper">
@@ -82,7 +82,7 @@ window.addEventListener('DOMContentLoaded', main);
   <div id="global-links">
     <ul class="simple">
     <li>
-      <a href="../../theindex.html">Index</a>
+      <a href="../../../theindex.html">Index</a>
     </li>
     <li>
       <a href="https://deser.nim.town/deser.html">Main</a>
@@ -111,11 +111,18 @@ window.addEventListener('DOMContentLoaded', main);
   </ul>
 </li>
 <li>
-  <a class="reference reference-toplevel" href="#17" id="67">Macros</a>
+  <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">makeSerializable
-      <li><a class="reference" href="#makeSerializable.m%2Cvarargs%5Btypedesc%5D%2Cstatic%5Bbool%5D"
-    title="makeSerializable(types: varargs[typedesc]; public: static[bool] = false)">makeSerializable(types: varargs[typedesc]; public: static[bool] = false)</a></li>
+      <ul class="simple nested-toc-section">fromPragma
+      <li><a class="reference" href="#fromPragma%2Ctypedesc%5BStructFeatures%5D%2COption%5BNimNode%5D"
+    title="fromPragma(featuresTy: typedesc[StructFeatures]; pragma: Option[NimNode]): StructFeatures">fromPragma(featuresTy: typedesc[StructFeatures]; pragma: Option[NimNode]): StructFeatures</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">fromTypeSym
+      <li><a class="reference" href="#fromTypeSym%2Ctypedesc%5BStruct%5D%2CNimNode"
+    title="fromTypeSym(structTy: typedesc[Struct]; typeSym: NimNode): Struct">fromTypeSym(structTy: typedesc[Struct]; typeSym: NimNode): Struct</a></li>
+  <li><a class="reference" href="#fromTypeSym%2Ctypedesc%5BTypeInfo%5D%2CNimNode"
+    title="fromTypeSym(typeInfoTy: typedesc[TypeInfo]; typeSym: NimNode): TypeInfo">fromTypeSym(typeInfoTy: typedesc[TypeInfo]; typeSym: NimNode): TypeInfo</a></li>
 
   </ul>
 
@@ -133,32 +140,44 @@ window.addEventListener('DOMContentLoaded', main);
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="../macroutils/types.html">../macroutils/types</a>, <a class="reference external" href="../macroutils/parsing/struct.html">../macroutils/parsing/struct</a>, <a class="reference external" href="../macroutils/generation/ser.html">../macroutils/generation/ser</a>
+<a class="reference external" href="../types.html">../types</a>, <a class="reference external" href="../types.html">../types</a>, <a class="reference external" href="field.html">field</a>, <a class="reference external" href="pragmas.html">pragmas</a>, <a class="reference external" href="../../pragmas.html">../../pragmas</a>, <a class="reference external" href="../matching.html">../matching</a>
 </dl></div>
-<div class="section" id="17">
-<h1><a class="toc-backref" href="#17">Macros</a></h1>
+<div class="section" id="12">
+<h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
-<div id="makeSerializable.m,varargs[typedesc],static[bool]">
-<dt><pre><span class="Keyword">macro</span> <a href="#makeSerializable.m%2Cvarargs%5Btypedesc%5D%2Cstatic%5Bbool%5D"><span class="Identifier">makeSerializable</span></a><span class="Other">(</span><span class="Identifier">types</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">typedesc</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">public</span><span class="Other">:</span> <span class="Identifier">static</span><span class="Other">[</span><span class="Identifier">bool</span><span class="Other">]</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span></pre></dt>
+<div id="fromPragma,typedesc[StructFeatures],Option[NimNode]">
+<dt><pre><span class="Keyword">func</span> <a href="#fromPragma%2Ctypedesc%5BStructFeatures%5D%2COption%5BNimNode%5D"><span class="Identifier">fromPragma</span></a><span class="Other">(</span><span class="Identifier">featuresTy</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="../types.html#StructFeatures"><span class="Identifier">StructFeatures</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">pragma</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="../types.html#StructFeatures"><span class="Identifier">StructFeatures</span></a></pre></dt>
 <dd>
 
-<p>Generate <tt class="docutils literal"><span class="pre"><span class="Identifier">serialize</span></span></tt> procedure for your type. Use <tt class="docutils literal"><span class="pre"><span class="Identifier">public</span></span></tt> parameter to export.</p>
-<p>Works only for objects and ref objects.</p>
-<p>Compile with <tt class="docutils literal"><span class="pre"><span class="Operator">-</span><span class="Identifier">d</span><span class="Punctuation">:</span><span class="Identifier">debugMakeSerializable</span></span></tt> to see macro output. Compile with <tt class="docutils literal"><span class="pre"><span class="Operator">-</span><span class="Identifier">d</span><span class="Punctuation">:</span><span class="Identifier">debugMakeSerializableTree</span></span></tt> to see macro output as NimNode tree.</p>
-<p><strong>Example</strong>:</p>
-<p><pre class="listing"><span class="Identifier">makeSerializable</span><span class="Punctuation">(</span><span class="Identifier">Foo</span><span class="Punctuation">)</span>
-
-<span class="Comment"># Use array of types if you want to make deserializable many types</span>
-<span class="Identifier">makeSerializable</span><span class="Punctuation">(</span><span class="Punctuation">[</span>
-  <span class="Identifier">Foo</span><span class="Punctuation">,</span>
-  <span class="Identifier">Bar</span>
-<span class="Punctuation">]</span><span class="Punctuation">)</span>
-</pre> </p>
-
+Parse <tt class="docutils literal"><span class="pre"><span class="Identifier">nnkPragma</span></span></tt> node and return <tt class="docutils literal"><span class="pre"><span class="Identifier">StructFeatures</span></span></tt>.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/ser/make.nim#L15"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/parsing/struct.nim#L157"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/ser/make.nim#L15" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/parsing/struct.nim#L157" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="fromTypeSym,typedesc[Struct],NimNode">
+<dt><pre><span class="Keyword">func</span> <a href="#fromTypeSym%2Ctypedesc%5BStruct%5D%2CNimNode"><span class="Identifier">fromTypeSym</span></a><span class="Other">(</span><span class="Identifier">structTy</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="../types.html#Struct"><span class="Identifier">Struct</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">typeSym</span><span class="Other">:</span> <span class="Identifier">NimNode</span><span class="Other">)</span><span class="Other">:</span> <a href="../types.html#Struct"><span class="Identifier">Struct</span></a></pre></dt>
+<dd>
+
+Parse <tt class="docutils literal"><span class="pre"><span class="Identifier">nnkSym</span></span></tt> node and return <tt class="docutils literal"><span class="pre"><span class="Identifier">Struct</span></span></tt>.
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/parsing/struct.nim#L73"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/parsing/struct.nim#L73" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="fromTypeSym,typedesc[TypeInfo],NimNode">
+<dt><pre><span class="Keyword">func</span> <a href="#fromTypeSym%2Ctypedesc%5BTypeInfo%5D%2CNimNode"><span class="Identifier">fromTypeSym</span></a><span class="Other">(</span><span class="Identifier">typeInfoTy</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><a href="../types.html#TypeInfo"><span class="Identifier">TypeInfo</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">typeSym</span><span class="Other">:</span> <span class="Identifier">NimNode</span><span class="Other">)</span><span class="Other">:</span> <a href="../types.html#TypeInfo"><span class="Identifier">TypeInfo</span></a></pre></dt>
+<dd>
+
+Parse <tt class="docutils literal"><span class="pre"><span class="Identifier">nnkSym</span></span></tt> node and return <tt class="docutils literal"><span class="pre"><span class="Identifier">TypeInfo</span></span></tt>.
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/parsing/struct.nim#L96"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/parsing/struct.nim#L96" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>

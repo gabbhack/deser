@@ -1,13 +1,27 @@
+CamelCase	deser/pragmas.html#CamelCase	RenameCase.CamelCase	
+CobolCase	deser/pragmas.html#CobolCase	RenameCase.CobolCase	
+KebabCase	deser/pragmas.html#KebabCase	RenameCase.KebabCase	
+PascalCase	deser/pragmas.html#PascalCase	RenameCase.PascalCase	
+PathCase	deser/pragmas.html#PathCase	RenameCase.PathCase	
+SnakeCase	deser/pragmas.html#SnakeCase	RenameCase.SnakeCase	
+PlainCase	deser/pragmas.html#PlainCase	RenameCase.PlainCase	
+TrainCase	deser/pragmas.html#TrainCase	RenameCase.TrainCase	
+UpperSnakeCase	deser/pragmas.html#UpperSnakeCase	RenameCase.UpperSnakeCase	
+RenameCase	deser/pragmas.html#RenameCase	pragmas: RenameCase	
 untagged	deser/pragmas.html#untagged.t	pragmas: untagged()	
 serializeWith	deser/pragmas.html#serializeWith.t,typed	pragmas: serializeWith(with: typed)	
 deserializeWith	deser/pragmas.html#deserializeWith.t,typed	pragmas: deserializeWith(with: typed)	
-renamed	deser/pragmas.html#renamed.t,string	pragmas: renamed(renamed: string)	
-renameSerialize	deser/pragmas.html#renameSerialize.t,string	pragmas: renameSerialize(renamed: string)	
-renameDeserialize	deser/pragmas.html#renameDeserialize.t,string	pragmas: renameDeserialize(renamed: string)	
-renameAll	deser/pragmas.html#renameAll.m,static[RenameCase],untyped	pragmas: renameAll(renameTo: static[RenameCase]; typ: untyped)	
+renamed	deser/pragmas.html#renamed.t	pragmas: renamed(renamed: string | RenameCase)	
+renameSerialize	deser/pragmas.html#renameSerialize.t	pragmas: renameSerialize(renamed: string | RenameCase)	
+renameDeserialize	deser/pragmas.html#renameDeserialize.t	pragmas: renameDeserialize(renamed: string | RenameCase)	
 skipped	deser/pragmas.html#skipped.t	pragmas: skipped()	
 skipSerializing	deser/pragmas.html#skipSerializing.t	pragmas: skipSerializing()	
 skipDeserializing	deser/pragmas.html#skipDeserializing.t	pragmas: skipDeserializing()	
 skipSerializeIf	deser/pragmas.html#skipSerializeIf.t,typed	pragmas: skipSerializeIf(condition: typed)	
-defaultValue	deser/pragmas.html#defaultValue.t,typed	pragmas: defaultValue(value: typed)	
+defaultValue	deser/pragmas.html#defaultValue.t,typed	pragmas: defaultValue(value: typed = nil)	
 onUnknownKeys	deser/pragmas.html#onUnknownKeys.t,typed	pragmas: onUnknownKeys(call: typed)	
+renameAll	deser/pragmas.html#renameAll.t,RenameCase	pragmas: renameAll(renameTo: RenameCase)	
+skipPrivateSerializing	deser/pragmas.html#skipPrivateSerializing.t	pragmas: skipPrivateSerializing()	
+skipPrivateDeserializing	deser/pragmas.html#skipPrivateDeserializing.t	pragmas: skipPrivateDeserializing()	
+skipPrivate	deser/pragmas.html#skipPrivate.t	pragmas: skipPrivate()	
+aliases	deser/pragmas.html#aliases.t,varargs[typed]	pragmas: aliases(aliases: varargs[typed])	

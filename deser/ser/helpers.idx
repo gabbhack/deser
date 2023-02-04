@@ -1,3 +1,4 @@
+asAddr	deser/ser/helpers.html#asAddr.t,untyped,untyped	helpers: asAddr(ident: untyped; exp: untyped): untyped	
 implSerializer	deser/ser/helpers.html#implSerializer.t,,static[bool]	helpers: implSerializer(selfType: typed{`type`}; public: static[bool] = false)	
 implSerializeSeq	deser/ser/helpers.html#implSerializeSeq.t,,static[bool]	helpers: implSerializeSeq(selfType: typed{`type`}; public: static[bool] = false)	
 implSerializeArray	deser/ser/helpers.html#implSerializeArray.t,,static[bool]	helpers: implSerializeArray(selfType: typed{`type`}; public: static[bool] = false)	

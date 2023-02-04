@@ -1,0 +1,1 @@
+parsePragma	deser/macroutils/parsing/pragmas.html#parsePragma.i,NimNode	pragmas: parsePragma(pragmas: NimNode): (NimNode, seq[NimNode])	
