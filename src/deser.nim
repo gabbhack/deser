@@ -129,8 +129,6 @@ Check example at [deser_json](https://github.com/gabbhack/deser_json).
 Check helpers templates for [serialization](deser/ser/helpers.html) and [deserialization](deser/des/helpers.html).
 
 .. Note:: This section of the documentation is being supplemented.
-```
-
 ]##
 
 import deser/[
