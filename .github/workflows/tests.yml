@@ -43,3 +43,6 @@ jobs:
 
       - name: Run tests
         run: nimble test
+      
+      - name: Try to build docs
+        run: nimble docs
