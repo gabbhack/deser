@@ -25,7 +25,7 @@ type
 ```
 equals to this JSON:
 
-```
+```json
 {
   "kind": true
   "trueField": ""
@@ -51,6 +51,7 @@ const json = """
   {
     "trueField": ""
   }
+"""
 let test = Test.fromJson(json)
 
 assert test.kind == true
@@ -186,7 +187,7 @@ type
     name {.defaultValue("noname").}: string
 ```
 
-Do not specify a value, then default(FieldType) will be used
+Do not specify a value, then `default(FieldType)` will be used
 
 ```nim
 import deser_json
