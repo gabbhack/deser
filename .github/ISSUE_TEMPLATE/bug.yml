@@ -1,0 +1,81 @@
+name: Bug report
+description: Report issues affecting the library or the documentation.
+labels:
+  - bug
+body:
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      options:
+        - label: I am sure the error is coming from deser code
+          required: true
+        - label: I have searched in the issue tracker for similar bug reports, including closed ones
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Context
+
+        Please provide as much information as possible. This will help us to reproduce the issue and fix it.
+
+  - type: textarea
+    attributes:
+      label: Copy and paste the output of `nim -v` on the command line.
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: deser version
+      placeholder: E.g. 0.3.0
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Current behavior
+      description: Please describe the behavior you are currently experiencing.
+    validations:
+      required: true
+  
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: Please describe the behavior you are expecting.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: Please describe the steps you took to reproduce the behavior.
+      placeholder: |
+        1. step 1
+        2. step 2
+        3. ...
+        4. you get it...
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Code example
+      description: Provide a [minimal, reproducible](https://stackoverflow.com/help/minimal-reproducible-example) and properly formatted example (if applicable).
+      placeholder: |
+        import deser
+        ...
+        makeDeserializable(Foo)
+      render: nim
+
+  - type: textarea
+    attributes:
+      label: Logs
+      description: Provide the complete traceback (if applicable) or other kind of logs.
+      render: sh
+
+  - type: textarea
+    attributes:
+      label: Debug dump
+      description: If you think the bug is related to the `makeSerializable` and/or `makeDeserializable` macros, please compile with the `-d:debugMakeSerializable` and/or `-d:debugMakeDeserializable` flag and paste the output.
+      render: nim

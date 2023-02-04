@@ -1,133 +1,140 @@
 discard """
   matrix: "; -d:release; --gc:orc; -d:release --gc:orc; --threads:on"
 """
-{.experimental: "views".}
-import std/[unittest, options, tables, sets]
-import deser
-import deser/test
+import std/[
+  unittest,
+  options,
+  tables,
+  sets
+]
+
+import deser/[
+  ser,
+  test
+]
 
 
 suite "Serialize default impls":
   test "bool":
-    assertSerTokens true, [Bool(true)]
-    assertSerTokens false, [Bool(false)]
+    assertSerTokens true, [initBoolToken(true)]
+    assertSerTokens false, [initBoolToken(false)]
   
   test "int":
-    assertSerTokens 0i8, [I8(0)]
-    assertSerTokens 0i16, [I16(0)]
-    assertSerTokens 0i32, [I32(0)]
-    assertSerTokens 0i64, [I64(0)]
-    assertSerTokens 0, [I64(0)]
+    assertSerTokens 0i8, [initI8Token(0)]
+    assertSerTokens 0i16, [initI16Token(0)]
+    assertSerTokens 0i32, [initI32Token(0)]
+    assertSerTokens 0i64, [initI64Token(0)]
+    assertSerTokens 0, [initI64Token(0)]
   
   test "float":
-    assertSerTokens 0f32, [F32(0.0)]
-    assertSerTokens 0f64, [F64(0.0)]
-    assertSerTokens 0.0, [F64(0.0)]
+    assertSerTokens 0f32, [initF32Token(0.0)]
+    assertSerTokens 0f64, [initF64Token(0.0)]
+    assertSerTokens 0.0, [initF64Token(0.0)]
   
   test "char":
-    assertSerTokens 'a', [Char('a')]
+    assertSerTokens 'a', [initCharToken('a')]
   
   test "enum":
     type TestEnum = enum
       First
     
-    assertSerTokens TestEnum.First, [Enum()]
+    assertSerTokens TestEnum.First, [initEnumToken()]
   
   test "bytes":
-    assertSerTokens [byte(0)], [Bytes(@[byte(0)])]
-    assertSerTokens @[byte(0)], [Bytes(@[byte(0)])]
+    assertSerTokens [byte(0)], [initBytesToken(@[byte(0)])]
+    assertSerTokens @[byte(0)], [initBytesToken(@[byte(0)])]
   
   test "set":
     assertSerTokens {1, 2, 3}, [
-      Seq(some 3),
-      I64(1),
-      I64(2),
-      I64(3),
-      SeqEnd()
+      initSeqToken(some 3),
+      initI64Token(1),
+      initI64Token(2),
+      initI64Token(3),
+      initSeqEndToken()
     ]
 
   test "array":
     assertSerTokens [1, 2, 3], [
-      Seq(some 3),
-      I64(1),
-      I64(2),
-      I64(3),
-      SeqEnd()
+      initSeqToken(some 3),
+      initI64Token(1),
+      initI64Token(2),
+      initI64Token(3),
+      initSeqEndToken()
     ]
 
   test "seq":
     assertSerTokens @[1, 2, 3], [
-      Seq(some 3),
-      I64(1),
-      I64(2),
-      I64(3),
-      SeqEnd()
+      initSeqToken(some 3),
+      initI64Token(1),
+      initI64Token(2),
+      initI64Token(3),
+      initSeqEndToken()
     ]
 
   test "tuple":
     assertSerTokens (123, "123"), [
-      Array(some 2),
-      I64(123),
-      String("123"),
-      ArrayEnd()
+      initArrayToken(some 2),
+      initI64Token(123),
+      initStringToken("123"),
+      initArrayEndToken()
     ]
   
   test "named tuple":
     assertSerTokens (id: 123), [
-      Array(some 1),
-      I64(123),
-      ArrayEnd()
+      initArrayToken(some 1),
+      initI64Token(123),
+      initArrayEndToken()
     ]
   
   test "option":
     assertSerTokens some 0, [
-      Some()
+      initSomeToken()
     ]
 
     assertSerTokens none int, [
-      None()
+      initNoneToken()
     ]
   
   test "tables":
     # Table | TableRef | OrderedTable | OrderedTableRef
     assertSerTokens {1: "1"}.toTable, [
-      Map(some 1),
-      I64(1),
-      String("1"),
-      MapEnd()
+      initMapToken(some 1),
+      initI64Token(1),
+      initStringToken("1"),
+      initMapEndToken()
     ]
 
     assertSerTokens {1: "1"}.newTable, [
-      Map(some 1),
-      I64(1),
-      String("1"),
-      MapEnd()
+      initMapToken(some 1),
+      initI64Token(1),
+      initStringToken("1"),
+      initMapEndToken()
     ]
 
     assertSerTokens {1: "1"}.toOrderedTable, [
-      Map(some 1),
-      I64(1),
-      String("1"),
-      MapEnd()
+      initMapToken(some 1),
+      initI64Token(1),
+      initStringToken("1"),
+      initMapEndToken()
     ]
 
     assertSerTokens {1: "1"}.newOrderedTable, [
-      Map(some 1),
-      I64(1),
-      String("1"),
-      MapEnd()
+      initMapToken(some 1),
+      initI64Token(1),
+      initStringToken("1"),
+      initMapEndToken()
     ]
   
   test "sets":
     # HashSet | OrderedSet
     assertSerTokens [1].toHashSet, [
-      Seq(some 1),
-      I64(1),
-      SeqEnd()
+      initSeqToken(some 1),
+      initI64Token(1),
+      initSeqEndToken()
     ]
 
     assertSerTokens [1].toOrderedSet, [
-      Seq(some 1),
-      I64(1),
-      SeqEnd()
+      initSeqToken(some 1),
+      initI64Token(1),
+      initSeqEndToken()
     ]

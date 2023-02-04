@@ -9,15 +9,15 @@ import std/[
   enumerate
 ]
 
-from error import
+from errors import
   raiseInvalidValue,
   raiseMissingField,
-  UnexpectedString,
-  UnexpectedSigned,
-  UnexpectedFloat
+  initUnexpectedString,
+  initUnexpectedSigned,
+  initUnexpectedFloat
 
 
-from ../magic/des/utils {.all.} import
+from deser/macroutils/generation/des/utils import
   genPrimitive,
   genArray,
   visitEnumIntBody,
@@ -32,7 +32,7 @@ from helpers import
 
 
 when defined(release):
-  {.push inline, checks: off.}
+  {.push inline.}
 
 {.push used.}
 proc deserialize*[T](self: NoneSeed[T], deserializer: var auto): T =
@@ -155,7 +155,7 @@ proc visitString*(self: CharVisitor, value: string): self.Value =
   if value.len == 1:
     value[0]
   else:
-    raiseInvalidValue(UnexpectedString(value), self)
+    raiseInvalidValue(initUnexpectedString(value), self)
 
 
 proc deserialize*(Self: typedesc[char], deserializer: var auto): Self =

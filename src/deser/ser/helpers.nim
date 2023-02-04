@@ -1,8 +1,14 @@
 import std/[options]
 
-from ../magic/sharedutils {.all.} import maybePublic
-from ../magic/ser/utils {.all.} import asAddr
+from deser/macroutils/generation/utils import maybePublic
 
+template asAddr*(ident: untyped, exp: untyped): untyped =
+  ## Get result from procedures by addr
+  when compiles(addr(exp)):
+    let temp = addr(exp)
+    template ident: untyped = temp[]
+  else:
+    var ident = exp
 
 template implSerializer*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
   bind
@@ -103,7 +109,6 @@ template implSerializeSeq*(selfType: typed{`type`}, public: static[bool] = false
 
     proc endSeq(self: var selfType)
 
-
 template implSerializeArray*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
   bind maybePublic
 
@@ -111,7 +116,6 @@ template implSerializeArray*(selfType: typed{`type`}, public: static[bool] = fal
     proc serializeArrayElement(self: var selfType, value: auto)
 
     proc endArray(self: var selfType)
-
 
 template implSerializeMap*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
   bind maybePublic
@@ -132,7 +136,6 @@ template implSerializeMap*(selfType: typed{`type`}, public: static[bool] = false
 
     when defined(release):
       {.pop.}
-
 
 template implSerializeStruct*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} =
   bind maybePublic

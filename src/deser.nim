@@ -42,7 +42,7 @@ makeSerializable(Message)
 makeDeserializable(Message)
 ```
 
-Use `toJson` and `fromJson` procedures from deser_json to serialize and deserialize to/from JSON:
+Use `toJson` and `fromJson` procedures from `deser_json` to serialize and deserialize to/from JSON:
 
 ```nim
 let chat = Message.fromJson(json)
@@ -97,15 +97,15 @@ echo chat.toJson()
 
 # Supported std-types
 - [bool](https://nim-lang.org/docs/system.html#bool)
-- [int8-64](https://nim-lang.org/docs/system.html#SomeSignedInt) (int serializaed as int64)
-- [uint8-64](https://nim-lang.org/docs/system.html#SomeUnsignedInt) (uint serialized as uint64)
-- [float32-64](https://nim-lang.org/docs/system.html#SomeFloat) (float serializaed as float64)
+- [int8-64](https://nim-lang.org/docs/system.html#SomeSignedInt) (`int` serializaed as int64)
+- [uint8-64](https://nim-lang.org/docs/system.html#SomeUnsignedInt) (`uint` serialized as uint64)
+- [float32-64](https://nim-lang.org/docs/system.html#SomeFloat) (`float` serializaed as float64)
 - [char](https://nim-lang.org/docs/system.html#char)
 - [string](https://nim-lang.org/docs/system.html#string)
 - [seq](https://nim-lang.org/docs/system.html#seq)
 - [array](https://nim-lang.org/docs/system.html#array)
 - enum (serialized as the parser decides)
-- tuple (serialized as array)
+- tuple (serialized as `array`)
 - [set](https://nim-lang.org/docs/system.html#set)
 - [range](https://nim-lang.org/docs/system.html#range)
 - [Option](https://nim-lang.org/docs/options.html#Option)
@@ -121,7 +121,7 @@ echo chat.toJson()
 # Customize serialization process
 Deser allows you to customize the serialization process, and the configuration will be applied to any parser.
 
-Configuration is done with pragmas that are applied at compile time. [View available pragmas](deser/pragmas.html).
+Configuration is done with pragmas that are applied at compile-time. [View available pragmas](deser/pragmas.html).
 
 # How to make bindings
 Check example at [deser_json](https://github.com/gabbhack/deser_json).
@@ -129,9 +129,8 @@ Check example at [deser_json](https://github.com/gabbhack/deser_json).
 Check helpers templates for [serialization](deser/ser/helpers.html) and [deserialization](deser/des/helpers.html).
 
 .. Note:: This section of the documentation is being supplemented.
+```
 
-# Write `serialize` and `deserialize` by hand
-.. Note:: This section of the documentation is being supplemented.
 ]##
 
 import deser/[

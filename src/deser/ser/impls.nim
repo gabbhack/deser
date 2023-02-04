@@ -2,7 +2,7 @@
 
 import std/[options, typetraits, tables, sets]
 
-from ../magic/ser/utils {.all.} import asAddr
+from helpers import asAddr
 
 
 when defined(release):
@@ -12,7 +12,6 @@ proc serialize*(self: bool, serializer: var auto) =
   mixin serializeBool
 
   serializer.serializeBool(self)
-
 
 proc serialize*(self: SomeInteger, serializer: var auto) =
   mixin
@@ -42,7 +41,6 @@ proc serialize*(self: SomeInteger, serializer: var auto) =
   elif self is uint64 | uint:
     serializer.serializeUint64(self)
 
-
 proc serialize*(self: SomeFloat, serializer: var auto) =
   mixin
     serializeFloat32,
@@ -53,42 +51,35 @@ proc serialize*(self: SomeFloat, serializer: var auto) =
   else:
     serializer.serializeFloat64(self)
 
-
 proc serialize*(self: string, serializer: var auto) =
   mixin serializeString
 
   serializer.serializeString(self)
-
 
 proc serialize*[T: char](self: T, serializer: var auto) =
   mixin serializeChar
 
   serializer.serializeChar(self)
 
-
 proc serialize*[T: enum](self: T, serializer: var auto) =
   mixin serializeEnum
 
   serializer.serializeEnum(self)
-
 
 proc serialize*[T: set](self: T, serializer: var auto) =
   mixin collectSeq
 
   serializer.collectSeq(self)
 
-
 proc serialize*(self: openArray[not byte], serializer: var auto) =
   mixin collectSeq
 
   serializer.collectSeq(self)
 
-
 proc serialize*(self: openArray[byte], serializer: var auto) =
   mixin serializeBytes
 
   serializer.serializeBytes(self)
-
 
 proc serialize*(self: tuple, serializer: var auto) =
   mixin
@@ -115,23 +106,23 @@ proc serialize*(self: Option, serializer: var auto) =
   else:
     serializer.serializeNone()
 
-
 proc serialize*[SomeTable: Table | OrderedTable](self: SomeTable, serializer: var auto) =
   mixin collectMap
 
   serializer.collectMap(self)
-
 
 proc serialize*(self: SomeSet, serializer: var auto) =
   mixin collectSeq
 
   serializer.collectSeq(self)
 
-
 proc serialize*(self: ref, serializer: var auto) =
   mixin serialize
 
-  serialize(self[], serializer)
+  if not self.isNil:
+    serialize(self[], serializer)
+  else:
+    serializer.serializeNone()
 
 when defined(release):
   {.pop.}

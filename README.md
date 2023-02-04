@@ -11,8 +11,8 @@
 
 ---
 
-## Motivation
-
+<details> 
+  <summary>Motivation</summary>
 Many serializers have already been written for Nim. You can probably find at least two serializers for each format. 
 
 The problem is that each library's API and customization options are different. I can't declare an object with renamed or skipped fields once and change the data format with one line.
@@ -24,6 +24,7 @@ Thus, there was no library for Nim that standardized the serialization process, 
 Also read:
 - [Standards](https://xkcd.com/927/)
 - [Not invented here](https://en.wikipedia.org/wiki/Not_invented_here)
+</details>
 
 
 ## Supported formats
@@ -109,4 +110,5 @@ distributed under licenses different than the deser.
 
 ## Acknowledgements
 - [serde.rs](https://serde.rs), for all the ideas I stole
-- [patty](https://github.com/andreaferretti/patty), for making it easier to work with object variants
+- [fusion/matching](https://github.com/nim-lang/fusion/blob/master/src/fusion/matching.nim), for making it easier to work with object variants
+- [anycase](https://github.com/epszaw/anycase)

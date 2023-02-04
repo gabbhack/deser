@@ -1,36 +1,242 @@
 ##[
-.. Note:: This section of the documentation is being supplemented.
+This module contains templates to help you reduce the amount of boilerplate when writing [Deserializer](#deserializer) or [Visitor](#visitor) objects.
 
 # Visitor
+To get the Nim data type from any data format, you need to write an object that implements the [Visitor](https://en.wikipedia.org/wiki/Visitor_pattern) pattern.
+When deserializing, you pass your `Visitor` object to the deserializer. Next, the deserializer, depending on what type of data it encountered in the raw data, calls a method from the `Visitor` object. 
+
+Your `Visitor` must implement the following methods:
+```nim
+proc expecting(self: Self): string
+
+proc visitBool(self: Self, value: bool): MyType
+proc visitInt8(self: Self, value: int8): MyType
+proc visitInt16(self: Self, value: int16): MyType
+proc visitInt32(self: Self, value: int32): MyType
+proc visitInt64(self: Self, value: int64): MyType
+
+proc visitUint8(self: Self, value: uint8): MyType
+proc visitUint16(self: Self, value: uint16): MyType
+proc visitUint32(self: Self, value: uint32): MyType
+proc visitUint64(self: Self, value: uint64): MyType
+
+proc visitFloat32(self: Self, value: float32): MyType
+proc visitFloat64(self: Self, value: float64): MyType
+
+proc visitChar(self: Self, value: char): MyType
+proc visitString(self: Self, value: sink string): MyType
+
+proc visitBytes(self: Self, value: openArray[byte]): MyType
+
+proc visitNone(self: Self): MyType
+proc visitSome(self: Self, deserializer: var auto): MyType
+
+proc visitSeq(self: Self, sequence: var auto): MyType
+proc visitMap(self: Self, map: var auto): MyType
+```
+where `Self` is the type of your `Visitor` object and `MyType` is the type you want to get from the deserializer.
+
+The `expecting` method is used to generate a meaningful error message when the deserializer encounters an unexpected type of data. For example, if you expect a `bool` value, but the deserializer encounters a `string`, the error message will be something like `Expected bool, but got string`.
+
+As you can see, no matter what type of data the deserializer encounters, your `Visitor` must return your type.
+Of course, not every type can be derived from `bool` or `None`. In such a case, it is recommended to throw out the exception. 
+
+.. Note:: The library, at the moment, does not restrict in any way which exceptions you throw, but it is **recommended** to use the [InvalidType](errors.html#InvalidType) exception with the [raiseInvalidType](errors.html#raiseInvalidType%2CUnexpected%2Cauto) procedure. `raiseInvalidType` uses the `expecting` method to generate a meaningful error message.
+
+Let's write a `Visitor` for our type that accepts only even numbers.
+It is painful to write an error for every unexpected type on your own, so we use the [implVisitor](#implVisitor.t%2Ctyped%2Cstatic[bool]) template. The `implVisitor` generates methods but you can override them.
+```nim
+import deser
+
+type
+  EvenInt = distinct int
+  EvenIntVisitor = object
+
+proc `$`(self: EvenInt): string = $self.int
+
+# implVisitor requires that Visitor has a Value parameter. Value is your type.
+template Value(visitor: EvenIntVisitor): type = EvenInt
+
+#[
+You can specify Value in a different way:
+
+type
+  EvenInt = distinct int
+  HackType[Value] = object
+  EvenIntVisitor = HackType[EvenInt]
+
+echo EvenIntVisitor.Value
+echo EvenIntVisitor().Value
+]#
+
+# The body of the methods is not much different, so let's write a template and use it.
+template visitBody: EvenInt {.dirty.} =
+  if value mod 2 == 0:
+    EvenInt(value)
+  else:
+    when value is SomeSignedInt:
+      raiseInvalidType(initUnexpectedSigned(value), self)
+    else:
+      raiseInvalidType(initUnexpectedUnsigned(value), self)
+
+implVisitor(EvenIntVisitor)
+
+proc expecting(self: EvenIntVisitor): string =
+  "even int"
+
+proc visitInt8(self: EvenIntVisitor, value: int8): self.Value = visitBody
+
+proc visitInt16(self: EvenIntVisitor, value: int16): self.Value = visitBody
+
+proc visitInt32(self: EvenIntVisitor, value: int32): self.Value = visitBody
+
+proc visitInt64(self: EvenIntVisitor, value: int64): self.Value = visitBody
+
+proc visitUint8(self: EvenIntVisitor, value: uint8): self.Value = visitBody
+
+proc visitUint16(self: EvenIntVisitor, value: uint16): self.Value = visitBody
+
+proc visitUint32(self: EvenIntVisitor, value: uint32): self.Value = visitBody
+
+proc visitUint64(self: EvenIntVisitor, value: uint64): self.Value = visitBody
+```
+
+Let's check `EvenIntVisitor` by getting a sequence of `EvenInt` from json:
+```nim
+import deser_json
+
+# To make an `EvenInt` deserializable, you need to write a `deserialize` procedure.
+proc deserialize(Self: typedesc[EvenInt], deserializer: var auto): Self =
+  mixin deserializeAny
+
+  deserializer.deserializeAny(EvenIntVisitor())
+
+echo seq[EvenInt].fromJson("[2, 4, 6, 8, 10]")
+echo seq[EvenInt].fromJson("[1, 3, 5, 7, 9]")
+```
+Full code:
+```nim
+import deser, deser_json
+
+type
+  EvenInt = distinct int
+  EvenIntVisitor = object
+
+proc `$`(self: EvenInt): string = $self.int
+
+# implVisitor requires that Visitor has a Value parameter. Value is your type.
+template Value(visitor: EvenIntVisitor): type = EvenInt
+
+# The body of the methods is not much different, so let's write a template and use it.
+template visitBody: EvenInt {.dirty.} =
+  if value mod 2 == 0:
+    EvenInt(value)
+  else:
+    when value is SomeSignedInt:
+      raiseInvalidType(initUnexpectedSigned(value), self)
+    else:
+      raiseInvalidType(initUnexpectedUnsigned(value), self)
+
+implVisitor(EvenIntVisitor)
+
+proc expecting(self: EvenIntVisitor): string =
+  "even int"
+
+proc visitInt8(self: EvenIntVisitor, value: int8): self.Value = visitBody
+
+proc visitInt16(self: EvenIntVisitor, value: int16): self.Value = visitBody
+
+proc visitInt32(self: EvenIntVisitor, value: int32): self.Value = visitBody
+
+proc visitInt64(self: EvenIntVisitor, value: int64): self.Value = visitBody
+
+proc visitUint8(self: EvenIntVisitor, value: uint8): self.Value = visitBody
+
+proc visitUint16(self: EvenIntVisitor, value: uint16): self.Value = visitBody
+
+proc visitUint32(self: EvenIntVisitor, value: uint32): self.Value = visitBody
+
+proc visitUint64(self: EvenIntVisitor, value: uint64): self.Value = visitBody
+
+# To make an `EvenInt` deserializable, you need to write a `deserialize` procedure.
+proc deserialize(Self: typedesc[EvenInt], deserializer: var auto): Self =
+  mixin deserializeAny
+
+  deserializer.deserializeAny(EvenIntVisitor())
+
+echo seq[EvenInt].fromJson("[2, 4, 6, 8, 10]")
+# Error: unhandled exception: invalid type: integer `1`, expected: even int [InvalidType]
+echo seq[EvenInt].fromJson("[1, 3, 5, 7, 9]")
+```
 
 # SeqAccess
+To gain access to the elements of the sequence, the `Visitor` gets a `SeqAccess` object in the `visitSeq` method.
+
+`SeqAccess` has the following methods:
+```nim
+proc nextElementSeed(self: var Self, seed: auto): Option[seed.Value]
+
+proc nextElement[Value](self: var Self): Option[Value]
+
+proc sizeHint(self: Self): Option[int]
+
+iterator items[Value](self: var Self): Value
+```
+
+All methods except `nextElementSeed` are implemented by default using the [implSeqAccess](#implSeqAccess.t%2C%2Cstatic[bool]) template.
 
 # MapAccess
+To gain access to the elements of the map, the `Visitor` gets a `MapAccess` object in the `visitMap` method.
+
+`MapAccess` has the following methods:
+```nim
+proc nextKeySeed(self: var Self, seed: auto): Option[seed.Value]
+
+proc nextValueSeed(self: var Self, seed: auto): seed.Value
+
+proc nextEntrySeed(self: var Self, kseed: auto, vseed: auto): Option[(kseed.Value, vseed.Value)]
+
+proc nextKey[Key](self: var Self): Option[Key]
+
+proc nextValue[Value](self: var Self): Value
+
+proc nextEntry[Key, Value](self: var Self): Option[tuple[key: Key, value: Value]]
+
+proc sizeHint[Self: Self](self: Self): Option[int] = none(int)
+
+iterator keys[Key](self: var Self): Key
+
+iterator pairs[Key, Value](self: var Self): (Key, Value)
+```
+
+All methods except `nextKeySeed` and `nextValueSeed` are implemented by default using the [implMapAccess](#implMapAccess.t%2C%2Cstatic[bool]) template.
 
 # Deserializer
+
 ]##
 
 import std/[
   options
 ]
 
-from error import
+from errors import
   raiseInvalidType,
   raiseInvalidValue,
   raiseDuplicateField,
   raiseInvalidLength,
-  UnexpectedBool,
-  UnexpectedUnsigned,
-  UnexpectedSigned,
-  UnexpectedFloat,
-  UnexpectedChar,
-  UnexpectedString,
-  UnexpectedBytes,
-  UnexpectedOption,
-  UnexpectedSeq,
-  UnexpectedMap
+  initUnexpectedBool,
+  initUnexpectedUnsigned,
+  initUnexpectedSigned,
+  initUnexpectedFloat,
+  initUnexpectedChar,
+  initUnexpectedString,
+  initUnexpectedBytes,
+  initUnexpectedOption,
+  initUnexpectedSeq,
+  initUnexpectedMap
 
-from ../magic/sharedutils {.all.} import maybePublic
+from deser/macroutils/generation/utils import
+  maybePublic
 
 
 type
@@ -45,15 +251,15 @@ Generate forward declarations and default implementation for [Visitor](#visitor)
 ]##
   bind
     raiseInvalidType,
-    UnexpectedBool,
-    UnexpectedSigned,
-    UnexpectedUnsigned,
-    UnexpectedFloat,
-    UnexpectedString,
-    UnexpectedBytes,
-    UnexpectedOption,
-    UnexpectedSeq,
-    UnexpectedMap,
+    initUnexpectedBool,
+    initUnexpectedSigned,
+    initUnexpectedUnsigned,
+    initUnexpectedFloat,
+    initUnexpectedString,
+    initUnexpectedBytes,
+    initUnexpectedOption,
+    initUnexpectedSeq,
+    initUnexpectedMap,
     maybePublic
 
   maybePublic(public):
@@ -91,36 +297,35 @@ Generate forward declarations and default implementation for [Visitor](#visitor)
     proc visitMap[Self: selfType](self: Self, map: var auto): self.Value
 
     # default implementation
-    proc visitBool[Self: selfType](self: Self, value: bool): self.Value = raiseInvalidType(UnexpectedBool(value), self)
+    proc visitBool[Self: selfType](self: Self, value: bool): self.Value = raiseInvalidType(initUnexpectedBool(value), self)
 
     proc visitInt8[Self: selfType](self: Self, value: int8): self.Value = self.visitInt64(value.int64)
     proc visitInt16[Self: selfType](self: Self, value: int16): self.Value = self.visitInt64(value.int64)
     proc visitInt32[Self: selfType](self: Self, value: int32): self.Value = self.visitInt64(value.int64)
-    proc visitInt64[Self: selfType](self: Self, value: int64): self.Value = raiseInvalidType(UnexpectedSigned(value), self)
+    proc visitInt64[Self: selfType](self: Self, value: int64): self.Value = raiseInvalidType(initUnexpectedSigned(value), self)
 
     proc visitUint8[Self: selfType](self: Self, value: uint8): self.Value = self.visitUint64(value.uint64)
     proc visitUint16[Self: selfType](self: Self, value: uint16): self.Value = self.visitUint64(value.uint64)
     proc visitUint32[Self: selfType](self: Self, value: uint32): self.Value = self.visitUint64(value.uint64)
-    proc visitUint64[Self: selfType](self: Self, value: uint64): self.Value = raiseInvalidType(UnexpectedUnsigned(value), self)
+    proc visitUint64[Self: selfType](self: Self, value: uint64): self.Value = raiseInvalidType(initUnexpectedUnsigned(value), self)
 
     proc visitFloat32[Self: selfType](self: Self, value: float32): self.Value = self.visitFloat64(value.float64)
-    proc visitFloat64[Self: selfType](self: Self, value: float64): self.Value = raiseInvalidType(UnexpectedFloat(value), self)
+    proc visitFloat64[Self: selfType](self: Self, value: float64): self.Value = raiseInvalidType(initUnexpectedFloat(value), self)
 
     proc visitChar[Self: selfType](self: Self, value: char): self.Value = self.visitString($value)
-    proc visitString[Self: selfType](self: Self, value: sink string): self.Value = raiseInvalidType(UnexpectedString(value), self)
+    proc visitString[Self: selfType](self: Self, value: sink string): self.Value = raiseInvalidType(initUnexpectedString(value), self)
 
-    proc visitBytes[Self: selfType](self: Self, value: openArray[byte]): self.Value = raiseInvalidType(UnexpectedBytes(@value), self)
+    proc visitBytes[Self: selfType](self: Self, value: openArray[byte]): self.Value = raiseInvalidType(initUnexpectedBytes(@value), self)
 
-    proc visitNone[Self: selfType](self: Self): self.Value = raiseInvalidType(UnexpectedOption(), self)
-    proc visitSome[Self: selfType](self: Self, deserializer: var auto): self.Value = raiseInvalidType(UnexpectedOption(), self)
+    proc visitNone[Self: selfType](self: Self): self.Value = raiseInvalidType(initUnexpectedOption(), self)
+    proc visitSome[Self: selfType](self: Self, deserializer: var auto): self.Value = raiseInvalidType(initUnexpectedOption(), self)
 
-    proc visitSeq[Self: selfType](self: Self, sequence: var auto): self.Value = raiseInvalidType(UnexpectedSeq(), self)
-    proc visitMap[Self: selfType](self: Self, map: var auto): self.Value = raiseInvalidType(UnexpectedMap(), self)
+    proc visitSeq[Self: selfType](self: Self, sequence: var auto): self.Value = raiseInvalidType(initUnexpectedSeq(), self)
+    proc visitMap[Self: selfType](self: Self, map: var auto): self.Value = raiseInvalidType(initUnexpectedMap(), self)
     {.pop.}
 
     when defined(release):
       {.pop.}
-
 
 template implSeqAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} = ##[
 Generate forward declarations and default implementation for [SeqAccess](#seqaccess).
@@ -141,7 +346,7 @@ Generate forward declarations and default implementation for [SeqAccess](#seqacc
     # default implementation
     proc nextElement[Value](self: var selfType): Option[Value] =
       self.nextElementSeed(NoneSeed[Value]())
-    
+
     proc sizeHint[Self: selfType](self: Self): Option[int] = none(int)
 
     iterator items[Value](self: var selfType): Value =
@@ -153,7 +358,6 @@ Generate forward declarations and default implementation for [SeqAccess](#seqacc
 
     when defined(release):
       {.pop.}
-
 
 template implMapAccess*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} = ##[
 Generate forward declarations and default implementation for [MapAccess](#mapaccess).
@@ -216,7 +420,6 @@ Generate forward declarations and default implementation for [MapAccess](#mapacc
     when defined(release):
       {.pop.}
 
-
 template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false) {.dirty.} = ##[
 Generate forward declarations for [Deserializer](#deserializer).
 ]##
@@ -262,7 +465,6 @@ Generate forward declarations for [Deserializer](#deserializer).
     proc deserializeIgnoredAny(self: var selfType, visitor: auto): visitor.Value
 
     proc deserializeArray(self: var selfType, len: static[int], visitor: auto): visitor.Value
-
 
 template implDeserializer*(selfType: typed{`type`}, public: static[bool] = false, defaultBody: untyped) {.dirty.} = ##[
 Generate [Deserializer](#deserializer) procedures with `defaultBody` as implementation.

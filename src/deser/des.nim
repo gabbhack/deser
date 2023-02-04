@@ -1,12 +1,12 @@
 import des/[
-  error,
   helpers,
+  errors,
   impls,
   make
 ]
 
 export
-  error,
   helpers,
+  errors,
   impls,
   make

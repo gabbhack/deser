@@ -1,139 +1,146 @@
 discard """
   matrix: "; -d:release; --gc:orc; -d:release --gc:orc; --threads:on"
 """
-{.experimental: "views".}
-import std/[unittest, options, tables, sets]
-import deser
-import deser/test
+import std/[
+  unittest,
+  options,
+  tables,
+  sets
+]
+
+import deser/[
+  des,
+  test
+]
 
 
 suite "Deserialize default impls":
-  test "bool":
-    assertDesTokens true, [Bool(true)]
+  test "initBoolToken":
+    assertDesTokens true, [initBoolToken(true)]
   
   test "int":
-    assertDesTokens 0i8, [I8(0)]
-    assertDesTokens 0i16, [I16(0)]
-    assertDesTokens 0i32, [I32(0)]
-    assertDesTokens 0i64, [I64(0)]
-    assertDesTokens 0, [I64(0)]
+    assertDesTokens 0i8, [initI8Token(0)]
+    assertDesTokens 0i16, [initI16Token(0)]
+    assertDesTokens 0i32, [initI32Token(0)]
+    assertDesTokens 0i64, [initI64Token(0)]
+    assertDesTokens 0, [initI64Token(0)]
   
   test "float":
-    assertDesTokens 0f32, [F32(0.0)]
-    assertDesTokens 0f64, [F64(0.0)]
-    assertDesTokens 0.0, [F64(0.0)]
+    assertDesTokens 0f32, [initF32Token(0.0)]
+    assertDesTokens 0f64, [initF64Token(0.0)]
+    assertDesTokens 0.0, [initF64Token(0.0)]
   
   test "char":
-    assertDesTokens 'a', [Char('a')]
+    assertDesTokens 'a', [initCharToken('a')]
   
   test "enum":
     type SimpleEnum = enum
       First = "first"
       Second
     
-    assertDesTokens SimpleEnum.First, [I8(0)]
-    assertDesTokens SimpleEnum.First, [I16(0)]
-    assertDesTokens SimpleEnum.First, [I32(0)]
-    assertDesTokens SimpleEnum.First, [I64(0)]
+    assertDesTokens SimpleEnum.First, [initI8Token(0)]
+    assertDesTokens SimpleEnum.First, [initI16Token(0)]
+    assertDesTokens SimpleEnum.First, [initI32Token(0)]
+    assertDesTokens SimpleEnum.First, [initI64Token(0)]
 
-    assertDesTokens SimpleEnum.First, [String("first")]
-    assertDesTokens SimpleEnum.Second, [String("Second")]
+    assertDesTokens SimpleEnum.First, [initStringToken("first")]
+    assertDesTokens SimpleEnum.Second, [initStringToken("Second")]
   
   test "bytes":
-    assertDesTokens [byte(0)], [Bytes(@[byte(0)])]
-    assertDesTokens @[byte(0)], [Bytes(@[byte(0)])]
+    assertDesTokens [byte(0)], [initBytesToken(@[byte(0)])]
+    assertDesTokens @[byte(0)], [initBytesToken(@[byte(0)])]
   
   test "set":
     assertDesTokens {1,2,3}, [
-      Seq(some 3),
-      I64(1),
-      I64(2),
-      I64(3),
-      SeqEnd()
+      initSeqToken(some 3),
+      initI64Token(1),
+      initI64Token(2),
+      initI64Token(3),
+      initSeqEndToken()
     ]
   
   test "array":
     assertDesTokens [1,2,3], [
-      Array(some 3),
-      I64(1),
-      I64(2),
-      I64(3),
-      ArrayEnd()
+      initArrayToken(some 3),
+      initI64Token(1),
+      initI64Token(2),
+      initI64Token(3),
+      initArrayEndToken()
     ]
   
   test "seq":
     assertDesTokens @[1,2,3], [
-      Seq(some 3),
-      I64(1),
-      I64(2),
-      I64(3),
-      SeqEnd()
+      initSeqToken(some 3),
+      initI64Token(1),
+      initI64Token(2),
+      initI64Token(3),
+      initSeqEndToken()
     ]
 
   test "tuple":
     assertDesTokens (123, "123"), [
-      Array(some 2),
-      I64(123),
-      String("123"),
-      ArrayEnd()
+      initArrayToken(some 2),
+      initI64Token(123),
+      initStringToken("123"),
+      initArrayEndToken()
     ]
   
   test "named tuple":
     assertDesTokens (id: 123), [
-      Array(some 1),
-      I64(123),
-      ArrayEnd()
+      initArrayToken(some 1),
+      initI64Token(123),
+      initArrayEndToken()
     ]
   
   test "option":
     assertDesTokens some 123, [
-      Some(),
-      I64(123)
+      initSomeToken(),
+      initI64Token(123)
     ]
     assertDesTokens none int, [
-      None()
+      initNoneToken()
     ]
   
   test "tables":
     # Table | TableRef | OrderedTable | OrderedTableRef
     assertDesTokens {1: "1"}.toTable, [
-      Map(some 1),
-      I64(1),
-      String("1"),
-      MapEnd()
+      initMapToken(some 1),
+      initI64Token(1),
+      initStringToken("1"),
+      initMapEndToken()
     ]
 
     assertDesTokens {1: "1"}.newTable, [
-      Map(some 1),
-      I64(1),
-      String("1"),
-      MapEnd()
+      initMapToken(some 1),
+      initI64Token(1),
+      initStringToken("1"),
+      initMapEndToken()
     ]
 
     assertDesTokens {1: "1"}.toOrderedTable, [
-      Map(some 1),
-      I64(1),
-      String("1"),
-      MapEnd()
+      initMapToken(some 1),
+      initI64Token(1),
+      initStringToken("1"),
+      initMapEndToken()
     ]
 
     assertDesTokens {1: "1"}.newOrderedTable, [
-      Map(some 1),
-      I64(1),
-      String("1"),
-      MapEnd()
+      initMapToken(some 1),
+      initI64Token(1),
+      initStringToken("1"),
+      initMapEndToken()
     ]
   
   test "sets":
     # HashSet | OrderedSet
     assertDesTokens [1].toHashSet, [
-      Seq(some 1),
-      I64(1),
-      SeqEnd()
+      initSeqToken(some 1),
+      initI64Token(1),
+      initSeqEndToken()
     ]
 
     assertDesTokens [1].toOrderedSet, [
-      Seq(some 1),
-      I64(1),
-      SeqEnd()
+      initSeqToken(some 1),
+      initI64Token(1),
+      initSeqEndToken()
     ]
