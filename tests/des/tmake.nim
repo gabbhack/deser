@@ -164,6 +164,9 @@ type
   
   AliasesWithRenameAllPragma {.renameAll(SnakeCase).} = object
     nickName {.aliases("username", "name").}: string
+  
+  ObjectWithRequiresInit {.requiresInit.} = object
+    text: string
 
 
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
@@ -237,7 +240,8 @@ makeDeserializable([
   RenameWithCase,
   CaseObjectMultiBranch,
   AliasesPragma,
-  AliasesWithRenameAllPragma
+  AliasesWithRenameAllPragma,
+  ObjectWithRequiresInit
 ], public=true)
 
 
@@ -591,5 +595,13 @@ suite "makeDeserializable":
       initStructToken("AliasesWithRenameAllPragma", 1),
       initStringToken("nickName"),
       initStringToken("Name"),
+      initStructEndToken()
+    ]
+  
+  test "ObjectWithRequiresInit":
+    assertDesTokens ObjectWithRequiresInit(text: "123"), [
+      initStructToken("ObjectWithRequiresInit", 1),
+      initStringToken("text"),
+      initStringToken("123"),
       initStructEndToken()
     ]
