@@ -21,7 +21,9 @@ body:
 
   - type: textarea
     attributes:
-      label: Copy and paste the output of `nim -v` on the command line.
+      label: Nim version.
+      description: Copy and paste the output of `nim -v` on the command line.
+      render: sh
     validations:
       required: true
 
