@@ -148,7 +148,7 @@ type
 # Forward declarations
 func flatten(fields: seq[Field]): seq[Field]
 
-func getRenameCase(symbol: NimNode): Option[RenameCase]
+func getRenamed(symbol: NimNode, nameIdent: NimNode): Option[string]
 
 
 # # # # # # # # # # # #
@@ -329,27 +329,19 @@ func nskTypeSerializeWithSym*(self: Field): NimNode =
 func serializeName*(self: Field): string =
   ## Returns the string from the `renameSerialize` pragma if presented, otherwise the field name.
   if Some(@rename) ?= self.features.renameSerialize:
-    if Some(@renameCase) ?= getRenameCase(rename):
-      self.nameIdent.strVal.toCase renameCase
-    else:
-      rename.strVal
+    getRenamed(rename, self.nameIdent).get(self.nameIdent.strVal)
   else:
     self.nameIdent.strVal
 
 func deserializeName*(self: Field): seq[string] =
-  ## Returns the string from the `renameDeserialize` pragma if presented, otherwise the field name.
+  ## Returns the sequence of strings from the `renameDeserialize` pragma if presented, otherwise the field name.
   if Some(@rename) ?= self.features.renameDeserialize:
-    if Some(@renameCase) ?= getRenameCase(rename):
-      result = @[self.nameIdent.strVal.toCase renameCase]
-    else:
-      result = @[rename.strVal]
+    result = @[getRenamed(rename, self.nameIdent).get(self.nameIdent.strVal)]
   elif self.features.aliases.len > 0:
     result = newSeqOfCap[string](self.features.aliases.len + 1)
     for alias in self.features.aliases:
-      if Some(@renameCase) ?= getRenameCase(alias):
-        result.add self.nameIdent.strVal.toCase renameCase
-      else:
-        result.add alias.strVal
+      if Some(@renamed) ?= getRenamed(alias, self.nameIdent):
+        result.add renamed
     result.add self.nameIdent.strVal
   else:
     result = @[self.nameIdent.strVal]
@@ -646,25 +638,29 @@ func flatten(fields: seq[Field]): seq[Field] =
     if not dedup.containsOrIncl field.nameIdent.strVal:
       result.add field
 
-func getRenameCase(symbol: NimNode): Option[RenameCase] =
+func getRenamed(symbol: NimNode, nameIdent: NimNode): Option[string] =
   if symbol == bindSym("CamelCase"):
-    some CamelCase
+    some nameIdent.strVal.toCase CamelCase
+  elif symbol == bindSym("CobolCase"):
+    some  nameIdent.strVal.toCase CobolCase
   elif symbol == bindSym("KebabCase"):
-    some KebabCase
+    some nameIdent.strVal.toCase KebabCase
   elif symbol == bindSym("PascalCase"):
-    some PascalCase
+    some nameIdent.strVal.toCase PascalCase
   elif symbol == bindSym("PathCase"):
-    some PathCase
+    some nameIdent.strVal.toCase PathCase
   elif symbol == bindSym("SnakeCase"):
-    some SnakeCase
+    some nameIdent.strVal.toCase SnakeCase
   elif symbol == bindSym("PlainCase"):
-    some PlainCase
+    some nameIdent.strVal.toCase PlainCase
   elif symbol == bindSym("TrainCase"):
-    some TrainCase
+    some nameIdent.strVal.toCase TrainCase
   elif symbol == bindSym("UpperSnakeCase"):
-    some UpperSnakeCase
+    some nameIdent.strVal.toCase UpperSnakeCase
+  elif symbol.kind == nnkStrLit:
+    some symbol.strVal
   else:
-    none RenameCase
+    none string
 
 
 # Tests
@@ -1005,7 +1001,7 @@ when isMainModule:
         features=initFieldFeatures(
           skipSerializing=false,
           skipDeserializing=false,
-          untagged=true,
+          untagged=false,
           renameSerialize=some newLit "Serialize",
           renameDeserialize=some newLit "Deserialize",
           skipSerializeIf=none NimNode,
@@ -1021,5 +1017,78 @@ when isMainModule:
 
       doAssert serializeName(field) == "Serialize"
       doAssert deserializeName(field) == @["Deserialize"]
+
+    block:
+      let checkTable = [
+        (newLit "barFoo", "barFoo"),
+        (ident "barFoo", "fooBar"),
+        (bindSym "CamelCase", "fooBar"),
+        (bindSym "CobolCase", "FOO-BAR"),
+        (bindSym "KebabCase", "foo-bar"),
+        (bindSym "PascalCase", "FooBar"),
+        (bindSym "PathCase", "foo/bar"),
+        (bindSym "SnakeCase", "foo_bar"),
+        (bindSym "PlainCase", "foo bar"),
+        (bindSym "TrainCase", "Foo-Bar"),
+        (bindSym "UpperSnakeCase", "FOO_BAR"),
+      ]
+      for (renameValue, checkValue) in checkTable:
+        let field = initField(
+          nameIdent=ident "fooBar",
+          typeNode=bindSym "Test",
+          features=initFieldFeatures(
+            skipSerializing=false,
+            skipDeserializing=false,
+            untagged=false,
+            renameSerialize=some renameValue,
+            renameDeserialize=some renameValue,
+            skipSerializeIf=none NimNode,
+            serializeWith=none NimNode,
+            deserializeWith=none NimNode,
+            defaultValue=none NimNode,
+            aliases = @[]
+          ),
+          public=false,
+          isCase=false,
+          branches=newSeqOfCap[FieldBranch](0)
+        )
+        doAssert field.serializeName == checkValue
+        doAssert field.deserializeName == @[checkValue]
+
+      let aliasCheckTable = [
+        (newLit "barFoo", @["barFoo", "fooBar"]),
+        (ident "barFoo", @["fooBar"]),
+        (bindSym "CamelCase", @["fooBar", "fooBar"]),
+        (bindSym "CobolCase", @["FOO-BAR", "fooBar"]),
+        (bindSym "KebabCase", @["foo-bar", "fooBar"]),
+        (bindSym "PascalCase", @["FooBar", "fooBar"]),
+        (bindSym "PathCase", @["foo/bar", "fooBar"]),
+        (bindSym "SnakeCase", @["foo_bar", "fooBar"]),
+        (bindSym "PlainCase", @["foo bar", "fooBar"]),
+        (bindSym "TrainCase", @["Foo-Bar", "fooBar"]),
+        (bindSym "UpperSnakeCase", @["FOO_BAR", "fooBar"]),
+      ]
+
+      for (renameValue, checkValue) in aliasCheckTable:
+        let field = initField(
+          nameIdent=ident "fooBar",
+          typeNode=bindSym "Test",
+          features=initFieldFeatures(
+            skipSerializing=false,
+            skipDeserializing=false,
+            untagged=false,
+            renameSerialize=none NimNode,
+            renameDeserialize=none NimNode,
+            skipSerializeIf=none NimNode,
+            serializeWith=none NimNode,
+            deserializeWith=none NimNode,
+            defaultValue=none NimNode,
+            aliases = @[renameValue]
+          ),
+          public=false,
+          isCase=false,
+          branches=newSeqOfCap[FieldBranch](0)
+        )
+        doAssert field.deserializeName == checkValue
 
   run()
