@@ -51,10 +51,16 @@ proc serialize*(self: SomeFloat, serializer: var auto) =
   else:
     serializer.serializeFloat64(self)
 
-proc serialize*(self: string, serializer: var auto) =
+proc serializeStringSlice(self: openArray[char], serializer: var auto) =
   mixin serializeString
 
   serializer.serializeString(self)
+
+template serialize*(self: string, serializer: var auto) =
+  # Workaround for string serialization
+  # array or seq of char must be serialized as sequence
+  bind serializeStringSlice
+  serializeStringSlice(self, serializer)
 
 proc serialize*[T: char](self: T, serializer: var auto) =
   mixin serializeChar

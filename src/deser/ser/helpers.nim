@@ -34,7 +34,7 @@ template implSerializer*(selfType: typed{`type`}, public: static[bool] = false) 
     proc serializeFloat64(self: var selfType, value: float64)
 
     proc serializeChar(self: var selfType, value: char)
-    proc serializeString(self: var selfType, value: string)
+    proc serializeString(self: var selfType, value: openArray[char])
 
     proc serializeBytes(self: var selfType, value: openArray[byte])
 

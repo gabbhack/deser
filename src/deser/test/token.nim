@@ -106,8 +106,11 @@ proc initF64Token*(value: float64): Token =
 proc initCharToken*(value: char): Token =
   Token(kind: Char, `char`: value)
 
-proc initStringToken*(value: string): Token =
-  Token(kind: String, `string`: value)
+proc initStringToken*(value: openArray[char]): Token =
+  var temp = newStringOfCap(value.len)
+  for i in value:
+    temp.add i
+  Token(kind: String, `string`: temp)
 
 proc initBytesToken*(value: seq[byte]): Token =
   Token(kind: Bytes, bytes: value)

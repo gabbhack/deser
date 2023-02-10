@@ -39,11 +39,28 @@ suite "Serialize default impls":
       First
     
     assertSerTokens TestEnum.First, [initEnumToken()]
-  
+
   test "bytes":
     assertSerTokens [byte(0)], [initBytesToken(@[byte(0)])]
     assertSerTokens @[byte(0)], [initBytesToken(@[byte(0)])]
   
+  test "chars":
+    assertSerTokens ['1', '2', '3'], [
+      initSeqToken(some 3),
+      initCharToken('1'),
+      initCharToken('2'),
+      initCharToken('3'),
+      initSeqEndToken()
+    ]
+
+    assertSerTokens @['1', '2', '3'], [
+      initSeqToken(some 3),
+      initCharToken('1'),
+      initCharToken('2'),
+      initCharToken('3'),
+      initSeqEndToken()
+    ]
+
   test "set":
     assertSerTokens {1, 2, 3}, [
       initSeqToken(some 3),

@@ -58,7 +58,7 @@ proc serializeFloat32*(self: var Serializer, v: float32) = assertNextToken self,
 
 proc serializeFloat64*(self: var Serializer, v: float32) = assertNextToken self, initF64Token(v)
 
-proc serializeString*(self: var Serializer, v: string) = assertNextToken self, initStringToken(v)
+proc serializeString*(self: var Serializer, v: openArray[char]) = assertNextToken self, initStringToken(v)
 
 proc serializeChar*(self: var Serializer, v: char) = assertNextToken self, initCharToken(v)
 
