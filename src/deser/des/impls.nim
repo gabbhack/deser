@@ -49,7 +49,7 @@ implVisitor(IgnoredAnyVisitor, public=true)
 
 proc expecting*(self: IgnoredAnyVisitor): string = "anything"
 
-proc visitBool*(self: IgnoredAnyVisitor): self.Value = IgnoredAny()
+proc visitBool*(self: IgnoredAnyVisitor, value: bool): self.Value = IgnoredAny()
 
 proc visitInt8*(self: IgnoredAnyVisitor, value: int8): self.Value = IgnoredAny()
 
