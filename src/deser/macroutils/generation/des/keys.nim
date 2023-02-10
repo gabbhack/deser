@@ -144,22 +144,22 @@ func defVisitStringProc(selfType, returnType, body: NimNode): NimNode =
 
 func defVisitBytesProc(selfType, returnType, body: NimNode): NimNode =
   let
-    visitStringIdent = ident "visitBytes"
+    visitBytesIdent = ident "visitBytes"
     selfIdent = ident "self"
     valueIdent = ident "value"
 
   quote do:
-    proc `visitStringIdent`(`selfIdent`: `selfType`, `valueIdent`: openArray[byte]): `returnType` =
+    proc `visitBytesIdent`(`selfIdent`: `selfType`, `valueIdent`: openArray[byte]): `returnType` =
       `body`
 
 func defVisitUintProc(selfType, returnType, body: NimNode): NimNode =
   let
-    visitStringIdent = ident "visitUint64"
+    visitUintIdent = ident "visitUint64"
     selfIdent = ident "self"
     valueIdent = ident "value"
 
   quote do:
-    proc `visitStringIdent`(`selfIdent`: `selfType`, `valueIdent`: uint64): `returnType` =
+    proc `visitUintIdent`(`selfIdent`: `selfType`, `valueIdent`: uint64): `returnType` =
       `body`
 
 func defDeserializeKeyProc(selfType, body: NimNode, public: bool): NimNode =
