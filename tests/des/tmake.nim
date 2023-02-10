@@ -168,6 +168,12 @@ type
   ObjectWithRequiresInit {.requiresInit.} = object
     text: string
 
+  Quotes = object
+    `first`: string
+    `second`*: string
+    `third` {.skipped.}: string
+    `fourth`* {.skipped.}: string
+
 
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
 
@@ -241,7 +247,8 @@ makeDeserializable([
   CaseObjectMultiBranch,
   AliasesPragma,
   AliasesWithRenameAllPragma,
-  ObjectWithRequiresInit
+  ObjectWithRequiresInit,
+  Quotes
 ], public=true)
 
 
@@ -603,5 +610,15 @@ suite "makeDeserializable":
       initStructToken("ObjectWithRequiresInit", 1),
       initStringToken("text"),
       initStringToken("123"),
+      initStructEndToken()
+    ]
+
+  test "Quotes":
+    assertDesTokens Quotes(first: "1", second: "2"), [
+      initStructToken("Quotes", 2),
+      initStringToken("first"),
+      initStringToken("1"),
+      initStringToken("second"),
+      initStringToken("2"),
       initStructEndToken()
     ]

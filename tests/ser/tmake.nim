@@ -145,6 +145,12 @@ type
       first: string
     of Third, Fourth:
       second: string
+  
+  Quotes = object
+    `first`: string
+    `second`*: string
+    `third` {.skipped.}: string
+    `fourth`* {.skipped.}: string
 
 
 makeSerializable([
@@ -171,7 +177,8 @@ makeSerializable([
   MultiCaseObjectUntagged,
   MultiCaseObjectAllUntagged,
   RenameWithCase,
-  CaseObjectMultiBranch
+  CaseObjectMultiBranch,
+  Quotes
 ], public=true)
 
 
@@ -453,4 +460,14 @@ suite "makeSerializable":
     var temp2: ChildRefObject
     assertSerTokens temp2, [
       initNoneToken()
+    ]
+  
+  test "Quotes":
+    assertSerTokens Quotes(first: "1", second: "2"), [
+      initMapToken(none int),
+      initStringToken("first"),
+      initStringToken("1"),
+      initStringToken("second"),
+      initStringToken("2"),
+      initMapEndToken()
     ]
