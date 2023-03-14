@@ -12,7 +12,12 @@ from deser/macroutils/generation/des import
   defDeserialize
 
 
-macro makeDeserializable*(types: varargs[typedesc], public: static[bool] = false) =
+macro makeDeserializable*(
+  types: varargs[typedesc],
+  public: static[bool] = false,
+  debugOutput: static[bool] = false,
+  debugTreeOutput: static[bool] = false
+) =
   ##[
 Generate `deserialize` procedure for your type. Use `public` parameter to export.
 
@@ -39,8 +44,8 @@ makeDeserializable([
     
     result.add defDeserialize(struct, public)
 
-  if defined(debugMakeDeserializable):
+  if defined(debugMakeDeserializable) or debugOutput:
     debugEcho result.toStrLit
-  
-  if defined(debugMakeDeserializableTree):
+
+  if defined(debugMakeDeserializableTree) or debugTreeOutput:
     debugEcho result.treeRepr
