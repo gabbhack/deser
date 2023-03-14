@@ -626,7 +626,7 @@ suite "makeDeserializable":
       initStringToken("2"),
       initStructEndToken()
     ]
-  
+
   test "Duplicate check":
     doAssertRaises(DuplicateField):
       assertDesTokens Object(id: 123), [

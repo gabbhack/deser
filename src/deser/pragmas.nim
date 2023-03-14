@@ -110,6 +110,17 @@ assert User(created: fromUnix(123)) == User.fromJson("""{"created": 123}""")
 ```
 ]##
 
+template deserWith*(with: typed) {.pragma.} ##[
+Combination of `serializeWith` and `deserializeWith`.
+
+The given type (or anything actually) must have callable .serialize and .deserialize attributes.
+
+.serialize must be callable as `proc (self: with, field: FieldType, serializer: var auto)`.
+
+.deserialize must be callable as `proc (self: with, deserializer: var auto): FieldType` or `proc [T](self: with, deserializer: var auto): T`.
+```
+]##
+
 template renamed*(renamed: string | RenameCase) {.pragma.} ##[
 Serialize and deserialize field with the given name instead of its Nim name.
 ]##
