@@ -28,6 +28,7 @@ from deser/macroutils/types import
   deserializeName,
   nameIdent,
   nskTypeDeserializeWithSym,
+  duplicateCheck,
   # FieldFeatures
   deserializeWith,
   skipDeserializing,
@@ -554,9 +555,8 @@ func defKeyToValueCase(struct: Struct): NimNode =
     if field.features.deserializeWith.isSome:
       nextValueCall = newDotExpr(nextValueCall, ident "value")
 
-    result.add nnkOfBranch.newTree(
-      newDotExpr(struct.nskTypeEnumSym, field.nskEnumFieldSym),
-      newStmtList(
+    let duplicateCheck =
+      if struct.duplicateCheck:
         nnkIfStmt.newTree(
           nnkElifBranch.newTree(
             newCall(bindSym("isSome"), field.nameIdent),
@@ -564,7 +564,14 @@ func defKeyToValueCase(struct: Struct): NimNode =
               newCall(bindSym("raiseDuplicateField"), defFieldNamesLit(field.deserializeName))
             )
           )
-        ),
+        )
+      else:
+        newEmptyNode()
+
+    result.add nnkOfBranch.newTree(
+      newDotExpr(struct.nskTypeEnumSym, field.nskEnumFieldSym),
+      newStmtList(
+        duplicateCheck,
         newAssignment(
           field.nameIdent,
           newCall(

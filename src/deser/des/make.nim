@@ -3,7 +3,8 @@ import std/[
 ]
 
 from deser/macroutils/types import
-  Struct
+  Struct,
+  `duplicateCheck=`
 
 from deser/macroutils/parsing/struct import
   fromTypeSym
@@ -15,6 +16,7 @@ from deser/macroutils/generation/des import
 macro makeDeserializable*(
   types: varargs[typedesc],
   public: static[bool] = false,
+  duplicateCheck: static[bool] = true,
   debugOutput: static[bool] = false,
   debugTreeOutput: static[bool] = false
 ) =
@@ -41,7 +43,8 @@ makeDeserializable([
 
   for typeSym in types:
     var struct = Struct.fromTypeSym(typeSym)
-    
+    struct.duplicateCheck = duplicateCheck
+
     result.add defDeserialize(struct, public)
 
   if defined(debugMakeDeserializable) or debugOutput:

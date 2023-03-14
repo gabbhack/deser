@@ -174,6 +174,9 @@ type
     `third` {.skipped.}: string
     `fourth`* {.skipped.}: string
 
+  DuplicateCheck = object
+    field: int8
+
 
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
 
@@ -251,6 +254,7 @@ makeDeserializable([
   Quotes
 ], public=true)
 
+makeDeserializable([DuplicateCheck], public=true, duplicateCheck=false)
 
 suite "makeDeserializable":
   test "Deserialize at CT":
@@ -620,5 +624,26 @@ suite "makeDeserializable":
       initStringToken("1"),
       initStringToken("second"),
       initStringToken("2"),
+      initStructEndToken()
+    ]
+  
+  test "Duplicate check":
+    doAssertRaises(DuplicateField):
+      assertDesTokens Object(id: 123), [
+        initStructToken("Object", 1),
+        initStringToken("id"),
+        initI64Token(123),
+        initStringToken("id"),
+        initI64Token(123),
+        initStructEndToken()
+      ]
+
+  test "Disable duplicate check":
+    assertDesTokens DuplicateCheck(field: 10), [
+      initStructToken("DuplicateCheck", 1),
+      initStringToken("field"),
+      initI8Token(0),
+      initStringToken("field"),
+      initI8Token(10),
       initStructEndToken()
     ]

@@ -44,6 +44,7 @@ type
     flattenFields: seq[Field]
     nskTypeEnumSym: NimNode
     nskEnumFieldUnknownSym: NimNode
+    duplicateCheck: bool
 
   Field* {.requiresInit.} = object
     ## Intermediate representation of type field.
@@ -171,7 +172,8 @@ func initStruct*(
     genericParams: genericParams,
     flattenFields: flatten fields,
     nskTypeEnumSym: genSym(nskType, typeSym.strVal & "Fields"),
-    nskEnumFieldUnknownSym: genSym(nskEnumField, "UnknownField")
+    nskEnumFieldUnknownSym: genSym(nskEnumField, "UnknownField"),
+    duplicateCheck: true
   )
 
 # Struct getters
@@ -215,6 +217,14 @@ func nskEnumFieldUnknownSym*(self: Struct): NimNode =
   ## 
   ## Created automatically in the `initStruct` constructor
   self.nskEnumFieldUnknownSym
+
+func duplicateCheck*(self: Struct): bool =
+  self.duplicateCheck
+
+
+# setters
+proc `duplicateCheck=`*(self: var Struct, value: bool) =
+  self.duplicateCheck = value
 
 
 # # # # # # # # # # # #
@@ -493,6 +503,7 @@ func aliases*(self: FieldFeatures): seq[NimNode] =
   ## Value from `aliases` pragma.
   self.aliases
 
+
 # setters
 proc `skipSerializing=`*(self: var FieldFeatures, value: bool) =
   ## `true` if `skipped` or `skipSerializing` pragmas are used.
@@ -509,6 +520,7 @@ proc `renameSerialize=`*(self: var FieldFeatures, value: Option[NimNode]) =
 proc `renameDeserialize=`*(self: var FieldFeatures, value: Option[NimNode]) =
   ## Value from `renameDeserialize` pragma.
   self.renameDeserialize = value
+
 
 # # # # # # # # # # # #
 # FieldBranch

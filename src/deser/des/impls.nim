@@ -16,7 +16,6 @@ from errors import
   initUnexpectedSigned,
   initUnexpectedFloat
 
-
 from deser/macroutils/generation/des/utils import
   genPrimitive,
   genArray,
