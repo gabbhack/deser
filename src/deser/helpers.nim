@@ -38,21 +38,26 @@ proc serialize*(self: typedesc[UnixTimeFormat], field: Time, serializer: var aut
   serializer.serializeInt64(field.toUnix())
 
 
-type DateTimeFormat* = object
-  format: string
+type DateTimeWith* = object ##[
+Deserialize and serialize [DateTime](https://nim-lang.org/docs/times.html#DateTime) as string of your format.
 
-template DateTimeWithFormat*(format: string) = DateTimeFormat(format: format)
+**Example:**
+```nim
+type User = object
+  created {.deserWith(DateTimeWith(format: "yyyy-MM-dd")).}: DateTime
+```
+]##
+  format*: string
 
-proc deserialize*(self: DateTimeFormat, deserializer: var auto): DateTime =
+proc deserialize*(self: DateTimeWith, deserializer: var auto): DateTime =
   mixin deserialize
 
   parse(deserialize(string, deserializer), self.format)
 
-proc serialize*(self: DateTimeFormat, field: DateTime, serializer: var auto) =
+proc serialize*(self: DateTimeWith, field: DateTime, serializer: var auto) =
   mixin serialize
 
   serializer.serializeString(field.format(self.format))
-
 
 when defined(release):
   {.pop.}
