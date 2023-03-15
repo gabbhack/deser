@@ -35,7 +35,8 @@ from deser/macroutils/types as macro_types import
   `skipSerializing=`,
   `skipDeserializing=`,
   `renameSerialize=`,
-  `renameDeserialize=`
+  `renameDeserialize=`,
+  `defaultValue=`
 
 from deser/macroutils/types import nil
 
@@ -51,6 +52,7 @@ from deser/pragmas import
   skipPrivate,
   skipPrivateSerializing,
   skipPrivateDeserializing,
+  defaultValue,
   RenameCase
 
 # for pattern matching and assertKind
@@ -166,12 +168,14 @@ func fromPragma*(featuresTy: typedesc[StructFeatures], pragma: Option[NimNode]):
       skipPrivateSym = bindSym("skipPrivate")
       skipPrivateSerializingSym = bindSym("skipPrivateSerializing")
       skipPrivateDeserializingSym = bindSym("skipPrivateDeserializing")
+      defaultValueSym = bindSym("defaultValue")
 
     var
       onUnknownKeys = none NimNode
       renameAll = none NimNode
       skipPrivateSerializing = false
       skipPrivateDeserializing = false
+      defaultValue = none NimNode
 
     for symbol, values in parsePragma(pragma):
       if symbol == onUnknownKeysSym:
@@ -185,12 +189,18 @@ func fromPragma*(featuresTy: typedesc[StructFeatures], pragma: Option[NimNode]):
         skipPrivateSerializing = true
       elif symbol == skipPrivateDeserializingSym:
         skipPrivateDeserializing = true
+      elif symbol == defaultValueSym:
+        if values[0].kind == nnkNilLit:
+          defaultValue = some newEmptyNode()
+        else:
+          defaultValue = some values[0]
 
     initStructFeatures(
       onUnknownKeys=onUnknownKeys,
       renameAll=renameAll,
       skipPrivateSerializing=skipPrivateSerializing,
-      skipPrivateDeserializing=skipPrivateDeserializing
+      skipPrivateDeserializing=skipPrivateDeserializing,
+      defaultValue=defaultValue
     )
   else:
     initEmptyStructFeatures()
@@ -235,6 +245,8 @@ proc propagateFeatures(fields: var seq[Field], features: StructFeatures) =
       field.features.skipSerializing = true
     if types.skipPrivateDeserializing(features) and not public field:
       field.features.skipDeserializing = true
+    
+    # TODO defaultValue
 
     # do not check aliases here, because they are useless for serialization
     if field.features.renameSerialize.isNone:
@@ -261,7 +273,7 @@ when isMainModule:
 
     Fourth[T] = object
 
-    Fifth {.onUnknownKeys(test), renameAll(CamelCase), skipPrivate.} = object
+    Fifth {.onUnknownKeys(test), renameAll(CamelCase), skipPrivate, defaultValue.} = object
 
   macro run() =
     let
@@ -374,7 +386,8 @@ when isMainModule:
         onUnknownKeys=some bindSym "test",
         renameAll=some bindSym "CamelCase",
         skipPrivateSerializing=true,
-        skipPrivateDeserializing=true
+        skipPrivateDeserializing=true,
+        defaultValue=some newEmptyNode()
       ), $StructFeatures.fromPragma(fifthType.pragma)
 
     block:

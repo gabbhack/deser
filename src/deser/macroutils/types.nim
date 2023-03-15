@@ -86,6 +86,7 @@ type
     renameAll: Option[NimNode]
     skipPrivateSerializing: bool
     skipPrivateDeserializing: bool
+    defaultValue: Option[NimNode]
 
   FieldFeatures* {.requiresInit.} = object
     ## Features derived from pragmas.
@@ -381,13 +382,15 @@ func initStructFeatures*(
   onUnknownKeys: Option[NimNode],
   renameAll: Option[NimNode],
   skipPrivateSerializing: bool,
-  skipPrivateDeserializing: bool
+  skipPrivateDeserializing: bool,
+  defaultValue: Option[NimNode]
 ): StructFeatures =
   StructFeatures(
     onUnknownKeys: onUnknownKeys,
     renameAll: renameAll,
     skipPrivateSerializing: skipPrivateSerializing,
-    skipPrivateDeserializing: skipPrivateDeserializing
+    skipPrivateDeserializing: skipPrivateDeserializing,
+    defaultValue: defaultValue
   )
 
 func initEmptyStructFeatures*(): StructFeatures =
@@ -395,7 +398,8 @@ func initEmptyStructFeatures*(): StructFeatures =
     onUnknownKeys: none NimNode,
     renameAll: none NimNode,
     skipPrivateSerializing: false,
-    skipPrivateDeserializing: false
+    skipPrivateDeserializing: false,
+    defaultValue: none NimNode
   )
 
 # StructFeatures getters
@@ -414,6 +418,10 @@ func skipPrivateSerializing*(self: StructFeatures): bool =
 func skipPrivateDeserializing*(self: StructFeatures): bool =
   ## True if `skipPrivateDeserializing` pragma presented.
   self.skipPrivateDeserializing
+
+func defaultValue*(self: StructFeatures): Option[NimNode] =
+  ## Value from `defaultValue` pragma.
+  self.defaultValue
 
 
 # # # # # # # # # # # #
@@ -514,20 +522,19 @@ func deserWith*(self: FieldFeatures): Option[NimNode] =
 
 # setters
 proc `skipSerializing=`*(self: var FieldFeatures, value: bool) =
-  ## `true` if `skipped` or `skipSerializing` pragmas are used.
   self.skipSerializing = value
 
 proc `skipDeserializing=`*(self: var FieldFeatures, value: bool) =
-  ## `true` if `skipped` or `skipDeserializing` pragmas are used.
   self.skipDeserializing = value
 
 proc `renameSerialize=`*(self: var FieldFeatures, value: Option[NimNode]) =
-  ## Value from `renameSerialize` pragma.
   self.renameSerialize = value
 
 proc `renameDeserialize=`*(self: var FieldFeatures, value: Option[NimNode]) =
-  ## Value from `renameDeserialize` pragma.
   self.renameDeserialize = value
+
+proc `defaultValue=`*(self: var FieldFeatures, value: Option[NimNode]) =
+  self.defaultValue = value
 
 
 # # # # # # # # # # # #
