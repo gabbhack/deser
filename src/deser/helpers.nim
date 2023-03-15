@@ -37,5 +37,22 @@ proc serialize*(self: typedesc[UnixTimeFormat], field: Time, serializer: var aut
 
   serializer.serializeInt64(field.toUnix())
 
+
+type DateTimeFormat* = object
+  format: string
+
+template DateTimeWithFormat*(format: string) = DateTimeFormat(format: format)
+
+proc deserialize*(self: DateTimeFormat, deserializer: var auto): DateTime =
+  mixin deserialize
+
+  parse(deserialize(string, deserializer), self.format)
+
+proc serialize*(self: DateTimeFormat, field: DateTime, serializer: var auto) =
+  mixin serialize
+
+  serializer.serializeString(field.format(self.format))
+
+
 when defined(release):
   {.pop.}
