@@ -106,6 +106,7 @@ type
     deserializeWith: Option[NimNode]
     defaultValue: Option[NimNode]
     aliases: seq[NimNode]
+    deserWith: Option[NimNode]
 
   FieldBranchKind* = enum
     Of
@@ -427,7 +428,8 @@ func initFieldFeatures*(
   serializeWith: Option[NimNode],
   deserializeWith: Option[NimNode],
   defaultValue: Option[NimNode],
-  aliases: seq[NimNode]
+  aliases: seq[NimNode],
+  deserWith: Option[NimNode]
 ): FieldFeatures =
   ##[
 Throws a `ValueError` exception if both `renameDeserialize` and `aliases` are passed.
@@ -445,7 +447,8 @@ Throws a `ValueError` exception if both `renameDeserialize` and `aliases` are pa
     serializeWith: serializeWith,
     deserializeWith: deserializeWith,
     defaultValue: defaultValue,
-    aliases: aliases
+    aliases: aliases,
+    deserWith: deserWith
   )
 
 func initEmptyFieldFeatures*(): FieldFeatures =
@@ -459,7 +462,8 @@ func initEmptyFieldFeatures*(): FieldFeatures =
     serializeWith: none NimNode,
     deserializeWith: none NimNode,
     defaultValue: none NimNode,
-    aliases: @[]
+    aliases: @[],
+    deserWith: none NimNode
   )
 
 # FieldFeatures getters
@@ -502,6 +506,10 @@ func defaultValue*(self: FieldFeatures): Option[NimNode] =
 func aliases*(self: FieldFeatures): seq[NimNode] =
   ## Value from `aliases` pragma.
   self.aliases
+
+func deserWith*(self: FieldFeatures): Option[NimNode] =
+  ## Value from `deserWith` pragma.
+  self.deserWith
 
 
 # setters
@@ -923,7 +931,8 @@ when isMainModule:
                     serializeWith=none NimNode,
                     deserializeWith=none NimNode,
                     defaultValue=none NimNode,
-                    aliases = @[]
+                    aliases = @[],
+                    deserWith=none NimNode
                   ),
                   public=false,
                   isCase=true,
@@ -969,7 +978,8 @@ when isMainModule:
                     serializeWith=none NimNode,
                     deserializeWith=none NimNode,
                     defaultValue=none NimNode,
-                    aliases = @[]
+                    aliases = @[],
+                    deserWith=none NimNode
                   ),
                   public=false,
                   isCase=true,
@@ -1020,7 +1030,8 @@ when isMainModule:
           serializeWith=none NimNode,
           deserializeWith=none NimNode,
           defaultValue=none NimNode,
-          aliases = @[]
+          aliases = @[],
+          deserWith=none NimNode
         ),
         public=false,
         isCase=false,
@@ -1058,7 +1069,8 @@ when isMainModule:
             serializeWith=none NimNode,
             deserializeWith=none NimNode,
             defaultValue=none NimNode,
-            aliases = @[]
+            aliases = @[],
+            deserWith=none NimNode
           ),
           public=false,
           isCase=false,
@@ -1095,7 +1107,8 @@ when isMainModule:
             serializeWith=none NimNode,
             deserializeWith=none NimNode,
             defaultValue=none NimNode,
-            aliases = @[renameValue]
+            aliases = @[renameValue],
+            deserWith=none NimNode
           ),
           public=false,
           isCase=false,

@@ -39,7 +39,8 @@ from deser/pragmas import
   renameDeserialize,
   skipSerializeIf,
   defaultValue,
-  aliases
+  aliases,
+  deserWith
 
 # for pattern matching and assertKind
 import deser/macroutils/matching
@@ -206,6 +207,7 @@ func fromPragma*(featuresTy: typedesc[FieldFeatures], pragma: Option[NimNode]): 
       skipSerializeIfSym = bindSym("skipSerializeIf")
       defaultValueSym = bindSym("defaultValue")
       aliasesSym = bindSym("aliases")
+      deserWithSym = bindSym("deserWith")
 
     var
       untagged = false
@@ -218,6 +220,7 @@ func fromPragma*(featuresTy: typedesc[FieldFeatures], pragma: Option[NimNode]): 
       skipSerializeIf = none NimNode
       defaultValue = none NimNode
       aliases = newSeqOfCap[NimNode](0)
+      deserWith = none NimNode
 
     for symbol, values in parsePragma(pragma):
       if symbol == untaggedSym:
@@ -252,9 +255,14 @@ func fromPragma*(featuresTy: typedesc[FieldFeatures], pragma: Option[NimNode]): 
         assertMatch values[0]:
           HiddenStdConv[Empty(), Bracket[all @values]]
         aliases = values
+      elif symbol == deserWithSym:
+        deserWith = some values[0]
 
     if aliases.len > 0 and renameDeserialize.isSome:
       error("Cannot use both `aliases` and `renameDeserialize` on the same field.", pragma)
+
+    if deserWith.isSome and (serializeWith.isSome or deserializeWith.isSome):
+      error("Cannot use both `deserWith` and `serializeWith` or `deserializeWith` on the same field", pragma)
 
     result = initFieldFeatures(
       skipSerializing = skipSerializing,
@@ -266,7 +274,8 @@ func fromPragma*(featuresTy: typedesc[FieldFeatures], pragma: Option[NimNode]): 
       serializeWith = serializeWith,
       deserializeWith = deserializeWith,
       defaultValue = defaultValue,
-      aliases = aliases
+      aliases = aliases,
+      deserWith = deserWith
     )
   else:
     result = initEmptyFieldFeatures()

@@ -115,9 +115,38 @@ Combination of `serializeWith` and `deserializeWith`.
 
 The given type (or anything actually) must have callable .serialize and .deserialize attributes.
 
-.serialize must be callable as `proc (self: with, field: FieldType, serializer: var auto)`.
+.serialize must be callable as `proc (self: withType, field: FieldType, serializer: var auto)`.
 
-.deserialize must be callable as `proc (self: with, deserializer: var auto): FieldType` or `proc [T](self: with, deserializer: var auto): T`.
+.deserialize must be callable as `proc (self: withType, deserializer: var auto): FieldType` or `proc [T](self: withType, deserializer: var auto): T`.
+
+**Example:**
+```nim
+import std/times
+
+import
+  deser,
+  deser_json
+
+
+type UnixTimeFormat = object
+
+proc deserialize(self: typedesc[UnixTimeFormat], deserializer: var auto): Time =
+  fromUnix(deserialize(int64, deserializer))
+
+proc serialize(self: typedesc[UnixTimeFormat], field: Time, serializer: var auto) =
+  serializer.serializeInt64(self.toUnix())
+
+type
+  User = object
+    created {.deserWith(UnixTimeFormat).}: Time
+
+makeSerializable(User)
+makeDeserializable(User)
+
+let user = User(created: fromUnix(123))
+
+assert user == User.fromJson("""{"created": 123}""")
+assert user.toJson() == """{"created":123}"""
 ```
 ]##
 

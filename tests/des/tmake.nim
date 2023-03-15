@@ -12,7 +12,8 @@ import std/[
 import deser/[
   des,
   pragmas,
-  test
+  test,
+  helpers
 ]
 
 
@@ -177,6 +178,9 @@ type
   DuplicateCheck = object
     field: int8
 
+  DeserWith = object
+    created {.deserWith(UnixTimeFormat).}: Time
+
 
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
 
@@ -251,7 +255,8 @@ makeDeserializable([
   AliasesPragma,
   AliasesWithRenameAllPragma,
   ObjectWithRequiresInit,
-  Quotes
+  Quotes,
+  DeserWith
 ], public=true)
 
 makeDeserializable([DuplicateCheck], public=true, duplicateCheck=false)
@@ -645,5 +650,13 @@ suite "makeDeserializable":
       initI8Token(0),
       initStringToken("field"),
       initI8Token(10),
+      initStructEndToken()
+    ]
+
+  test "DeserWith":
+    assertDesTokens DeserWith(created: fromUnix(123)), [
+      initStructToken("DeserWith", 1),
+      initStringToken("created"),
+      initI64Token(123),
       initStructEndToken()
     ]

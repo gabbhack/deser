@@ -134,10 +134,12 @@ Check helpers templates for [serialization](deser/ser/helpers.html) and [deseria
 import deser/[
   pragmas,
   des,
-  ser
+  ser,
+  helpers
 ]
 
 export
   pragmas,
   des,
-  ser
+  ser,
+  helpers

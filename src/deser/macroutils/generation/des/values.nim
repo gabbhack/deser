@@ -34,6 +34,7 @@ from deser/macroutils/types import
   skipDeserializing,
   defaultValue,
   untagged,
+  deserWith,
   # Field and Struct
   features,
   # FieldBranch
@@ -195,19 +196,34 @@ func defDeserializeWithType(struct: Struct, public: bool): NimNode =
   result = newStmtList()
 
   for field in struct.flattenFields:
-    if Some(@deserializeWith) ?= field.features.deserializeWith:
+    if field.features.deserializeWith.isSome or field.features.deserWith.isSome:
       let
         typ = field.nskTypeDeserializeWithSym
         deserializeIdent = defMaybeExportedIdent(ident "deserialize", public)
+        deserializerIdent = ident "deserializer"
+        value =
+          if Some(@deserializeWith) ?= field.features.deserializeWith:
+            newCall(deserializeWith, deserializerIdent)
+          elif Some(@deserWith) ?= field.features.deserWith:
+            newCall(ident "deserialize", deserWith, deserializerIdent)
+          else:
+            doAssert false
+            newEmptyNode()
+        genericValue = block:
+          let tmp = copy value
+          tmp[0] = nnkBracketExpr.newTree(tmp[0], ident "T")
+          tmp
 
       result.add defWithType(typ)
 
       result.add quote do:
-        proc `deserializeIdent`[T](selfTy: typedesc[`typ`[T]], deserializer: var auto): selfTy {.inline.} =
-          when compiles(`deserializeWith`[T](deserializer)):
-            selfTy(value: `deserializeWith`[T](deserializer))
+        proc `deserializeIdent`[T](selfTy: typedesc[`typ`[T]], `deserializerIdent`: var auto): selfTy {.inline.} =
+          mixin deserialize
+
+          when compiles(`genericValue`):
+            selfTy(value: `genericValue`)
           else:
-            selfTy(value: `deserializeWith`(deserializer))
+            selfTy(value: `value`)
 
 func defWithGenerics(someType: NimNode, genericParams: NimNode): NimNode =
   assertKind someType, {nnkIdent, nnkSym}
@@ -264,7 +280,7 @@ func defFieldLets(struct: Struct): NimNode =
   for field in struct.flattenFields:
     let 
       genericTypeArgument =
-        if field.features.deserializeWith.isSome:
+        if field.features.deserializeWith.isSome or field.features.deserWith.isSome:
           let
             withType = field.nskTypeDeserializeWithSym
             originType = defFieldType(struct, field)
@@ -282,7 +298,7 @@ func defFieldLets(struct: Struct): NimNode =
     var nextElementCall = quote do:
       nextElement[`genericTypeArgument`](`sequenceIdent`)
 
-    if field.features.deserializeWith.isSome:
+    if field.features.deserializeWith.isSome or field.features.deserWith.isSome:
       # nextElement returns Option[T]
       nextElementCall = quote do:
         block:
@@ -532,7 +548,7 @@ func defKeyToValueCase(struct: Struct): NimNode =
 
   for field in struct.flattenFields:
     let genericTypeArgument =
-      if field.features.deserializeWith.isSome:
+      if field.features.deserializeWith.isSome or field.features.deserWith.isSome:
         let
           withType = field.nskTypeDeserializeWithSym
           originType = defFieldType(struct, field)
@@ -552,7 +568,7 @@ func defKeyToValueCase(struct: Struct): NimNode =
         ident "map",
       )
 
-    if field.features.deserializeWith.isSome:
+    if field.features.deserializeWith.isSome or field.features.deserWith.isSome:
       nextValueCall = newDotExpr(nextValueCall, ident "value")
 
     let duplicateCheck =
