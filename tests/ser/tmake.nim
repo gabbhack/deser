@@ -10,7 +10,8 @@ import std/[
 import deser/[
   ser,
   pragmas,
-  test
+  test,
+  helpers
 ]
 
 
@@ -152,6 +153,9 @@ type
     `third` {.skipped.}: string
     `fourth`* {.skipped.}: string
 
+  DeserWith = object
+    created {.deserWith(UnixTimeFormat).}: Time
+
 
 makeSerializable([
   Object,
@@ -178,7 +182,8 @@ makeSerializable([
   MultiCaseObjectAllUntagged,
   RenameWithCase,
   CaseObjectMultiBranch,
-  Quotes
+  Quotes,
+  DeserWith
 ], public=true)
 
 
@@ -469,5 +474,13 @@ suite "makeSerializable":
       initStringToken("1"),
       initStringToken("second"),
       initStringToken("2"),
+      initMapEndToken()
+    ]
+  
+  test "DeserWith":
+    assertSerTokens DeserWith(created: fromUnix(123)), [
+      initMapToken(none int),
+      initStringToken("created"),
+      initI64Token(123),
       initMapEndToken()
     ]

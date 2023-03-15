@@ -35,7 +35,7 @@ proc deserialize*(self: typedesc[UnixTimeFormat], deserializer: var auto): Time 
 proc serialize*(self: typedesc[UnixTimeFormat], field: Time, serializer: var auto) =
   mixin serialize
 
-  serializer.serializeInt64(self.toUnix())
+  serializer.serializeInt64(field.toUnix())
 
 when defined(release):
   {.pop.}
