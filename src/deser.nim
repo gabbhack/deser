@@ -49,7 +49,11 @@ let chat = Message.fromJson(json)
 echo chat.toJson()
 ```
 
-`created` field is the time in unix format, it is not convenient to work with it as `int`. But if we try to just use [Time](https://nim-lang.org/docs/times.html#Time), we get an error:
+# De/serialize Time and DateTime
+
+In previous section we created `Message` type where `created` field is the time in unix format.
+
+It is not convenient to work with it as `int`. But if we try to just use [Time](https://nim-lang.org/docs/times.html#Time), we get an error:
 
 ```nim
 Error: type mismatch: got <typedesc[Time], Deserializer>
@@ -83,6 +87,24 @@ type
 
 makeSerializable(Message)
 makeDeserializable(Message)
+```
+
+.. Note:: Since deser 0.3.2 you can use the [helpers](https://deser.nim.town/deser/helpers.html) module and [deserWith](https://deser.nim.town/deser/pragmas.html#deserWith.t%2Ctyped) pragma for convenient time de/serialization.
+
+Example:
+
+```nim
+import std/times
+
+import
+  deser,
+  deser_json
+
+type
+  Message = object
+    id: int
+    text: string
+    created {.deserWith(UnixTimeFormat).}: Time
 
 const json = """
 {
