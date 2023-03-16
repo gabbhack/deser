@@ -119,6 +119,8 @@ The given type (or anything actually) must have callable .serialize and .deseria
 
 .deserialize must be callable as `proc (self: withType, deserializer: var auto): FieldType` or `proc [T](self: withType, deserializer: var auto): T`.
 
+.. Note:: You dont need to reimplement this example in your project. Please use [helpers](https://deser.nim.town/deser/helpers.html) module.
+
 **Example:**
 ```nim
 import std/times
