@@ -110,6 +110,46 @@ assert User(created: fromUnix(123)) == User.fromJson("""{"created": 123}""")
 ```
 ]##
 
+template deserWith*(with: typed) {.pragma.} ##[
+Combination of `serializeWith` and `deserializeWith`.
+
+The given type (or anything actually) must have callable .serialize and .deserialize attributes.
+
+.serialize must be callable as `proc (self: withType, field: FieldType, serializer: var auto)`.
+
+.deserialize must be callable as `proc (self: withType, deserializer: var auto): FieldType` or `proc [T](self: withType, deserializer: var auto): T`.
+
+**Example:**
+```nim
+import std/times
+
+import
+  deser,
+  deser_json
+
+
+type UnixTimeFormat = object
+
+proc deserialize(self: typedesc[UnixTimeFormat], deserializer: var auto): Time =
+  fromUnix(deserialize(int64, deserializer))
+
+proc serialize(self: typedesc[UnixTimeFormat], field: Time, serializer: var auto) =
+  serializer.serializeInt64(self.toUnix())
+
+type
+  User = object
+    created {.deserWith(UnixTimeFormat).}: Time
+
+makeSerializable(User)
+makeDeserializable(User)
+
+let user = User(created: fromUnix(123))
+
+assert user == User.fromJson("""{"created": 123}""")
+assert user.toJson() == """{"created":123}"""
+```
+]##
+
 template renamed*(renamed: string | RenameCase) {.pragma.} ##[
 Serialize and deserialize field with the given name instead of its Nim name.
 ]##
@@ -177,17 +217,18 @@ type
 ]##
 
 template defaultValue*(value: typed = nil) {.pragma.} ##[
-Uses the specified value if the field was not in the input.
+Uses the specified value, function or template if the field was not in the input.
 
-**Example**:
+Function or template must be callable as `myDefault[T]()`.
 
+**Examples**:
 ```nim
 type
   User = object
     name {.defaultValue("noname").}: string
 ```
 
-Do not specify a value, then `default(FieldType)` will be used
+Do not specify a value, then system [default](https://nim-lang.org/docs/system.html#default%2Ctypedesc%5BT%5D) will be used:
 
 ```nim
 import deser_json
@@ -197,6 +238,31 @@ type
     id {.defaultValue.}: int
 
 assert Foo.fromJson("""{}""").id == 0
+```
+
+Specify a function
+
+```nim
+proc myDefault[T](): T =
+  when T is int:
+    123
+  elif T is string:
+    "hello"
+  else:
+    {.error.}
+  
+type
+  User = object
+    id {.defaultValue(myDefault).}: int
+```
+
+You can use `defaultValue` on object. Than specified value will be used on all missing fields.
+
+```nim
+type
+  User {.defaultValue(myDefault).} =
+    id: int
+    bio: string
 ```
 ]##
 

@@ -34,3 +34,9 @@ tests/megatest.nim
 outputExpected.txt
 
 .idea/
+tests/megatest
+tests/des/timpls
+tests/ser/timpls
+tests/ser/tmake
+tests/des/tmake
+src/deser/macroutils/generation/ser/ser

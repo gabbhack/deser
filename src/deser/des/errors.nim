@@ -118,28 +118,22 @@ proc raiseInvalidType*(unexp: Unexpected, exp: auto) =
 
   raise newException(InvalidType, &"invalid type: {$unexp}, expected: {exp.expecting()}")
 
-
 proc raiseInvalidValue*(unexp: Unexpected, exp: auto) =
   mixin expecting
 
   raise newException(InvalidValue, &"invalid value: {$unexp}, expected: {exp.expecting()}")
 
-
 proc raiseInvalidLength*(unexp: int, exp: auto) =
   raise newException(InvalidLength, &"invalid length: {$unexp}, expected: {$exp}")
-
 
 proc raiseUnknownField*(unexp: sink string) =
   raise newException(UnknownField, &"unknown field {$unexp}, there are no fields")
 
-
 proc raiseMissingField*(field: static[string]) =
   raise newException(MissingField, &"missing field `{field}`")
 
-
 proc raiseDuplicateField*(field: static[string]) =
   raise newException(DuplicateField, &"duplicate field `{field}`")
-
 
 proc raiseUnknownUntaggedVariant*(struct: static[string], field: static[string]) =
   raise newException(UnknownUntaggedVariant, &"not possible to derive value of case field `{field}` of struct `{struct}`")

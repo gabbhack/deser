@@ -26,6 +26,7 @@ from deser/macroutils/types import
   skipSerializing,
   skipSerializeIf,
   untagged,
+  deserWith,
   # FieldBranch
   kind,
   conditionOfBranch,
@@ -79,16 +80,26 @@ func defSerializeWith(struct: Struct, public: bool): NimNode =
   result = newStmtList()
 
   for field in struct.flattenFields:
-    if Some(@serializeWith) ?= field.features.serializeWith:
+    if field.features.serializeWith.isSome or field.features.deserWith.isSome:
       let
         typ = field.nskTypeSerializeWithSym
         serializeIdent = defMaybeExportedIdent(ident "serialize", public)
+        selfIdent = ident "self"
+        serializerIdent = ident "serializer"
+        serializeWithBody =
+          if Some(@serializeWith) ?= field.features.serializeWith:
+            newCall(serializeWith, newDotExpr(ident "self", ident "value"), ident "serializer")
+          elif Some(@deserWith) ?= field.features.deserWith:
+            newCall(ident "serialize", deserWith, newDotExpr(ident "self", ident "value"), ident "serializer")
+          else:
+            doAssert false
+            newEmptyNode()
 
       result.add defWithType(typ)
 
       result.add quote do:
-        proc `serializeIdent`[T](self: `typ`[T], serializer: var auto) {.inline.} =
-          `serializeWith`(self.value, serializer)
+        proc `serializeIdent`[T](`selfIdent`: `typ`[T], `serializerIdent`: var auto) {.inline.} =
+          `serializeWithBody`
 
 func defSerializeProc(struct: Struct, body: NimNode, public: bool): NimNode =
   let procName = defMaybeExportedIdent(ident "serialize", public)
@@ -210,7 +221,7 @@ func defSerializeField(field: Field, checkSkipIf: bool): NimNode =
     skipSerializeIf = field.features.skipSerializeIf
     serializeWithType = field.nskTypeSerializeWithSym
     serializeFieldArgument =
-      if field.features.serializeWith.isSome:
+      if field.features.serializeWith.isSome or field.features.deserWith.isSome:
         nnkObjConstr.newTree(
           nnkBracketExpr.newTree(
             serializeWithType,

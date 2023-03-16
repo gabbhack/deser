@@ -10,7 +10,8 @@ import std/[
 import deser/[
   ser,
   pragmas,
-  test
+  test,
+  helpers
 ]
 
 
@@ -145,6 +146,15 @@ type
       first: string
     of Third, Fourth:
       second: string
+  
+  Quotes = object
+    `first`: string
+    `second`*: string
+    `third` {.skipped.}: string
+    `fourth`* {.skipped.}: string
+
+  DeserWith = object
+    created {.deserWith(UnixTimeFormat).}: Time
 
 
 makeSerializable([
@@ -171,7 +181,9 @@ makeSerializable([
   MultiCaseObjectUntagged,
   MultiCaseObjectAllUntagged,
   RenameWithCase,
-  CaseObjectMultiBranch
+  CaseObjectMultiBranch,
+  Quotes,
+  DeserWith
 ], public=true)
 
 
@@ -453,4 +465,22 @@ suite "makeSerializable":
     var temp2: ChildRefObject
     assertSerTokens temp2, [
       initNoneToken()
+    ]
+  
+  test "Quotes":
+    assertSerTokens Quotes(first: "1", second: "2"), [
+      initMapToken(none int),
+      initStringToken("first"),
+      initStringToken("1"),
+      initStringToken("second"),
+      initStringToken("2"),
+      initMapEndToken()
+    ]
+  
+  test "DeserWith":
+    assertSerTokens DeserWith(created: fromUnix(123)), [
+      initMapToken(none int),
+      initStringToken("created"),
+      initI64Token(123),
+      initMapEndToken()
     ]

@@ -3,7 +3,8 @@ import std/[
 ]
 
 from deser/macroutils/types import
-  Struct
+  Struct,
+  `duplicateCheck=`
 
 from deser/macroutils/parsing/struct import
   fromTypeSym
@@ -12,7 +13,13 @@ from deser/macroutils/generation/des import
   defDeserialize
 
 
-macro makeDeserializable*(types: varargs[typedesc], public: static[bool] = false) =
+macro makeDeserializable*(
+  types: varargs[typedesc],
+  public: static[bool] = false,
+  duplicateCheck: static[bool] = true,
+  debugOutput: static[bool] = false,
+  debugTreeOutput: static[bool] = false
+) =
   ##[
 Generate `deserialize` procedure for your type. Use `public` parameter to export.
 
@@ -36,11 +43,12 @@ makeDeserializable([
 
   for typeSym in types:
     var struct = Struct.fromTypeSym(typeSym)
-    
+    struct.duplicateCheck = duplicateCheck
+
     result.add defDeserialize(struct, public)
 
-  if defined(debugMakeDeserializable):
+  if defined(debugMakeDeserializable) or debugOutput:
     debugEcho result.toStrLit
-  
-  if defined(debugMakeDeserializableTree):
+
+  if defined(debugMakeDeserializableTree) or debugTreeOutput:
     debugEcho result.treeRepr

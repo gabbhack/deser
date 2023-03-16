@@ -44,6 +44,7 @@ type
     flattenFields: seq[Field]
     nskTypeEnumSym: NimNode
     nskEnumFieldUnknownSym: NimNode
+    duplicateCheck: bool
 
   Field* {.requiresInit.} = object
     ## Intermediate representation of type field.
@@ -85,6 +86,7 @@ type
     renameAll: Option[NimNode]
     skipPrivateSerializing: bool
     skipPrivateDeserializing: bool
+    defaultValue: Option[NimNode]
 
   FieldFeatures* {.requiresInit.} = object
     ## Features derived from pragmas.
@@ -105,6 +107,7 @@ type
     deserializeWith: Option[NimNode]
     defaultValue: Option[NimNode]
     aliases: seq[NimNode]
+    deserWith: Option[NimNode]
 
   FieldBranchKind* = enum
     Of
@@ -171,7 +174,8 @@ func initStruct*(
     genericParams: genericParams,
     flattenFields: flatten fields,
     nskTypeEnumSym: genSym(nskType, typeSym.strVal & "Fields"),
-    nskEnumFieldUnknownSym: genSym(nskEnumField, "UnknownField")
+    nskEnumFieldUnknownSym: genSym(nskEnumField, "UnknownField"),
+    duplicateCheck: true
   )
 
 # Struct getters
@@ -215,6 +219,14 @@ func nskEnumFieldUnknownSym*(self: Struct): NimNode =
   ## 
   ## Created automatically in the `initStruct` constructor
   self.nskEnumFieldUnknownSym
+
+func duplicateCheck*(self: Struct): bool =
+  self.duplicateCheck
+
+
+# setters
+proc `duplicateCheck=`*(self: var Struct, value: bool) =
+  self.duplicateCheck = value
 
 
 # # # # # # # # # # # #
@@ -370,13 +382,15 @@ func initStructFeatures*(
   onUnknownKeys: Option[NimNode],
   renameAll: Option[NimNode],
   skipPrivateSerializing: bool,
-  skipPrivateDeserializing: bool
+  skipPrivateDeserializing: bool,
+  defaultValue: Option[NimNode]
 ): StructFeatures =
   StructFeatures(
     onUnknownKeys: onUnknownKeys,
     renameAll: renameAll,
     skipPrivateSerializing: skipPrivateSerializing,
-    skipPrivateDeserializing: skipPrivateDeserializing
+    skipPrivateDeserializing: skipPrivateDeserializing,
+    defaultValue: defaultValue
   )
 
 func initEmptyStructFeatures*(): StructFeatures =
@@ -384,7 +398,8 @@ func initEmptyStructFeatures*(): StructFeatures =
     onUnknownKeys: none NimNode,
     renameAll: none NimNode,
     skipPrivateSerializing: false,
-    skipPrivateDeserializing: false
+    skipPrivateDeserializing: false,
+    defaultValue: none NimNode
   )
 
 # StructFeatures getters
@@ -404,6 +419,10 @@ func skipPrivateDeserializing*(self: StructFeatures): bool =
   ## True if `skipPrivateDeserializing` pragma presented.
   self.skipPrivateDeserializing
 
+func defaultValue*(self: StructFeatures): Option[NimNode] =
+  ## Value from `defaultValue` pragma.
+  self.defaultValue
+
 
 # # # # # # # # # # # #
 # FieldFeatures
@@ -417,7 +436,8 @@ func initFieldFeatures*(
   serializeWith: Option[NimNode],
   deserializeWith: Option[NimNode],
   defaultValue: Option[NimNode],
-  aliases: seq[NimNode]
+  aliases: seq[NimNode],
+  deserWith: Option[NimNode]
 ): FieldFeatures =
   ##[
 Throws a `ValueError` exception if both `renameDeserialize` and `aliases` are passed.
@@ -435,7 +455,8 @@ Throws a `ValueError` exception if both `renameDeserialize` and `aliases` are pa
     serializeWith: serializeWith,
     deserializeWith: deserializeWith,
     defaultValue: defaultValue,
-    aliases: aliases
+    aliases: aliases,
+    deserWith: deserWith
   )
 
 func initEmptyFieldFeatures*(): FieldFeatures =
@@ -449,7 +470,8 @@ func initEmptyFieldFeatures*(): FieldFeatures =
     serializeWith: none NimNode,
     deserializeWith: none NimNode,
     defaultValue: none NimNode,
-    aliases: @[]
+    aliases: @[],
+    deserWith: none NimNode
   )
 
 # FieldFeatures getters
@@ -493,22 +515,27 @@ func aliases*(self: FieldFeatures): seq[NimNode] =
   ## Value from `aliases` pragma.
   self.aliases
 
+func deserWith*(self: FieldFeatures): Option[NimNode] =
+  ## Value from `deserWith` pragma.
+  self.deserWith
+
+
 # setters
 proc `skipSerializing=`*(self: var FieldFeatures, value: bool) =
-  ## `true` if `skipped` or `skipSerializing` pragmas are used.
   self.skipSerializing = value
 
 proc `skipDeserializing=`*(self: var FieldFeatures, value: bool) =
-  ## `true` if `skipped` or `skipDeserializing` pragmas are used.
   self.skipDeserializing = value
 
 proc `renameSerialize=`*(self: var FieldFeatures, value: Option[NimNode]) =
-  ## Value from `renameSerialize` pragma.
   self.renameSerialize = value
 
 proc `renameDeserialize=`*(self: var FieldFeatures, value: Option[NimNode]) =
-  ## Value from `renameDeserialize` pragma.
   self.renameDeserialize = value
+
+proc `defaultValue=`*(self: var FieldFeatures, value: Option[NimNode]) =
+  self.defaultValue = value
+
 
 # # # # # # # # # # # #
 # FieldBranch
@@ -911,7 +938,8 @@ when isMainModule:
                     serializeWith=none NimNode,
                     deserializeWith=none NimNode,
                     defaultValue=none NimNode,
-                    aliases = @[]
+                    aliases = @[],
+                    deserWith=none NimNode
                   ),
                   public=false,
                   isCase=true,
@@ -957,7 +985,8 @@ when isMainModule:
                     serializeWith=none NimNode,
                     deserializeWith=none NimNode,
                     defaultValue=none NimNode,
-                    aliases = @[]
+                    aliases = @[],
+                    deserWith=none NimNode
                   ),
                   public=false,
                   isCase=true,
@@ -1008,7 +1037,8 @@ when isMainModule:
           serializeWith=none NimNode,
           deserializeWith=none NimNode,
           defaultValue=none NimNode,
-          aliases = @[]
+          aliases = @[],
+          deserWith=none NimNode
         ),
         public=false,
         isCase=false,
@@ -1046,7 +1076,8 @@ when isMainModule:
             serializeWith=none NimNode,
             deserializeWith=none NimNode,
             defaultValue=none NimNode,
-            aliases = @[]
+            aliases = @[],
+            deserWith=none NimNode
           ),
           public=false,
           isCase=false,
@@ -1083,7 +1114,8 @@ when isMainModule:
             serializeWith=none NimNode,
             deserializeWith=none NimNode,
             defaultValue=none NimNode,
-            aliases = @[renameValue]
+            aliases = @[renameValue],
+            deserWith=none NimNode
           ),
           public=false,
           isCase=false,

@@ -12,7 +12,12 @@ from deser/macroutils/generation/ser import
   defSerialize
 
 
-macro makeSerializable*(types: varargs[typedesc], public: static[bool] = false) = ##[
+macro makeSerializable*(
+  types: varargs[typedesc],
+  public: static[bool] = false,
+  debugOutput: static[bool] = false,
+  debugTreeOutput: static[bool] = false
+) = ##[
 Generate `serialize` procedure for your type. Use `public` parameter to export.
 
 Works only for objects and ref objects.
@@ -38,8 +43,8 @@ makeSerializable([
     
     result.add defSerialize(struct, public)
 
-  if defined(debugMakeSerializable):
+  if defined(debugMakeSerializable) or debugOutput:
     debugEcho result.toStrLit
 
-  if defined(debugMakeSerializableTree):
+  if defined(debugMakeSerializableTree) or debugTreeOutput:
     debugEcho result.treeRepr

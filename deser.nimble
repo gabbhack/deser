@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.3.1"
+version       = "0.3.2"
 author        = "gabbhack"
 description   = "De/serialization library for Nim"
 license       = "MIT"
