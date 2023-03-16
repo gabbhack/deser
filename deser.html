@@ -105,6 +105,7 @@ window.addEventListener('DOMContentLoaded', main);
   </div>
   <ul class="simple simple-toc" id="toc-list">
 <li><a class="reference" id="explore_toc" href="#explore">Explore</a></li>
+<li><a class="reference" id="deslashserialize-time-and-datetime_toc" href="#deslashserialize-time-and-datetime">De/serialize Time and DateTime</a></li>
 <li><a class="reference" id="supported-stdminustypes_toc" href="#supported-stdminustypes">Supported std-types</a></li>
 <li><a class="reference" id="supported-formats_toc" href="#supported-formats">Supported formats</a></li>
 <li><a class="reference" id="customize-serialization-process_toc" href="#customize-serialization-process">Customize serialization process</a></li>
@@ -162,7 +163,9 @@ This is a mandatory step. The generated procedures will then be used by parsers.
 <p><pre class="listing"><span class="Keyword">let</span> <span class="Identifier">chat</span> <span class="Operator">=</span> <span class="Identifier">Message</span><span class="Operator">.</span><span class="Identifier">fromJson</span><span class="Punctuation">(</span><span class="Identifier">json</span><span class="Punctuation">)</span>
 <span class="Identifier">echo</span> <span class="Identifier">chat</span><span class="Operator">.</span><span class="Identifier">toJson</span><span class="Punctuation">(</span><span class="Punctuation">)</span>
 </pre></p>
-<p><tt class="docutils literal"><span class="pre"><span class="Identifier">created</span></span></tt> field is the time in unix format, it is not convenient to work with it as <tt class="docutils literal"><span class="pre"><span class="Identifier">int</span></span></tt>. But if we try to just use <a class="reference external" href="https://nim-lang.org/docs/times.html#Time">Time</a>, we get an error:</p>
+
+<h1><a class="toc-backref" id="deslashserialize-time-and-datetime" href="#deslashserialize-time-and-datetime">De/serialize Time and DateTime</a></h1><p>In previous section we created <tt class="docutils literal"><span class="pre"><span class="Identifier">Message</span></span></tt> type where <tt class="docutils literal"><span class="pre"><span class="Identifier">created</span></span></tt> field is the time in unix format.</p>
+<p>It is not convenient to work with it as <tt class="docutils literal"><span class="pre"><span class="Identifier">int</span></span></tt>. But if we try to just use <a class="reference external" href="https://nim-lang.org/docs/times.html#Time">Time</a>, we get an error:</p>
 <p><pre class="listing"><span class="Identifier">Error</span><span class="Punctuation">:</span> <span class="Keyword">type</span> <span class="Identifier">mismatch</span><span class="Punctuation">:</span> <span class="Identifier">got</span> <span class="Operator">&lt;</span><span class="Identifier">typedesc</span><span class="Punctuation">[</span><span class="Identifier">Time</span><span class="Punctuation">]</span><span class="Punctuation">,</span> <span class="Identifier">Deserializer</span><span class="Operator">&gt;</span>
 <span class="Identifier">but</span> <span class="Identifier">expected</span> <span class="Identifier">one</span> <span class="Keyword">of</span><span class="Punctuation">:</span> <span class="Operator">...</span>
 </pre></p>
@@ -190,6 +193,21 @@ Out of the box, deser supports serialization of <a class="reference external" hr
 
 <span class="Identifier">makeSerializable</span><span class="Punctuation">(</span><span class="Identifier">Message</span><span class="Punctuation">)</span>
 <span class="Identifier">makeDeserializable</span><span class="Punctuation">(</span><span class="Identifier">Message</span><span class="Punctuation">)</span>
+</pre></p>
+<div class="admonition admonition-info"><span class="admonition-info-text"><b>Note:</b></span>
+Since deser 0.3.2 you can use the <a class="reference external" href="https://deser.nim.town/deser/helpers.html">helpers</a> module and <a class="reference external" href="https://deser.nim.town/deser/pragmas.html#deserWith.t%2Ctyped">deserWith</a> pragma for convenient time de/serialization.</div>
+<p>Example:</p>
+<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">std</span><span class="Operator">/</span><span class="Identifier">times</span>
+
+<span class="Keyword">import</span>
+  <span class="Identifier">deser</span><span class="Punctuation">,</span>
+  <span class="Identifier">deser_json</span>
+
+<span class="Keyword">type</span>
+  <span class="Identifier">Message</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">id</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
+    <span class="Identifier">text</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
+    <span class="Identifier">created</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">deserWith</span><span class="Punctuation">(</span><span class="Identifier">UnixTimeFormat</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Time</span>
 
 <span class="Keyword">const</span> <span class="Identifier">json</span> <span class="Operator">=</span> <span class="LongStringLit">&quot;&quot;&quot;
 {
@@ -251,7 +269,7 @@ This section of the documentation is being supplemented.</div>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-03-16 09:55:40 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-03-16 10:17:06 UTC</small>
       </div>
     </div>
   </div>

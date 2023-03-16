@@ -253,9 +253,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L376"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L378"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L376" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L378" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -300,9 +300,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L219"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L221"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L219" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L221" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -346,6 +346,8 @@ class="link-seesrc" target="_blank">Source</a>
 <p>The given type (or anything actually) must have callable .serialize and .deserialize attributes.</p>
 <p>.serialize must be callable as <tt class="docutils literal"><span class="pre"><span class="Keyword">proc</span> <span class="Punctuation">(</span><span class="Identifier">self</span><span class="Punctuation">:</span> <span class="Identifier">withType</span><span class="Punctuation">,</span> <span class="Identifier">field</span><span class="Punctuation">:</span> <span class="Identifier">FieldType</span><span class="Punctuation">,</span> <span class="Identifier">serializer</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">auto</span><span class="Punctuation">)</span></span></tt>.</p>
 <p>.deserialize must be callable as <tt class="docutils literal"><span class="pre"><span class="Keyword">proc</span> <span class="Punctuation">(</span><span class="Identifier">self</span><span class="Punctuation">:</span> <span class="Identifier">withType</span><span class="Punctuation">,</span> <span class="Identifier">deserializer</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">auto</span><span class="Punctuation">)</span><span class="Punctuation">:</span> <span class="Identifier">FieldType</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Keyword">proc</span> <span class="Punctuation">[</span><span class="Identifier">T</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Identifier">self</span><span class="Punctuation">:</span> <span class="Identifier">withType</span><span class="Punctuation">,</span> <span class="Identifier">deserializer</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">auto</span><span class="Punctuation">)</span><span class="Punctuation">:</span> <span class="Identifier">T</span></span></tt>.</p>
+<div class="admonition admonition-info"><span class="admonition-info-text"><b>Note:</b></span>
+You dont need to reimplement this example in your project. Please use <a class="reference external" href="https://deser.nim.town/deser/helpers.html">helpers</a> module.</div>
 <p><strong>Example:</strong></p>
 <p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">std</span><span class="Operator">/</span><span class="Identifier">times</span>
 
@@ -424,9 +426,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L269"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L271"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L269" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L271" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -450,9 +452,9 @@ Pragma respects other <tt class="docutils literal"><span class="pre"><span class
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L317"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L319"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L317" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L319" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -462,9 +464,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Serialize and deserialize field with the given name instead of its Nim name. 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L153"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L155"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L153" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L155" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -474,9 +476,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Deserialize field with the given name instead of its Nim name. 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L161"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L163"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L161" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L163" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -486,9 +488,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Serialize field with the given name instead of its Nim name. 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L157"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L159"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L157" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L159" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -536,9 +538,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L188"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L190"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L188" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L190" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -554,9 +556,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L165"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L167"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L165" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L167" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -574,9 +576,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L363"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L365"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L363" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L365" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -594,9 +596,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L350"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L352"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L350" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L352" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -614,9 +616,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L337"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L339"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L337" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L339" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -638,9 +640,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L200"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L202"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L200" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L202" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -656,9 +658,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L177"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L179"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L177" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L179" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -721,7 +723,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-03-16 09:55:36 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-03-16 10:17:03 UTC</small>
       </div>
     </div>
   </div>
