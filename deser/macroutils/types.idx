@@ -15,6 +15,8 @@ genericParams	deser/macroutils/types.html#genericParams,Struct	types: genericPar
 flattenFields	deser/macroutils/types.html#flattenFields,Struct	types: flattenFields(self: Struct): seq[Field]	
 nskTypeEnumSym	deser/macroutils/types.html#nskTypeEnumSym,Struct	types: nskTypeEnumSym(self: Struct): NimNode	
 nskEnumFieldUnknownSym	deser/macroutils/types.html#nskEnumFieldUnknownSym,Struct	types: nskEnumFieldUnknownSym(self: Struct): NimNode	
+duplicateCheck	deser/macroutils/types.html#duplicateCheck,Struct	types: duplicateCheck(self: Struct): bool	
+duplicateCheck=	deser/macroutils/types.html#duplicateCheck=,Struct,bool	types: duplicateCheck=(self: var Struct; value: bool)	
 initField	deser/macroutils/types.html#initField,NimNode,NimNode,FieldFeatures,bool,bool,seq[FieldBranch]	types: initField(nameIdent: NimNode; typeNode: NimNode; features: FieldFeatures;\n          public: bool; isCase: bool; branches: seq[FieldBranch]): Field	
 nameIdent	deser/macroutils/types.html#nameIdent,Field	types: nameIdent(self: Field): NimNode	
 typeNode	deser/macroutils/types.html#typeNode,Field	types: typeNode(self: Field): NimNode	
@@ -30,13 +32,14 @@ nskTypeSerializeWithSym	deser/macroutils/types.html#nskTypeSerializeWithSym,Fiel
 serializeName	deser/macroutils/types.html#serializeName,Field	types: serializeName(self: Field): string	
 deserializeName	deser/macroutils/types.html#deserializeName,Field	types: deserializeName(self: Field): seq[string]	
 merge	deser/macroutils/types.html#merge,Field,Field	types: merge(self: var Field; another: Field)	
-initStructFeatures	deser/macroutils/types.html#initStructFeatures,Option[NimNode],Option[NimNode],bool,bool	types: initStructFeatures(onUnknownKeys: Option[NimNode]; renameAll: Option[NimNode];\n                   skipPrivateSerializing: bool; skipPrivateDeserializing: bool): StructFeatures	
+initStructFeatures	deser/macroutils/types.html#initStructFeatures,Option[NimNode],Option[NimNode],bool,bool,Option[NimNode]	types: initStructFeatures(onUnknownKeys: Option[NimNode]; renameAll: Option[NimNode];\n                   skipPrivateSerializing: bool; skipPrivateDeserializing: bool;\n                   defaultValue: Option[NimNode]): StructFeatures	
 initEmptyStructFeatures	deser/macroutils/types.html#initEmptyStructFeatures	types: initEmptyStructFeatures(): StructFeatures	
 onUnknownKeys	deser/macroutils/types.html#onUnknownKeys,StructFeatures	types: onUnknownKeys(self: StructFeatures): Option[NimNode]	
 renameAll	deser/macroutils/types.html#renameAll,StructFeatures	types: renameAll(self: StructFeatures): Option[NimNode]	
 skipPrivateSerializing	deser/macroutils/types.html#skipPrivateSerializing,StructFeatures	types: skipPrivateSerializing(self: StructFeatures): bool	
 skipPrivateDeserializing	deser/macroutils/types.html#skipPrivateDeserializing,StructFeatures	types: skipPrivateDeserializing(self: StructFeatures): bool	
-initFieldFeatures	deser/macroutils/types.html#initFieldFeatures,bool,bool,bool,Option[NimNode],Option[NimNode],Option[NimNode],Option[NimNode],Option[NimNode],Option[NimNode],seq[NimNode]	types: initFieldFeatures(skipSerializing: bool; skipDeserializing: bool;\n                  untagged: bool; renameSerialize: Option[NimNode];\n                  renameDeserialize: Option[NimNode];\n                  skipSerializeIf: Option[NimNode];\n                  serializeWith: Option[NimNode];\n                  deserializeWith: Option[NimNode];\n                  defaultValue: Option[NimNode]; aliases: seq[NimNode]): FieldFeatures	
+defaultValue	deser/macroutils/types.html#defaultValue,StructFeatures	types: defaultValue(self: StructFeatures): Option[NimNode]	
+initFieldFeatures	deser/macroutils/types.html#initFieldFeatures,bool,bool,bool,Option[NimNode],Option[NimNode],Option[NimNode],Option[NimNode],Option[NimNode],Option[NimNode],seq[NimNode],Option[NimNode]	types: initFieldFeatures(skipSerializing: bool; skipDeserializing: bool;\n                  untagged: bool; renameSerialize: Option[NimNode];\n                  renameDeserialize: Option[NimNode];\n                  skipSerializeIf: Option[NimNode];\n                  serializeWith: Option[NimNode];\n                  deserializeWith: Option[NimNode];\n                  defaultValue: Option[NimNode]; aliases: seq[NimNode];\n                  deserWith: Option[NimNode]): FieldFeatures	
 initEmptyFieldFeatures	deser/macroutils/types.html#initEmptyFieldFeatures	types: initEmptyFieldFeatures(): FieldFeatures	
 skipSerializing	deser/macroutils/types.html#skipSerializing,FieldFeatures	types: skipSerializing(self: FieldFeatures): bool	
 skipDeserializing	deser/macroutils/types.html#skipDeserializing,FieldFeatures	types: skipDeserializing(self: FieldFeatures): bool	
@@ -48,10 +51,12 @@ serializeWith	deser/macroutils/types.html#serializeWith,FieldFeatures	types: ser
 deserializeWith	deser/macroutils/types.html#deserializeWith,FieldFeatures	types: deserializeWith(self: FieldFeatures): Option[NimNode]	
 defaultValue	deser/macroutils/types.html#defaultValue,FieldFeatures	types: defaultValue(self: FieldFeatures): Option[NimNode]	
 aliases	deser/macroutils/types.html#aliases,FieldFeatures	types: aliases(self: FieldFeatures): seq[NimNode]	
+deserWith	deser/macroutils/types.html#deserWith,FieldFeatures	types: deserWith(self: FieldFeatures): Option[NimNode]	
 skipSerializing=	deser/macroutils/types.html#skipSerializing=,FieldFeatures,bool	types: skipSerializing=(self: var FieldFeatures; value: bool)	
 skipDeserializing=	deser/macroutils/types.html#skipDeserializing=,FieldFeatures,bool	types: skipDeserializing=(self: var FieldFeatures; value: bool)	
 renameSerialize=	deser/macroutils/types.html#renameSerialize=,FieldFeatures,Option[NimNode]	types: renameSerialize=(self: var FieldFeatures; value: Option[NimNode])	
 renameDeserialize=	deser/macroutils/types.html#renameDeserialize=,FieldFeatures,Option[NimNode]	types: renameDeserialize=(self: var FieldFeatures; value: Option[NimNode])	
+defaultValue=	deser/macroutils/types.html#defaultValue=,FieldFeatures,Option[NimNode]	types: defaultValue=(self: var FieldFeatures; value: Option[NimNode])	
 initFieldBranch	deser/macroutils/types.html#initFieldBranch,seq[Field],Option[NimNode]	types: initFieldBranch(fields: seq[Field]; conditionOfBranch: Option[NimNode]): FieldBranch	
 kind	deser/macroutils/types.html#kind,FieldBranch	types: kind(self: FieldBranch): FieldBranchKind	
 conditionOfBranch	deser/macroutils/types.html#conditionOfBranch,FieldBranch	types: conditionOfBranch(self: FieldBranch): NimNode	

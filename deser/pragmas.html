@@ -132,6 +132,11 @@ window.addEventListener('DOMContentLoaded', main);
     title="deserializeWith(with: typed)">deserializeWith(with: typed)</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">deserWith
+      <li><a class="reference" href="#deserWith.t%2Ctyped"
+    title="deserWith(with: typed)">deserWith(with: typed)</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">onUnknownKeys
       <li><a class="reference" href="#onUnknownKeys.t%2Ctyped"
     title="onUnknownKeys(call: typed)">onUnknownKeys(call: typed)</a></li>
@@ -248,9 +253,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L310"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L376"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L310" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L376" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -258,13 +263,14 @@ class="link-seesrc" target="_blank">Source</a>
 <dt><pre><span class="Keyword">template</span> <a href="#defaultValue.t%2Ctyped"><span class="Identifier">defaultValue</span></a><span class="Other">(</span><span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">typed</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
 <dd>
 
-<p>Uses the specified value if the field was not in the input.</p>
-<p><strong>Example</strong>:</p>
+<p>Uses the specified value, function or template if the field was not in the input.</p>
+<p>Function or template must be callable as <tt class="docutils literal"><span class="pre"><span class="Identifier">myDefault</span><span class="Punctuation">[</span><span class="Identifier">T</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Punctuation">)</span></span></tt>.</p>
+<p><strong>Examples</strong>:</p>
 <p><pre class="listing"><span class="Keyword">type</span>
   <span class="Identifier">User</span> <span class="Operator">=</span> <span class="Keyword">object</span>
     <span class="Identifier">name</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">defaultValue</span><span class="Punctuation">(</span><span class="StringLit">&quot;noname&quot;</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
 </pre></p>
-<p>Do not specify a value, then <tt class="docutils literal"><span class="pre"><span class="Identifier">default</span><span class="Punctuation">(</span><span class="Identifier">FieldType</span><span class="Punctuation">)</span></span></tt> will be used</p>
+<p>Do not specify a value, then system <a class="reference external" href="https://nim-lang.org/docs/system.html#default%2Ctypedesc%5BT%5D">default</a> will be used:</p>
 <p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">deser_json</span>
 
 <span class="Keyword">type</span>
@@ -272,12 +278,31 @@ class="link-seesrc" target="_blank">Source</a>
     <span class="Identifier">id</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">defaultValue</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
 
 <span class="Identifier">assert</span> <span class="Identifier">Foo</span><span class="Operator">.</span><span class="Identifier">fromJson</span><span class="Punctuation">(</span><span class="LongStringLit">&quot;&quot;&quot;{}&quot;&quot;&quot;</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">id</span> <span class="Operator">==</span> <span class="DecNumber">0</span>
+</pre></p>
+<p>Specify a function</p>
+<p><pre class="listing"><span class="Keyword">proc</span> <span class="Identifier">myDefault</span><span class="Punctuation">[</span><span class="Identifier">T</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Punctuation">:</span> <span class="Identifier">T</span> <span class="Operator">=</span>
+  <span class="Keyword">when</span> <span class="Identifier">T</span> <span class="Keyword">is</span> <span class="Identifier">int</span><span class="Punctuation">:</span>
+    <span class="DecNumber">123</span>
+  <span class="Keyword">elif</span> <span class="Identifier">T</span> <span class="Keyword">is</span> <span class="Identifier">string</span><span class="Punctuation">:</span>
+    <span class="StringLit">&quot;hello&quot;</span>
+  <span class="Keyword">else</span><span class="Punctuation">:</span>
+    <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">error</span><span class="Operator">.</span><span class="Punctuation">}</span>
+
+<span class="Keyword">type</span>
+  <span class="Identifier">User</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">id</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">defaultValue</span><span class="Punctuation">(</span><span class="Identifier">myDefault</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
+</pre></p>
+<p>You can use <tt class="docutils literal"><span class="pre"><span class="Identifier">defaultValue</span></span></tt> on object. Than specified value will be used on all missing fields.</p>
+<p><pre class="listing"><span class="Keyword">type</span>
+  <span class="Identifier">User</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">defaultValue</span><span class="Punctuation">(</span><span class="Identifier">myDefault</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span>
+    <span class="Identifier">id</span><span class="Punctuation">:</span> <span class="Identifier">int</span>
+    <span class="Identifier">bio</span><span class="Punctuation">:</span> <span class="Identifier">string</span>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L179"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L219"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L179" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L219" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -310,6 +335,50 @@ class="link-seesrc" target="_blank">Source</a>
 href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L87"
 class="link-seesrc" target="_blank">Source</a>
 &nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L87" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="deserWith.t,typed">
+<dt><pre><span class="Keyword">template</span> <a href="#deserWith.t%2Ctyped"><span class="Identifier">deserWith</span></a><span class="Other">(</span><span class="Identifier">with</span><span class="Other">:</span> <span class="Identifier">typed</span><span class="Other">)</span> {.<span class="Identifier">pragma</span>.}</pre></dt>
+<dd>
+
+<p>Combination of <tt class="docutils literal"><span class="pre"><span class="Identifier">serializeWith</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">deserializeWith</span></span></tt>.</p>
+<p>The given type (or anything actually) must have callable .serialize and .deserialize attributes.</p>
+<p>.serialize must be callable as <tt class="docutils literal"><span class="pre"><span class="Keyword">proc</span> <span class="Punctuation">(</span><span class="Identifier">self</span><span class="Punctuation">:</span> <span class="Identifier">withType</span><span class="Punctuation">,</span> <span class="Identifier">field</span><span class="Punctuation">:</span> <span class="Identifier">FieldType</span><span class="Punctuation">,</span> <span class="Identifier">serializer</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">auto</span><span class="Punctuation">)</span></span></tt>.</p>
+<p>.deserialize must be callable as <tt class="docutils literal"><span class="pre"><span class="Keyword">proc</span> <span class="Punctuation">(</span><span class="Identifier">self</span><span class="Punctuation">:</span> <span class="Identifier">withType</span><span class="Punctuation">,</span> <span class="Identifier">deserializer</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">auto</span><span class="Punctuation">)</span><span class="Punctuation">:</span> <span class="Identifier">FieldType</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Keyword">proc</span> <span class="Punctuation">[</span><span class="Identifier">T</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Identifier">self</span><span class="Punctuation">:</span> <span class="Identifier">withType</span><span class="Punctuation">,</span> <span class="Identifier">deserializer</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">auto</span><span class="Punctuation">)</span><span class="Punctuation">:</span> <span class="Identifier">T</span></span></tt>.</p>
+<p><strong>Example:</strong></p>
+<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">std</span><span class="Operator">/</span><span class="Identifier">times</span>
+
+<span class="Keyword">import</span>
+  <span class="Identifier">deser</span><span class="Punctuation">,</span>
+  <span class="Identifier">deser_json</span>
+
+
+<span class="Keyword">type</span> <span class="Identifier">UnixTimeFormat</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+
+<span class="Keyword">proc</span> <span class="Identifier">deserialize</span><span class="Punctuation">(</span><span class="Identifier">self</span><span class="Punctuation">:</span> <span class="Identifier">typedesc</span><span class="Punctuation">[</span><span class="Identifier">UnixTimeFormat</span><span class="Punctuation">]</span><span class="Punctuation">,</span> <span class="Identifier">deserializer</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">auto</span><span class="Punctuation">)</span><span class="Punctuation">:</span> <span class="Identifier">Time</span> <span class="Operator">=</span>
+  <span class="Identifier">fromUnix</span><span class="Punctuation">(</span><span class="Identifier">deserialize</span><span class="Punctuation">(</span><span class="Identifier">int64</span><span class="Punctuation">,</span> <span class="Identifier">deserializer</span><span class="Punctuation">)</span><span class="Punctuation">)</span>
+
+<span class="Keyword">proc</span> <span class="Identifier">serialize</span><span class="Punctuation">(</span><span class="Identifier">self</span><span class="Punctuation">:</span> <span class="Identifier">typedesc</span><span class="Punctuation">[</span><span class="Identifier">UnixTimeFormat</span><span class="Punctuation">]</span><span class="Punctuation">,</span> <span class="Identifier">field</span><span class="Punctuation">:</span> <span class="Identifier">Time</span><span class="Punctuation">,</span> <span class="Identifier">serializer</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">auto</span><span class="Punctuation">)</span> <span class="Operator">=</span>
+  <span class="Identifier">serializer</span><span class="Operator">.</span><span class="Identifier">serializeInt64</span><span class="Punctuation">(</span><span class="Identifier">self</span><span class="Operator">.</span><span class="Identifier">toUnix</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Punctuation">)</span>
+
+<span class="Keyword">type</span>
+  <span class="Identifier">User</span> <span class="Operator">=</span> <span class="Keyword">object</span>
+    <span class="Identifier">created</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">deserWith</span><span class="Punctuation">(</span><span class="Identifier">UnixTimeFormat</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">Time</span>
+
+<span class="Identifier">makeSerializable</span><span class="Punctuation">(</span><span class="Identifier">User</span><span class="Punctuation">)</span>
+<span class="Identifier">makeDeserializable</span><span class="Punctuation">(</span><span class="Identifier">User</span><span class="Punctuation">)</span>
+
+<span class="Keyword">let</span> <span class="Identifier">user</span> <span class="Operator">=</span> <span class="Identifier">User</span><span class="Punctuation">(</span><span class="Identifier">created</span><span class="Punctuation">:</span> <span class="Identifier">fromUnix</span><span class="Punctuation">(</span><span class="DecNumber">123</span><span class="Punctuation">)</span><span class="Punctuation">)</span>
+
+<span class="Identifier">assert</span> <span class="Identifier">user</span> <span class="Operator">==</span> <span class="Identifier">User</span><span class="Operator">.</span><span class="Identifier">fromJson</span><span class="Punctuation">(</span><span class="LongStringLit">&quot;&quot;&quot;{&quot;created&quot;: 123}&quot;&quot;&quot;</span><span class="Punctuation">)</span>
+<span class="Identifier">assert</span> <span class="Identifier">user</span><span class="Operator">.</span><span class="Identifier">toJson</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="LongStringLit">&quot;&quot;&quot;{&quot;created&quot;:123}&quot;&quot;&quot;</span>
+</pre> </p>
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L113"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L113" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -355,9 +424,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L203"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L269"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L203" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L269" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -381,9 +450,9 @@ Pragma respects other <tt class="docutils literal"><span class="pre"><span class
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L251"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L317"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L251" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L317" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -393,9 +462,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Serialize and deserialize field with the given name instead of its Nim name. 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L113"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L153"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L113" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L153" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -405,9 +474,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Deserialize field with the given name instead of its Nim name. 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L121"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L161"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L121" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L161" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -417,9 +486,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Serialize field with the given name instead of its Nim name. 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L117"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L157"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L117" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L157" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -467,9 +536,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L148"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L188"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L148" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L188" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -485,9 +554,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L125"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L165"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L125" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L165" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -505,9 +574,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L297"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L363"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L297" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L363" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -525,9 +594,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L284"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L350"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L284" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L350" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -545,9 +614,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L271"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L337"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L271" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L337" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -569,9 +638,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L160"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L200"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L160" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L200" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -587,9 +656,9 @@ class="link-seesrc" target="_blank">Source</a>
 </pre> </p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L137"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/pragmas.nim#L177"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L137" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/pragmas.nim#L177" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -652,7 +721,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-02-05 15:34:23 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-03-16 09:55:36 UTC</small>
       </div>
     </div>
   </div>

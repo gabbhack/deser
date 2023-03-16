@@ -152,7 +152,8 @@ window.addEventListener('DOMContentLoaded', main);
   serializeWith: Option[NimNode]
   deserializeWith: Option[NimNode]
   defaultValue: Option[NimNode]
-  aliases: seq[NimNode]">FieldFeatures</a></li>
+  aliases: seq[NimNode]
+  deserWith: Option[NimNode]">FieldFeatures</a></li>
   <li><a class="reference" href="#Struct"
     title="Struct {.requiresInit.} = object
   typeSym: NimNode
@@ -161,13 +162,15 @@ window.addEventListener('DOMContentLoaded', main);
   genericParams: Option[NimNode]
   flattenFields: seq[Field]
   nskTypeEnumSym: NimNode
-  nskEnumFieldUnknownSym: NimNode">Struct</a></li>
+  nskEnumFieldUnknownSym: NimNode
+  duplicateCheck: bool">Struct</a></li>
   <li><a class="reference" href="#StructFeatures"
     title="StructFeatures {.requiresInit.} = object
   onUnknownKeys: Option[NimNode]
   renameAll: Option[NimNode]
   skipPrivateSerializing: bool
-  skipPrivateDeserializing: bool">StructFeatures</a></li>
+  skipPrivateDeserializing: bool
+  defaultValue: Option[NimNode]">StructFeatures</a></li>
   <li><a class="reference" href="#TypeInfo"
     title="TypeInfo {.requiresInit.} = object
   typeSym: NimNode
@@ -200,6 +203,13 @@ window.addEventListener('DOMContentLoaded', main);
   <ul class="simple nested-toc-section">defaultValue
       <li><a class="reference" href="#defaultValue%2CFieldFeatures"
     title="defaultValue(self: FieldFeatures): Option[NimNode]">defaultValue(self: FieldFeatures): Option[NimNode]</a></li>
+  <li><a class="reference" href="#defaultValue%2CStructFeatures"
+    title="defaultValue(self: StructFeatures): Option[NimNode]">defaultValue(self: StructFeatures): Option[NimNode]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">defaultValue=
+      <li><a class="reference" href="#defaultValue%3D%2CFieldFeatures%2COption%5BNimNode%5D"
+    title="defaultValue=(self: var FieldFeatures; value: Option[NimNode])">defaultValue=(self: var FieldFeatures; value: Option[NimNode])</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">deserializeName
@@ -210,6 +220,21 @@ window.addEventListener('DOMContentLoaded', main);
   <ul class="simple nested-toc-section">deserializeWith
       <li><a class="reference" href="#deserializeWith%2CFieldFeatures"
     title="deserializeWith(self: FieldFeatures): Option[NimNode]">deserializeWith(self: FieldFeatures): Option[NimNode]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">deserWith
+      <li><a class="reference" href="#deserWith%2CFieldFeatures"
+    title="deserWith(self: FieldFeatures): Option[NimNode]">deserWith(self: FieldFeatures): Option[NimNode]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">duplicateCheck
+      <li><a class="reference" href="#duplicateCheck%2CStruct"
+    title="duplicateCheck(self: Struct): bool">duplicateCheck(self: Struct): bool</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">duplicateCheck=
+      <li><a class="reference" href="#duplicateCheck%3D%2CStruct%2Cbool"
+    title="duplicateCheck=(self: var Struct; value: bool)">duplicateCheck=(self: var Struct; value: bool)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">features
@@ -265,20 +290,22 @@ window.addEventListener('DOMContentLoaded', main);
 
   </ul>
   <ul class="simple nested-toc-section">initFieldFeatures
-      <li><a class="reference" href="#initFieldFeatures%2Cbool%2Cbool%2Cbool%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2Cseq%5BNimNode%5D"
+      <li><a class="reference" href="#initFieldFeatures%2Cbool%2Cbool%2Cbool%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2Cseq%5BNimNode%5D%2COption%5BNimNode%5D"
     title="initFieldFeatures(skipSerializing: bool; skipDeserializing: bool;
                   untagged: bool; renameSerialize: Option[NimNode];
                   renameDeserialize: Option[NimNode];
                   skipSerializeIf: Option[NimNode];
                   serializeWith: Option[NimNode];
                   deserializeWith: Option[NimNode];
-                  defaultValue: Option[NimNode]; aliases: seq[NimNode]): FieldFeatures">initFieldFeatures(skipSerializing: bool; skipDeserializing: bool;
+                  defaultValue: Option[NimNode]; aliases: seq[NimNode];
+                  deserWith: Option[NimNode]): FieldFeatures">initFieldFeatures(skipSerializing: bool; skipDeserializing: bool;
                   untagged: bool; renameSerialize: Option[NimNode];
                   renameDeserialize: Option[NimNode];
                   skipSerializeIf: Option[NimNode];
                   serializeWith: Option[NimNode];
                   deserializeWith: Option[NimNode];
-                  defaultValue: Option[NimNode]; aliases: seq[NimNode]): FieldFeatures</a></li>
+                  defaultValue: Option[NimNode]; aliases: seq[NimNode];
+                  deserWith: Option[NimNode]): FieldFeatures</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">initStruct
@@ -289,10 +316,12 @@ window.addEventListener('DOMContentLoaded', main);
 
   </ul>
   <ul class="simple nested-toc-section">initStructFeatures
-      <li><a class="reference" href="#initStructFeatures%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2Cbool%2Cbool"
+      <li><a class="reference" href="#initStructFeatures%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2Cbool%2Cbool%2COption%5BNimNode%5D"
     title="initStructFeatures(onUnknownKeys: Option[NimNode]; renameAll: Option[NimNode];
-                   skipPrivateSerializing: bool; skipPrivateDeserializing: bool): StructFeatures">initStructFeatures(onUnknownKeys: Option[NimNode]; renameAll: Option[NimNode];
-                   skipPrivateSerializing: bool; skipPrivateDeserializing: bool): StructFeatures</a></li>
+                   skipPrivateSerializing: bool; skipPrivateDeserializing: bool;
+                   defaultValue: Option[NimNode]): StructFeatures">initStructFeatures(onUnknownKeys: Option[NimNode]; renameAll: Option[NimNode];
+                   skipPrivateSerializing: bool; skipPrivateDeserializing: bool;
+                   defaultValue: Option[NimNode]): StructFeatures</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">initTypeInfo
@@ -503,9 +532,9 @@ window.addEventListener('DOMContentLoaded', main);
 <p>It is <strong>not recommended</strong> to initialize <tt class="docutils literal"><span class="pre"><span class="Identifier">Field</span></span></tt> another way to avoid using the wrong <tt class="docutils literal"><span class="pre"><span class="Identifier">NimNode</span></span></tt>.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L48"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L49"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L48" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L49" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -528,9 +557,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>It is <strong>not recommended</strong> to initialize <tt class="docutils literal"><span class="pre"><span class="Identifier">FieldBranch</span></span></tt> another way to avoid using the wrong <tt class="docutils literal"><span class="pre"><span class="Identifier">NimNode</span></span></tt>.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L113"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L116"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L113" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L116" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -541,9 +570,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L109"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L112"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L109" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L112" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -559,6 +588,7 @@ class="link-seesrc" target="_blank">Source</a>
   <span class="Identifier">deserializeWith</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span>
   <span class="Identifier">defaultValue</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span>
   <span class="Identifier">aliases</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span>
+  <span class="Identifier">deserWith</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span>
 </pre></dt>
 <dd>
 
@@ -567,9 +597,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>You can initialize <tt class="docutils literal"><span class="pre"><span class="Identifier">FieldFeatures</span></span></tt> manually using the <tt class="docutils literal"><span class="pre"><span class="Identifier">initFieldFeatures</span></span></tt> constructor.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L89"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L91"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L89" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L91" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -582,6 +612,7 @@ class="link-seesrc" target="_blank">Source</a>
   <span class="Identifier">flattenFields</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="types.html#Field"><span class="Identifier">Field</span></a><span class="Other">]</span>
   <span class="Identifier">nskTypeEnumSym</span><span class="Other">:</span> <span class="Identifier">NimNode</span>
   <span class="Identifier">nskEnumFieldUnknownSym</span><span class="Other">:</span> <span class="Identifier">NimNode</span>
+  <span class="Identifier">duplicateCheck</span><span class="Other">:</span> <span class="Identifier">bool</span>
 </pre></dt>
 <dd>
 
@@ -603,6 +634,7 @@ class="link-seesrc" target="_blank">Source</a>
   <span class="Identifier">renameAll</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span>
   <span class="Identifier">skipPrivateSerializing</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">skipPrivateDeserializing</span><span class="Other">:</span> <span class="Identifier">bool</span>
+  <span class="Identifier">defaultValue</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span>
 </pre></dt>
 <dd>
 
@@ -611,9 +643,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>You can initialize <tt class="docutils literal"><span class="pre"><span class="Identifier">StructFeatures</span></span></tt> manually using the <tt class="docutils literal"><span class="pre"><span class="Identifier">initStructFeatures</span></span></tt> constructor.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L76"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L77"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L76" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L77" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -632,9 +664,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>It is <strong>not recommended</strong> to initialize <tt class="docutils literal"><span class="pre"><span class="Identifier">TypeInfo</span></span></tt> another way to avoid using the wrong <tt class="docutils literal"><span class="pre"><span class="Identifier">NimNode</span></span></tt>.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L130"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L133"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L130" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L133" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -649,9 +681,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Value from <tt class="docutils literal"><span class="pre"><span class="Identifier">aliases</span></span></tt> pragma.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L492"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L514"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L492" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L514" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -663,9 +695,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Raise <tt class="docutils literal"><span class="pre"><span class="Identifier">AssertionDefect</span></span></tt> for non-case fields.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L287"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L299"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L287" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L299" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -677,9 +709,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Raise <tt class="docutils literal"><span class="pre"><span class="Identifier">AssertionDefect</span></span></tt> for non-case fields.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L297"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L309"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L297" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L309" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -692,9 +724,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Raise <tt class="docutils literal"><span class="pre"><span class="Identifier">AssertionDefect</span></span></tt> for non-Of branches.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L538"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L565"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L538" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L565" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -704,9 +736,34 @@ class="link-seesrc" target="_blank">Source</a>
 
 Value from <tt class="docutils literal"><span class="pre"><span class="Identifier">defaultValue</span></span></tt> pragma.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L488"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L510"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L488" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L510" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="defaultValue,StructFeatures">
+<dt><pre><span class="Keyword">func</span> <a href="#defaultValue%2CStructFeatures"><span class="Identifier">defaultValue</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="types.html#StructFeatures"><span class="Identifier">StructFeatures</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+Value from <tt class="docutils literal"><span class="pre"><span class="Identifier">defaultValue</span></span></tt> pragma.
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L422"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L422" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="defaultValue=,FieldFeatures,Option[NimNode]">
+<dt><pre><span class="Keyword">proc</span> <a href="#defaultValue%3D%2CFieldFeatures%2COption%5BNimNode%5D"><span class="Identifier">defaultValue=</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#FieldFeatures"><span class="Identifier">FieldFeatures</span></a><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">)</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L536"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L536" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -717,9 +774,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Returns the sequence of strings from the <tt class="docutils literal"><span class="pre"><span class="Identifier">renameDeserialize</span></span></tt> pragma if presented, otherwise the field name.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L336"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L348"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L336" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L348" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -730,9 +787,45 @@ class="link-seesrc" target="_blank">Source</a>
 
 Value from <tt class="docutils literal"><span class="pre"><span class="Identifier">deserializeWith</span></span></tt> pragma.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L484"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L506"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L484" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L506" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="deserWith,FieldFeatures">
+<dt><pre><span class="Keyword">func</span> <a href="#deserWith%2CFieldFeatures"><span class="Identifier">deserWith</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="types.html#FieldFeatures"><span class="Identifier">FieldFeatures</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+Value from <tt class="docutils literal"><span class="pre"><span class="Identifier">deserWith</span></span></tt> pragma.
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L518"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L518" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="duplicateCheck,Struct">
+<dt><pre><span class="Keyword">func</span> <a href="#duplicateCheck%2CStruct"><span class="Identifier">duplicateCheck</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="types.html#Struct"><span class="Identifier">Struct</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L223"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L223" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="duplicateCheck=,Struct,bool">
+<dt><pre><span class="Keyword">proc</span> <a href="#duplicateCheck%3D%2CStruct%2Cbool"><span class="Identifier">duplicateCheck=</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#Struct"><span class="Identifier">Struct</span></a><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L228"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L228" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -742,9 +835,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Features derived from pragmas.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L271"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L283"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L271" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L283" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -754,9 +847,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Features derived from pragmas.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L188"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L192"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L188" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L192" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -766,9 +859,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L275"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L287"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L275" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L287" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -778,9 +871,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L550"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L577"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L550" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L577" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -790,9 +883,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Type fields.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L184"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L188"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L184" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L188" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -802,9 +895,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L553"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L580"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L553" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L580" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -816,9 +909,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Created automatically in the <tt class="docutils literal"><span class="pre"><span class="Identifier">initStruct</span></span></tt> constructor.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L198"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L202"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L198" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L202" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -830,9 +923,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Return nnkGenericParams NimNode.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L192"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L196"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L192" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L196" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -844,9 +937,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Return nnkGenericParams NimNode.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L602"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L629"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L602" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L629" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -856,9 +949,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L441"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L462"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L441" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L462" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -868,9 +961,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L382"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L396"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L382" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L396" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -882,9 +975,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L222"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L234"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L222" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L234" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -895,28 +988,29 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L515"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L542"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L515" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L542" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
-<div id="initFieldFeatures,bool,bool,bool,Option[NimNode],Option[NimNode],Option[NimNode],Option[NimNode],Option[NimNode],Option[NimNode],seq[NimNode]">
-<dt><pre><span class="Keyword">func</span> <a href="#initFieldFeatures%2Cbool%2Cbool%2Cbool%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2Cseq%5BNimNode%5D"><span class="Identifier">initFieldFeatures</span></a><span class="Other">(</span><span class="Identifier">skipSerializing</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">skipDeserializing</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+<div id="initFieldFeatures,bool,bool,bool,Option[NimNode],Option[NimNode],Option[NimNode],Option[NimNode],Option[NimNode],Option[NimNode],seq[NimNode],Option[NimNode]">
+<dt><pre><span class="Keyword">func</span> <a href="#initFieldFeatures%2Cbool%2Cbool%2Cbool%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2Cseq%5BNimNode%5D%2COption%5BNimNode%5D"><span class="Identifier">initFieldFeatures</span></a><span class="Other">(</span><span class="Identifier">skipSerializing</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">skipDeserializing</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
                        <span class="Identifier">untagged</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">renameSerialize</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">;</span>
                        <span class="Identifier">renameDeserialize</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">;</span>
                        <span class="Identifier">skipSerializeIf</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">;</span>
                        <span class="Identifier">serializeWith</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">;</span>
                        <span class="Identifier">deserializeWith</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">;</span>
-                       <span class="Identifier">defaultValue</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">aliases</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="types.html#FieldFeatures"><span class="Identifier">FieldFeatures</span></a> {.
+                       <span class="Identifier">defaultValue</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">aliases</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">;</span>
+                       <span class="Identifier">deserWith</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="types.html#FieldFeatures"><span class="Identifier">FieldFeatures</span></a> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 Throws a <tt class="docutils literal"><span class="pre"><span class="Identifier">ValueError</span></span></tt> exception if both <tt class="docutils literal"><span class="pre"><span class="Identifier">renameDeserialize</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">aliases</span></span></tt> are passed. 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L410"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L429"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L410" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L429" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -928,25 +1022,26 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L156"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L159"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L156" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L159" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
-<div id="initStructFeatures,Option[NimNode],Option[NimNode],bool,bool">
-<dt><pre><span class="Keyword">func</span> <a href="#initStructFeatures%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2Cbool%2Cbool"><span class="Identifier">initStructFeatures</span></a><span class="Other">(</span><span class="Identifier">onUnknownKeys</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">;</span>
+<div id="initStructFeatures,Option[NimNode],Option[NimNode],bool,bool,Option[NimNode]">
+<dt><pre><span class="Keyword">func</span> <a href="#initStructFeatures%2COption%5BNimNode%5D%2COption%5BNimNode%5D%2Cbool%2Cbool%2COption%5BNimNode%5D"><span class="Identifier">initStructFeatures</span></a><span class="Other">(</span><span class="Identifier">onUnknownKeys</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">;</span>
                         <span class="Identifier">renameAll</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">;</span>
                         <span class="Identifier">skipPrivateSerializing</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                        <span class="Identifier">skipPrivateDeserializing</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <a href="types.html#StructFeatures"><span class="Identifier">StructFeatures</span></a> {.
+                        <span class="Identifier">skipPrivateDeserializing</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                        <span class="Identifier">defaultValue</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="types.html#StructFeatures"><span class="Identifier">StructFeatures</span></a> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L369"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L381"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L369" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L381" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -958,9 +1053,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L559"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L586"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L559" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L586" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -970,9 +1065,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 True for case fields.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L283"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L295"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L283" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L295" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -982,9 +1077,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L535"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L562"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L535" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L562" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -994,9 +1089,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Add <tt class="docutils literal"><span class="pre"><span class="Identifier">another</span></span></tt> field to all branches of first field.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L349"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L361"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L349" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L361" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1008,9 +1103,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Return nnkIdent NimNode.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L259"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L271"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L259" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L271" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1022,9 +1117,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Created automatically in the <tt class="docutils literal"><span class="pre"><span class="Identifier">initField</span></span></tt> constructor</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L308"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L320"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L308" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L320" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1036,9 +1131,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Created automatically in the <tt class="docutils literal"><span class="pre"><span class="Identifier">initStruct</span></span></tt> constructor</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L212"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L216"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L212" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L216" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1050,9 +1145,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Created automatically in the <tt class="docutils literal"><span class="pre"><span class="Identifier">initField</span></span></tt> constructor</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L315"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L327"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L315" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L327" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1064,9 +1159,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Created automatically in the <tt class="docutils literal"><span class="pre"><span class="Identifier">initStruct</span></span></tt> constructor</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L205"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L209"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L205" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L209" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1078,9 +1173,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Created automatically in the <tt class="docutils literal"><span class="pre"><span class="Identifier">initField</span></span></tt> constructor</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L322"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L334"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L322" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L334" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1090,9 +1185,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Value from <tt class="docutils literal"><span class="pre"><span class="Identifier">onUnknownKeys</span></span></tt> pragma.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L391"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L406"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L391" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L406" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1104,9 +1199,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Return <tt class="docutils literal"><span class="pre"><span class="Identifier">nnkPragma</span></span></tt> NimNode.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L590"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L617"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L590" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L617" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1116,9 +1211,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 True for public fields.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L279"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L291"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L279" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L291" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1130,9 +1225,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Return <tt class="docutils literal"><span class="pre"><span class="Identifier">nnkRecList</span></span></tt>.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L596"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L623"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L596" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L623" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1142,9 +1237,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Value from <tt class="docutils literal"><span class="pre"><span class="Identifier">renameAll</span></span></tt> pragma.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L395"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L410"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L395" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L410" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1155,9 +1250,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Value from <tt class="docutils literal"><span class="pre"><span class="Identifier">renameDeserialize</span></span></tt> pragma.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L472"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L494"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L472" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L494" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1166,11 +1261,11 @@ class="link-seesrc" target="_blank">Source</a>
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
-Value from <tt class="docutils literal"><span class="pre"><span class="Identifier">renameDeserialize</span></span></tt> pragma.
+
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L509"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L533"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L509" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L533" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1181,9 +1276,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Value from <tt class="docutils literal"><span class="pre"><span class="Identifier">renameSerialize</span></span></tt> pragma.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L468"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L490"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L468" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L490" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1192,11 +1287,11 @@ class="link-seesrc" target="_blank">Source</a>
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
-Value from <tt class="docutils literal"><span class="pre"><span class="Identifier">renameSerialize</span></span></tt> pragma.
+
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L505"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L530"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L505" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L530" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1207,9 +1302,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Returns the string from the <tt class="docutils literal"><span class="pre"><span class="Identifier">renameSerialize</span></span></tt> pragma if presented, otherwise the field name.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L329"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L341"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L329" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L341" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1219,9 +1314,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Value from <tt class="docutils literal"><span class="pre"><span class="Identifier">serializeWith</span></span></tt> pragma.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L480"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L502"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L480" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L502" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1231,9 +1326,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 <tt class="docutils literal"><span class="pre"><span class="Identifier">true</span></span></tt> if <tt class="docutils literal"><span class="pre"><span class="Identifier">skipped</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Identifier">skipDeserializing</span></span></tt> pragmas are used.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L460"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L482"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L460" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L482" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1242,11 +1337,11 @@ class="link-seesrc" target="_blank">Source</a>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
-<tt class="docutils literal"><span class="pre"><span class="Identifier">true</span></span></tt> if <tt class="docutils literal"><span class="pre"><span class="Identifier">skipped</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Identifier">skipDeserializing</span></span></tt> pragmas are used.
+
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L501"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L527"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L501" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L527" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1256,9 +1351,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 True if <tt class="docutils literal"><span class="pre"><span class="Identifier">skipPrivateDeserializing</span></span></tt> pragma presented.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L403"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L418"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L403" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L418" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1268,9 +1363,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 True if <tt class="docutils literal"><span class="pre"><span class="Identifier">skipPrivateSerializing</span></span></tt> pragma presented.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L399"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L414"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L399" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L414" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1281,9 +1376,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Value from <tt class="docutils literal"><span class="pre"><span class="Identifier">skipSerializeIf</span></span></tt> pragma.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L476"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L498"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L476" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L498" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1293,9 +1388,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 <tt class="docutils literal"><span class="pre"><span class="Identifier">true</span></span></tt> if <tt class="docutils literal"><span class="pre"><span class="Identifier">skipped</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Identifier">skipSerializing</span></span></tt> pragmas are used.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L456"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L478"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L456" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L478" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1304,11 +1399,11 @@ class="link-seesrc" target="_blank">Source</a>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
-<tt class="docutils literal"><span class="pre"><span class="Identifier">true</span></span></tt> if <tt class="docutils literal"><span class="pre"><span class="Identifier">skipped</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Identifier">skipSerializing</span></span></tt> pragmas are used.
+
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L497"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L524"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L497" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L524" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1320,9 +1415,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>May return nnkSym, nnkIdent or nnkBracketExpr NimNode.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L265"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L277"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L265" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L277" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1334,9 +1429,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Return nnkSym NimNode.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L178"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L182"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L178" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L182" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1348,9 +1443,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>Return <tt class="docutils literal"><span class="pre"><span class="Identifier">nnkSym</span></span></tt> NimNode.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L583"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L610"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L583" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L610" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1360,9 +1455,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 <tt class="docutils literal"><span class="pre"><span class="Identifier">true</span></span></tt> if <tt class="docutils literal"><span class="pre"><span class="Identifier">untagged</span></span></tt> pragma used.
 &nbsp;&nbsp;<a
-href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L464"
+href="https://github.com/gabbhack/deser/tree/master/src/deser/macroutils/types.nim#L486"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L464" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/gabbhack/deser/edit/devel/src/deser/macroutils/types.nim#L486" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1376,7 +1471,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-02-05 15:34:24 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-03-16 09:55:37 UTC</small>
       </div>
     </div>
   </div>

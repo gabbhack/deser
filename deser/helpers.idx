@@ -1,0 +1,6 @@
+UnixTimeFormat	deser/helpers.html#UnixTimeFormat	helpers: UnixTimeFormat	
+deserialize	deser/helpers.html#deserialize,typedesc[UnixTimeFormat],auto	helpers: deserialize(self: typedesc[UnixTimeFormat]; deserializer: var auto): Time	
+serialize	deser/helpers.html#serialize,typedesc[UnixTimeFormat],Time,auto	helpers: serialize(self: typedesc[UnixTimeFormat]; field: Time; serializer: var auto)	
+DateTimeWith	deser/helpers.html#DateTimeWith	helpers: DateTimeWith	
+deserialize	deser/helpers.html#deserialize,DateTimeWith,auto	helpers: deserialize(self: DateTimeWith; deserializer: var auto): DateTime	
+serialize	deser/helpers.html#serialize,DateTimeWith,DateTime,auto	helpers: serialize(self: DateTimeWith; field: DateTime; serializer: var auto)	

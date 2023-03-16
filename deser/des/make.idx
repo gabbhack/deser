@@ -1,1 +1,1 @@
-makeDeserializable	deser/des/make.html#makeDeserializable.m,varargs[typedesc],static[bool]	make: makeDeserializable(types: varargs[typedesc]; public: static[bool] = false)	
+makeDeserializable	deser/des/make.html#makeDeserializable.m,varargs[typedesc],static[bool],static[bool],static[bool],static[bool]	make: makeDeserializable(types: varargs[typedesc]; public: static[bool] = false;\n                   duplicateCheck: static[bool] = true;\n                   debugOutput: static[bool] = false;\n                   debugTreeOutput: static[bool] = false)	

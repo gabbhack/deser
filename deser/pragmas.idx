@@ -11,6 +11,7 @@ RenameCase	deser/pragmas.html#RenameCase	pragmas: RenameCase
 untagged	deser/pragmas.html#untagged.t	pragmas: untagged()	
 serializeWith	deser/pragmas.html#serializeWith.t,typed	pragmas: serializeWith(with: typed)	
 deserializeWith	deser/pragmas.html#deserializeWith.t,typed	pragmas: deserializeWith(with: typed)	
+deserWith	deser/pragmas.html#deserWith.t,typed	pragmas: deserWith(with: typed)	
 renamed	deser/pragmas.html#renamed.t	pragmas: renamed(renamed: string | RenameCase)	
 renameSerialize	deser/pragmas.html#renameSerialize.t	pragmas: renameSerialize(renamed: string | RenameCase)	
 renameDeserialize	deser/pragmas.html#renameDeserialize.t	pragmas: renameDeserialize(renamed: string | RenameCase)	
