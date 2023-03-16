@@ -23,6 +23,14 @@ proc fromTimestamp(deserializer: var auto): Time =
 proc raiseError(objName, fieldValue: auto) =
   raise newException(ValueError, &"Unknown field `{fieldValue}`")
 
+proc myDefault[T](): T =
+  when T is int:
+    123
+  elif T is string:
+    "hello"
+  else:
+    {.error.}
+
 
 type
   EmptyObject = object
@@ -70,6 +78,7 @@ type
   DefaultObject = object
     id {.defaultValue(123).}: int
     integer {.defaultValue.}: int
+    fun {.defaultValue(myDefault).}: int
   
   OnUnknownObject {.onUnknownKeys(raiseError).} = object
 
@@ -181,6 +190,13 @@ type
   DeserWith = object
     created {.deserWith(UnixTimeFormat).}: Time
 
+  EmptyDefaultValue {.defaultValue.} = object
+    id: int
+    text: string
+
+  DefaultValueFun {.defaultValue(myDefault).} = object
+    id: int
+    text: string
 
 proc `==`*(x, y: ObjectWithRef): bool = x.id[] == y.id[]
 
@@ -256,7 +272,9 @@ makeDeserializable([
   AliasesWithRenameAllPragma,
   ObjectWithRequiresInit,
   Quotes,
-  DeserWith
+  DeserWith,
+  EmptyDefaultValue,
+  DefaultValueFun,
 ], public=true)
 
 makeDeserializable([DuplicateCheck], public=true, duplicateCheck=false)
@@ -373,7 +391,7 @@ suite "makeDeserializable":
     ]
   
   test "DefaultObject":
-    assertDesTokens DefaultObject(id: 123, integer: 0), [
+    assertDesTokens DefaultObject(id: 123, integer: 0, fun: 123), [
       initStructToken("DefaultObject", 1),
       initStructEndToken()
     ]
@@ -658,5 +676,17 @@ suite "makeDeserializable":
       initStructToken("DeserWith", 1),
       initStringToken("created"),
       initI64Token(123),
+      initStructEndToken()
+    ]
+
+  test "Empty default value on object":
+    assertDesTokens EmptyDefaultValue(id: 0, text: ""), [
+      initStructToken("EmptyDefaultValue", 2),
+      initStructEndToken()
+    ]
+
+  test "Fun default value on object":
+    assertDesTokens DefaultValueFun(id: 123, text: "hello"), [
+      initStructToken("DefaultValueFun", 2),
       initStructEndToken()
     ]

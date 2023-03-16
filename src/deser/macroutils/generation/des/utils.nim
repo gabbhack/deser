@@ -67,7 +67,7 @@ template getOrDefault*[T](field: Option[T]): T =
     # HACK: https://github.com/nim-lang/Nim/issues/20033
     default(typedesc[T])
 
-template getOrDefaultValue*[T](field: Option[T], defaultValue: T): T =
+template getOrDefaultValue*[T](field: Option[T], defaultValue: untyped): T =
   bind
     isSome,
     unsafeGet
@@ -75,7 +75,10 @@ template getOrDefaultValue*[T](field: Option[T], defaultValue: T): T =
   if isSome(field):
     unsafeGet(field)
   else:
-    defaultValue
+    when compiles(defaultValue[T]()):
+      defaultValue[T]()
+    else:
+      defaultValue
 
 template getOrRaise*[T](field: Option[T], name: static[string]): T =
   bind

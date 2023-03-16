@@ -217,17 +217,18 @@ type
 ]##
 
 template defaultValue*(value: typed = nil) {.pragma.} ##[
-Uses the specified value if the field was not in the input.
+Uses the specified value, function or template if the field was not in the input.
 
-**Example**:
+Function or template must be callable as `myDefault[T]()`.
 
+**Examples**:
 ```nim
 type
   User = object
     name {.defaultValue("noname").}: string
 ```
 
-Do not specify a value, then `default(FieldType)` will be used
+Do not specify a value, then system [default](https://nim-lang.org/docs/system.html#default%2Ctypedesc%5BT%5D) will be used:
 
 ```nim
 import deser_json
@@ -237,6 +238,31 @@ type
     id {.defaultValue.}: int
 
 assert Foo.fromJson("""{}""").id == 0
+```
+
+Specify a function
+
+```nim
+proc myDefault[T](): T =
+  when T is int:
+    123
+  elif T is string:
+    "hello"
+  else:
+    {.error.}
+  
+type
+  User = object
+    id {.defaultValue(myDefault).}: int
+```
+
+You can use `defaultValue` on object. Than specified value will be used on all missing fields.
+
+```nim
+type
+  User {.defaultValue(myDefault).} =
+    id: int
+    bio: string
 ```
 ]##
 

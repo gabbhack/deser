@@ -79,7 +79,8 @@ func fromTypeSym*(structTy: typedesc[Struct], typeSym: NimNode): Struct =
     pragmas.skipPrivate,
     pragmas.renameAll,
     pragmas.skipPrivateSerializing,
-    pragmas.skipPrivateDeserializing
+    pragmas.skipPrivateDeserializing,
+    pragmas.defaultValue
 
   let
     typeInfo = TypeInfo.fromTypeSym(typeSym)
@@ -245,8 +246,9 @@ proc propagateFeatures(fields: var seq[Field], features: StructFeatures) =
       field.features.skipSerializing = true
     if types.skipPrivateDeserializing(features) and not public field:
       field.features.skipDeserializing = true
-    
-    # TODO defaultValue
+
+    if macro_types.defaultValue(field.features).isNone:
+      field.features.defaultValue = types.defaultValue(features)
 
     # do not check aliases here, because they are useless for serialization
     if field.features.renameSerialize.isNone:
