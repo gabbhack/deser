@@ -7,15 +7,15 @@ on:
     path-ignore:
       - 'README.md'
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     branches:
       - master
     path-ignore:
       - 'README.md'
-  release:
-    types: [published]
 
 jobs:
   build:
+    if: github.event.pull_request.draft == false
     if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     strategy:
       matrix:
