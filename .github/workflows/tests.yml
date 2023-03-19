@@ -15,8 +15,7 @@ on:
 
 jobs:
   build:
-    if: "github.event.pull_request.draft == false"
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    if: "github.event.pull_request.draft == false && ! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     strategy:
       matrix:
         nim: ['1.6.x', 'stable']
