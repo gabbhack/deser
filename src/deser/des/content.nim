@@ -1,5 +1,5 @@
 type
-  ContentType = enum
+  ContentType* = enum
     Bool
     U8, U16, U32, U64
     I8, I16, I32, I64
@@ -11,8 +11,8 @@ type
     Seq
     Map
 
-  Content = object
-    case kind: ContentType
+  Content* = object
+    case kind*: ContentType
     of Bool:
       `bool`*: bool
     of I8:
@@ -44,8 +44,8 @@ type
     of None:
       discard
     of Some:
-      some: ref Content
+      some*: ref Content
     of Seq:
-      `seq`: seq[Content]
+      `seq`*: seq[Content]
     of Map:
-      map: seq[(Content, Content)]
+      map*: seq[(Content, Content)]
