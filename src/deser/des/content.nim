@@ -118,12 +118,9 @@ proc asStr*(self: Content): Option[string] =
     some(string)
   of Bytes(bytes: @bytes):
     var tempString = newStringOfCap(bytes.len)
-    when defined(js) or defined(nimscript):
-      for i in bytes:
-        tempString.add i
-    else:
-      if bytes.len > 0:
-        copyMem(tempString[0].addr, bytes[0].unsafeAddr, bytes.len)
+
+    for i in bytes:
+      tempString.add i.char
 
     if validateUtf8(tempString) == -1:
       some(tempString)
