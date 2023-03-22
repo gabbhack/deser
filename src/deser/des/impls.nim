@@ -40,6 +40,8 @@ when defined(release):
   {.push inline.}
 
 {.push used.}
+proc deserialize*(Self: typedesc[ref], deserializer: var auto): Self
+
 proc deserialize*[T](self: NoneSeed[T], deserializer: var auto): T =
   mixin deserialize
 
@@ -600,6 +602,29 @@ proc visitString*(self: ContentVisitor, value: sink string): self.Value =
 
 proc visitBytes*(self: ContentVisitor, value: openArray[byte]): self.Value =
   initContent(@value)
+
+proc visitNone*(self: ContentVisitor): self.Value =
+  initNoneContent()
+
+proc visitSome*(self: ContentVisitor, deserializer: var auto): self.Value =
+  let content = deserialize(Content, deserializer)
+  initSomeContent(content)
+
+proc visitSeq*(self: ContentVisitor, sequence: var auto): self.Value =
+  var vec = newSeqOfCap[Content](sequence.sizeHint().get(0))
+
+  for i in items[Content](sequence):
+    vec.add i
+
+  initContent(vec)
+
+proc visitMap*(self: ContentVisitor, map: var auto): self.Value =
+  var vec = newSeqOfCap[(Content, Content)](map.sizeHint().get(0))
+
+  for kv in pairs[(Content, Content)](map):
+    vec.add kv
+
+  initContent(vec) 
 
 proc deserialize*(Self: typedesc[Content], deserializer: var auto): Self =
   deserializer.deserializeAny(ContentVisitor())
