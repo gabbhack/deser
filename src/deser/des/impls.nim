@@ -607,10 +607,16 @@ proc visitNone*(self: ContentVisitor): self.Value =
   initNoneContent()
 
 proc visitSome*(self: ContentVisitor, deserializer: var auto): self.Value =
+  mixin deserialize
+
   let content = deserialize(Content, deserializer)
   initSomeContent(content)
 
 proc visitSeq*(self: ContentVisitor, sequence: var auto): self.Value =
+  mixin
+    sizeHint,
+    items
+
   var vec = newSeqOfCap[Content](sequence.sizeHint().get(0))
 
   for i in items[Content](sequence):
@@ -619,6 +625,10 @@ proc visitSeq*(self: ContentVisitor, sequence: var auto): self.Value =
   initContent(vec)
 
 proc visitMap*(self: ContentVisitor, map: var auto): self.Value =
+  mixin
+    sizeHint,
+    pairs
+
   var vec = newSeqOfCap[(Content, Content)](map.sizeHint().get(0))
 
   for kv in pairs[Content, Content](map):
@@ -627,6 +637,8 @@ proc visitMap*(self: ContentVisitor, map: var auto): self.Value =
   initContent(vec)
 
 proc deserialize*(Self: typedesc[Content], deserializer: var auto): Self =
+  mixin deserializeAny
+
   deserializer.deserializeAny(ContentVisitor())
 
 proc deserialize*(Self: typedesc[ref], deserializer: var auto): Self =
