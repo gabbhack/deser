@@ -29,6 +29,12 @@ from helpers import
   NoneSeed,
   IgnoredAny
 
+from content import
+  Content,
+  initContent,
+  initNoneContent,
+  initSomeContent
+
 
 when defined(release):
   {.push inline.}
@@ -543,6 +549,60 @@ proc deserialize*(Self: typedesc[range], deserializer: var auto): Self =
   else:
     deserializer.deserializeInt64(RangeVisitor[Self]())
 {.pop.}
+
+type
+  ContentVisitorRaw[Value] = object
+  ContentVisitor = ContentVisitorRaw[Content]
+
+implVisitor(ContentVisitor, public=true)
+
+proc expecting*(self: ContentVisitor): string =
+  "any value"
+
+proc visitBool*(self: ContentVisitor, value: bool): self.Value =
+  initContent(value)
+
+proc visitInt8*(self: ContentVisitor, value: int8): self.Value =
+  initContent(value)
+
+proc visitInt16*(self: ContentVisitor, value: int16): self.Value =
+  initContent(value)
+
+proc visitInt32*(self: ContentVisitor, value: int32): self.Value =
+  initContent(value)
+
+proc visitInt64*(self: ContentVisitor, value: int64): self.Value =
+  initContent(value)
+
+proc visitUint8*(self: ContentVisitor, value: uint8): self.Value =
+  initContent(value)
+
+proc visitUint16*(self: ContentVisitor, value: uint16): self.Value =
+  initContent(value)
+
+proc visitUint32*(self: ContentVisitor, value: uint32): self.Value =
+  initContent(value)
+
+proc visitUint64*(self: ContentVisitor, value: uint64): self.Value =
+  initContent(value)
+
+proc visitFloat32*(self: ContentVisitor, value: float32): self.Value =
+  initContent(value)
+
+proc visitFloat64*(self: ContentVisitor, value: float64): self.Value =
+  initContent(value)
+
+proc visitChar*(self: ContentVisitor, value: char): self.Value =
+  initContent(value)
+
+proc visitString*(self: ContentVisitor, value: sink string): self.Value =
+  initContent(value)
+
+proc visitBytes*(self: ContentVisitor, value: openArray[byte]): self.Value =
+  initContent(@value)
+
+proc deserialize*(Self: typedesc[Content], deserializer: var auto): Self =
+  deserializer.deserializeAny(ContentVisitor())
 
 proc deserialize*(Self: typedesc[ref], deserializer: var auto): Self =
   mixin deserialize
