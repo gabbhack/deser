@@ -624,7 +624,7 @@ proc visitMap*(self: ContentVisitor, map: var auto): self.Value =
   for kv in pairs[Content, Content](map):
     vec.add kv
 
-  initContent(vec) 
+  initContent(vec)
 
 proc deserialize*(Self: typedesc[Content], deserializer: var auto): Self =
   deserializer.deserializeAny(ContentVisitor())
