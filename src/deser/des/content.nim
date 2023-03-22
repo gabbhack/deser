@@ -63,6 +63,51 @@ type
 when defined(release):
   {.push inline.}
 
+proc initContent*(value: auto): Content =
+  when value is bool:
+    Content(kind: Bool, bool: value)
+  elif value is int8:
+    Content(kind: I8, i8: value)
+  elif value is int16:
+    Content(kind: I16, i16: value)
+  elif value is int32:
+    Content(kind: I32, i32: value)
+  elif value is int64 or int:
+    Content(kind: I64, i64: value.int64)
+  elif value is uint8:
+    Content(kind: U8, u8: value)
+  elif value is uint16:
+    Content(kind: U16, u16: value)
+  elif value is uint32:
+    Content(kind: U32, u32: value)
+  elif value is uint64 or uint:
+    Content(kind: U64, u64: value.uint64)
+  elif value is float32:
+    Content(kind: F32, f32: value)
+  elif value is float64 or float:
+    Content(kind: F64, f64: value)
+  elif value is char:
+    Content(kind: Char, char: value)
+  elif value is string:
+    Content(kind: String, string: value)
+  elif value is seq[byte]:
+    Content(kind: Bytes, bytes: value)
+  elif value is seq[Content]:
+    Content(kind: Seq, seq: value)
+  elif value is seq[(Content, Content)]:
+    Content(kind: Map, map: value)
+  else:
+    {.error: "Unsupported type " & $typeof(value).}
+
+proc initSomeContent*(value: Content): Content =
+  let content = new Content
+  content[] = value
+
+  Content(kind: Some, some: content)
+
+proc initNoneContent*(): Content =
+  Content(kind: None)
+
 proc isSome(self: Content): bool = self.kind == Some
 
 proc isNone(self: Content): bool = self.kind == None
