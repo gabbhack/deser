@@ -72,7 +72,7 @@ proc initContent*(value: auto): Content =
     Content(kind: I16, i16: value)
   elif value is int32:
     Content(kind: I32, i32: value)
-  elif value is int64 or int:
+  elif value is (int64 or int):
     Content(kind: I64, i64: value.int64)
   elif value is uint8:
     Content(kind: U8, u8: value)
@@ -80,11 +80,11 @@ proc initContent*(value: auto): Content =
     Content(kind: U16, u16: value)
   elif value is uint32:
     Content(kind: U32, u32: value)
-  elif value is uint64 or uint:
+  elif value is (uint64 or uint):
     Content(kind: U64, u64: value.uint64)
   elif value is float32:
     Content(kind: F32, f32: value)
-  elif value is float64 or float:
+  elif value is (float64 or float):
     Content(kind: F64, f64: value)
   elif value is char:
     Content(kind: Char, char: value)
