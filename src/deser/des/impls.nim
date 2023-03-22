@@ -621,7 +621,7 @@ proc visitSeq*(self: ContentVisitor, sequence: var auto): self.Value =
 proc visitMap*(self: ContentVisitor, map: var auto): self.Value =
   var vec = newSeqOfCap[(Content, Content)](map.sizeHint().get(0))
 
-  for kv in pairs[(Content, Content)](map):
+  for kv in pairs[Content, Content](map):
     vec.add kv
 
   initContent(vec) 
