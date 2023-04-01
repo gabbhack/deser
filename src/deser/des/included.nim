@@ -1,3 +1,5 @@
+# Special module for `included` pragma
+
 {.experimental: "caseStmtMacros".}
 import std/[
   options,
