@@ -1,6 +1,7 @@
 # Special module for `included` pragma
 
 {.experimental: "caseStmtMacros".}
+{.experimental: "views".}
 import std/[
   options,
   unicode
@@ -8,6 +9,9 @@ import std/[
 
 import deser/macroutils/matching
 import deser/des/errors
+
+from deser/des/helpers import
+  implDeserializer
 
 
 type
@@ -169,6 +173,32 @@ proc unexpected*(self: Content): Unexpected =
     return initUnexpectedSeq()
   of Map():
     return initUnexpectedMap()
+
+
+type
+  FlatMapDeserializer* = object
+    content: seq[Option[(Content, Content)]]
+
+  FlatMapAccess* = object
+    iter: var seq[Option[(Content, Content)]]
+
+  FlatStructAccess* = object
+    iter: var seq[Option[(Content, Content)]]
+    pendingContent: Option[Content]
+    fields: openArray[string]
+
+implDeserializer(FlatMapDeserializer, public=true):
+  {.error: "Can only include structs and maps".}
+
+proc deserializeMap*(self: var FlatMapDeserializer, visitor: auto): visitor.Value =
+  mixin visitMap
+
+  visitor.visitMap(FlatMapAccess(iter: self.content))
+
+proc deserializeStruct*(self: var FlatMapDeserializer, name: static[string], fields: static[array], visitor: auto): visitor.Value =
+  mixin visitMap
+
+  visitor.visitMap(FlatStructAccess(iter: self.content, fields: fields.toOpenArray(fields.low, fields.high)))
 
 when defined(release):
   {.pop.}
