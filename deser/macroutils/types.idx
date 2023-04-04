@@ -67,3 +67,4 @@ typeSym	deser/macroutils/types.html#typeSym,TypeInfo	types: typeSym(self: TypeIn
 pragma	deser/macroutils/types.html#pragma,TypeInfo	types: pragma(self: TypeInfo): Option[NimNode]	
 recList	deser/macroutils/types.html#recList,TypeInfo	types: recList(self: TypeInfo): Option[NimNode]	
 genericParams	deser/macroutils/types.html#genericParams,TypeInfo	types: genericParams(self: TypeInfo): Option[NimNode]	
+flatten	deser/macroutils/types.html#flatten,seq[Field]	types: flatten(fields: seq[Field]): seq[Field]	
