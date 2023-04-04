@@ -114,7 +114,7 @@ window.addEventListener('DOMContentLoaded', main);
   <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#Field"
-    title="Field {.requiresInit.} = object
+    title="Field = object
   nameIdent: NimNode
   typeNode: NimNode
   features: FieldFeatures
@@ -129,7 +129,7 @@ window.addEventListener('DOMContentLoaded', main);
   else:
       nil">Field</a></li>
   <li><a class="reference" href="#FieldBranch"
-    title="FieldBranch {.requiresInit.} = object
+    title="FieldBranch = object
   case kind: FieldBranchKind
   of Of:
       conditionOfBranch: NimNode
@@ -142,7 +142,7 @@ window.addEventListener('DOMContentLoaded', main);
     title="FieldBranchKind = enum
   Of, Else">FieldBranchKind</a></li>
   <li><a class="reference" href="#FieldFeatures"
-    title="FieldFeatures {.requiresInit.} = object
+    title="FieldFeatures = object
   skipSerializing: bool
   skipDeserializing: bool
   untagged: bool
@@ -155,7 +155,7 @@ window.addEventListener('DOMContentLoaded', main);
   aliases: seq[NimNode]
   deserWith: Option[NimNode]">FieldFeatures</a></li>
   <li><a class="reference" href="#Struct"
-    title="Struct {.requiresInit.} = object
+    title="Struct = object
   typeSym: NimNode
   fields: seq[Field]
   features: StructFeatures
@@ -165,14 +165,14 @@ window.addEventListener('DOMContentLoaded', main);
   nskEnumFieldUnknownSym: NimNode
   duplicateCheck: bool">Struct</a></li>
   <li><a class="reference" href="#StructFeatures"
-    title="StructFeatures {.requiresInit.} = object
+    title="StructFeatures = object
   onUnknownKeys: Option[NimNode]
   renameAll: Option[NimNode]
   skipPrivateSerializing: bool
   skipPrivateDeserializing: bool
   defaultValue: Option[NimNode]">StructFeatures</a></li>
   <li><a class="reference" href="#TypeInfo"
-    title="TypeInfo {.requiresInit.} = object
+    title="TypeInfo = object
   typeSym: NimNode
   pragma: Option[NimNode]
   recList: Option[NimNode]
@@ -507,7 +507,7 @@ window.addEventListener('DOMContentLoaded', main);
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
 <div id="Field">
-<dt><pre><a href="types.html#Field"><span class="Identifier">Field</span></a> {.<span class="Identifier">requiresInit</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
+<dt><pre><a href="types.html#Field"><span class="Identifier">Field</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">nameIdent</span><span class="Other">:</span> <span class="Identifier">NimNode</span>
   <span class="Identifier">typeNode</span><span class="Other">:</span> <span class="Identifier">NimNode</span>
   <span class="Identifier">features</span><span class="Other">:</span> <a href="types.html#FieldFeatures"><span class="Identifier">FieldFeatures</span></a>
@@ -539,7 +539,7 @@ class="link-seesrc" target="_blank">Source</a>
 </dd>
 </div>
 <div id="FieldBranch">
-<dt><pre><a href="types.html#FieldBranch"><span class="Identifier">FieldBranch</span></a> {.<span class="Identifier">requiresInit</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
+<dt><pre><a href="types.html#FieldBranch"><span class="Identifier">FieldBranch</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Keyword">case</span> <span class="Identifier">kind</span><span class="Other">:</span> <a href="types.html#FieldBranchKind"><span class="Identifier">FieldBranchKind</span></a>
   <span class="Keyword">of</span> <span class="Identifier">Of</span><span class="Other">:</span>
       <span class="Identifier">conditionOfBranch</span><span class="Other">:</span> <span class="Identifier">NimNode</span>
@@ -577,7 +577,7 @@ class="link-seesrc" target="_blank">Source</a>
 </dd>
 </div>
 <div id="FieldFeatures">
-<dt><pre><a href="types.html#FieldFeatures"><span class="Identifier">FieldFeatures</span></a> {.<span class="Identifier">requiresInit</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
+<dt><pre><a href="types.html#FieldFeatures"><span class="Identifier">FieldFeatures</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">skipSerializing</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">skipDeserializing</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">untagged</span><span class="Other">:</span> <span class="Identifier">bool</span>
@@ -604,7 +604,7 @@ class="link-seesrc" target="_blank">Source</a>
 </dd>
 </div>
 <div id="Struct">
-<dt><pre><a href="types.html#Struct"><span class="Identifier">Struct</span></a> {.<span class="Identifier">requiresInit</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
+<dt><pre><a href="types.html#Struct"><span class="Identifier">Struct</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">typeSym</span><span class="Other">:</span> <span class="Identifier">NimNode</span>
   <span class="Identifier">fields</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="types.html#Field"><span class="Identifier">Field</span></a><span class="Other">]</span>
   <span class="Identifier">features</span><span class="Other">:</span> <a href="types.html#StructFeatures"><span class="Identifier">StructFeatures</span></a>
@@ -629,7 +629,7 @@ class="link-seesrc" target="_blank">Source</a>
 </dd>
 </div>
 <div id="StructFeatures">
-<dt><pre><a href="types.html#StructFeatures"><span class="Identifier">StructFeatures</span></a> {.<span class="Identifier">requiresInit</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
+<dt><pre><a href="types.html#StructFeatures"><span class="Identifier">StructFeatures</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">onUnknownKeys</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span>
   <span class="Identifier">renameAll</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span>
   <span class="Identifier">skipPrivateSerializing</span><span class="Other">:</span> <span class="Identifier">bool</span>
@@ -650,7 +650,7 @@ class="link-seesrc" target="_blank">Source</a>
 </dd>
 </div>
 <div id="TypeInfo">
-<dt><pre><a href="types.html#TypeInfo"><span class="Identifier">TypeInfo</span></a> {.<span class="Identifier">requiresInit</span>.} <span class="Other">=</span> <span class="Keyword">object</span>
+<dt><pre><a href="types.html#TypeInfo"><span class="Identifier">TypeInfo</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">typeSym</span><span class="Other">:</span> <span class="Identifier">NimNode</span>
   <span class="Identifier">pragma</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span>
   <span class="Identifier">recList</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">NimNode</span><span class="Other">]</span>
@@ -1471,7 +1471,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-03-19 06:33:21 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-04-04 13:25:12 UTC</small>
       </div>
     </div>
   </div>
