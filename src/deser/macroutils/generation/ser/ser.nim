@@ -62,7 +62,7 @@ func defCheckedSerializeField(field: Field, checker, body: NimNode): NimNode
 func defNilCheck(): NimNode
 
 
-func defSerialize*(struct: var Struct, public: bool): NimNode =
+func defSerialize*(struct: Struct, public: bool): NimNode =
   defPushPop:
     newStmtList(
       defSerializeWith(
