@@ -297,31 +297,54 @@ Generate forward declarations and default implementation for [Visitor](#visitor)
     proc visitMap[Self: selfType](self: Self, map: var auto): self.Value
 
     # default implementation
-    proc visitBool[Self: selfType](self: Self, value: bool): self.Value = raiseInvalidType(initUnexpectedBool(value), self)
+    proc visitBool[Self: selfType](self: Self, value: bool): self.Value =
+      raiseInvalidType(initUnexpectedBool(value), self)
+      result = default(self.Value)
 
     proc visitInt8[Self: selfType](self: Self, value: int8): self.Value = self.visitInt64(value.int64)
     proc visitInt16[Self: selfType](self: Self, value: int16): self.Value = self.visitInt64(value.int64)
     proc visitInt32[Self: selfType](self: Self, value: int32): self.Value = self.visitInt64(value.int64)
-    proc visitInt64[Self: selfType](self: Self, value: int64): self.Value = raiseInvalidType(initUnexpectedSigned(value), self)
+    proc visitInt64[Self: selfType](self: Self, value: int64): self.Value =
+      raiseInvalidType(initUnexpectedSigned(value), self)
+      result = default(self.Value)
 
     proc visitUint8[Self: selfType](self: Self, value: uint8): self.Value = self.visitUint64(value.uint64)
     proc visitUint16[Self: selfType](self: Self, value: uint16): self.Value = self.visitUint64(value.uint64)
     proc visitUint32[Self: selfType](self: Self, value: uint32): self.Value = self.visitUint64(value.uint64)
-    proc visitUint64[Self: selfType](self: Self, value: uint64): self.Value = raiseInvalidType(initUnexpectedUnsigned(value), self)
+    proc visitUint64[Self: selfType](self: Self, value: uint64): self.Value =
+      raiseInvalidType(initUnexpectedUnsigned(value), self)
+      result = default(self.Value)
 
     proc visitFloat32[Self: selfType](self: Self, value: float32): self.Value = self.visitFloat64(value.float64)
-    proc visitFloat64[Self: selfType](self: Self, value: float64): self.Value = raiseInvalidType(initUnexpectedFloat(value), self)
+    proc visitFloat64[Self: selfType](self: Self, value: float64): self.Value =
+      raiseInvalidType(initUnexpectedFloat(value), self)
+      result = default(self.Value)
 
     proc visitChar[Self: selfType](self: Self, value: char): self.Value = self.visitString($value)
-    proc visitString[Self: selfType](self: Self, value: sink string): self.Value = raiseInvalidType(initUnexpectedString(value), self)
+    proc visitString[Self: selfType](self: Self, value: sink string): self.Value =
+      raiseInvalidType(initUnexpectedString(value), self)
+      result = default(self.Value)
 
-    proc visitBytes[Self: selfType](self: Self, value: openArray[byte]): self.Value = raiseInvalidType(initUnexpectedBytes(@value), self)
+    proc visitBytes[Self: selfType](self: Self, value: openArray[byte]): self.Value =
+      raiseInvalidType(initUnexpectedBytes(@value), self)
+      result = default(self.Value)
 
-    proc visitNone[Self: selfType](self: Self): self.Value = raiseInvalidType(initUnexpectedOption(), self)
-    proc visitSome[Self: selfType](self: Self, deserializer: var auto): self.Value = raiseInvalidType(initUnexpectedOption(), self)
+    proc visitNone[Self: selfType](self: Self): self.Value =
+      raiseInvalidType(initUnexpectedOption(), self)
+      result = default(self.Value)
 
-    proc visitSeq[Self: selfType](self: Self, sequence: var auto): self.Value = raiseInvalidType(initUnexpectedSeq(), self)
-    proc visitMap[Self: selfType](self: Self, map: var auto): self.Value = raiseInvalidType(initUnexpectedMap(), self)
+    proc visitSome[Self: selfType](self: Self, deserializer: var auto): self.Value =
+      raiseInvalidType(initUnexpectedOption(), self)
+      result = default(self.Value)
+
+    proc visitSeq[Self: selfType](self: Self, sequence: var auto): self.Value =
+      raiseInvalidType(initUnexpectedSeq(), self)
+      result = default(self.Value)
+
+    proc visitMap[Self: selfType](self: Self, map: var auto): self.Value =
+      raiseInvalidType(initUnexpectedMap(), self)
+      result = default(self.Value)
+
     {.pop.}
 
     when defined(release):
