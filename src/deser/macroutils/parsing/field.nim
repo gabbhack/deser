@@ -1,6 +1,3 @@
-discard """
-  action: "compile"
-"""
 import std/[
   macros,
   options

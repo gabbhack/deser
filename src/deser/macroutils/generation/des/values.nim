@@ -351,7 +351,7 @@ template resolveUntagged {.dirty.} =
       # if an error occurs during deserialization, for example, there is no required field
       # we should exit (break) the block and try to deserialize another variant, and not throw an exception
       let variantBody = resolve(struct, variant.fields, objConstr, raiseOnNone=false)
-      body.add newBlockStmt(variantBody)
+      body.add newBlockStmt(ident "untaggedBlock", variantBody)
     of Else:
       # since the resolver takes the value from the `Of` condition
       # we cannot guess the value in the `Else` branch

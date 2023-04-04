@@ -111,7 +111,7 @@ template getOrBreak*[T](field: Option[T]): T =
       # HACK: https://github.com/nim-lang/Nim/issues/20033
       default(typedesc[T])
     else:
-      break
+      break untaggedBlock
 
 macro genPrimitive*(typ: typed{`type`}, deserializeMethod: untyped = nil, floats: static[bool] = false) =
   result = newStmtList()
