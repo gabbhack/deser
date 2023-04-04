@@ -28,7 +28,7 @@ from anycase import
 
 
 type
-  Struct* {.requiresInit.} = object
+  Struct* = object
     ## Intermediate representation of type.
     ## 
     ## Usually `Struct` is initialized using the `fromTypeSym` constructor.
@@ -46,7 +46,7 @@ type
     nskEnumFieldUnknownSym: NimNode
     duplicateCheck: bool
 
-  Field* {.requiresInit.} = object
+  Field* = object
     ## Intermediate representation of type field.
     ## 
     ## Usually `Field` is initialized using
@@ -74,7 +74,7 @@ type
     else:
       discard
 
-  StructFeatures* {.requiresInit.} = object
+  StructFeatures* = object
     ## Features derived from pragmas.
     ## 
     ## Usually `StructFeatures` is initialized using
@@ -88,7 +88,7 @@ type
     skipPrivateDeserializing: bool
     defaultValue: Option[NimNode]
 
-  FieldFeatures* {.requiresInit.} = object
+  FieldFeatures* = object
     ## Features derived from pragmas.
     ## 
     ## Usually `FieldFeatures` is initialized using
@@ -113,7 +113,7 @@ type
     Of
     Else
 
-  FieldBranch* {.requiresInit.} = object
+  FieldBranch* = object
     ## Represents branch of case field.
     ## 
     ## Usually `FieldBranch` is initialized using
@@ -130,7 +130,7 @@ type
       discard
     fields: seq[Field]
 
-  TypeInfo* {.requiresInit.} = object
+  TypeInfo* = object
     ## Not parsed representation of type.
     ## Used when we not need to parse `NimNode` to `Struct`, `Field`, `*Features`, etc.
     ## 
