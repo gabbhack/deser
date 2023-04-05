@@ -4,7 +4,7 @@ import std/[
 
 
 func defWithType*(name: NimNode): NimNode =
-  result = nnkTypeSection.newTree(
+  nnkTypeSection.newTree(
     nnkTypeDef.newTree(
       name,
       nnkGenericParams.newTree(
