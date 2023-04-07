@@ -68,8 +68,6 @@ func parseFields*(typeInfo: TypeInfo): seq[Field] =
 
 func fieldsFromRecList*(recList: NimNode): seq[Field] =
   ## Parse fields from a recList
-  var firstCaseField = none Field
-
   for fieldNode in recList:
     case fieldNode.kind
     of nnkIdentDefs:
@@ -77,52 +75,12 @@ func fieldsFromRecList*(recList: NimNode): seq[Field] =
       result.add Field.fromIdentDefs(fieldNode)
     of nnkRecCase:
       # case field
-      let field = Field.fromRecCase(fieldNode)
-      if firstCaseField.isNone:
-        firstCaseField = some field
-      else:
-        # Merge all cases from this level into first case field.
-        #[
-        Example:
-        type Test = object
-          case firstKind: FirstKind
-          of Foo:
-            discard
-          of Bar:
-            discard
-          
-          case secondKind: SecondKind
-          of Fizz:
-            discard
-          of Bazz:
-            discard
-        
-        In our internal representation it will have the form:
-        type Test = object
-          case firstKind: FirstKind
-          of Foo:
-            case secondKind: SecondKind
-            of Fizz:
-              discard
-            of Bazz:
-              discard
-          of Bar:
-            case secondKind: SecondKind
-            of Fizz:
-              discard
-            of Bazz:
-              discard
-        ]#
-        # This transformation makes it easier to generate deserialization code.
-        firstCaseField.get().merge(field)
+      result.add Field.fromRecCase(fieldNode)
     of nnkNilLit:
       # empty field: discard/nil
       discard
     else:
       assertKind fieldNode, {nnkIdentDefs, nnkRecCase, nnkNilLit}
-
-  if firstCaseField.isSome:
-    result.add firstCaseField.get()
 
 func fromIdentDefs*(fieldTy: typedesc[Field], identDefs: NimNode): Field =
   ## Parse a field from an identDefs node
@@ -148,9 +106,7 @@ func fromRecCase*(fieldTy: typedesc[Field], recCase: NimNode): Field =
   var branches = newSeqOfCap[FieldBranch](recCase.len-1)
 
   for branch in rawBranches:
-    {.warning[UnsafeSetLen]: off.}
     branches.add FieldBranch.fromBranch(branch)
-    {.warning[UnsafeSetLen]: on.}
   
   let (typeNode, nameIdent, pragmas, isPublic) = unpackIdentDefs(identDefs)
 
