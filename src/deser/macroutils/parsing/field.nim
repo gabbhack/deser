@@ -18,8 +18,7 @@ from deser/macroutils/types import
   FieldFeatures,
   TypeInfo,
 
-  recList,
-  merge
+  recList
 
 from pragmas as parse_pragmas import
   parsePragma
