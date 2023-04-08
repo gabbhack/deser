@@ -70,6 +70,45 @@ type
     else:
       discard
 
+  ParsedStruct* = object
+    ## Parsed representation of type.
+    ## 
+    ## Usually `Struct` is initialized using the `fromTypeSym` constructor.
+    ## 
+    ## You can initialize `Struct` manually using the
+    ## `initStruct` constructor.
+    ##
+    ## It is **not recommended** to initialize `Struct` another way to avoid using the wrong `NimNode`.
+    typeSym: NimNode
+    fields: seq[ParsedField]
+    features: StructFeatures
+    genericParams: Option[NimNode]
+
+  ParsedField* = object
+    ## Parsed representation of type field.
+    ## 
+    ## Usually `Field` is initialized using
+    ## `fromIdentDefs` and
+    ## `fromRecCase` constructors.
+    ## 
+    ## The list of fields can be obtained with procedures
+    ## `fieldsFromRecList` and
+    ## `parseFields`.
+    ## 
+    ## You can initialize `Field` manually using the
+    ## `initField` constructor.
+    ## 
+    ## It is **not recommended** to initialize `Field` another way to avoid using the wrong `NimNode`.
+    nameIdent: NimNode
+    typeNode: NimNode
+    features: FieldFeatures
+    public: bool
+    case isCase: bool
+    of true:
+      branches: seq[FieldBranch]
+    else:
+      discard
+
   StructFeatures* = object
     ## Features derived from pragmas.
     ## 
@@ -157,8 +196,14 @@ func initStruct*(
   fields: seq[Field],
   features: StructFeatures,
   genericParams: Option[NimNode],
+  flattenFields: seq[Field],
+  nskTypeEnumSym: NimNode,
+  nskEnumFieldUnknownSym: NimNode,
+  duplicateCheck: bool
 ): Struct =
   assertKind typeSym, {nnkSym}
+  assertKind nskTypeEnumSym, {nnkSym}
+  assertKind nskEnumFieldUnknownSym, {nnkSym}
 
   if Some(@genericParams) ?= genericParams:
     assertKind genericParams, {nnkGenericParams}
@@ -168,10 +213,10 @@ func initStruct*(
     fields: fields,
     features: features,
     genericParams: genericParams,
-    flattenFields: flatten fields,
-    nskTypeEnumSym: genSym(nskType, typeSym.strVal & "Fields"),
-    nskEnumFieldUnknownSym: genSym(nskEnumField, "UnknownField"),
-    duplicateCheck: true
+    flattenFields: fields,
+    nskTypeEnumSym: nskTypeEnumSym,
+    nskEnumFieldUnknownSym: nskEnumFieldUnknownSym,
+    duplicateCheck: duplicateCheck
   )
 
 # Struct getters
@@ -233,10 +278,16 @@ func initField*(
   features: FieldFeatures,
   public: bool,
   isCase: bool,
-  branches: seq[FieldBranch]
+  branches: seq[FieldBranch],
+  nskEnumFieldSym: NimNode,
+  nskTypeDeserializeWithSym: NimNode,
+  nskTypeSerializeWithSym: NimNode
 ): Field =
   assertKind nameIdent, {nnkIdent}
   assertKind typeNode, {nnkSym, nnkIdent, nnkBracketExpr, nnkRefTy}
+  assertKind nskEnumFieldSym, {nnkSym}
+  assertKind nskTypeDeserializeWithSym, {nnkSym}
+  assertKind nskTypeSerializeWithSym, {nnkSym}
 
   if isCase:
     Field(
@@ -246,9 +297,9 @@ func initField*(
       public: public,
       isCase: true,
       branches: branches,
-      nskEnumFieldSym: genSym(nskEnumField, nameIdent.strVal),
-      nskTypeDeserializeWithSym: genSym(nskType, nameIdent.strVal & "DeserializeWith"),
-      nskTypeSerializeWithSym: genSym(nskType, nameIdent.strVal & "SerializeWith")
+      nskEnumFieldSym: nskEnumFieldSym,
+      nskTypeDeserializeWithSym: nskTypeDeserializeWithSym,
+      nskTypeSerializeWithSym: nskTypeSerializeWithSym
     )
   else:
     Field(
@@ -257,9 +308,9 @@ func initField*(
       features: features,
       public: public,
       isCase: false,
-      nskEnumFieldSym: genSym(nskEnumField, nameIdent.strVal),
-      nskTypeDeserializeWithSym: genSym(nskType, nameIdent.strVal & "DeserializeWith"),
-      nskTypeSerializeWithSym: genSym(nskType, nameIdent.strVal & "SerializeWith")
+      nskEnumFieldSym: nskEnumFieldSym,
+      nskTypeDeserializeWithSym: nskTypeDeserializeWithSym,
+      nskTypeSerializeWithSym: nskTypeSerializeWithSym
     )
 
 
@@ -614,35 +665,7 @@ func genericParams*(self: TypeInfo): Option[NimNode] =
 
 # # # # # # # # # # # #
 # Utils
-func flatten(fields: seq[Field]): seq[Field] =
-  var
-    temp = newSeqOfCap[Field](fields.len)
-    dedup = initHashSet[string]()
 
-  for field in fields:
-    if not field.isCase:
-      temp.add field
-
-    if field.isCase:
-      if not field.features.untagged:
-        temp.add initField(
-          nameIdent=field.nameIdent,
-          typeNode=field.typeNode,
-          features=field.features,
-          public=false,
-          isCase=false,
-          branches=newSeqOfCap[FieldBranch](0)
-        )
-      for branch in field.branches:
-        {.warning[UnsafeSetLen]: off.}
-        temp.add flatten branch.fields
-        {.warning[UnsafeSetLen]: on.}
-
-  for field in temp:
-    # It will become a problem when RFC 368 is implemented
-    # https://github.com/nim-lang/RFCs/issues/368
-    if not dedup.containsOrIncl field.nameIdent.strVal:
-      result.add field
 
 func getRenamed(symbol: NimNode, nameIdent: NimNode): Option[string] =
   if symbol == bindSym("CamelCase"):
