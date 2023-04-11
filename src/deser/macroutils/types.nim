@@ -73,12 +73,12 @@ type
   ParsedStruct* = object
     ## Parsed representation of type.
     ## 
-    ## Usually `Struct` is initialized using the `fromTypeSym` constructor.
+    ## Usually `ParsedStruct` is initialized using the `fromTypeSym` constructor.
     ## 
-    ## You can initialize `Struct` manually using the
-    ## `initStruct` constructor.
+    ## You can initialize `ParsedStruct` manually using the
+    ## `initParsedStruct` constructor.
     ##
-    ## It is **not recommended** to initialize `Struct` another way to avoid using the wrong `NimNode`.
+    ## It is **not recommended** to initialize `ParsedStruct` another way to avoid using the wrong `NimNode`.
     typeSym: NimNode
     fields: seq[ParsedField]
     features: StructFeatures
@@ -87,7 +87,7 @@ type
   ParsedField* = object
     ## Parsed representation of type field.
     ## 
-    ## Usually `Field` is initialized using
+    ## Usually `ParsedField` is initialized using
     ## `fromIdentDefs` and
     ## `fromRecCase` constructors.
     ## 
@@ -95,10 +95,10 @@ type
     ## `fieldsFromRecList` and
     ## `parseFields`.
     ## 
-    ## You can initialize `Field` manually using the
+    ## You can initialize `ParsedField` manually using the
     ## `initField` constructor.
     ## 
-    ## It is **not recommended** to initialize `Field` another way to avoid using the wrong `NimNode`.
+    ## It is **not recommended** to initialize `ParsedField` another way to avoid using the wrong `NimNode`.
     nameIdent: NimNode
     typeNode: NimNode
     features: FieldFeatures
@@ -184,8 +184,6 @@ type
 
 # # # # # # # # # # # #
 # Forward declarations
-func flatten*(fields: seq[Field]): seq[Field]
-
 func getRenamed(symbol: NimNode, nameIdent: NimNode): Option[string]
 
 
@@ -243,8 +241,6 @@ func genericParams*(self: Struct): Option[NimNode] =
 func flattenFields*(self: Struct): seq[Field] =
   ## Returns all fields, including fields from all branches.
   ## Case fields are included if not marked with `untagged`.
-  ## 
-  ## Created automatically in the `initStruct` constructor.
   self.flattenFields
 
 func nskTypeEnumSym*(self: Struct): NimNode =
@@ -612,6 +608,113 @@ proc fields*(self: var FieldBranch): var seq[Field] =
 
 
 # # # # # # # # # # # #
+# ParsedStruct
+func initParsedStruct*(
+  typeSym: NimNode,
+  fields: seq[ParsedField],
+  features: StructFeatures,
+  genericParams: Option[NimNode]
+): ParsedStruct =
+  assertKind typeSym, {nnkSym}
+
+  if genericParams.isSome:
+    assertKind genericParams.get(), {nnkGenericParams}
+
+  ParsedStruct(
+    typeSym: typeSym,
+    fields: fields,
+    features: features,
+    genericParams: genericParams
+  )
+
+func typeSym*(self: ParsedStruct): NimNode =
+  ## Type symbol.
+  ##
+  ## Return nnkSym NimNode.
+  self.typeSym
+
+func fields*(self: ParsedStruct): seq[ParsedField] =
+  ## Type fields.
+  self.fields
+
+func features*(self: ParsedStruct): StructFeatures =
+  ## Features derived from pragmas.
+  self.features
+
+func genericParams*(self: ParsedStruct): Option[NimNode] =
+  ## Generic idents from type.
+  ## 
+  ## Return nnkGenericParams NimNode.
+  self.genericParams
+
+
+# # # # # # # # # # # #
+# ParsedField
+func initParsedField*(
+  nameIdent: NimNode,
+  typeNode: NimNode,
+  features: FieldFeatures,
+  public: bool,
+  isCase: bool,
+  branches: seq[FieldBranch],
+): ParsedField =
+  assertKind nameIdent, {nnkIdent}
+  assertKind typeNode, {nnkSym, nnkIdent, nnkBracketExpr, nnkRefTy}
+
+  if isCase:
+    ParsedField(
+      nameIdent: nameIdent,
+      typeNode: typeNode,
+      features: features,
+      public: public,
+      isCase: true,
+      branches: branches,
+    )
+  else:
+    ParsedField(
+      nameIdent: nameIdent,
+      typeNode: typeNode,
+      features: features,
+      public: public,
+      isCase: false,
+    )
+
+func nameIdent*(self: ParsedField): NimNode =
+  ## Field name ident.
+  ## 
+  ## Return nnkIdent NimNode.
+  self.nameIdent
+
+func typeNode*(self: ParsedField): NimNode =
+  ## Field type symbol.
+  ## 
+  ## May return nnkSym, nnkIdent or nnkBracketExpr NimNode.
+  self.typeNode
+
+func features*(self: ParsedField): FieldFeatures =
+  ## Features derived from pragmas.
+  self.features
+
+func public*(self: ParsedField): bool =
+  ## True for public fields.
+  self.public
+
+func isCase*(self: ParsedField): bool =
+  ## True for case fields.
+  self.isCase
+
+func branches*(self: ParsedField): seq[FieldBranch] =
+  ## Field branches.
+  ## 
+  ## Raise `AssertionDefect` for non-case fields.
+  case self.isCase
+  of true:
+    result = self.branches
+  else:
+    doAssert self.isCase
+
+
+# # # # # # # # # # # #
 # TypeInfo
 func initTypeInfo*(
   typeSym: NimNode, 
@@ -665,8 +768,6 @@ func genericParams*(self: TypeInfo): Option[NimNode] =
 
 # # # # # # # # # # # #
 # Utils
-
-
 func getRenamed(symbol: NimNode, nameIdent: NimNode): Option[string] =
   if symbol == bindSym("CamelCase"):
     some nameIdent.strVal.toCase CamelCase
