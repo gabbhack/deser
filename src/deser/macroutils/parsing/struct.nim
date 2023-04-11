@@ -12,15 +12,15 @@ from deser/macroutils/types as macro_types import
   recList,
   pragma,
 
-  Struct,
-  initStruct,
+  ParsedStruct,
+  initParsedStruct,
   genericParams,
 
   StructFeatures,
   initStructFeatures,
   initEmptyStructFeatures,
 
-  Field,
+  ParsedField,
   isCase,
   branches,
   public,
@@ -64,12 +64,10 @@ func showUnsupportedObjectError(symbol: NimNode, nodeKind: NimNodeKind) {.noretu
 
 func mergeRecList*(toNode, fromNode: NimNode): NimNode
 
-proc propagateFeatures(fields: var seq[Field], features: StructFeatures)
-
 func mergePragma(toNode, fromNode: NimNode): NimNode
 
 # Parse
-func fromTypeSym*(structTy: typedesc[Struct], typeSym: NimNode): Struct =
+func fromTypeSym*(structTy: typedesc[ParsedStruct], typeSym: NimNode): ParsedStruct =
   ## Parse `nnkSym` node and return `Struct`.
   bind
     pragmas.onUnknownKeys,
@@ -82,11 +80,9 @@ func fromTypeSym*(structTy: typedesc[Struct], typeSym: NimNode): Struct =
   let
     typeInfo = TypeInfo.fromTypeSym(typeSym)
     features = StructFeatures.fromPragma(typeInfo.pragma)
+    fields = parseFields(typeInfo)
 
-  var fields = parseFields(typeInfo)
-  propagateFeatures(fields, features)
-
-  initStruct(
+  initParsedStruct(
     typeSym=typeSym,
     fields=fields,
     features=features,
@@ -236,24 +232,3 @@ func mergePragma(toNode, fromNode: NimNode): NimNode =
 
   for pragma in fromNode:
     result.add pragma
-
-proc propagateFeatures(fields: var seq[Field], features: StructFeatures) =
-  for field in fields.mitems:
-    if types.skipPrivateSerializing(features) and not public field:
-      field.features.skipSerializing = true
-    if types.skipPrivateDeserializing(features) and not public field:
-      field.features.skipDeserializing = true
-
-    if macro_types.defaultValue(field.features).isNone:
-      field.features.defaultValue = types.defaultValue(features)
-
-    # do not check aliases here, because they are useless for serialization
-    if field.features.renameSerialize.isNone:
-      field.features.renameSerialize = types.renameAll(features)
-
-    if field.features.renameDeserialize.isNone and field.features.aliases.len == 0:
-      field.features.renameDeserialize = types.renameAll(features)
-
-    if field.isCase:
-      for branch in field.branches.mitems:
-        branch.fields.propagateFeatures(features)

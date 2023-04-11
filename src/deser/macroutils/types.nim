@@ -167,13 +167,13 @@ type
   ParsedFieldBranch* = object
     ## Represents branch of case field.
     ## 
-    ## Usually `FieldBranch` is initialized using
+    ## Usually `ParsedFieldBranch` is initialized using
     ## `fromBranch` constructor.
     ## 
-    ## You can initialize `FieldBranch` manually using the
-    ## `initFieldBranch` constructor.
+    ## You can initialize `ParsedFieldBranch` manually using the
+    ## `initParsedFieldBranch` constructor.
     ## 
-    ## It is **not recommended** to initialize `FieldBranch` another way to avoid using the wrong `NimNode`.
+    ## It is **not recommended** to initialize `ParsedFieldBranch` another way to avoid using the wrong `NimNode`.
     case kind: FieldBranchKind
     of Of:
       conditionOfBranch: NimNode
@@ -707,6 +707,10 @@ func typeNode*(self: ParsedField): NimNode =
   ## May return nnkSym, nnkIdent or nnkBracketExpr NimNode.
   self.typeNode
 
+proc features*(self: var ParsedField): var FieldFeatures =
+  ## Features derived from pragmas.
+  self.features
+
 func features*(self: ParsedField): FieldFeatures =
   ## Features derived from pragmas.
   self.features
@@ -723,6 +727,17 @@ func branches*(self: ParsedField): seq[ParsedFieldBranch] =
   ## Field branches.
   ## 
   ## Raise `AssertionDefect` for non-case fields.
+  case self.isCase
+  of true:
+    result = self.branches
+  else:
+    doAssert self.isCase
+
+proc branches*(self: var ParsedField): var seq[ParsedFieldBranch] =
+  ## Field branches.
+  ## 
+  ## Raise `AssertionDefect` for non-case fields.
+  {.warning[ProveInit]:off.}
   case self.isCase
   of true:
     result = self.branches
@@ -750,6 +765,27 @@ func initParsedFieldBranch*(
       kind: Else,
       fields: fields
     )
+
+func kind*(self: ParsedFieldBranch): FieldBranchKind =
+  self.kind
+
+func conditionOfBranch*(self: ParsedFieldBranch): NimNode =
+  ## Condition of `Of` branch without body.
+  ## 
+  ## Return nnkOfBranch or nnkIdent (``) NimNode.
+  ## 
+  ## Raise `AssertionDefect` for non-Of branches.
+  case self.kind
+  of Of:
+    result = self.conditionOfBranch
+  else:
+    doAssert self.kind == Of
+
+func fields*(self: ParsedFieldBranch): seq[ParsedField] =
+  self.fields
+
+proc fields*(self: var ParsedFieldBranch): var seq[ParsedField] =
+  self.fields
 
 
 # # # # # # # # # # # #
