@@ -9,8 +9,7 @@ However, constructors from the `parsing/struct` and `parsing/field` modules are 
 
 import std/[
   macros,
-  options,
-  sets
+  options
 ]
 
 # for pattern matching and assertKind
@@ -105,7 +104,7 @@ type
     public: bool
     case isCase: bool
     of true:
-      branches: seq[FieldBranch]
+      branches: seq[ParsedFieldBranch]
     else:
       discard
 
@@ -164,6 +163,23 @@ type
     else:
       discard
     fields: seq[Field]
+
+  ParsedFieldBranch* = object
+    ## Represents branch of case field.
+    ## 
+    ## Usually `FieldBranch` is initialized using
+    ## `fromBranch` constructor.
+    ## 
+    ## You can initialize `FieldBranch` manually using the
+    ## `initFieldBranch` constructor.
+    ## 
+    ## It is **not recommended** to initialize `FieldBranch` another way to avoid using the wrong `NimNode`.
+    case kind: FieldBranchKind
+    of Of:
+      conditionOfBranch: NimNode
+    else:
+      discard
+    fields: seq[ParsedField]
 
   TypeInfo* = object
     ## Not parsed representation of type.
@@ -656,7 +672,7 @@ func initParsedField*(
   features: FieldFeatures,
   public: bool,
   isCase: bool,
-  branches: seq[FieldBranch],
+  branches: seq[ParsedFieldBranch],
 ): ParsedField =
   assertKind nameIdent, {nnkIdent}
   assertKind typeNode, {nnkSym, nnkIdent, nnkBracketExpr, nnkRefTy}
@@ -703,7 +719,7 @@ func isCase*(self: ParsedField): bool =
   ## True for case fields.
   self.isCase
 
-func branches*(self: ParsedField): seq[FieldBranch] =
+func branches*(self: ParsedField): seq[ParsedFieldBranch] =
   ## Field branches.
   ## 
   ## Raise `AssertionDefect` for non-case fields.
@@ -712,6 +728,28 @@ func branches*(self: ParsedField): seq[FieldBranch] =
     result = self.branches
   else:
     doAssert self.isCase
+
+
+# # # # # # # # # # # #
+# ParsedFieldBranch
+func initParsedFieldBranch*(
+  fields: seq[ParsedField],
+  conditionOfBranch: Option[NimNode]
+): ParsedFieldBranch =
+
+  if Some(@conditionOfBranch) ?= conditionOfBranch:
+    assertKind conditionOfBranch, {nnkOfBranch, nnkIdent}
+
+    ParsedFieldBranch(
+      kind: Of,
+      fields: fields,
+      conditionOfBranch: conditionOfBranch
+    )
+  else:
+    ParsedFieldBranch(
+      kind: Else,
+      fields: fields
+    )
 
 
 # # # # # # # # # # # #

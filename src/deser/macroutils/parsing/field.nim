@@ -4,15 +4,15 @@ import std/[
 ]
 
 from deser/macroutils/types import
-  Field,
-  initField,
+  ParsedField,
+  initParsedField,
 
   FieldFeatures,
   initFieldFeatures,
   initEmptyFieldFeatures,
 
-  FieldBranch,
-  initFieldBranch,
+  ParsedFieldBranch,
+  initParsedFieldBranch,
 
   FieldBranchKind,
   FieldFeatures,
@@ -42,15 +42,15 @@ from deser/pragmas import
 import deser/macroutils/matching
 
 # Forward declaration
-func fieldsFromRecList*(recList: NimNode): seq[Field]
+func fieldsFromRecList*(recList: NimNode): seq[ParsedField]
 
-func fromIdentDefs*(fieldTy: typedesc[Field], identDefs: NimNode): Field
+func fromIdentDefs*(fieldTy: typedesc[ParsedField], identDefs: NimNode): ParsedField
 
-func fromRecCase*(fieldTy: typedesc[Field], recCase: NimNode): Field
+func fromRecCase*(fieldTy: typedesc[ParsedField], recCase: NimNode): ParsedField
 
 func fromPragma*(featuresTy: typedesc[FieldFeatures], pragma: Option[NimNode]): FieldFeatures
 
-func fromBranch*(branchTy: typedesc[FieldBranch], branch: NimNode): seq[FieldBranch]
+func fromBranch*(branchTy: typedesc[ParsedFieldBranch], branch: NimNode): seq[ParsedFieldBranch]
 
 func unpackIdentDefs(identDefs: NimNode): tuple[typeNode, name: NimNode, pragma: Option[NimNode], isPublic: bool]
 
@@ -58,58 +58,58 @@ func deSymBracketExpr(bracket: NimNode): NimNode
 
 
 # Parse
-func parseFields*(typeInfo: TypeInfo): seq[Field] =
+func parseFields*(typeInfo: TypeInfo): seq[ParsedField] =
   ## Parse fields from a typeInfo
   if Some(@reclist) ?= typeInfo.recList:
     fieldsFromRecList(recList)
   else:
-    newSeqOfCap[Field](0)
+    newSeqOfCap[ParsedField](0)
 
-func fieldsFromRecList*(recList: NimNode): seq[Field] =
+func fieldsFromRecList*(recList: NimNode): seq[ParsedField] =
   ## Parse fields from a recList
   for fieldNode in recList:
     case fieldNode.kind
     of nnkIdentDefs:
       # usual field
-      result.add Field.fromIdentDefs(fieldNode)
+      result.add ParsedField.fromIdentDefs(fieldNode)
     of nnkRecCase:
       # case field
-      result.add Field.fromRecCase(fieldNode)
+      result.add ParsedField.fromRecCase(fieldNode)
     of nnkNilLit:
       # empty field: discard/nil
       discard
     else:
       assertKind fieldNode, {nnkIdentDefs, nnkRecCase, nnkNilLit}
 
-func fromIdentDefs*(fieldTy: typedesc[Field], identDefs: NimNode): Field =
+func fromIdentDefs*(fieldTy: typedesc[ParsedField], identDefs: NimNode): ParsedField =
   ## Parse a field from an identDefs node
   assertKind identDefs, {nnkIdentDefs}
 
   let (typeNode, nameIdent, pragmas, isPublic) = unpackIdentDefs(identDefs)
 
-  initField(
+  initParsedField(
     nameIdent=nameIdent,
     typeNode=typeNode,
     features=FieldFeatures.fromPragma(pragmas),
     public=isPublic,
     isCase=false,
-    branches=newSeqOfCap[FieldBranch](0)
+    branches=newSeqOfCap[ParsedFieldBranch](0)
   )
 
-func fromRecCase*(fieldTy: typedesc[Field], recCase: NimNode): Field =
+func fromRecCase*(fieldTy: typedesc[ParsedField], recCase: NimNode): ParsedField =
   ## Parse a field from a recCase node
   assertKind recCase, {nnkRecCase}
   assertMatch recCase:
     RecCase[@identDefs, all @rawBranches]
 
-  var branches = newSeqOfCap[FieldBranch](recCase.len-1)
+  var branches = newSeqOfCap[ParsedFieldBranch](recCase.len-1)
 
   for branch in rawBranches:
-    branches.add FieldBranch.fromBranch(branch)
+    branches.add ParsedFieldBranch.fromBranch(branch)
   
   let (typeNode, nameIdent, pragmas, isPublic) = unpackIdentDefs(identDefs)
 
-  initField(
+  initParsedField(
     nameIdent=nameIdent,
     typeNode=typeNode,
     features=FieldFeatures.fromPragma(pragmas),
@@ -118,7 +118,7 @@ func fromRecCase*(fieldTy: typedesc[Field], recCase: NimNode): Field =
     branches=branches
   )
 
-func fromBranch*(branchTy: typedesc[FieldBranch], branch: NimNode): seq[FieldBranch] =
+func fromBranch*(branchTy: typedesc[ParsedFieldBranch], branch: NimNode): seq[ParsedFieldBranch] =
   ## Parse a field branch from a branch node
 
   assertMatch branch:
@@ -128,14 +128,14 @@ func fromBranch*(branchTy: typedesc[FieldBranch], branch: NimNode): seq[FieldBra
   let fields = fieldsFromRecList(recList)
 
   if condition.len > 0:
-    result = newSeqOfCap[FieldBranch](condition.len)
+    result = newSeqOfCap[ParsedFieldBranch](condition.len)
     for cond in condition:
-      result.add initFieldBranch(
+      result.add initParsedFieldBranch(
         fields=fields,
         conditionOfBranch=some nnkOfBranch.newTree(cond)
       )
   else:
-    result.add initFieldBranch(
+    result.add initParsedFieldBranch(
       fields=fields,
       conditionOfBranch=none NimNode
     )
