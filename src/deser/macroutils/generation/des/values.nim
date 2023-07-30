@@ -207,7 +207,6 @@ func defDeserializeWithType(struct: Struct, public: bool): NimNode =
           elif Some(@deserWith) ?= field.features.deserWith:
             newCall(ident "deserialize", deserWith, deserializerIdent)
           else:
-            doAssert false
             newEmptyNode()
         genericValue = block:
           let tmp = copy value
@@ -302,8 +301,9 @@ func defFieldLets(struct: Struct): NimNode =
       # nextElement returns Option[T]
       nextElementCall = quote do:
         block:
-          if isSome(`nextElementCall`):
-            some(unsafeGet(`nextElementCall`).value)
+          let tempNextElement = `nextElementCall`
+          if isSome(tempNextElement):
+            some(unsafeGet(tempNextElement).value)
           else:
             none(`genericTypeArgument`.T)
 
@@ -364,7 +364,6 @@ template resolveUntagged {.dirty.} =
       `raiseUnknownUntaggedVariantSym`(`structNameLit`, `fieldNameLit`)
   result = body
 
-
 template resolveTagged {.dirty.} =
   # HACK: need to generate temp let
   # to prove that case field value is correct
@@ -404,7 +403,6 @@ template resolveTagged {.dirty.} =
     tempKindLet,
     caseStmt
   )
-
 
 func resolve(struct: Struct, fields: seq[Field], objConstr: NimNode, raiseOnNone = true): NimNode =
   let

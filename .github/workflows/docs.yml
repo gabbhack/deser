@@ -18,7 +18,7 @@ jobs:
       - name: Set up Nim
         uses: jiro4989/setup-nim-action@v1
         with:
-          nim-version: stable
+          nim-version: 1.6.12
       
       - name: Build docs
         run: nimble docs
