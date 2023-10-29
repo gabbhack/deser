@@ -1,6 +1,8 @@
 name: Tests
 
 on:
+  schedule:
+    - cron: '0 0 1 * *'
   push:
     branches:
       - master
@@ -18,7 +20,7 @@ jobs:
     if: "github.event.pull_request.draft == false && ! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     strategy:
       matrix:
-        nim: ['1.6.12', 'devel']
+        nim: ['1.6.12', '2.0.0', 'devel']
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
