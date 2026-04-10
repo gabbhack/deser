@@ -18,22 +18,22 @@ jobs:
     if: "github.event.pull_request.draft == false && ! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     strategy:
       matrix:
-        nim: ['1.6.12', 'devel']
+        nim: ['1.6.12', 'stable', 'devel']
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Cache nimble
         id: cache-nimble
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: ~/.nimble
           key: ${{ runner.os }}-nimble-${{ hashFiles('*.nimble') }}
         if: runner.os != 'Windows'
 
       - name: Set up Nim
-        uses: jiro4989/setup-nim-action@v1
+        uses: jiro4989/setup-nim-action@v2
         with:
           nim-version: ${{ matrix.nim }}
 
