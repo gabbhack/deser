@@ -17,8 +17,9 @@ jobs:
   build:
     if: "github.event.pull_request.draft == false && ! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     strategy:
+      fail-fast: false
       matrix:
-        nim: ['1.6.12', 'stable', 'devel']
+        nim: ['1.6.12', '2.2.8', 'devel']
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
